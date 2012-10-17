@@ -118,6 +118,7 @@ build_kernel()
 	build_standby
 	build_mdfs
 	make ARCH=arm CROSS_COMPILE=${CROSS_COMPILE} -j8 uImage modules
+	make ARCH=arm CROSS_COMPILE=${CROSS_COMPILE} INSTALL_MOD_PATH=output modules_install
 
 	${OBJCOPY} -R .note.gnu.build-id -S -O binary vmlinux bImage
 
