@@ -1348,7 +1348,11 @@ ft5x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	set_bit(EV_ABS, input_dev->evbit);
 	set_bit(EV_KEY, input_dev->evbit);
 
-	input_dev->name	= CTP_NAME;		//dev_name(&client->dev)
+
+	input_dev->name		= CTP_NAME;		//dev_name(&client->dev)
+	input_dev->id.bustype = BUS_I2C;
+	input_dev->dev.parent = &client->dev;
+
 	err = input_register_device(input_dev);
 	if (err) {
 		dev_err(&client->dev,"ft5x_ts_probe: failed to register input device: %s\n",
