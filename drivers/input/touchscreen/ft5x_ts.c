@@ -106,6 +106,15 @@ static int key_tp  = 0;
 static int key_val = 0;
 #endif
 
+#ifdef PRINT_POINT_INFO
+#define print_point_info(fmt, args...) \
+do{ \
+pr_info(fmt, ##args); \
+}while(0)
+#else
+#define print_point_info(fmt, args...) //
+#endif
+
 #define CTP_IRQ_NUMBER                  (config_info.irq_gpio_number)
 #define CTP_IRQ_MODE			(TRIG_EDGE_NEGATIVE)
 #define CTP_NAME			 FT5X_NAME
@@ -980,53 +989,62 @@ static void ft5x_report_multitouch(void)
 
 	switch(event->touch_point) {
 	case 5:
-		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID5);	
-		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, event->pressure);
+		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID5);
+		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, 1);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x5);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y5);
-		input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+		input_report_abs(data->input_dev, ABS_MT_PRESSURE, event->pressure);
+		input_report_key(data->input_dev, BTN_TOUCH, 1);
 		input_mt_sync(data->input_dev);
-		dprintk(DEBUG_X_Y_INFO,"report data:===x5 = %d,y5 = %d ====\n",event->x5,event->y5);
+
+		print_point_info("===x5 = %d,y5 = %d ====\n",event->x5,event->y5);
 	case 4:
-		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID4);	
-		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, event->pressure);
+		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID4);
+		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, 1);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x4);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y4);
-		input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+		input_report_abs(data->input_dev, ABS_MT_PRESSURE, event->pressure);
+		input_report_key(data->input_dev, BTN_TOUCH, 1);
 		input_mt_sync(data->input_dev);
-		dprintk(DEBUG_X_Y_INFO,"report data:===x4 = %d,y4 = %d ====\n",event->x4,event->y4);
+
+		print_point_info("===x4 = %d,y4 = %d ====\n",event->x4,event->y4);
 	case 3:
-		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID3);	
-		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, event->pressure);
+		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID3);
+		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, 1);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x3);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y3);
-		input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+		input_report_abs(data->input_dev, ABS_MT_PRESSURE, event->pressure);
+		input_report_key(data->input_dev, BTN_TOUCH, 1);
 		input_mt_sync(data->input_dev);
-		dprintk(DEBUG_X_Y_INFO,"report data:===x3 = %d,y3 = %d ====\n",event->x3,event->y3);
+
+		print_point_info("===x3 = %d,y3 = %d ====\n",event->x3,event->y3);
 	case 2:
-		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID2);	
-		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, event->pressure);
+		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID2);
+		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, 1);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x2);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y2);
-		input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+		input_report_abs(data->input_dev, ABS_MT_PRESSURE, event->pressure);
+		input_report_key(data->input_dev, BTN_TOUCH, 1);
 		input_mt_sync(data->input_dev);
 		dprintk(DEBUG_X_Y_INFO,"report data:===x2 = %d,y2 = %d ====\n",event->x2,event->y2);
 	case 1:
 
 		input_report_abs(data->input_dev, ABS_X, event->x1);
 		input_report_abs(data->input_dev, ABS_Y, event->y1);
-		input_report_abs(data->input_dev, ABS_PRESSURE, 1);
-		input_report_key(data->input_dev, BTN_TOUCH, 1);
+		input_report_abs(data->input_dev, ABS_PRESSURE, event->pressure);
 
 		input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->touch_ID1);
-		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, event->pressure);
+		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, 1);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x1);
 		input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y1);
-		input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+		input_report_abs(data->input_dev, ABS_MT_PRESSURE, event->pressure);
+		input_report_key(data->input_dev, BTN_TOUCH, 1);
 		input_mt_sync(data->input_dev);
+
 		dprintk(DEBUG_X_Y_INFO,"report data:===x1 = %d,y1 = %d ====\n",event->x1,event->y1);
 		//hanbiao
-		dprintk(DEBUG_X_Y_INFO,"report data:===touch_ID1 = %d,pressure = %d ====\n", event->touch_ID1,event->pressure);
+		/* dprintk(DEBUG_X_Y_INFO,"report data:===touch_ID1 = %d,pressure = %d ====\n", event->touch_ID1,event->pressure); */
+
 		break;
 	default:
 		dprintk(DEBUG_X_Y_INFO,"report data:==touch_point default =\n");
@@ -1322,12 +1340,13 @@ ft5x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	input_set_abs_params(input_dev,
 			ABS_Y, 0, SCREEN_MAX_Y, 0, 0);
 	input_set_abs_params(input_dev,
-			ABS_PRESSURE, 0, 1, 0 , 0);
+			ABS_PRESSURE, 0, PRESS_MAX, 0 , 0);
+	input_set_abs_params(input_dev,
+			ABS_MT_PRESSURE, 0, PRESS_MAX, 0 , 0);
 
 	set_bit(ABS_MT_TOUCH_MAJOR, input_dev->absbit);
 	set_bit(ABS_MT_POSITION_X, input_dev->absbit);
 	set_bit(ABS_MT_POSITION_Y, input_dev->absbit);
-	set_bit(ABS_MT_WIDTH_MAJOR, input_dev->absbit);
 
 
 	input_set_abs_params(input_dev,
@@ -1335,9 +1354,7 @@ ft5x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	input_set_abs_params(input_dev,
 			     ABS_MT_POSITION_Y, 0, SCREEN_MAX_Y, 0, 0);
 	input_set_abs_params(input_dev,
-			     ABS_MT_TOUCH_MAJOR, 0, PRESS_MAX, 0, 0);
-	input_set_abs_params(input_dev,
-			     ABS_MT_WIDTH_MAJOR, 0, 200, 0, 0);
+			     ABS_MT_TOUCH_MAJOR, 0, 1, 0, 0);
 	input_set_abs_params(input_dev,
 			     ABS_MT_TRACKING_ID, 0, 4, 0, 0);
 	//hanbiao
