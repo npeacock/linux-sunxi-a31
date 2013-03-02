@@ -26,6 +26,9 @@
 #include <linux/printk.h>
 #include <linux/hrtimer.h>
 #include "governor.h"
+#ifdef CONFIG_ARCH_SUN6I
+#include <mach/dram-freq.h>
+#endif
 
 struct class *devfreq_class;
 
@@ -83,6 +86,7 @@ int update_devfreq(struct devfreq *devfreq)
 {
 	unsigned long freq;
 	int err = 0;
+	u32 flags = 0;
 
 	if (!mutex_is_locked(&devfreq->lock)) {
 		WARN(true, "devfreq->lock must be locked by the caller.\n");
@@ -94,7 +98,34 @@ int update_devfreq(struct devfreq *devfreq)
 	if (err)
 		return err;
 
-	err = devfreq->profile->target(devfreq->dev.parent, &freq);
+	/*
+	 * Adjust the freuqency with user freq and QoS.
+	 *
+	 * List from the highest proiority
+	 * max_freq (probably called by thermal when it's too hot)
+	 * min_freq
+	 */
+#ifdef CONFIG_ARCH_SUN6I
+	if (devfreq->scaling_min_freq && freq < devfreq->scaling_min_freq) {
+		freq = devfreq->scaling_min_freq;
+		flags &= ~DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use GLB */
+	}
+	if (devfreq->scaling_max_freq && freq > devfreq->scaling_max_freq) {
+		freq = devfreq->scaling_max_freq;
+		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+	}
+#else
+	if (devfreq->min_freq && freq < devfreq->min_freq) {
+		freq = devfreq->min_freq;
+		flags &= ~DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use GLB */
+	}
+	if (devfreq->max_freq && freq > devfreq->max_freq) {
+		freq = devfreq->max_freq;
+		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+	}
+#endif
+
+	err = devfreq->profile->target(devfreq->dev.parent, &freq, flags);
 	if (err)
 		return err;
 
@@ -273,7 +304,6 @@ static void devfreq_monitor(struct work_struct *work)
 		 */
 		if (devfreq->next_polling <= jiffies_passed) {
 			error = update_devfreq(devfreq);
-
 			/* Remove a devfreq with an error. */
 			if (error && error != -EAGAIN) {
 
@@ -451,7 +481,11 @@ static ssize_t show_governor(struct device *dev,
 static ssize_t show_freq(struct device *dev,
 			 struct device_attribute *attr, char *buf)
 {
+#ifdef CONFIG_ARCH_SUN6I
+	return sprintf(buf, "%lu\n", dramfreq_get());
+#else
 	return sprintf(buf, "%lu\n", to_devfreq(dev)->previous_freq);
+#endif
 }
 
 static ssize_t show_polling_interval(struct device *dev,
@@ -501,12 +535,165 @@ static ssize_t show_central_polling(struct device *dev,
 		       !to_devfreq(dev)->governor->no_central_polling);
 }
 
+#ifndef CONFIG_ARCH_SUN6I
+static ssize_t store_min_freq(struct device *dev, struct device_attribute *attr,
+			      const char *buf, size_t count)
+{
+	struct devfreq *df = to_devfreq(dev);
+	unsigned long value;
+	int ret;
+	unsigned long max;
+
+	ret = sscanf(buf, "%lu", &value);
+	if (ret != 1)
+		goto out;
+
+	mutex_lock(&df->lock);
+	max = df->max_freq;
+	if (value && max && value > max) {
+		ret = -EINVAL;
+		goto unlock;
+	}
+
+	df->min_freq = value;
+	update_devfreq(df);
+	ret = count;
+unlock:
+	mutex_unlock(&df->lock);
+out:
+	return ret;
+}
+#endif
+
+static ssize_t show_min_freq(struct device *dev, struct device_attribute *attr,
+			     char *buf)
+{
+	return sprintf(buf, "%lu\n", to_devfreq(dev)->min_freq);
+}
+
+#ifndef CONFIG_ARCH_SUN6I
+static ssize_t store_max_freq(struct device *dev, struct device_attribute *attr,
+			      const char *buf, size_t count)
+{
+	struct devfreq *df = to_devfreq(dev);
+	unsigned long value;
+	int ret;
+	unsigned long min;
+
+	ret = sscanf(buf, "%lu", &value);
+	if (ret != 1)
+		goto out;
+
+	mutex_lock(&df->lock);
+	min = df->min_freq;
+	if (value && min && value < min) {
+		ret = -EINVAL;
+		goto unlock;
+	}
+
+	df->max_freq = value;
+	update_devfreq(df);
+	ret = count;
+unlock:
+	mutex_unlock(&df->lock);
+out:
+	return ret;
+}
+#endif
+
+static ssize_t show_max_freq(struct device *dev, struct device_attribute *attr,
+			     char *buf)
+{
+	return sprintf(buf, "%lu\n", to_devfreq(dev)->max_freq);
+}
+
+#ifdef CONFIG_ARCH_SUN6I
+static ssize_t store_scaling_min_freq(struct device *dev, struct device_attribute *attr,
+			      const char *buf, size_t count)
+{
+	struct devfreq *df = to_devfreq(dev);
+	unsigned long value;
+	int ret;
+	unsigned long min, max;
+
+	ret = sscanf(buf, "%lu", &value);
+	if (ret != 1)
+		goto out;
+
+	mutex_lock(&df->lock);
+	min = df->min_freq;
+	max = df->max_freq;
+	if (value && min && max && ((value > max) || (value < min))) {
+		ret = -EINVAL;
+		goto unlock;
+	}
+
+	df->scaling_min_freq = value;
+	update_devfreq(df);
+	ret = count;
+unlock:
+	mutex_unlock(&df->lock);
+out:
+	return ret;
+}
+
+static ssize_t show_scaling_min_freq(struct device *dev, struct device_attribute *attr,
+			     char *buf)
+{
+	return sprintf(buf, "%lu\n", to_devfreq(dev)->scaling_min_freq);
+}
+
+static ssize_t store_scaling_max_freq(struct device *dev, struct device_attribute *attr,
+			      const char *buf, size_t count)
+{
+	struct devfreq *df = to_devfreq(dev);
+	unsigned long value;
+	int ret;
+	unsigned long min, max;
+
+	ret = sscanf(buf, "%lu", &value);
+	if (ret != 1)
+		goto out;
+
+	mutex_lock(&df->lock);
+	min = df->min_freq;
+	max = df->max_freq;
+	if (value && min && max && ((value < min) || (value > max))) {
+		ret = -EINVAL;
+		goto unlock;
+	}
+
+	df->scaling_max_freq = value;
+	update_devfreq(df);
+	ret = count;
+unlock:
+	mutex_unlock(&df->lock);
+out:
+	return ret;
+}
+
+static ssize_t show_scaling_max_freq(struct device *dev, struct device_attribute *attr,
+			     char *buf)
+{
+	return sprintf(buf, "%lu\n", to_devfreq(dev)->scaling_max_freq);
+}
+#endif
+
 static struct device_attribute devfreq_attrs[] = {
 	__ATTR(governor, S_IRUGO, show_governor, NULL),
 	__ATTR(cur_freq, S_IRUGO, show_freq, NULL),
 	__ATTR(central_polling, S_IRUGO, show_central_polling, NULL),
 	__ATTR(polling_interval, S_IRUGO | S_IWUSR, show_polling_interval,
 	       store_polling_interval),
+#ifndef CONFIG_ARCH_SUN6I
+	__ATTR(min_freq, S_IRUGO | S_IWUSR, show_min_freq, store_min_freq),
+	__ATTR(max_freq, S_IRUGO | S_IWUSR, show_max_freq, store_max_freq),
+#else
+	__ATTR(min_freq, S_IRUGO, show_min_freq, NULL),
+	__ATTR(max_freq, S_IRUGO, show_max_freq, NULL),
+	__ATTR(scaling_min_freq, S_IRUGO | S_IWUSR, show_scaling_min_freq, store_scaling_min_freq),
+	__ATTR(scaling_max_freq, S_IRUGO | S_IWUSR, show_scaling_max_freq, store_scaling_max_freq),
+#endif
 	{ },
 };
 
@@ -555,14 +742,30 @@ module_exit(devfreq_exit);
  *			     freq value given to target callback.
  * @dev		The devfreq user device. (parent of devfreq)
  * @freq	The frequency given to target function
+ * @flags	Flags handed from devfreq framework.
  *
  */
-struct opp *devfreq_recommended_opp(struct device *dev, unsigned long *freq)
+struct opp *devfreq_recommended_opp(struct device *dev, unsigned long *freq,
+				    u32 flags)
 {
-	struct opp *opp = opp_find_freq_ceil(dev, freq);
+	struct opp *opp;
 
-	if (opp == ERR_PTR(-ENODEV))
+	if (flags & DEVFREQ_FLAG_LEAST_UPPER_BOUND) {
+		/* The freq is an upper bound. opp should be lower */
 		opp = opp_find_freq_floor(dev, freq);
+
+		/* If not available, use the closest opp */
+		if (opp == ERR_PTR(-ENODEV))
+			opp = opp_find_freq_ceil(dev, freq);
+	} else {
+		/* The freq is an lower bound. opp should be higher */
+		opp = opp_find_freq_ceil(dev, freq);
+
+		/* If not available, use the closest opp */
+		if (opp == ERR_PTR(-ENODEV))
+			opp = opp_find_freq_floor(dev, freq);
+	}
+
 	return opp;
 }
 

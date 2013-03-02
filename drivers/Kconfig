@@ -138,4 +138,13 @@ source "drivers/virt/Kconfig"
 
 source "drivers/devfreq/Kconfig"
 
+source "drivers/gsensor/Kconfig"
+
+# for test
+# source "drivers/test/Kconfig"
+
+source "drivers/gpu/Kconfig"
+
+source "drivers/gator/Kconfig"
+
 endmenu

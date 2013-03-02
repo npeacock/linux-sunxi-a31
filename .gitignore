@@ -32,6 +32,11 @@ modules.builtin
 *.lzo
 *.patch
 *.gcno
+*.bak
+*.symvers
+*.rar
+*.zip
+*.map
 
 #
 # Top-level generic files
@@ -55,7 +60,8 @@ modules.builtin
 #
 !.gitignore
 !.mailmap
-
+!drivers/input/touchscreen/ft_app.i
+!rootfs/rootfs_dragonboard.cpio.gz
 #
 # Generated include files
 #
@@ -84,3 +90,17 @@ GTAGS
 *.orig
 *~
 \#*#
+modules/wifi/usi-bcm4329/v4.218.248.15/open-src/src/dhd/linux/dhd-cdc-sdmmc-gpl-3.3
+modules/mali/DX910-BU-00000-r2p4-02rel1/devicedrv/mali/arch
+modules/mali/DX910-BU-00000-r2p4-02rel1/devicedrv/ump/arch
+modules/wifi/bcm4018*/5.90.125*/open-src/src/dhd/linux/dhd-cdc-sdmmc-gpl-*
+modules/eurasia_km/eurasiacon/binary2_sunxi_android_release/
+modules/eurasia_km/eurasiacon/binary2_sunxi_android_debug/
+samples/hidraw/hid-example
+skel/
+output/
+bImage
+
+# standby files
+arch/arm/mach-sun6i/pm/standby/standby.code
+arch/arm/mach-sun6i/pm/standby/super/resume/resume1.code

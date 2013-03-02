@@ -501,7 +501,7 @@ static int uart_write(struct tty_struct *tty,
 	struct uart_state *state = tty->driver_data;
 	struct uart_port *port;
 	struct circ_buf *circ;
-	unsigned long flags;
+	unsigned long flags=0;
 	int c, ret = 0;
 
 	/*
@@ -532,8 +532,8 @@ static int uart_write(struct tty_struct *tty,
 		count -= c;
 		ret += c;
 	}
-	spin_unlock_irqrestore(&port->lock, flags);
 
+	spin_unlock_irqrestore(&port->lock, flags);
 	uart_start(tty);
 	return ret;
 }
