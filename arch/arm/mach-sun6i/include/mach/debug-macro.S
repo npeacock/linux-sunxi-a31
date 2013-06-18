@@ -15,7 +15,7 @@
 #ifdef CONFIG_DEBUG_AW_UART0
 #define UART_PADDR	AW_UART0_BASE
 #define UART_VADDR	(0xf0000000 + AW_UART0_BASE)
-
+	
 #elif defined (CONFIG_DEBUG_AW_R_UART)
 #define UART_PADDR	AW_R_UART_BASE
 #define UART_VADDR	(0xf0000000 + AW_R_UART_BASE)
@@ -41,3 +41,6 @@
 	tst	\rd, #0x2
 	beq	1002b
         .endm
+
+
+

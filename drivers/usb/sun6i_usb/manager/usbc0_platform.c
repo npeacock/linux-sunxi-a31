@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USBæ§åˆ¶å™¨0è®¾å¤‡ä¿¡æ¯
+* Description 	: USB¿ØÖÆÆ÷0Éè±¸ĞÅÏ¢
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -47,7 +47,7 @@
 #include  "usb_hw_scan.h"
 
 //---------------------------------------------------------------
-//  device ä¿¡æ¯æè¿°
+//  device ĞÅÏ¢ÃèÊö
 //---------------------------------------------------------------
 static struct sw_udc_mach_info sw_udc_cfg;
 
@@ -65,7 +65,7 @@ static struct platform_device sw_udc_device = {
 };
 
 //---------------------------------------------------------------
-//  host ä¿¡æ¯æè¿°
+//  host ĞÅÏ¢ÃèÊö
 //---------------------------------------------------------------
 static struct sw_hcd_eps_bits sw_hcd_eps[] = {
 	{ "ep1_tx", 8, },
@@ -240,3 +240,5 @@ __s32 usbc0_platform_device_exit(struct usb_port_info *info)
 
     return 0;
 }
+
+

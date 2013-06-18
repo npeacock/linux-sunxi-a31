@@ -58,18 +58,18 @@ enum counters {
     ACTIVITY_FP1,
     ACTIVITY_FP2,
     ACTIVITY_FP3,
-
+    
     /* L2 cache counters */
     COUNTER_L2_C0,
     COUNTER_L2_C1,
 
     /* Vertex processor counters */
     COUNTER_VP_C0,
-    COUNTER_VP_C1,
+    COUNTER_VP_C1, 
 
     /* Fragment processor counters */
-    COUNTER_FP0_C0,
-    COUNTER_FP0_C1,
+    COUNTER_FP0_C0,    
+    COUNTER_FP0_C1,     
     COUNTER_FP1_C0,
     COUNTER_FP1_C1,
     COUNTER_FP2_C0,
@@ -183,7 +183,7 @@ static u32 get_difference(u32 start, u32 end)
  */
 static inline int is_activity_counter(unsigned int event_id)
 {
-    return (event_id >= FIRST_ACTIVITY_EVENT &&
+    return (event_id >= FIRST_ACTIVITY_EVENT && 
         event_id <= LAST_ACTIVITY_EVENT);
 }
 
@@ -290,14 +290,14 @@ static int create_files(struct super_block *sb, struct dentry *root) {
 
     /*
      * Create the filesystem entries for vertex processor, fragement processor
-     * and L2 cache timeline and hardware counters. Software counters get
+     * and L2 cache timeline and hardware counters. Software counters get 
      * special handling after this block.
      */
     for (event = FIRST_ACTIVITY_EVENT; event <= LAST_HW_COUNTER; event++)
     {
         char buf[40];
 
-        /*
+        /* 
          * We can skip this event if it's for a non-existent fragment
          * processor.
          */
@@ -316,17 +316,17 @@ static int create_files(struct super_block *sb, struct dentry *root) {
             case ACTIVITY_FP1:
             case ACTIVITY_FP2:
             case ACTIVITY_FP3:
-                snprintf(buf, sizeof buf, "ARM_%s_FP%d_active",
+                snprintf(buf, sizeof buf, "ARM_%s_FP%d_active", 
                     mali_name, event - ACTIVITY_FP0);
                 break;
             case COUNTER_L2_C0:
             case COUNTER_L2_C1:
-                snprintf(buf, sizeof buf, "ARM_%s_L2_cnt%d",
+                snprintf(buf, sizeof buf, "ARM_%s_L2_cnt%d", 
                     mali_name, event - COUNTER_L2_C0);
                 break;
             case COUNTER_VP_C0:
             case COUNTER_VP_C1:
-                snprintf(buf, sizeof buf, "ARM_%s_VP_cnt%d",
+                snprintf(buf, sizeof buf, "ARM_%s_VP_cnt%d", 
                     mali_name, event - COUNTER_VP_C0);
                 break;
             case COUNTER_FP0_C0:
@@ -337,7 +337,7 @@ static int create_files(struct super_block *sb, struct dentry *root) {
             case COUNTER_FP2_C1:
             case COUNTER_FP3_C0:
             case COUNTER_FP3_C1:
-                snprintf(buf, sizeof buf, "ARM_%s_FP%d_cnt%d", mali_name,
+                snprintf(buf, sizeof buf, "ARM_%s_FP%d_cnt%d", mali_name, 
                     (event - COUNTER_FP0_C0) / 2, (event - COUNTER_FP0_C0) % 2);
                 break;
             default:
@@ -346,18 +346,18 @@ static int create_files(struct super_block *sb, struct dentry *root) {
         }
 
         dir = gatorfs_mkdir(sb, root, buf);
-
+        
         if (!dir) {
             return -1;
         }
-
+        
         gatorfs_create_ulong(sb, dir, "enabled", &counter_enabled[event]);
-
+        
         /* Only create an event node for counters that can change what they count */
         if (event >= COUNTER_L2_C0) {
             gatorfs_create_ulong(sb, dir, "event", &counter_event[event]);
         }
-
+        
         gatorfs_create_ro_ulong(sb, dir, "key", &counter_key[event]);
     }
 
@@ -386,18 +386,18 @@ static int create_files(struct super_block *sb, struct dentry *root) {
         switch(event) {
         case COUNTER_FILMSTRIP:
             snprintf(buf, sizeof(buf), "ARM_%s_Filmstrip", mali_name);
-		break;
+        	break;
 
         case COUNTER_FREQUENCY:
             snprintf(buf, sizeof(buf), "ARM_%s_Frequency", mali_name);
-		break;
+        	break;
 
         case COUNTER_VOLTAGE:
             snprintf(buf, sizeof(buf), "ARM_%s_Voltage", mali_name);
-		break;
+        	break;
 
         default:
-		break;
+        	break;
         }
 
         dir = gatorfs_mkdir(sb, root, buf);
@@ -439,7 +439,7 @@ static int is_any_sw_counter_enabled(void)
     return 0;    /* No s/w counters enabled */
 }
 
-static void mali_counter_initialize(void)
+static void mali_counter_initialize(void) 
 {
     /* If a Mali driver is present and exporting the appropriate symbol
      * then we can request the HW counters (of which there are only 2)
@@ -513,7 +513,7 @@ static void mali_counter_initialize(void)
     }
 }
 
-static void mali_counter_deinitialize(void)
+static void mali_counter_deinitialize(void) 
 {
     mali_profiling_set_event_type *mali_set_hw_event;
     mali_osk_fb_control_set_type *mali_set_fb_event;
@@ -523,12 +523,12 @@ static void mali_counter_deinitialize(void)
 
     if (mali_set_hw_event) {
         int i;
-
+        
         pr_debug("gator: mali offline _mali_profiling_set_event symbol @ %p\n",mali_set_hw_event);
         for (i = FIRST_HW_COUNTER; i <= LAST_HW_COUNTER; i++) {
             mali_set_hw_event(i, 0xFFFFFFFF);
         }
-
+        
         symbol_put(_mali_profiling_set_event);
     } else {
         printk("gator: mali offline _mali_profiling_set_event symbol not found\n");
@@ -620,7 +620,7 @@ static void stop(void) {
 #endif
 
         pr_debug("gator: mali timeline tracepoint deactivated\n");
-
+        
         trace_registered = 0;
     }
 

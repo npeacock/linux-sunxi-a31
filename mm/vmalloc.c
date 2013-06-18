@@ -1744,7 +1744,7 @@ void *vmalloc(unsigned long size)
 		printk("try count: %d\n", try_count);
 		try_count++;
 	}
-
+	
 	return mem;
 }
 EXPORT_SYMBOL(vmalloc);

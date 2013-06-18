@@ -830,3 +830,4 @@ void rtl8723a_stop_thread(_adapter *padapter);
 
 s32 c2h_id_filter_ccx_8723a(u8 id);
 #endif
+

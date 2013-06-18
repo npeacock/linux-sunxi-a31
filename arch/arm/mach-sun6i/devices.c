@@ -128,3 +128,4 @@ void sw_pdev_init(void)
 {
 	platform_add_devices(sw_pdevs, ARRAY_SIZE(sw_pdevs));
 }
+

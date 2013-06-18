@@ -25,3 +25,4 @@ u32 dma_ctrl_chain(dm_hdl_t dma_hdl, enum dma_op_type_e op, void *parg);
 u32 dma_release_chain(dm_hdl_t dma_hdl);
 
 #endif  /* __DMA_CHAIN_NEW_H */
+

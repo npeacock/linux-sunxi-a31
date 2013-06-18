@@ -108,7 +108,7 @@ struct _HASH_TABLE_
 	@Input          uKeySize - the size of the hash key, in bytes.
 	@Input          pKey - a pointer to the key to hash.
 	@Input          uHashTabLen - the length of the hash table.
-
+    
 	@Return 	    the hash value.
 ******************************************************************************/
 IMG_UINT32
@@ -182,7 +182,7 @@ HASH_Key_Comp_Default (IMG_SIZE_T uKeySize, IMG_VOID *pKey1, IMG_VOID *pKey2)
 	@Input          pBucket - the bucket
 	@Input          ppBucketTable - the hash table
 	@Input          uSize - the size of the hash table
-
+    
 	@Return         PVRSRV_ERROR
 ******************************************************************************/
 static PVRSRV_ERROR
@@ -218,7 +218,7 @@ _ChainInsert (HASH_TABLE *pHash, BUCKET *pBucket, BUCKET **ppBucketTable, IMG_UI
 	@Input          uOldSize - the size of the old hash table
 	@Input          ppNewTable - the new hash table
 	@Input          uNewSize - the size of the new hash table
-
+    
 	@Return         None
 ******************************************************************************/
 static PVRSRV_ERROR
@@ -254,12 +254,12 @@ _Rehash (HASH_TABLE *pHash,
 	@Description    Attempt to resize a hash table, failure to allocate a
                     new larger hash table is not considered a hard failure.
                     We simply continue and allow the table to fill up, the
-			effect is to allow hash chains to become longer.
+	            	effect is to allow hash chains to become longer.
 
 	@Input          pHash - Hash table to resize.
     @Input          uNewSize - Required table size.
 	@Return         IMG_TRUE Success
-			IMG_FALSE Failed
+	            	IMG_FALSE Failed
 ******************************************************************************/
 static IMG_BOOL
 _Resize (HASH_TABLE *pHash, IMG_UINT32 uNewSize)
@@ -382,7 +382,7 @@ HASH_TABLE * HASH_Create (IMG_UINT32 uInitialLen)
                     removed before calling this function.
 
 	@Input          pHash - hash table
-
+    
 	@Return 	    None
 ******************************************************************************/
 IMG_VOID
@@ -417,7 +417,7 @@ HASH_Delete (HASH_TABLE *pHash)
 	@Input          v - the value associated with the key.
 
 	@Return 	    IMG_TRUE  - success
-			IMG_FALSE  - failure
+	            	IMG_FALSE  - failure
 ******************************************************************************/
 IMG_BOOL
 HASH_Insert_Extended (HASH_TABLE *pHash, IMG_VOID *pKey, IMG_UINTPTR_T v)
@@ -482,7 +482,7 @@ HASH_Insert_Extended (HASH_TABLE *pHash, IMG_VOID *pKey, IMG_UINTPTR_T v)
 	@Input          v - the value associated with the key.
 
 	@Return 	    IMG_TRUE - success.
-			IMG_FALSE - failure.
+	            	IMG_FALSE - failure.
 ******************************************************************************/
 IMG_BOOL
 HASH_Insert (HASH_TABLE *pHash, IMG_UINTPTR_T k, IMG_UINTPTR_T v)
@@ -681,7 +681,7 @@ HASH_Iterate(HASH_TABLE *pHash, HASH_pfnCallback pfnCallback)
 		{
 			PVRSRV_ERROR eError;
 			BUCKET *pNextBucket = pBucket->pNext;
-
+			
 			eError = pfnCallback((IMG_UINTPTR_T) ((IMG_VOID *) *(pBucket->k)), (IMG_UINTPTR_T) pBucket->v);
 
 			/* The callback might want us to break out early */

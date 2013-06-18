@@ -255,7 +255,7 @@ static __u64 sys_clk_get_rate(__aw_ccu_clk_id_e id)
 
             if(!tmp_reg->ModeSel)
             {
-		tmp_rate = tmp_reg->FracMod ? 297000000 : 270000000;
+	    	tmp_rate = tmp_reg->FracMod ? 297000000 : 270000000;
 		ccm_get_pllx_para(&tmp_pll, tmp_rate);
 		tmp_reg->FactorM = tmp_pll.FactorM;
 		tmp_reg->FactorN = tmp_pll.FactorN;
@@ -1176,3 +1176,4 @@ __clk_ops_t sys_clk_ops = {
     .set_reset  = 0,
     .get_reset  = 0,
 };
+

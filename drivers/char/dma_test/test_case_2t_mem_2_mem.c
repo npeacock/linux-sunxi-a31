@@ -748,3 +748,4 @@ u32 __dtc_2t_mem_2_mem(void)
 	kernel_thread(__test_thread2, NULL, CLONE_FS | CLONE_SIGHAND);
 	return 0;
 }
+

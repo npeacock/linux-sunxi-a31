@@ -489,7 +489,7 @@ static int read(int **buffer)
                 pr_debug("gator: Mali-T6xx: setting value to zero\n");
                 value = 0;
             }
-
+            
             /* Clear the counter value ready for the next sample. */
             timeline_data[index] = 0;
 

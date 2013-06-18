@@ -48,7 +48,7 @@ extern "C" {
 #endif
 
 /******************************************************************************
- * resman definitions
+ * resman definitions 
  *****************************************************************************/
 
 enum {
@@ -69,10 +69,10 @@ enum {
 
 	/* BUFFER CLASS: */
 	RESMAN_TYPE_BUFFERCLASS_DEVICE,					/*!< Buffer Class Device Resource */
-
+	
 	/* OS specific User mode Mappings: */
 	RESMAN_TYPE_OS_USERMODE_MAPPING,				/*!< OS specific User mode mappings */
-
+	
 	/* COMMON: */
 	RESMAN_TYPE_DEVICEMEM_CONTEXT,					/*!< Device Memory Context Resource */
 	RESMAN_TYPE_DEVICECLASSMEM_MAPPING,				/*!< Device Memory Mapping Resource */
@@ -84,7 +84,7 @@ enum {
     RESMAN_TYPE_SHARED_MEM_INFO,                    /*!< Shared system memory meminfo */
     RESMAN_TYPE_MODIFY_SYNC_OPS,					/*!< Syncobject synchronisation Resource*/
     RESMAN_TYPE_SYNC_INFO,					        /*!< Syncobject Resource*/
-
+	
 	/* KERNEL: */
 	RESMAN_TYPE_KERNEL_DEVICEMEM_ALLOCATION			/*!< Device Memory Allocation Resource */
 };
@@ -94,13 +94,13 @@ enum {
 #define RESMAN_CRITERIA_PVOID_PARAM		0x00000002	/*!< match by criteria param1 */
 #define RESMAN_CRITERIA_UI32_PARAM		0x00000004	/*!< match by criteria param2 */
 
-typedef PVRSRV_ERROR (*RESMAN_FREE_FN)(IMG_PVOID pvParam, IMG_UINT32 ui32Param, IMG_BOOL bForceCleanup);
+typedef PVRSRV_ERROR (*RESMAN_FREE_FN)(IMG_PVOID pvParam, IMG_UINT32 ui32Param, IMG_BOOL bForceCleanup); 
 
 typedef struct _RESMAN_ITEM_ *PRESMAN_ITEM;
 typedef struct _RESMAN_CONTEXT_ *PRESMAN_CONTEXT;
 
 /******************************************************************************
- * resman functions
+ * resman functions 
  *****************************************************************************/
 
 /*
@@ -115,18 +115,18 @@ PVRSRV_ERROR ResManInit(IMG_VOID);
 IMG_VOID ResManDeInit(IMG_VOID);
 
 PRESMAN_ITEM ResManRegisterRes(PRESMAN_CONTEXT	hResManContext,
-							   IMG_UINT32		ui32ResType,
-							   IMG_PVOID		pvParam,
-							   IMG_UINT32		ui32Param,
+							   IMG_UINT32		ui32ResType, 
+							   IMG_PVOID		pvParam, 
+							   IMG_UINT32		ui32Param, 
 							   RESMAN_FREE_FN	pfnFreeResource);
 
 PVRSRV_ERROR ResManFreeResByPtr(PRESMAN_ITEM	psResItem,
 								IMG_BOOL		bForceCleanup);
 
 PVRSRV_ERROR ResManFreeResByCriteria(PRESMAN_CONTEXT	hResManContext,
-									 IMG_UINT32			ui32SearchCriteria,
-									 IMG_UINT32			ui32ResType,
-									 IMG_PVOID			pvParam,
+									 IMG_UINT32			ui32SearchCriteria, 
+									 IMG_UINT32			ui32ResType, 
+									 IMG_PVOID			pvParam, 
 									 IMG_UINT32			ui32Param);
 
 PVRSRV_ERROR ResManDissociateRes(PRESMAN_ITEM		psResItem,
@@ -149,3 +149,4 @@ IMG_VOID PVRSRVResManDisconnect(PRESMAN_CONTEXT hResManContext,
 /******************************************************************************
  End of file (resman.h)
 ******************************************************************************/
+

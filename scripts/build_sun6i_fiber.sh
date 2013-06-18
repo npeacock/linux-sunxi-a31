@@ -106,6 +106,13 @@ build_kernel()
 		cp arch/arm/configs/sun6ismp_fiber_defconfig .config
 	fi
 	cp rootfs/rootfs.cpio.gz .
+
+    #try to remove csi drivers
+    rm -rf ${LICHEE_KDIR}/drivers/media/video/sunxi_csi/device/*.ko
+    rm -rf ${LICHEE_KDIR}/drivers/media/video/sunxi_csi/device/*.o
+    rm -rf ${LICHEE_KDIR}/drivers/media/video/sunxi-vfe/device/*.ko
+    rm -rf ${LICHEE_KDIR}/drivers/media/video/sunxi-vfe/device/*.o
+
 	build_standby
 	build_mdfs
 	make ARCH=arm CROSS_COMPILE=${CROSS_COMPILE} -j8 uImage modules
@@ -262,3 +269,4 @@ all)
 	show_help
 	;;
 esac
+

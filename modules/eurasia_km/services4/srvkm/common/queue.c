@@ -109,7 +109,7 @@ void ProcSeqShowQueue(struct seq_file *sfile,void* el)
 		seq_printf(sfile, "%x %x  %5u  %6u  %3u  %5u   %2u   %2u    %3u  \n",
 							(IMG_UINTPTR_T)psQueue,
 							(IMG_UINTPTR_T)psCmd,
-							psCmd->ui32ProcessID,
+					 		psCmd->ui32ProcessID,
 							psCmd->CommandType,
 							psCmd->uCmdSize,
 							psCmd->ui32DevIndex,
@@ -675,7 +675,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVGetQueueSpaceKM(PVRSRV_QUEUE_INFO *psQueue,
 			 - waits for space in the queue for a new command
 			 - fills in generic command information
 			 - returns a pointer to the caller who's expected to then fill
-				in the private data.
+			 	in the private data.
 			The caller should follow PVRSRVInsertCommand with PVRSRVSubmitCommand
 			which will update the queue's write offset so the command can be
 			executed.
@@ -812,7 +812,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVInsertCommandKM(PVRSRV_QUEUE_INFO	*psQueue,
  @Function	: PVRSRVSubmitCommandKM
 
  @Description :
-			 updates the queue's write offset so the command can be executed.
+ 			 updates the queue's write offset so the command can be executed.
 
  @Input	: psQueue 		-	queue command is in
  @Input	: psCommand
@@ -874,7 +874,7 @@ static
 PVRSRV_ERROR CheckIfSyncIsQueued(PVRSRV_SYNC_OBJECT *psSync, COMMAND_COMPLETE_DATA *psCmdData)
 {
 	IMG_UINT32 k;
-
+ 
 	if (psCmdData->bInUse)
 	{
 		for (k=0;k<psCmdData->ui32SrcSyncCount;k++)
@@ -1082,10 +1082,13 @@ PVRSRV_ERROR PVRSRVProcessCommand(SYS_DATA			*psSysData,
 		*/
 		psCmdCompleteData->bInUse = IMG_FALSE;
 		eError = PVRSRV_ERROR_CMD_NOT_PROCESSED;
+		PVR_LOG(("Failed to submit command from queue processor, this could cause sync wedge!"));
 	}
-
-	/* Increment the CCB offset */
-	psDeviceCommandData[psCommand->CommandType].ui32CCBOffset = (ui32CCBOffset + 1) % DC_NUM_COMMANDS_PER_TYPE;
+	else
+	{
+		/* Increment the CCB offset */
+		psDeviceCommandData[psCommand->CommandType].ui32CCBOffset = (ui32CCBOffset + 1) % DC_NUM_COMMANDS_PER_TYPE;
+	}
 
 	return eError;
 }
@@ -1108,7 +1111,7 @@ static IMG_VOID PVRSRVProcessQueues_ForEachCb(PVRSRV_DEVICE_NODE *psDeviceNode)
  @Description	Tries to process a command from each Q
 
  @input ui32CallerID - used to distinguish between async ISR/DPC type calls
-						the synchronous services driver
+ 						the synchronous services driver
  @input	bFlush - flush commands with stale dependencies (only used for HW recovery)
 
  @Return	PVRSRV_ERROR
@@ -1132,7 +1135,7 @@ PVRSRV_ERROR PVRSRVProcessQueues(IMG_BOOL	bFlush)
 	{
 		OSWaitus(1);
 	};
-
+	
 	psQueue = psSysData->psQueueList;
 
 	if(!psQueue)
@@ -1386,9 +1389,9 @@ PVRSRV_ERROR PVRSRVRegisterCmdProcListKM(IMG_UINT32		ui32DevIndex,
 				PVR_DPF((PVR_DBG_ERROR,"PVRSRVRegisterCmdProcListKM: Failed to alloc cmd %d", ui32CmdTypeCounter));
 				goto ErrorExit;
 			}
-
+			
 			psDeviceCommandData[ui32CmdTypeCounter].apsCmdCompleteData[ui32CmdCounter] = psCmdCompleteData;
-
+			
 			/* clear memory */
 			OSMemSet(psCmdCompleteData, 0x00, ui32AllocSize);
 
@@ -1415,7 +1418,7 @@ ErrorExit:
 				"PVRSRVRegisterCmdProcListKM: Failed to clean up after error, device 0x%x",
 				ui32DevIndex));
 	}
-
+	
 	return eError;
 }
 
@@ -1467,7 +1470,7 @@ PVRSRV_ERROR PVRSRVRemoveCmdProcListKM(IMG_UINT32 ui32DevIndex,
 			for (ui32CmdCounter = 0; ui32CmdCounter < DC_NUM_COMMANDS_PER_TYPE; ui32CmdCounter++)
 			{
 				psCmdCompleteData = psDeviceCommandData[ui32CmdTypeCounter].apsCmdCompleteData[ui32CmdCounter];
-
+				
 				/* free the cmd complete structure array entries */
 				if (psCmdCompleteData != IMG_NULL)
 				{

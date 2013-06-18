@@ -280,3 +280,7 @@ void fpga_config_use_otg(__u32 sram_vbase)
 	USBC_Writel(reg_value, (sram_vbase + 0x04));
 	return ;
 }
+
+
+
+

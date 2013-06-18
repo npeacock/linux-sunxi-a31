@@ -21,11 +21,11 @@
 #define CSI_CAP          (0x08)
 #define CSI_SYNC_CNT		 (0x0c)
 #define CSI_FIFO_THRS		 (0x10)
-
+                         
 #define CSI_PTN_LEN			 (0x30)
 #define CSI_PTN_ADDR		 (0x34)
-
-//CH
+                         
+//CH                     
 #define CSI_CFG					 (0x44)
 #define CSI_SCALE        (0x4C)
 #define CSI_BUF0_A       (0x50)

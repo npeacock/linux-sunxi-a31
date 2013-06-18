@@ -137,13 +137,13 @@
 #define SPI_BCC_DUAL_MOD_RX_EN	(0x1	  << 28)	/* master dual mode RX enable */
 
 
-/* è®¾ç½®configçš„bitä½ */
-/***************å¿…é¡»è·Ÿlinuxçš„spiå‚æ•°è®¾ç½®ä¸€è‡´***************
- * å·¥ä½œæ¨¡å¼ï¼ŒåŒ…æ‹¬4ç§ï¼š
- * 0: å·¥ä½œæ¨¡å¼0ï¼ŒPOL=0,PAL=0;
- * 1: å·¥ä½œæ¨¡å¼1ï¼ŒPOL=0,PAL=1;
- * 2: å·¥ä½œæ¨¡å¼2ï¼ŒPOL=1,PAL=0;
- * 3: å·¥ä½œæ¨¡å¼3ï¼ŒPOL=1,PAL=1;
+/* ÉèÖÃconfigµÄbitÎ» */
+/***************±ØÐë¸úlinuxµÄspi²ÎÊýÉèÖÃÒ»ÖÂ***************
+ * ¹¤×÷Ä£Ê½£¬°üÀ¨4ÖÖ£º
+ * 0: ¹¤×÷Ä£Ê½0£¬POL=0,PAL=0;
+ * 1: ¹¤×÷Ä£Ê½1£¬POL=0,PAL=1;
+ * 2: ¹¤×÷Ä£Ê½2£¬POL=1,PAL=0;
+ * 3: ¹¤×÷Ä£Ê½3£¬POL=1,PAL=1;
  */
 #define SPI_PHA_ACTIVE_		    (0x01)
 #define SPI_POL_ACTIVE_		    (0x02)
@@ -151,12 +151,12 @@
 #define SPI_MODE_0_ACTIVE_		(0|0)
 #define SPI_MODE_1_ACTIVE_		(0|SPI_PHA_ACTIVE_)
 #define SPI_MODE_2_ACTIVE_		(SPI_POL_ACTIVE_|0)
-#define SPI_MODE_3_ACTIVE_		(SPI_POL_ACTIVE_|SPI_PHA_ACTIVE_) /*é»˜è®¤ä¸ºæ¨¡å¼3*/
-/* ä¸‹é¢å±žæ€§å°‘ç”¨ */
-#define SPI_CS_HIGH_ACTIVE_		    (0x04)  /*é»˜è®¤ä¸ºç‰‡é€‰ä½Žç”µå¹³æœ‰æ•ˆï¼Œå³ä½Žç”µå¹³é€‰ä¸­ç‰‡é€‰*/
-#define SPI_LSB_FIRST_ACTIVE_		(0x08)  /*é»˜è®¤ä¸ºå…ˆå‘é€MSBï¼Œå³å…ˆå‘é€æœ€ä½Žä½*/
-#define SPI_DUMMY_ONE_ACTIVE_        (0x10)  /*é»˜è®¤ä¸ºæŽ¥æ”¶æ—¶spiæŽ§åˆ¶å™¨è‡ªåŠ¨å¡«å……0æ”¾åœ¨txFIFO */
-#define SPI_RECEIVE_ALL_ACTIVE_      (0x20)  /*é»˜è®¤ä¸ºæ”¾å¼ƒæ— ç”¨çš„burstï¼Œå³å‘é€çš„æ—¶å€™æ”¾å¼ƒrxFIFOæŽ¥æ”¶åˆ°æ•°æ® */
+#define SPI_MODE_3_ACTIVE_		(SPI_POL_ACTIVE_|SPI_PHA_ACTIVE_) /*Ä¬ÈÏÎªÄ£Ê½3*/
+/* ÏÂÃæÊôÐÔÉÙÓÃ */
+#define SPI_CS_HIGH_ACTIVE_		    (0x04)  /*Ä¬ÈÏÎªÆ¬Ñ¡µÍµçÆ½ÓÐÐ§£¬¼´µÍµçÆ½Ñ¡ÖÐÆ¬Ñ¡*/
+#define SPI_LSB_FIRST_ACTIVE_		(0x08)  /*Ä¬ÈÏÎªÏÈ·¢ËÍMSB£¬¼´ÏÈ·¢ËÍ×îµÍÎ»*/
+#define SPI_DUMMY_ONE_ACTIVE_        (0x10)  /*Ä¬ÈÏÎª½ÓÊÕÊ±spi¿ØÖÆÆ÷×Ô¶¯Ìî³ä0·ÅÔÚtxFIFO */
+#define SPI_RECEIVE_ALL_ACTIVE_      (0x20)  /*Ä¬ÈÏÎª·ÅÆúÎÞÓÃµÄburst£¬¼´·¢ËÍµÄÊ±ºò·ÅÆúrxFIFO½ÓÊÕµ½Êý¾Ý */
 
 
 #define SUN6I_SPI_ADDR_SIZE		0xFFF

@@ -8,7 +8,7 @@
  * published by the Free Software Foundation.
  *
  * Similar entries to those below must be present in the events.xml file.
- * To add them to the events.xml, create an events-mmap.xml with the
+ * To add them to the events.xml, create an events-mmap.xml with the 
  * following contents and rebuild gatord:
  *
  * <counter_set name="mmaped_cntX">
@@ -153,7 +153,7 @@ static int mmaped_simulate(int counter, int delta_in_us)
 			if (x / 1000000 != (x + delta_in_us) / 1000000)
 				dc = (dc + 100000) % 1000000;
 			x += delta_in_us;
-
+			
 			result = t < dc ? 0 : 10;
 		}
 		break;
@@ -177,7 +177,7 @@ static int gator_events_mmaped_read(int **buffer)
 	if (smp_processor_id())
 		return 0;
 
-#ifndef TODO
+#ifndef TODO	
 	getnstimeofday(&ts);
 	time = timespec_to_ns(&ts);
 	delta_in_us = (int)(time - prev_time) / 1000;
@@ -196,7 +196,7 @@ static int gator_events_mmaped_read(int **buffer)
 #endif
 		}
 	}
-
+	
 	if (buffer)
 		*buffer = mmaped_buffer;
 
@@ -218,7 +218,7 @@ int __init gator_events_mmaped_init(void)
 #ifdef TODO
 	mmaped_base = ioremap(COUNTERS_PHYS_ADDR, SZ_4K);
 	if (!mmaped_base)
-		return -ENOMEM;
+		return -ENOMEM;	
 #endif
 
 	for (i = 0; i < MMAPED_COUNTERS_NUM; i++) {

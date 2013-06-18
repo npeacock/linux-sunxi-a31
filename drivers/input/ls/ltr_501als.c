@@ -47,7 +47,7 @@
 
 #include <linux/gfp.h>
 
-#include "ltr_501als.h"
+#include "ltr_501als.h" 
 
 /* Note about power vs enable/disable:
  *  The chip has two functions, proximity and ambient light sensing.
@@ -124,7 +124,7 @@ int ltr558_als_read(void)
 {
 	int div_tmp;
 	u8 als_tmp;
-
+	
 	int alsval_ch0_lo, alsval_ch0_hi;
 	int alsval_ch1_lo, alsval_ch1_hi;
 	int luxdata_int;
@@ -140,7 +140,7 @@ int ltr558_als_read(void)
 	alsval_ch0_lo = als_tmp;
 	als_tmp = ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_1);
 	alsval_ch0_hi = als_tmp;
-
+	
 	alsval_ch1 = (alsval_ch1_hi * 256) + alsval_ch1_lo;
 	alsval_ch0 = (alsval_ch0_hi * 256) + alsval_ch0_lo;
 
@@ -148,7 +148,7 @@ int ltr558_als_read(void)
 
 	div_tmp = ( (alsval_ch1 + alsval_ch0) != 0)?(alsval_ch1 + alsval_ch0):1;
 	ratio = (100 * alsval_ch1)/div_tmp;
-
+  
 	if (ratio < 45)
 	{
 		ch0_coeff = 17743;
@@ -189,7 +189,7 @@ int ltr558_ps_read(void)
 	}
 
 	dprintk(DEBUG_REPORT_PS_DATA, "ps psval_lo = %d\n",  psval_lo);
-
+		
 	psval_hi = ltr558_i2c_read_reg(LTR558_PS_DATA_1);
 	if (psval_hi < 0){
 		psdata = psval_hi;
@@ -197,7 +197,7 @@ int ltr558_ps_read(void)
 	}
 
 	dprintk(DEBUG_REPORT_PS_DATA, "ps psval_hi = %d\n",  psval_hi);
-
+		
 	psdata = ((psval_hi & 7)* 256) + psval_lo;
 
 
@@ -289,15 +289,15 @@ static int ltr558_ps_enable(void)
 			break;
 	}
 
-	error = ltr558_i2c_write_reg(LTR558_PS_CONTR, setgain | (1<<1));
+	error = ltr558_i2c_write_reg(LTR558_PS_CONTR, setgain | (1<<1)); 
 	mdelay(WAKEUP_DELAY);
 
-	/* ===============
+	/* =============== 
 	 * ** IMPORTANT **
 	 * ===============
 	 * Other settings like timing and threshold to be set here, if required.
-	 * Not set and kept as device default for now.
-	 */
+ 	 * Not set and kept as device default for now.
+ 	 */
 
 	return error;
 }
@@ -307,14 +307,14 @@ static int ltr558_ps_enable(void)
 static int ltr558_ps_disable(void)
 {
 	int error;
-	error = ltr558_i2c_write_reg(LTR558_PS_CONTR, MODE_PS_StdBy);
+	error = ltr558_i2c_write_reg(LTR558_PS_CONTR, MODE_PS_StdBy); 
 	return error;
 }
 
 static int ltr558_als_enable(void)
 {
 	int error;
-	int gainrange = 2;//lkj Dynamic Range 2 (2 lux to 64k lux)
+	int gainrange = 2;//lkj Dynamic Range 2 (2 lux to 64k lux) 
 
 	if (gainrange == 1)
 		error = ltr558_i2c_write_reg(LTR558_ALS_CONTR, MODE_ALS_ON_Range1);
@@ -325,12 +325,12 @@ static int ltr558_als_enable(void)
 
 	mdelay(WAKEUP_DELAY);
 
-	/* ===============
+	/* =============== 
 	 * ** IMPORTANT **
 	 * ===============
 	 * Other settings like timing and threshold to be set here, if required.
-	 * Not set and kept as device default for now.
-	 */
+ 	 * Not set and kept as device default for now.
+ 	 */
 
 	return error;
 }
@@ -340,7 +340,7 @@ static int ltr558_als_enable(void)
 static int ltr558_als_disable(void)
 {
 	int error;
-	error = ltr558_i2c_write_reg(LTR558_ALS_CONTR, MODE_ALS_StdBy);
+	error = ltr558_i2c_write_reg(LTR558_ALS_CONTR, MODE_ALS_StdBy); 
 	return error;
 }
 
@@ -351,7 +351,7 @@ int ltr558_als_power(bool enable)
 
 	if (enable)
 		ret=ltr558_als_enable();
-	else
+	else 
 		ret=ltr558_als_disable();
 
 	return ret;
@@ -389,7 +389,7 @@ int ltr558_devinit(void)
 
 	ltr558_i2c_write_reg(LTR558_PS_LED, 0x7f );
 	ltr558_i2c_write_reg(LTR558_PS_N_PULSES, 0x08);
-
+	
 	mutex_unlock(&ltr558_data->power_lock);
 
 	error = 0;
@@ -411,7 +411,7 @@ int ltr558_devinit(void)
 	printk(" read thres lower =%d\n", ((lower_high & 0x7) << 7) |  lower_low );
 
 
-//	error = ltr558_i2c_write_reg(LTR558_PS_LED, 0x6b & 0xf8);è¯»æœ‰å˜åŒ–ã€€
+//	error = ltr558_i2c_write_reg(LTR558_PS_LED, 0x6b & 0xf8);¶ÁÓÐ±ä»¯¡¡
 
 	error = ltr558_i2c_read_reg(LTR558_PS_CONTR);
 	printk(" LTR558_PS_CONTR =0x%0x\n", error );
@@ -447,7 +447,7 @@ void ltr558_set_client(struct i2c_client *client)
 static void ltr_ps_enable(struct ltr_data *ltr)
 {
 	dprintk(DEBUG_CONTROL_INFO, "starting ps work");
-	queue_delayed_work(ltr->wq, &ltr->ps_delay_work, 0);
+	queue_delayed_work(ltr->wq, &ltr->ps_delay_work, 0); 
 }
 
 static void ltr_ps_disable(struct ltr_data *ltr)
@@ -526,7 +526,7 @@ static ssize_t ps_poll_delay_store(struct device *dev,
 
 	dprintk(DEBUG_CONTROL_INFO, "ps new delay = %lldms, old delay = %ldms\n",
 		    new_delay,ltr->ps_poll_delay);
-
+	
 	ltr->ps_poll_delay = new_delay;
 
 	return size;
@@ -571,7 +571,7 @@ static ssize_t light_enable_store(struct device *dev,
 
 	dprintk(DEBUG_CONTROL_INFO, "new_value = %d, old state = %d\n",
 		    new_value, (ltr->power_state & LIGHT_ENABLED) ? 1 : 0);
-
+	
 	mutex_lock(&ltr->power_lock);
 	if (new_value && !(ltr->power_state & LIGHT_ENABLED)) {
 		ltr558_als_power(true);
@@ -740,7 +740,7 @@ static void ltr558_schedwork(struct work_struct *work)
 #endif
 	val = ltr558_ps_read();
 	dprintk(DEBUG_REPORT_PS_DATA, " ps val =%d\n", val);
-
+	
 	/* 0 is close, 1 is far */
 	val = val >= PS_DISTANCE ? 0: 1;
 
@@ -816,11 +816,11 @@ static int ltr_i2c_probe(struct i2c_client *client,
 		printk("%s: failed to alloc memory for module data\n", __func__);
 		return -ENOMEM;
 	}
-
+	
 	ltr->i2c_client = client;
 	i2c_set_clientdata(client, ltr);
 	ltr->sensor_config = &sensor_config;
-	ltr->irq = sensor_config.int1;
+	ltr->irq = sensor_config.int1; 
 	ltr->ps_poll_delay = 100;
 
 	/* the timer just fires off a work queue request.  we need a thread
@@ -831,7 +831,7 @@ static int ltr_i2c_probe(struct i2c_client *client,
 		printk("%s: could not create workqueue\n", __func__);
 		goto err_create_workqueue;
 	}
-
+	
 	/* ==================proximity  sensor====================== */
 	mutex_init(&ltr->power_lock);
 	INIT_DELAYED_WORK(&ltr->ps_delay_work, ltr558_schedwork);
@@ -846,7 +846,7 @@ static int ltr_i2c_probe(struct i2c_client *client,
 	input_set_drvdata(input_dev, ltr);
 	input_dev->name = "proximity";
 	input_set_capability(input_dev, EV_ABS, ABS_DISTANCE);
-	/* 0,close ,1 far */
+	/* 0,close ,1 far */ 
 	input_set_abs_params(input_dev, ABS_DISTANCE, 0, 1, 0, 0);
 
 	printk("registering proximity input device\n");
@@ -884,7 +884,7 @@ static int ltr_i2c_probe(struct i2c_client *client,
 	input_set_drvdata(input_dev, ltr);
 	input_dev->name = "lightsensor";
 	input_set_capability(input_dev, EV_ABS, ABS_MISC);
-	//max 16bit
+	//max 16bit 
 	input_set_abs_params(input_dev, ABS_MISC, 0, 65535, 0, 0);
 
 	dprintk(DEBUG_INIT, "registering lightsensor-level input device\n");
@@ -954,7 +954,7 @@ static int ltr_i2c_remove(struct i2c_client *client)
 {
 	struct ltr_data *ltr = i2c_get_clientdata(client);
 
-
+	
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&ltr->early_suspend);
 #endif
@@ -988,7 +988,7 @@ static void ltr558_resume_events (struct work_struct *work)
 {
 	ltr558_devinit();
 
-	mutex_lock(&ltr558_data->power_lock);
+	mutex_lock(&ltr558_data->power_lock);	
 	if (ltr558_data->power_state & LIGHT_ENABLED) {
 		ltr558_als_power(true);
 		ltr_light_enable(ltr558_data);
@@ -1007,11 +1007,11 @@ static void ltr_early_suspend(struct early_suspend *handler)
 {
 	struct ltr_data *ltr =
 		container_of(handler, struct ltr_data, early_suspend);
-
+	
         dprintk(DEBUG_SUSPEND, "==early suspend=\n");
 
 	atomic_set(&ltr->ltr558_suspend, 1);
-
+	
 	if (ltr->power_state & LIGHT_ENABLED){
 		ltr_light_disable(ltr);
 		ltr558_als_power(false);
@@ -1020,13 +1020,13 @@ static void ltr_early_suspend(struct early_suspend *handler)
 	if (ltr->power_state & PROXIMITY_ENABLED){
 		ltr_ps_disable(ltr);
 		ltr558_ps_power(false);
-	}
+	} 
 }
 static void ltr_late_resume(struct early_suspend *handler)
 {
 	struct ltr_data *ltr =
 		container_of(handler, struct ltr_data, early_suspend);
-
+	
         dprintk(DEBUG_SUSPEND, "==early resume=\n");
 
 	if (NORMAL_STANDBY == standby_type) {
@@ -1075,7 +1075,7 @@ static int ltr_resume(struct i2c_client *client)
 	struct ltr_data *ltr = i2c_get_clientdata(client);
 
 	dprintk(DEBUG_SUSPEND, "==resume=\n");
-
+	
 	if (NORMAL_STANDBY == standby_type) {
 		if (ltr->power_state & LIGHT_ENABLED){
 			ltr558_als_power(true);
@@ -1091,7 +1091,7 @@ static int ltr_resume(struct i2c_client *client)
 		queue_work(ltr558_resume_wq, &ltr558_resume_work);
 
 	return 0;
-
+		
 }
 #endif
 #endif /*CONFIG_HAS_EARLYSUSPEND*/
@@ -1112,7 +1112,7 @@ static struct i2c_driver ltr_i2c_driver = {
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #else
 #ifdef CONFIG_PM
-	.suspend  = ltr_suspend,
+	.suspend  = ltr_suspend, 
 	.resume   = ltr_resume,
 #endif
 #endif
@@ -1125,7 +1125,7 @@ static struct i2c_driver ltr_i2c_driver = {
 
 /**
  * ls_detect - Device detection callback for automatic device creation
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -1135,9 +1135,9 @@ static int ls_detect(struct i2c_client *client, struct i2c_board_info *info)
 	int ret;
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
             return -ENODEV;
-
+            
 	if (sensor_config.twi_id == adapter->nr) {
-		for (i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++) {
+		for (i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++) {	    
 			client->addr = i2c_address[i2c_num];
 			dprintk(DEBUG_INIT, "%s:addr= 0x%x,i2c_num:%d\n",__func__,client->addr,i2c_num);
 			ret = i2c_smbus_read_byte_data(client,LTR558_MANUFACTURER_ID);
@@ -1150,9 +1150,9 @@ static int ls_detect(struct i2c_client *client, struct i2c_board_info *info)
 					strlcpy(info->type, LTR558_NAME, I2C_NAME_SIZE);
 					return 0;
 				}
-			}
+			}                                                           
 		}
-
+        
 		pr_info("%s:LS Device not found, \
 		maybe the other gsensor equipment! \n",__func__);
 		return -ENODEV;
@@ -1163,7 +1163,7 @@ static int ls_detect(struct i2c_client *client, struct i2c_board_info *info)
 
 /**
  * ls_fetch_sysconfig_para - get config info from sysconfig.fex file.
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -1174,29 +1174,29 @@ static int ls_fetch_sysconfig_para(void)
 	int twi_id = 0;
 	int sensor_int = 0;
 	script_item_u	val;
-	script_item_value_type_e  type;
-
+	script_item_value_type_e  type;	
+		
 	dprintk(DEBUG_INIT, "========%s===================\n", __func__);
-
+	
 	type = script_get_item("ls_para", "ls_used", &val);
-
+ 
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		pr_err("%s: type err  device_used = %d. \n", __func__, val.val);
 		goto script_get_err;
 	}
 	device_used = val.val;
-
+	
 	if (1 == device_used) {
-		type = script_get_item("ls_para", "ls_twi_id", &val);
+		type = script_get_item("ls_para", "ls_twi_id", &val);	
 		if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 			pr_err("%s: type err twi_id = %d. \n", __func__, val.val);
 			goto script_get_err;
 		}
 		twi_id = val.val;
-
+		
 		dprintk(DEBUG_INIT, "%s: twi_id is %d. \n", __func__, twi_id);
 
-		type = script_get_item("ls_para", "ls_int", &val);
+		type = script_get_item("ls_para", "ls_int", &val);	
 		if (SCIRPT_ITEM_VALUE_TYPE_PIO != type) {
 			printk("%s: type err twi int1 = %d. \n", __func__, val.gpio.gpio);
 			goto script_get_err;
@@ -1204,9 +1204,9 @@ static int ls_fetch_sysconfig_para(void)
 		sensor_int = val.gpio.gpio;
 
 		dprintk(DEBUG_INIT, "%s: INT gpio is %d. \n", __func__, sensor_int);
-
+		
 		ret = 0;
-
+		
 	} else {
 		pr_err("%s: ls_unused. \n",  __func__);
 		ret = -1;
@@ -1247,3 +1247,4 @@ module_param_named(debug_mask, debug_mask, int, S_IRUGO | S_IWUSR | S_IWGRP);
 MODULE_AUTHOR("nsdfsdf@sta.samsung.com");
 MODULE_DESCRIPTION("Optical Sensor driver for ltrp002a00f");
 MODULE_LICENSE("GPL");
+

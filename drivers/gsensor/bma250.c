@@ -260,7 +260,7 @@ static void bma250_late_resume(struct early_suspend *h);
 
 /**
  * gsensor_fetch_sysconfig_para - get config info from sysconfig.fex file.
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -270,29 +270,29 @@ static int gsensor_fetch_sysconfig_para(void)
 	int device_used = -1;
 	script_item_u	val;
 	script_item_value_type_e  type;
-
+		
 	dprintk(DEBUG_INIT, "========%s===================\n", __func__);
 
 	type = script_get_item("gsensor_para", "gsensor_used", &val);
-
+ 
 	if (SCIRPT_ITEM_VALUE_TYPE_INT  != type) {
 		pr_err("%s: type err  device_used = %d. \n", __func__, val.val);
 		goto script_get_err;
 	}
 	device_used = val.val;
-
+	
 	if (1 == device_used) {
-		type = script_get_item("gsensor_para", "gsensor_twi_id", &val);
+		type = script_get_item("gsensor_para", "gsensor_twi_id", &val);	
 		if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
 			pr_err("%s: type err twi_id = %d. \n", __func__, val.val);
 			goto script_get_err;
 		}
 		twi_id = val.val;
-
+		
 		dprintk(DEBUG_INIT, "%s: twi_id is %d. \n", __func__, twi_id);
 
 		ret = 0;
-
+		
 	} else {
 		pr_err("%s: gsensor_unused. \n",  __func__);
 		ret = -1;
@@ -307,7 +307,7 @@ script_get_err:
 
 /**
  * gsensor_detect - Device detection callback for automatic device creation
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -317,7 +317,7 @@ static int gsensor_detect(struct i2c_client *client, struct i2c_board_info *info
 	int ret;
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
 		return -ENODEV;
-
+            
 	if (twi_id == adapter->nr) {
 		for (i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++) {
 			client->addr = i2c_address[i2c_num];
@@ -327,23 +327,23 @@ static int gsensor_detect(struct i2c_client *client, struct i2c_board_info *info
 			if ((ret &0x00FF) == BMA250_CHIP_ID) {
 				pr_info("Bosch Sensortec Device detected!\n" );
 				strlcpy(info->type, SENSOR_NAME, I2C_NAME_SIZE);
-				return 0;
-
+				return 0; 
+    
 			} else if((ret &0x00FF) == BMA150_CHIP_ID) {
-
+            	  	
 				pr_info("Bosch Sensortec Device detected!\n" \
-					"BMA150 registered I2C driver!\n");
+					"BMA150 registered I2C driver!\n");  
 				strlcpy(info->type, SENSOR_NAME, I2C_NAME_SIZE);
-				return 0;
+				return 0; 
 			} else if((ret &0x00FF) == BMA250E_CHIP_ID) {
-
+            	  	
 				pr_info("Bosch Sensortec Device detected!\n" \
-					"BMA250E registered I2C driver!\n");
+					"BMA250E registered I2C driver!\n");  
 				strlcpy(info->type, SENSOR_NAME, I2C_NAME_SIZE);
-				return 0;
-			}
+				return 0; 
+			}                                                                                                               
 		}
-
+        
 		pr_info("%s:Bosch Sensortec Device not found, \
 			maybe the other gsensor equipment! \n",__func__);
 		return -ENODEV;
@@ -802,23 +802,23 @@ static void bma250_set_enable(struct device *dev, int enable)
 	mutex_lock(&bma250->enable_mutex);
 	if (enable) {
 		if (pre_enable ==0) {
-			bma250_set_mode(bma250->bma250_client,
+			bma250_set_mode(bma250->bma250_client, 
 							BMA250_MODE_NORMAL);
 			schedule_delayed_work(&bma250->work,
 				msecs_to_jiffies(atomic_read(&bma250->delay)));
 			atomic_set(&bma250->enable, 1);
 		}
-
+		
 	} else {
 		if (pre_enable ==1) {
-			bma250_set_mode(bma250->bma250_client,
+			bma250_set_mode(bma250->bma250_client, 
 							BMA250_MODE_SUSPEND);
 			cancel_delayed_work_sync(&bma250->work);
 			atomic_set(&bma250->enable, 0);
-		}
+		} 
 	}
 	mutex_unlock(&bma250->enable_mutex);
-
+	
 }
 
 static ssize_t bma250_enable_store(struct device *dev,
@@ -952,7 +952,7 @@ static int bma250_probe(struct i2c_client *client,
 	data->early_suspend.resume = bma250_late_resume;
 	register_early_suspend(&data->early_suspend);
 #endif
-
+	
 	dprintk(DEBUG_INIT, "bma250: probe end\n");
 
 	return 0;
@@ -973,7 +973,7 @@ static void bma250_early_suspend(struct early_suspend *h)
 		container_of(h, struct bma250_data, early_suspend);
 
 	dprintk(DEBUG_SUSPEND, "bma250: early suspend\n");
-
+	
 	if (NORMAL_STANDBY == standby_type) {
 		mutex_lock(&data->enable_mutex);
 		if (atomic_read(&data->enable)==1) {
@@ -1017,7 +1017,7 @@ static void bma250_late_resume(struct early_suspend *h)
 			printk("suspend: write bandwidth err\n");
 		if (bma250_set_range(data->bma250_client, data->range_state) < 0)
 			printk("suspend: write range err\n");
-
+			
 		mutex_lock(&data->enable_mutex);
 		if (atomic_read(&data->enable)==1) {
 			bma250_set_mode(data->bma250_client, BMA250_MODE_NORMAL);
@@ -1025,7 +1025,7 @@ static void bma250_late_resume(struct early_suspend *h)
 				msecs_to_jiffies(atomic_read(&data->delay)));
 		}
 		mutex_unlock(&data->enable_mutex);
-
+		
 	}
 }
 #else
@@ -1035,7 +1035,7 @@ static int bma250_resume(struct i2c_client *client)
 	struct bma250_data *data = i2c_get_clientdata(client);
 
 	dprintk(DEBUG_SUSPEND, "bma250: resume\n");
-
+	
 	if (NORMAL_STANDBY == standby_type) {
 		mutex_lock(&data->enable_mutex);
 		if (atomic_read(&data->enable)==1) {
@@ -1050,7 +1050,7 @@ static int bma250_resume(struct i2c_client *client)
 			printk("suspend: write bandwidth err\n");
 		if (bma250_set_range(data->bma250_client, data->range_state) < 0)
 			printk("suspend: write range err\n");
-
+			
 		mutex_lock(&data->enable_mutex);
 		if (atomic_read(&data->enable)==1) {
 			bma250_set_mode(data->bma250_client, BMA250_MODE_NORMAL);
@@ -1058,7 +1058,7 @@ static int bma250_resume(struct i2c_client *client)
 				msecs_to_jiffies(atomic_read(&data->delay)));
 		}
 		mutex_unlock(&data->enable_mutex);
-
+		
 	}
 	return 0;
 }
@@ -1068,7 +1068,7 @@ static int bma250_suspend(struct i2c_client *client, pm_message_t mesg)
 	struct bma250_data *data = i2c_get_clientdata(client);
 
 	dprintk(DEBUG_SUSPEND, "bma250: suspend\n");
-
+	
 	if (NORMAL_STANDBY == standby_type) {
 		mutex_lock(&data->enable_mutex);
 		if (atomic_read(&data->enable)==1) {
@@ -1140,14 +1140,14 @@ static int __init BMA250_init(void)
 {
 	int ret = -1;
 	dprintk(DEBUG_INIT, "bma250: init\n");
-
+	
 	if(gsensor_fetch_sysconfig_para()){
 		printk("%s: err.\n", __func__);
 		return -1;
 	}
 
 	bma250_driver.detect = gsensor_detect;
-
+	
 	ret = i2c_add_driver(&bma250_driver);
 
 	return ret;
@@ -1164,3 +1164,4 @@ MODULE_LICENSE("GPL");
 
 module_init(BMA250_init);
 module_exit(BMA250_exit);
+

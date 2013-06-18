@@ -121,7 +121,7 @@ PVRSRVAllocSharedSysMemoryKM(PVRSRV_PER_PROCESS_DATA	*psPerProc,
 
 	*ppsKernelMemInfo = psKernelMemInfo;
 
-	return PVRSRV_OK;
+	return PVRSRV_OK; 
 }
 
 

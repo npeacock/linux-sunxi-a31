@@ -18,14 +18,14 @@
 
 #undef I2S_DBG
 #if (0)
-    #define I2S_DBG(format,args...)  printk("[SWITCH] "format,##args)
+    #define I2S_DBG(format,args...)  printk("[SWITCH] "format,##args)    
 #else
-    #define I2S_DBG(...)
+    #define I2S_DBG(...)    
 #endif
 
 struct sun6i_dma_params {
-	char *name;
-	dma_addr_t dma_addr;
+	char *name;		
+	dma_addr_t dma_addr;	
 };
 
 #endif

@@ -1,7 +1,7 @@
 /*************************************************************************/ /*!
 @Title          Timed Trace header
 @Copyright      Copyright (c) Imagination Technologies Ltd. All Rights Reserved
-@Description	Timed Trace token header. Contains defines for all the tokens
+@Description	Timed Trace token header. Contains defines for all the tokens 
                 used.
 @License        Dual MIT/GPLv2
 

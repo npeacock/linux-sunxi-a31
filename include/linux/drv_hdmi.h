@@ -6,7 +6,7 @@ typedef struct
 {
 	__u8    hw_intf;        /* 0:iis  1:spdif 2:pcm */
 	__u16	fs_between;     /* fs */
-	__u32   sample_rate;    /*sample rate*/
+	__u32   sample_rate;    /*sample rate*/  
 	__u8    clk_edge;       /* 0:*/
 	__u8    ch0_en;         /* 1 */
 	__u8    ch1_en;         /* 0 */

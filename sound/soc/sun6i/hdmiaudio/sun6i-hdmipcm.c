@@ -72,9 +72,9 @@ static void sun6i_pcm_enqueue(struct snd_pcm_substream *substream)
 	unsigned long len 	= prtd->dma_period;
 	unsigned int limit	= prtd->dma_limit;
 
-	while (prtd->dma_loaded < limit) {
+  	while (prtd->dma_loaded < limit) {
 		if ((pos + len) > prtd->dma_end) {
-			len  = prtd->dma_end - pos;
+			len  = prtd->dma_end - pos;			
 		}
 		/*because dma enqueue the first buffer while config dma,so at the beginning, can't add the buffer*/
 		if (prtd->play_dma_flag) {
@@ -95,7 +95,7 @@ static void sun6i_pcm_enqueue(struct snd_pcm_substream *substream)
 	prtd->dma_pos = pos;
 }
 
-static u32 sun6i_audio_buffdone(dm_hdl_t dma_hdl, void *parg, enum dma_cb_cause_e result)
+static u32 sun6i_audio_buffdone(dm_hdl_t dma_hdl, void *parg, enum dma_cb_cause_e result)                       
 {
 	struct sun6i_runtime_data *prtd 	= NULL;
 	struct snd_pcm_substream *substream = parg;
@@ -142,8 +142,8 @@ static int sun6i_pcm_hw_params(struct snd_pcm_substream *substream,
 			return -EINVAL;
 		}
 		/*
-		* set callback
-		*/
+	 	* set callback
+	 	*/
 		memset(&prtd->play_done_cb, 0, sizeof(prtd->play_done_cb));
 		prtd->play_done_cb.func = sun6i_audio_buffdone;
 		prtd->play_done_cb.parg = substream;
@@ -172,9 +172,9 @@ static int sun6i_pcm_hw_params(struct snd_pcm_substream *substream,
 static int sun6i_pcm_hw_free(struct snd_pcm_substream *substream)
 {
 	struct sun6i_runtime_data *prtd = substream->runtime->private_data;
-
+	
 	snd_pcm_set_runtime_buffer(substream, NULL);
-
+  
 	if (prtd->params) {
 		/*
 		 * stop play dma transfer
@@ -188,7 +188,7 @@ static int sun6i_pcm_hw_free(struct snd_pcm_substream *substream)
 		if (0 != sw_dma_release(prtd->dma_hdl)) {
 			return -EINVAL;
 		}
-		prtd->dma_hdl = (dm_hdl_t)NULL;
+		prtd->dma_hdl = (dm_hdl_t)NULL;	
 		prtd->params = NULL;
 	}
 
@@ -200,7 +200,7 @@ static int sun6i_pcm_prepare(struct snd_pcm_substream *substream)
 	int ret = 0;
 	struct dma_config_t hdmiaudio_dma_conf;
 	struct sun6i_runtime_data *prtd = substream->runtime->private_data;
-
+	
 	if (!prtd->params) {
 		return 0;
 	}
@@ -208,7 +208,7 @@ static int sun6i_pcm_prepare(struct snd_pcm_substream *substream)
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		/*
 		 * config play dma para
-		 */
+		 */ 
 		memset(&hdmiaudio_dma_conf, 0, sizeof(hdmiaudio_dma_conf));
 		hdmiaudio_dma_conf.xfer_type 	= DMAXFER_D_BWORD_S_BWORD;
 		hdmiaudio_dma_conf.address_type = DMAADDRT_D_IO_S_LN;
@@ -224,7 +224,7 @@ static int sun6i_pcm_prepare(struct snd_pcm_substream *substream)
 		if (0 != sw_dma_config(prtd->dma_hdl, &hdmiaudio_dma_conf, ENQUE_PHASE_NORMAL)) {
 			return -EINVAL;
 		}
-	}
+	} 
 
 	prtd->dma_loaded = 0;
 	prtd->dma_pos = prtd->dma_start;
@@ -232,7 +232,7 @@ static int sun6i_pcm_prepare(struct snd_pcm_substream *substream)
 	/* enqueue dma buffers */
 	sun6i_pcm_enqueue(substream);
 
-	return ret;
+	return ret;	
 }
 
 static int sun6i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
@@ -250,7 +250,7 @@ static int sun6i_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 			return -EINVAL;
 		}
 		break;
-
+		
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
@@ -274,9 +274,9 @@ static snd_pcm_uframes_t sun6i_pcm_pointer(struct snd_pcm_substream *substream)
 	snd_pcm_uframes_t offset 	= 0;
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	struct sun6i_runtime_data *prtd = runtime->private_data;
-
+	
 	spin_lock(&prtd->lock);
-
+	
 	if (0 != sw_dma_ctl(prtd->dma_hdl, DMA_OP_GET_CUR_SRC_ADDR, &dmasrc)) {
 		printk("%s,err\n", __func__);
 	}
@@ -301,12 +301,12 @@ static int sun6i_pcm_open(struct snd_pcm_substream *substream)
 
 	snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
 	snd_soc_set_runtime_hwparams(substream, &sun6i_pcm_hardware);
-
+	
 	prtd = kzalloc(sizeof(struct sun6i_runtime_data), GFP_KERNEL);
 	if (prtd == NULL) {
 		return -ENOMEM;
 	}
-
+		
 	spin_lock_init(&prtd->lock);
 
 	runtime->private_data = prtd;
@@ -317,9 +317,9 @@ static int sun6i_pcm_close(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	struct sun6i_runtime_data *prtd = runtime->private_data;
-
+	
 	kfree(prtd);
-
+	
 	return 0;
 }
 
@@ -327,7 +327,7 @@ static int sun6i_pcm_mmap(struct snd_pcm_substream *substream,
 	struct vm_area_struct *vma)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
-
+	
 	return dma_mmap_writecombine(substream->pcm->card->dev, vma,
 				     runtime->dma_area,
 				     runtime->dma_addr,

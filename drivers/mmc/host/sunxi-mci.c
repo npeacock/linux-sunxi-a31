@@ -216,11 +216,11 @@ s32 sw_mci_set_vddio(struct sunxi_mmc_host* smc_host, u32 vdd)
 
 s32 sw_mci_update_clk(struct sunxi_mmc_host* smc_host)
 {
-	u32 rval;
-	s32 expire = jiffies + msecs_to_jiffies(1000);	//1000ms timeout
-	s32 ret = 0;
+  	u32 rval;
+  	s32 expire = jiffies + msecs_to_jiffies(1000);	//1000ms timeout
+  	s32 ret = 0;
 
-	rval = SDXC_Start|SDXC_UPCLKOnly|SDXC_WaitPreOver;
+  	rval = SDXC_Start|SDXC_UPCLKOnly|SDXC_WaitPreOver;
 	if (smc_host->voltage_switching)
 		rval |= SDXC_VolSwitch;
 	mci_writel(smc_host, REG_CMDR, rval);
@@ -421,9 +421,9 @@ static void sw_mci_init_idma_des(struct sunxi_mmc_host* smc_host, struct mmc_dat
 			memset((void*)&pdes[des_idx], 0, sizeof(struct sunxi_mmc_idma_des));
 			config = SDXC_IDMAC_DES0_CH|SDXC_IDMAC_DES0_OWN|SDXC_IDMAC_DES0_DIC;
 
-			if (buff_frag_num > 1 && j != buff_frag_num-1)
+		    	if (buff_frag_num > 1 && j != buff_frag_num-1)
 				pdes[des_idx].data_buf1_sz = SDXC_DES_BUFFER_MAX_LEN;
-			else
+		    	else
 				pdes[des_idx].data_buf1_sz = remain;
 
 			pdes[des_idx].buf_addr_ptr1 = sg_dma_address(&data->sg[i])
@@ -443,7 +443,7 @@ static void sw_mci_init_idma_des(struct sunxi_mmc_host* smc_host, struct mmc_dat
 			}
 			pdes[des_idx].config = config;
 			SMC_INFO(smc_host, "sg %d, frag %d, remain %d, des[%d](%08x): "
-				"[0] = %08x, [1] = %08x, [2] = %08x, [3] = %08x\n", i, j, remain,
+		    		"[0] = %08x, [1] = %08x, [2] = %08x, [3] = %08x\n", i, j, remain,
 				des_idx, (u32)&pdes[des_idx],
 				(u32)((u32*)&pdes[des_idx])[0], (u32)((u32*)&pdes[des_idx])[1],
 				(u32)((u32*)&pdes[des_idx])[2], (u32)((u32*)&pdes[des_idx])[3]);

@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USB 娑堟伅鍒嗗彂
+* Description 	: USB 消息分发
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -205,8 +205,8 @@ static void rmmod_host_driver(struct usb_msg_center_info *center_info)
 
 	ret = sw_usb_host0_disable();
 	if(ret != 0){
-	DMSG_PANIC("err: disable hcd0 failed\n");
-	return;
+    	DMSG_PANIC("err: disable hcd0 failed\n");
+    	return;
 	}
 
 	set_usb_role(center_info, USB_ROLE_NULL);
@@ -489,3 +489,4 @@ s32 usb_msg_center_exit(struct usb_cfg *cfg)
 
 	return 0;
 }
+

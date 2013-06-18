@@ -37,7 +37,7 @@ PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+  
 */ /**************************************************************************/
 #ifndef __SUNXILFB_H__
 #define __SUNXILFB_H__
@@ -174,7 +174,7 @@ typedef struct SUNXILFB_DEVINFO_TAG
 
 	/* jump table into PVR services */
 	PVRSRV_DC_DISP2SRV_KMJTABLE	sPVRJTable;
-
+	
 	/* jump table into DC */
 	PVRSRV_DC_SRV2DISP_KMJTABLE	sDCJTable;
 
@@ -206,7 +206,7 @@ typedef struct SUNXILFB_DEVINFO_TAG
 
 	/* Display format */
 	DISPLAY_FORMAT          sDisplayFormat;
-
+	
 	/* Display dimensions */
 	DISPLAY_DIMS            sDisplayDim;
 
@@ -320,3 +320,4 @@ void SUNXILFBPrintInfo(SUNXILFB_DEVINFO *psDevInfo);
 /******************************************************************************
  End of file (dc_sunxi.h)
 ******************************************************************************/
+

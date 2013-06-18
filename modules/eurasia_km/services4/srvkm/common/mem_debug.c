@@ -58,11 +58,11 @@ extern "C"
 
 	/*
 	 Allocated Memory Layout:
-
+	 
 	 ---------                     \
 	 Status    [OSMEM_DEBUG_INFO]   |- TEST_BUFFER_PADDING_STATUS
 	 ---------                     <
-	 [0xBB]*   [raw bytes]          |- ui32Size
+	 [0xBB]*   [raw bytes]          |- ui32Size 
 	 ---------                     <
 	 [0xB2]*   [raw bytes]          |- TEST_BUFFER_PADDING_AFTER
 	 ---------                     /

@@ -139,7 +139,8 @@ source "drivers/virt/Kconfig"
 source "drivers/devfreq/Kconfig"
 
 source "drivers/gsensor/Kconfig"
-
+#MTK 4in1 combo module
+source "drivers/mtk_wcn_combo/Kconfig
 # for test
 # source "drivers/test/Kconfig"
 

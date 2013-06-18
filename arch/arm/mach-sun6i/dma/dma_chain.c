@@ -17,7 +17,7 @@
 
 void __free_dest_list(struct list_head *plist)
 {
-	des_item *pcur = NULL, *n = NULL;
+ 	des_item *pcur = NULL, *n = NULL;
 
 	/* free all buf on the list */
 	list_for_each_entry_safe(pcur, n, plist, list) {
@@ -489,3 +489,4 @@ void dma_irq_hdl_chain(struct dma_channel_t *pchan, u32 upend_bits)
 			__handle_qd_chain(pchan);
 	}
 }
+

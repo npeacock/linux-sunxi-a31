@@ -153,7 +153,7 @@ IMG_BOOL GetBufferDimensions(IMG_UINT32 *pui32Width, IMG_UINT32 *pui32Height, PV
 			*pePixelFormat = PVRSRV_PIXEL_FORMAT_UNKNOWN;
 			return IMG_FALSE;
 	}
-
+			
 	*pui32Stride = dc_nohw_byte_stride(width, depth);
 
 #if defined(DEBUG)

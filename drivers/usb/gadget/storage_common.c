@@ -973,3 +973,4 @@ static ssize_t fsg_zero_disk(struct device *dev, struct device_attribute *attr,
 	return count;
 }
 #endif
+

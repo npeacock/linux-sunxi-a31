@@ -40,7 +40,7 @@ static int qf_read(struct usbnet *dev, u8 reg, u16 length, void *data)
 	if (!buf)
 		goto out;
 
-	err = usb_control_msg(dev->udev, usb_rcvctrlpipe(dev->udev, 0),
+	err = usb_control_msg(dev->udev, usb_rcvctrlpipe(dev->udev, 0), 
 				QF_RD_REGS, QF_REQ_RD_REG,
 			    0, reg, buf, length, USB_CTRL_SET_TIMEOUT);
 	if (err == length)

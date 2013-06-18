@@ -18,7 +18,7 @@
 *      <author>    		<time>       	<version >    		<desc>
 *    yangnaitian      2011-5-24            1.0          create this file
 *    javen            2011-6-26            1.1          add suspend and resume
-*    javen            2011-7-18            1.2          æ—¶é’Ÿå¼€å…³å’Œä¾›ç”µå¼€å…³ä»é©±åŠ¨ç§»å‡ºæ¥
+*    javen            2011-7-18            1.2          Ê±ÖÓ¿ª¹ØºÍ¹©µç¿ª¹Ø´ÓÇı¶¯ÒÆ³öÀ´
 *
 *************************************************************************************
 */
@@ -37,7 +37,7 @@
 
 
 /*.......................................................................................*/
-//                               å…¨å±€ä¿¡æ¯å®šä¹‰
+//                               È«¾ÖĞÅÏ¢¶¨Òå
 /*.......................................................................................*/
 
 //#define  SW_USB_OHCI_DEBUG
@@ -49,7 +49,7 @@ static struct sw_hci_hcd *g_sw_ohci[3];
 static u32 ohci_first_probe[3] = {1, 1, 1};
 
 /*.......................................................................................*/
-//                                      å‡½æ•°åŒº
+//                                      º¯ÊıÇø
 /*.......................................................................................*/
 
 extern int usb_disabled(void);
@@ -177,7 +177,7 @@ static void sw_setup_gpio(void)
 	reg_val |= (0x22<<24);
 	USBC_Writel(reg_val, (0xf1c20800 + 0x6c + 0xc));
 #else
-    /* javen, éœ€è¦å°†è¿™é‡Œçš„ä»£ç è¡¥èµ·æ¥ï¼Œå¹¶ä¸”è§„åˆ’åŒ– */
+    /* javen, ĞèÒª½«ÕâÀïµÄ´úÂë²¹ÆğÀ´£¬²¢ÇÒ¹æ»®»¯ */
 
 	//gpio_set_cfg(GPIO_G(10), 2, 3);
 	//gpio_set_pull(GPIO_G(10), 2, PIO_PULLDOWN);
@@ -204,9 +204,9 @@ static void sw_setup_gpio(void)
 */
 static void sw_start_ohc(struct sw_hci_hcd *sw_ohci)
 {
-	open_ohci_clock(sw_ohci);
+  	open_ohci_clock(sw_ohci);
 	if(sw_ohci->usbc_no == 3){
-	sw_setup_gpio();
+     	sw_setup_gpio();
 	}
     sw_ohci->port_configure(sw_ohci, 1);
     sw_ohci->usb_passby(sw_ohci, 1);
@@ -391,7 +391,7 @@ static int sw_ohci_hcd_probe(struct platform_device *pdev)
 		goto ERR2;
 	}
 
-	hcd->rsrc_start = (u32)sw_ohci->ohci_base;
+  	hcd->rsrc_start = (u32)sw_ohci->ohci_base;
 	hcd->rsrc_len 	= sw_ohci->ohci_reg_length;
 	hcd->regs 		= sw_ohci->ohci_base;
 	sw_ohci->hcd    = hcd;
@@ -527,16 +527,16 @@ void sw_ohci_hcd_shutdown(struct platform_device* pdev)
 	}
 
 	if(sw_ohci->probe == 0){
-	DMSG_PANIC("ERR: sw_ohci is disable, need not shutdown\n");
-	return ;
+    	DMSG_PANIC("ERR: sw_ohci is disable, need not shutdown\n");
+    	return ;
 	}
 
-	DMSG_INFO("[%s]: ohci shutdown start\n", sw_ohci->hci_name);
+ 	DMSG_INFO("[%s]: ohci shutdown start\n", sw_ohci->hci_name);
 
     usb_hcd_platform_shutdown(pdev);
     sw_stop_ohc(sw_ohci);
 
-	DMSG_INFO("[%s]: ohci shutdown end\n", sw_ohci->hci_name);
+ 	DMSG_INFO("[%s]: ohci shutdown end\n", sw_ohci->hci_name);
 
     return;
 }
@@ -597,19 +597,19 @@ static int sw_ohci_hcd_suspend(struct device *dev)
 	}
 
     if(sw_ohci->not_suspend){
-	    DMSG_INFO("[%s]: not suspend\n", sw_ohci->hci_name);
+ 	    DMSG_INFO("[%s]: not suspend\n", sw_ohci->hci_name);
     }else{
-	    DMSG_INFO("[%s]: sw_ohci_hcd_suspend\n", sw_ohci->hci_name);
+ 	    DMSG_INFO("[%s]: sw_ohci_hcd_suspend\n", sw_ohci->hci_name);
 
-	/* Root hub was already suspended. Disable irq emission and
-	 * mark HW unaccessible, bail out if RH has been resumed. Use
-	 * the spinlock to properly synchronize with possible pending
-	 * RH suspend or resume activity.
-	 *
-	 * This is still racy as hcd->state is manipulated outside of
-	 * any locks =P But that will be a different fix.
-	 */
-	spin_lock_irqsave(&ohci->lock, flags);
+    	/* Root hub was already suspended. Disable irq emission and
+    	 * mark HW unaccessible, bail out if RH has been resumed. Use
+    	 * the spinlock to properly synchronize with possible pending
+    	 * RH suspend or resume activity.
+    	 *
+    	 * This is still racy as hcd->state is manipulated outside of
+    	 * any locks =P But that will be a different fix.
+    	 */
+    	spin_lock_irqsave(&ohci->lock, flags);
 
         ohci_writel(ohci, OHCI_INTR_MIE, &ohci->regs->intrdisable);
         (void)ohci_readl(ohci, &ohci->regs->intrdisable);
@@ -670,14 +670,14 @@ static int sw_ohci_hcd_resume(struct device *dev)
 	}
 
     if(sw_ohci->not_suspend){
-	    DMSG_INFO("[%s]: controller not suspend, need not resume\n", sw_ohci->hci_name);
+ 	    DMSG_INFO("[%s]: controller not suspend, need not resume\n", sw_ohci->hci_name);
     }else{
-	DMSG_INFO("[%s]: sw_ohci_hcd_resume\n", sw_ohci->hci_name);
+     	DMSG_INFO("[%s]: sw_ohci_hcd_resume\n", sw_ohci->hci_name);
 
-	sw_start_ohc(sw_ohci);
+    	sw_start_ohc(sw_ohci);
 
-	set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
-	ohci_finish_controller_resume(hcd);
+    	set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
+    	ohci_finish_controller_resume(hcd);
     }
 
     return 0;
@@ -812,3 +812,5 @@ int sw_usb_enable_ohci(__u32 usbc_no)
 	return 0;
 }
 EXPORT_SYMBOL(sw_usb_enable_ohci);
+
+

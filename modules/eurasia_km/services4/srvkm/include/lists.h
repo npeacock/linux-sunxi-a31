@@ -57,11 +57,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  There are 4 main types of functions:
  - INSERT	: given a pointer to the head pointer of the list and a pointer to
-			  the node, inserts it as the new head.
+ 			  the node, inserts it as the new head.
  - REMOVE	: given a pointer to a node, removes it from its list.
  - FOR EACH	: apply a function over all the elements of a list.
  - ANY		: apply a function over the elements of a list, until one of them
-			  return a non null value, and then returns it.
+ 			  return a non null value, and then returns it.
 
  The two last functions can have a variable argument form, with allows to pass
  additional parameters to the callback function. In order to do this, the
@@ -80,7 +80,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     @Description    Apply a callback function to all the elements of a list.
 
     @Input          psHead - the head of the list to be processed.
-    @Input          pfnCallBack - the function to be applied to each element
+    @Input          pfnCallBack - the function to be applied to each element 
                         of the list.
 
     @Return         None
@@ -120,11 +120,11 @@ IMG_VOID List_##TYPE##_ForEach_va(TYPE *psHead, IMG_VOID(*pfnCallBack)(TYPE* psN
 ******************************************************************************
     @Function       List_##TYPE##_Any
 
-    @Description    Applies a callback function to the elements of a list until
+    @Description    Applies a callback function to the elements of a list until 
                     the function returns a non null value, then returns it.
 
     @Input          psHead - the head of the list to be processed.
-    @Input          pfnCallBack - the function to be applied to each element
+    @Input          pfnCallBack - the function to be applied to each element 
                     of the list.
 
     @Return         None
@@ -270,7 +270,7 @@ IMG_VOID List_##TYPE##_Insert(TYPE **ppsHead, TYPE *psNewNode)\
     @Description    Reverse a list in place
 
     @Input          ppsHead - The pointer to the pointer to the head node.
-
+					
     @Return         None
 ******************************************************************************/
 #define DECLARE_LIST_REVERSE(TYPE) \
@@ -285,7 +285,7 @@ IMG_VOID List_##TYPE##_Reverse(TYPE **ppsHead)\
 	psTmpNode1 = IMG_NULL; \
 	psCurNode = *ppsHead; \
 	while(psCurNode) { \
-	psTmpNode2 = psCurNode->psNext; \
+    	psTmpNode2 = psCurNode->psNext; \
         psCurNode->psNext = psTmpNode1; \
 		psTmpNode1 = psCurNode; \
 		psCurNode = psTmpNode2; \

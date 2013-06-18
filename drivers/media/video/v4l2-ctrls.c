@@ -738,7 +738,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
 	case V4L2_CID_MPEG_VIDEO_MPEG4_LEVEL:
 	case V4L2_CID_MPEG_VIDEO_MPEG4_PROFILE:
 	/* Add camera flash light by raymonxiu */
-	case V4L2_CID_CAMERA_FLASH_MODE:
+	case V4L2_CID_CAMERA_FLASH_MODE:	
 	/* Add camera autofocus mode by raymonxiu */
 	case V4L2_CID_CAMERA_AF_MODE:
 	/* Add camera autofocus ctrl by raymonxiu */

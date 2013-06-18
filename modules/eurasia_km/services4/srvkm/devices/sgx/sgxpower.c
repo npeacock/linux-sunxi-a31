@@ -48,6 +48,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "sgxutils.h"
 #include "pdump_km.h"
 
+extern IMG_UINT32 g_ui32HostIRQCountSample;
 
 #if defined(SUPPORT_HW_RECOVERY)
 static PVRSRV_ERROR SGXAddTimer(PVRSRV_DEVICE_NODE		*psDeviceNode,
@@ -78,7 +79,7 @@ static PVRSRV_ERROR SGXAddTimer(PVRSRV_DEVICE_NODE		*psDeviceNode,
 
  @Description
 
-	Derives the microkernel timing info from the system-supplied values
+ 	Derives the microkernel timing info from the system-supplied values
 
  @Input	   psDeviceNode : SGX Device node
 
@@ -120,7 +121,7 @@ static PVRSRV_ERROR SGXUpdateTimingInfo(PVRSRV_DEVICE_NODE	*psDeviceNode)
 					The ukernel timer frequency has changed.
 				*/
 				IMG_HANDLE hNewTimer;
-
+				
 				eError = SGXAddTimer(psDeviceNode, psSGXTimingInfo, &hNewTimer);
 				if (eError == PVRSRV_OK)
 				{
@@ -233,7 +234,7 @@ static IMG_VOID SGXStartTimer(PVRSRV_SGXDEV_INFO	*psDevInfo)
 
  @Description
 
-	Wait until the SGX core clocks have gated.
+ 	Wait until the SGX core clocks have gated.
 
  @Input	   psDevInfo : SGX Device Info
  @Input	   ui32Register : Offset of register to poll
@@ -366,6 +367,20 @@ PVRSRV_ERROR SGXPrePowerState (IMG_HANDLE				hDevHandle,
 					MAKEUNIQUETAG(psDevInfo->psKernelSGXHostCtlMemInfo));
 		#endif /* PDUMP */
 
+		/* Wait for the pending ukernel to host interrupts to come back. */
+		#if !defined(NO_HARDWARE)
+		if (PollForValueKM(&g_ui32HostIRQCountSample,
+							psDevInfo->psSGXHostCtl->ui32InterruptCount,
+							0xffffffff,
+							MAX_HW_TIME_US,
+							MAX_HW_TIME_US/WAIT_TRY_COUNT,
+							IMG_FALSE) != PVRSRV_OK)
+		{
+			PVR_DPF((PVR_DBG_ERROR,"SGXPrePowerState: Wait for pending interrupts failed."));
+			SGXDumpDebugInfo(psDevInfo, IMG_FALSE);
+			PVR_DBG_BREAK;
+		}
+		#endif /* NO_HARDWARE */
 #if defined(SGX_FEATURE_MP)
 		ui32CoresEnabled = ((OSReadHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_MASTER_CORE) & EUR_CR_MASTER_CORE_ENABLE_MASK) >> EUR_CR_MASTER_CORE_ENABLE_SHIFT) + 1;
 #else
@@ -540,6 +555,18 @@ PVRSRV_ERROR SGXPreClockSpeedChange (IMG_HANDLE				hDevHandle,
 				PDUMPRESUME();
 				return eError;
 			}
+		}
+		else
+		{
+			#if defined(SUPPORT_HW_RECOVERY)
+			PVRSRV_ERROR	eError;
+
+			eError = OSDisableTimer(psDevInfo->hTimer);
+			if (eError != PVRSRV_OK)
+			{
+				PVR_DPF((PVR_DBG_ERROR,"SGXStartTimer : Failed to enable host timer"));
+			}
+			#endif /* SUPPORT_HW_RECOVERY */
 		}
 	}
 

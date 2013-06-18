@@ -2,13 +2,13 @@
 #define __NAND_LIB_H__
 
 //---------------------------------------------------------------
-//  nand driver ÁâàÊú¨Âè∑
+//  nand driver ∞Ê±æ∫≈
 //---------------------------------------------------------------
 #define  NAND_VERSION_0                 0x02
 #define  NAND_VERSION_1                 0x10
 
 //---------------------------------------------------------------
-//  ÁªìÊûÑ‰Ωì ÂÆö‰πâ
+//  Ω·ππÃÂ ∂®“Â
 //---------------------------------------------------------------
 typedef struct
 {
@@ -27,7 +27,7 @@ typedef struct
     __u32       OperationOpt;                       //the mask of the operation types which current nand flash can support support
     __u32        FrequencePar;                       //the parameter of the hardware access clock, based on 'MHz'
     __u32        EccMode;                            //the Ecc Mode for the nand flash chip, 0: bch-16, 1:bch-28, 2:bch_32
-    __u32        NandChipId[8];                      //the nand chip id of current connecting nand chip
+    __u8        NandChipId[8];                      //the nand chip id of current connecting nand chip
     __u32       ValidBlkRatio;                      //the ratio of the valid physical blocks, based on 1024
 	__u32 		good_block_ratio;					//good block ratio get from hwscan
 	__u32		ReadRetryType;						//the read retry type
@@ -63,7 +63,7 @@ struct nand_disk{
 };
 
 //---------------------------------------------------------------
-//  ÂáΩÊï∞ ÂÆö‰πâ
+//  ∫Ø ˝ ∂®“Â
 //---------------------------------------------------------------
 
 //for logic
@@ -101,6 +101,7 @@ extern __s32 PHY_ChangeMode(__u8 serial_mode);
 extern __s32 PHY_ScanDDRParam(void);
 extern __s32 PHY_SynchBank(__u32 nBank, __u32 bMode);
 extern __s32 PHY_ResetChip(__u32 nChip);
+extern __s32 PHY_Readretry_reset(void);
 
 //for simplie(boot0)
 extern __s32 PHY_SimpleErase(struct boot_physical_param * eraseop);
@@ -135,6 +136,7 @@ extern __u32 NAND_GetChipCnt(void);
 extern __u32 NAND_GetChipConnect(void);
 extern __u32 NAND_GetBadBlockFlagPos(void);
 extern __u32 NAND_GetReadRetryType(void);
+extern __u32 NAND_GetVersion(__u8* nand_version);
 
 
 //for lsb mode
@@ -160,6 +162,8 @@ extern __u32 NFC_DmaIntOccur(void);
 
 //for mbr
 extern int mbr2disks(struct nand_disk* disk_array);
+
+extern int NAND_Print(const char *fmt, ...);
 
 
 

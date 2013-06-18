@@ -351,7 +351,7 @@ IMG_VOID PVRSRVResManDisconnect(PRESMAN_CONTEXT psResManContext,
 		FreeResourceByCriteria(psResManContext, RESMAN_CRITERIA_RESTYPE, RESMAN_TYPE_TRANSFER_CONTEXT, 0, 0, IMG_TRUE);
 		FreeResourceByCriteria(psResManContext, RESMAN_CRITERIA_RESTYPE, RESMAN_TYPE_SHARED_PB_DESC_CREATE_LOCK, 0, 0, IMG_TRUE);
 		FreeResourceByCriteria(psResManContext, RESMAN_CRITERIA_RESTYPE, RESMAN_TYPE_SHARED_PB_DESC, 0, 0, IMG_TRUE);
-
+		
 		/* COMMON types: */
 		FreeResourceByCriteria(psResManContext, RESMAN_CRITERIA_RESTYPE, RESMAN_TYPE_SYNC_INFO, 0, 0, IMG_TRUE);
 		FreeResourceByCriteria(psResManContext, RESMAN_CRITERIA_RESTYPE, RESMAN_TYPE_DEVICECLASSMEM_MAPPING, 0, 0, IMG_TRUE);
@@ -534,7 +534,7 @@ PVRSRV_ERROR ResManFreeResByPtr(RESMAN_ITEM	*psResItem, IMG_BOOL bForceCleanup)
 
  @inputs	 	hResManContext - handle for resman context
  @inputs        ui32SearchCriteria - indicates which parameters should be
-				used in search for resources to free
+ 				used in search for resources to free
  @inputs        ui32ResType - identify what kind of resource to free
  @inputs        pvParam - address of resource to be free
  @inputs        ui32Param - size of resource to be free
@@ -633,7 +633,7 @@ PVRSRV_ERROR ResManDissociateRes(RESMAN_ITEM		*psResItem,
  @Function	 	ResManFindResourceByPtr_AnyVaCb
 
  @Description
-					Compares the resman item with a given pointer.
+ 					Compares the resman item with a given pointer.
 
  @inputs	 	psCurItem - theThe item to check
  @inputs        va - Variable argument list with:
@@ -656,7 +656,7 @@ static IMG_BOOL ResManFindResourceByPtr_AnyVaCb(RESMAN_ITEM *psCurItem, va_list 
  @Function	 	ResManFindResourceByPtr
 
  @Description
-					Attempts to find a resource in the list for this context
+ 					Attempts to find a resource in the list for this context
 
  @inputs	 	hResManContext - handle for resman context
  @inputs        psItem - pointer to resource item to find
@@ -725,13 +725,13 @@ IMG_INTERNAL PVRSRV_ERROR ResManFindResourceByPtr(PRESMAN_CONTEXT	psResManContex
  @Function	 	FreeResourceByPtr
 
  @Description
-					Frees a resource and move it from the list
+ 					Frees a resource and move it from the list
 					NOTE : this function must be called with the resource
 					list sync object held
 
  @inputs        psItem - pointer to resource item to free
-				bExecuteCallback - execute callback?
-				bForceCleanup - skips uKernel re-sync
+ 				bExecuteCallback - execute callback?
+ 				bForceCleanup - skips uKernel re-sync
 
  @Return   		PVRSRV_ERROR
 **************************************************************************/
@@ -771,7 +771,7 @@ static PVRSRV_ERROR FreeResourceByPtr(RESMAN_ITEM	*psItem,
 	if (bExecuteCallback)
 	{
 		eError = psItem->pfnFreeResource(psItem->pvParam, psItem->ui32Param, bForceCleanup);
-		if ((eError != PVRSRV_OK) && (eError != PVRSRV_ERROR_RETRY))
+	 	if ((eError != PVRSRV_OK) && (eError != PVRSRV_ERROR_RETRY))
 		{
 			PVR_DPF((PVR_DBG_ERROR, "FreeResourceByPtr: ERROR calling FreeResource function"));
 		}
@@ -797,7 +797,7 @@ static PVRSRV_ERROR FreeResourceByPtr(RESMAN_ITEM	*psItem,
  @Function	 	FreeResourceByCriteria_AnyVaCb
 
  @Description
-					Matches a resource manager item with a given criteria.
+ 					Matches a resource manager item with a given criteria.
 
  @inputs        psCuItem - the item to be matched
  @inputs		va - a variable argument list with:.
@@ -850,7 +850,7 @@ static IMG_VOID* FreeResourceByCriteria_AnyVaCb(RESMAN_ITEM *psCurItem, va_list 
  @Function	 	FreeResourceByCriteria
 
  @Description
-					Frees all resources that match the given criteria for the
+ 					Frees all resources that match the given criteria for the
 					context.
 					NOTE : this function must be called with the resource
 					list sync object held
@@ -883,9 +883,9 @@ static PVRSRV_ERROR FreeResourceByCriteria(PRESMAN_CONTEXT	psResManContext,
 										&FreeResourceByCriteria_AnyVaCb,
 										ui32SearchCriteria,
 										ui32ResType,
-										pvParam,
-										ui32Param)) != IMG_NULL
-			&& eError == PVRSRV_OK)
+						 				pvParam,
+						 				ui32Param)) != IMG_NULL
+		  	&& eError == PVRSRV_OK)
 	{
 		do
 		{
@@ -912,7 +912,7 @@ static PVRSRV_ERROR FreeResourceByCriteria(PRESMAN_CONTEXT	psResManContext,
  @Function	 	ValidateResList
 
  @Description
-					Walks the resource list check the pointers
+ 					Walks the resource list check the pointers
 					NOTE : this function must be called with the resource
 					list sync object held
 

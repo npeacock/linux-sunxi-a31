@@ -55,7 +55,7 @@ typedef struct _BM_MAPPING_ BM_MAPPING;
 
 
 /** Enable support for arena statistics. */
-#define RA_STATS
+#define RA_STATS 
 
 
 /** Resource arena statistics. */
@@ -72,7 +72,7 @@ struct _RA_STATISTICS_
 
     /** total number of resource within the arena */
     IMG_SIZE_T uTotalResourceCount;
-
+    
     /** number of free resource within the arena */
     IMG_SIZE_T uFreeResourceCount;
 
@@ -120,7 +120,7 @@ RA_Create (IMG_CHAR *name,
            IMG_UINTPTR_T base,
            IMG_SIZE_T uSize,
            BM_MAPPING *psMapping,
-           IMG_SIZE_T uQuantum,
+           IMG_SIZE_T uQuantum, 
            IMG_BOOL (*imp_alloc)(IMG_VOID *_h,
                                 IMG_SIZE_T uSize,
                                 IMG_SIZE_T *pActualSize,
@@ -145,7 +145,7 @@ RA_Create (IMG_CHAR *name,
  *
  *  To delete a resource arena. All resources allocated from the arena
  *  must be freed before deleting the arena.
- *
+ *                  
  *  @Input  pArena - the arena to delete.
  *  @Return None
  */
@@ -159,7 +159,7 @@ RA_Delete (RA_ARENA *pArena);
  *
  *  To test whether it is safe to delete a resource arena. If any allocations
  *	have not been freed, the RA must not be deleted.
- *
+ *                  
  *  @Input  pArena - the arena to test.
  *  @Return IMG_BOOL - IMG_TRUE if is safe to go on and call RA_Delete.
  */
@@ -206,10 +206,10 @@ RA_Add (RA_ARENA *pArena, IMG_UINTPTR_T base, IMG_SIZE_T uSize);
  *  @Return IMG_TRUE - success, IMG_FALSE - failure
  */
 IMG_BOOL
-RA_Alloc (RA_ARENA *pArena,
+RA_Alloc (RA_ARENA *pArena, 
           IMG_SIZE_T uSize,
           IMG_SIZE_T *pActualSize,
-          BM_MAPPING **ppsMapping,
+          BM_MAPPING **ppsMapping, 
           IMG_UINT32 uFlags,
           IMG_UINT32 uAlignment,
 		  IMG_UINT32 uAlignmentOffset,
@@ -221,14 +221,14 @@ RA_Alloc (RA_ARENA *pArena,
  *  @Function   RA_Free
  *
  *  @Description    To free a resource segment.
- *
+ *  
  *  @Input  pArena - the arena the segment was originally allocated from.
  *  @Input  base - the base of the resource span to free.
  *	@Input	bFreeBackingStore - Should backing store memory be freed?
  *
  *  @Return None
  */
-IMG_VOID
+IMG_VOID 
 RA_Free (RA_ARENA *pArena, IMG_UINTPTR_T base, IMG_BOOL bFreeBackingStore);
 
 
@@ -254,12 +254,12 @@ RA_Free (RA_ARENA *pArena, IMG_UINTPTR_T base, IMG_BOOL bFreeBackingStore);
 
 /**
  * @Function    RA_GetNextLiveSegment
- *
+ * 
  * @Description Returns details of the next live resource segments
- *
+ * 
  * @Input       pArena - the arena the segment was originally allocated from.
  * @Output      psSegDetails - rtn details of segments
- *
+ * 
  * @Return      IMG_TRUE if operation succeeded
  */
 IMG_BOOL RA_GetNextLiveSegment(IMG_HANDLE hArena, RA_SEGMENT_DETAILS *psSegDetails);
@@ -269,21 +269,22 @@ IMG_BOOL RA_GetNextLiveSegment(IMG_HANDLE hArena, RA_SEGMENT_DETAILS *psSegDetai
  *  @Function   RA_GetStats
  *
  *  @Description    gets stats on a given arena
- *
+ *  
  *  @Input  pArena - the arena the segment was originally allocated from.
- *  @Input  ppszStr - string to write stats to
+ *  @Input  ppszStr - string to write stats to 
  *	@Input	pui32StrLen - length of string
  *
  *  @Return PVRSRV_ERROR
  */
 PVRSRV_ERROR RA_GetStats(RA_ARENA *pArena,
-							IMG_CHAR **ppszStr,
+							IMG_CHAR **ppszStr, 
 							IMG_UINT32 *pui32StrLen);
 
 PVRSRV_ERROR RA_GetStatsFreeMem(RA_ARENA *pArena,
-								IMG_CHAR **ppszStr,
+								IMG_CHAR **ppszStr, 
 								IMG_UINT32 *pui32StrLen);
 
 #endif /* #ifdef RA_STATS */
 
 #endif
+

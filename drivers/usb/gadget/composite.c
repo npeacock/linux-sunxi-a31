@@ -1840,3 +1840,6 @@ s32 get_android_usb_config(struct android_usb_config *config)
 }
 
 #endif
+
+
+

@@ -58,11 +58,11 @@
 /* TWI Clock Register Bit Fields & Masks,default value:0x0000_0000 */
 /*
 Fin is APB CLOCK INPUT;
-Fsample = F0 = Fin/2^CLK_N;
+Fsample = F0 = Fin/2^CLK_N; 
           F1 = F0/(CLK_M+1);
-
-Foscl = F1/10 = Fin/(2^CLK_N * (CLK_M+1)*10);
-Foscl is clock SCL;standard mode:100KHz or fast mode:400KHz
+          
+Foscl = F1/10 = Fin/(2^CLK_N * (CLK_M+1)*10); 
+Foscl is clock SCL;standard mode:100KHz or fast mode:400KHz        
 */
 #define TWI_CLK_DIV_M		(0xF<<3) /* 6:3bit  */
 #define TWI_CLK_DIV_N		(0x7<<0) /* 2:0bit */

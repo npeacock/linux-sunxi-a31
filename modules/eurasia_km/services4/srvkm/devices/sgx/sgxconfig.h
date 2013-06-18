@@ -136,7 +136,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * override - see SGX_USE_CODE_SEGMENT_RANGE_BITS.*/
 	#define SGX_PIXELSHADER_HEAP_BASE			 0xF4000000
 	#define SGX_PIXELSHADER_HEAP_SIZE			(0x05000000-0x00001000)
-
+	
 	#define SGX_VERTEXSHADER_HEAP_BASE			 0xFC000000
 	#define SGX_VERTEXSHADER_HEAP_SIZE			(0x02000000-0x00001000)
 #else /* FIX_HW_BRN_31620 */
@@ -164,10 +164,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#else
 		#include <sgx_msvdx_defs.h>
 		/* Create heaps with memory tiling enabled.
-		 * SGX HW limit is 10 heaps.
-		 */
-		/* Tiled heap space is taken from general heap */
-		#define SGX_GENERAL_HEAP_BASE				 0x10000000
+	 	 * SGX HW limit is 10 heaps.
+	 	 */
+	 	/* Tiled heap space is taken from general heap */
+	 	#define SGX_GENERAL_HEAP_BASE				 0x10000000
 		#define SGX_GENERAL_HEAP_SIZE				(0xB5000000-0x00001000)
 
 		#define SGX_VPB_TILED_HEAP_STRIDE			TILING_TILE_STRIDE_2K
@@ -243,7 +243,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * override - see SGX_USE_CODE_SEGMENT_RANGE_BITS.*/
 	#define SGX_PIXELSHADER_HEAP_BASE			 0xF9000000
 	#define SGX_PIXELSHADER_HEAP_SIZE			(0x05000000-0x00001000)
-
+	
 	#define SGX_VERTEXSHADER_HEAP_BASE			 0xFE000000
 	#define SGX_VERTEXSHADER_HEAP_SIZE			(0x02000000-0x00001000)
 #endif /* FIX_HW_BRN_31620 */
@@ -277,7 +277,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 * For hybrid PB we have to split virtual PB range between the shared
 	 * PB and percontext PB due to the fact we only have one heap config
 	 * per device.
-	 * If hybrid PB is enabled we split the space acording to HYBRID_SHARED_PB_SIZE.
+ 	 * If hybrid PB is enabled we split the space acording to HYBRID_SHARED_PB_SIZE.
 	 * i.e. HYBRID_SHARED_PB_SIZE defines the size of the shared PB and the
 	 * remainder is the size of the percontext PB.
 	 * If hybrid PB is not enabled then we still create both heaps (helps keep
@@ -361,13 +361,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ********************************************************************************/
 #if !defined (SGX_FEATURE_EDM_VERTEX_PDSADDR_FULL_RANGE)
 	#if ((SGX_KERNEL_CODE_HEAP_BASE + SGX_KERNEL_CODE_HEAP_SIZE - SGX_PDSPIXEL_CODEDATA_HEAP_BASE) >  0x4000000)
-		#error "sgxconfig.h: ERROR: SGX_KERNEL_CODE_HEAP_BASE out of range of SGX_PDSPIXEL_CODEDATA_HEAP_BASE"
+	 	#error "sgxconfig.h: ERROR: SGX_KERNEL_CODE_HEAP_BASE out of range of SGX_PDSPIXEL_CODEDATA_HEAP_BASE"
 	#endif
-
+	
 	#if ((SGX_PDSVERTEX_CODEDATA_HEAP_BASE + SGX_PDSVERTEX_CODEDATA_HEAP_SIZE - SGX_PDSPIXEL_CODEDATA_HEAP_BASE) >  0x4000000)
-		#error "sgxconfig.h: ERROR: SGX_PDSVERTEX_CODEDATA_HEAP_BASE out of range of SGX_PDSPIXEL_CODEDATA_HEAP_BASE"
+	 	#error "sgxconfig.h: ERROR: SGX_PDSVERTEX_CODEDATA_HEAP_BASE out of range of SGX_PDSPIXEL_CODEDATA_HEAP_BASE"
 	#endif
-#endif
+#endif	
 
 /*********************************************************************************
  *

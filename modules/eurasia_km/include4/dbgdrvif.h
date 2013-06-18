@@ -50,7 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define METHOD_BUFFERED                 0
 #define FILE_ANY_ACCESS                 0
 
-#define CTL_CODE( DeviceType, Function, Method, Access ) (Function)
+#define CTL_CODE( DeviceType, Function, Method, Access ) (Function) 
 #define MAKEIOCTLINDEX(i)	((i) & 0xFFF)
 
 #else

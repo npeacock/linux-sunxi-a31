@@ -165,23 +165,23 @@ int gator_trace_gpu_start(void)
 
 #if defined(MALI_SUPPORT) && (MALI_SUPPORT != MALI_T6xx)
     if (!GATOR_REGISTER_TRACE(mali_timeline_event)) {
-	mali_timeline_trace_registered = 1;
+    	mali_timeline_trace_registered = 1;
     }
 #endif
 
 #if defined(MALI_SUPPORT) && (MALI_SUPPORT == MALI_T6xx)
     if (!GATOR_REGISTER_TRACE(mali_job_slots_event)) {
-	mali_job_slots_trace_registered = 1;
+    	mali_job_slots_trace_registered = 1;
     }
 #endif
 
     if (!mali_timeline_trace_registered) {
         if (GATOR_REGISTER_TRACE(gpu_activity_start)) {
-		return 0;
+        	return 0;
         }
         if (GATOR_REGISTER_TRACE(gpu_activity_stop)) {
-		GATOR_UNREGISTER_TRACE(gpu_activity_start);
-		return 0;
+        	GATOR_UNREGISTER_TRACE(gpu_activity_start);
+        	return 0;
         }
         gpu_trace_registered = 1;
     }

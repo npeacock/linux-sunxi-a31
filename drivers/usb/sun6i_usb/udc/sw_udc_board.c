@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: æ¿çº§æŽ§åˆ¶
+* Description 	: °å¼¶¿ØÖÆ
 *
 * Notes         :
 *
@@ -42,7 +42,7 @@
 #include  "sw_udc_board.h"
 
 //---------------------------------------------------------------
-//  å® å®šä¹‰
+//  ºê ¶¨Òå
 //---------------------------------------------------------------
 
 #define res_size(_r) (((_r)->end - (_r)->start) + 1)
@@ -67,10 +67,10 @@
 */
 u32  open_usb_clock(sw_udc_io_t *sw_udc_io)
 {
-	DMSG_INFO_UDC("open_usb_clock\n");
+ 	DMSG_INFO_UDC("open_usb_clock\n");
 
 	if(sw_udc_io->ahb_otg && sw_udc_io->mod_usbotg && sw_udc_io->mod_usbphy && !sw_udc_io->clk_is_open){
-		clk_enable(sw_udc_io->ahb_otg);
+	   	clk_enable(sw_udc_io->ahb_otg);
 		mdelay(10);
 
 	    //clk_enable(sw_udc_io->mod_usbotg); /*NO SCLK_GATING_OTG */
@@ -164,7 +164,7 @@ u32 close_usb_clock(sw_udc_io_t *sw_udc_io)
 __s32 sw_udc_bsp_init(__u32 usbc_no, sw_udc_io_t *sw_udc_io)
 {
 	sw_udc_io->usbc.usbc_info[usbc_no].num = usbc_no;
-	sw_udc_io->usbc.usbc_info[usbc_no].base = (u32)sw_udc_io->usb_vbase;
+   	sw_udc_io->usbc.usbc_info[usbc_no].base = (u32)sw_udc_io->usb_vbase;
 	sw_udc_io->usbc.sram_base = (u32)sw_udc_io->sram_vbase;
 
 //	USBC_init(&sw_udc_io->usbc);
@@ -349,3 +349,8 @@ __s32 sw_udc_io_exit(__u32 usbc_no, struct platform_device *pdev, sw_udc_io_t *s
 
 	return 0;
 }
+
+
+
+
+

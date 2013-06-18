@@ -817,9 +817,9 @@ static int do_read(struct fsg_common *common)
 #ifdef CONFIG_USB_SW_SUN6I_USB
         if(curlun->zero_disk){
             if(file_offset_tmp == 0){
-			nread = vfs_read(curlun->filp,
-					 (char __user *)bh->buf,
-					 amount, &file_offset_tmp);
+        		nread = vfs_read(curlun->filp,
+        				 (char __user *)bh->buf,
+        				 amount, &file_offset_tmp);
             }else{
                 nread = amount;
             }
@@ -1027,7 +1027,7 @@ static int do_write(struct fsg_common *common)
             if(curlun->zero_disk){
                 nwritten = amount;
             }else{
-			/*åœ¨åˆ é™¤å°æ–‡ä»¶æ—¶vfs_writeå¯èƒ½ä¼šè¶…æ—¶ï¼Œå¼•èµ·usb reset,å¢åŠ å»¶æ—¶ï¼Œé€Ÿåº¦ä¼šä¸‹é™*/
+            		/*ÔÚÉ¾³ıĞ¡ÎÄ¼şÊ±vfs_write¿ÉÄÜ»á³¬Ê±£¬ÒıÆğusb reset,Ôö¼ÓÑÓÊ±£¬ËÙ¶È»áÏÂ½µ*/
 								if(amount <= 512){
 									msleep(1);
 								}

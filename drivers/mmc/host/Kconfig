@@ -552,7 +552,7 @@ config MMC_SUN6I
 
 config MMC_DEBUG_SUNXI
 	bool "Winner's(SUN6I) MMC Host Debug support"
-	depends on MMC && MMC_SUN6I
+	depends on MMC && MMC_SUN6I 
 	default n
 
 config MMC_PRE_DBGLVL_SUNXI

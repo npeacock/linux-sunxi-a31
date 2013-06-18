@@ -173,7 +173,7 @@ typedef struct OMAPLFB_DEVINFO_TAG
 
 	/* jump table into PVR services */
 	PVRSRV_DC_DISP2SRV_KMJTABLE	sPVRJTable;
-
+	
 	/* jump table into DC */
 	PVRSRV_DC_SRV2DISP_KMJTABLE	sDCJTable;
 
@@ -205,7 +205,7 @@ typedef struct OMAPLFB_DEVINFO_TAG
 
 	/* Display format */
 	DISPLAY_FORMAT          sDisplayFormat;
-
+	
 	/* Display dimensions */
 	DISPLAY_DIMS            sDisplayDim;
 
@@ -320,3 +320,4 @@ void OMAPLFBPrintInfo(OMAPLFB_DEVINFO *psDevInfo);
 /******************************************************************************
  End of file (omaplfb.h)
 ******************************************************************************/
+

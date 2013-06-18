@@ -375,9 +375,9 @@ IMG_VOID PDumpOSCPUVAddrToDevPAddr(PVRSRV_DEVICE_TYPE eDeviceType,
 
 	/* Caller must now alway supply hOSMemHandle, even though we only (presently)
 	   use it here in the linux implementation */
-
+	   
 	PVR_ASSERT (hOSMemHandle != IMG_NULL);
-
+	
 	sCpuPAddr = OSMemHandleToCpuPAddr(hOSMemHandle, ui32Offset);
 	PVR_ASSERT((sCpuPAddr.uiAddr & (ui32PageSize - 1)) == 0);
 
@@ -478,7 +478,7 @@ IMG_VOID PDumpInit(IMG_VOID)
 		{
 			return;
 		}
-
+		
 		/*
 		 * Pass the connection notify callback
 		 */

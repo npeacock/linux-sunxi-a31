@@ -141,7 +141,7 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 #if defined(PDUMP)
 	IMG_UINT32				ui32KernelCCBEventKickerDumpVal; /*!< pdump copy of the kernel CCB event kicker */
 #endif /* PDUMP */
-	PVRSRV_KERNEL_MEM_INFO	*psKernelSGXMiscMemInfo;	/*!< kernel mode linear address of SGX misc info buffer */
+ 	PVRSRV_KERNEL_MEM_INFO	*psKernelSGXMiscMemInfo;	/*!< kernel mode linear address of SGX misc info buffer */
 	IMG_UINT32				aui32HostKickAddr[SGXMKIF_CMD_MAX];		/*!< ukernel host kick offests */
 #if defined(SGX_SUPPORT_HWPROFILING)
 	PPVRSRV_KERNEL_MEM_INFO psKernelHWProfilingMemInfo;
@@ -154,10 +154,6 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 #endif
 #if defined(FIX_HW_BRN_29823)
 	PPVRSRV_KERNEL_MEM_INFO	psKernelDummyTermStreamMemInfo; /*!< Meminfo for dummy terminate stream */
-#endif
-#if defined(SGX_FEATURE_VDM_CONTEXT_SWITCH) && defined(FIX_HW_BRN_31559)
-	PPVRSRV_KERNEL_MEM_INFO	psKernelVDMSnapShotBufferMemInfo; /*!< Meminfo for dummy snapshot buffer */
-	PPVRSRV_KERNEL_MEM_INFO	psKernelVDMCtrlStreamBufferMemInfo; /*!< Meminfo for dummy control stream */
 #endif
 #if defined(SGX_FEATURE_VDM_CONTEXT_SWITCH) && \
 	defined(FIX_HW_BRN_33657) && defined(SUPPORT_SECURE_33657_FIX)
@@ -179,8 +175,8 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 	SGX_MISCINFO_STRUCT_SIZES	sSGXStructSizes;
 
 	/*
-		if we don't preallocate the pagetables we must
-		insert newly allocated page tables dynamically
+		if we don't preallocate the pagetables we must 
+		insert newly allocated page tables dynamically 
 	*/
 	IMG_VOID				*pvMMUContextList;
 
@@ -552,12 +548,12 @@ PVRSRV_ERROR SGXInitialise(PVRSRV_SGXDEV_INFO	*psDevInfo,
 						   IMG_BOOL				bHardwareRecovery);
 PVRSRV_ERROR SGXDeinitialise(IMG_HANDLE hDevCookie);
 
-PVRSRV_ERROR SGXPrePowerState(IMG_HANDLE				hDevHandle,
-							  PVRSRV_DEV_POWER_STATE	eNewPowerState,
+PVRSRV_ERROR SGXPrePowerState(IMG_HANDLE				hDevHandle, 
+							  PVRSRV_DEV_POWER_STATE	eNewPowerState, 
 							  PVRSRV_DEV_POWER_STATE	eCurrentPowerState);
 
-PVRSRV_ERROR SGXPostPowerState(IMG_HANDLE				hDevHandle,
-							   PVRSRV_DEV_POWER_STATE	eNewPowerState,
+PVRSRV_ERROR SGXPostPowerState(IMG_HANDLE				hDevHandle, 
+							   PVRSRV_DEV_POWER_STATE	eNewPowerState, 
 							   PVRSRV_DEV_POWER_STATE	eCurrentPowerState);
 
 PVRSRV_ERROR SGXPreClockSpeedChange(IMG_HANDLE				hDevHandle,

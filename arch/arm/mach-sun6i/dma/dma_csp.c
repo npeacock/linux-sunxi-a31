@@ -305,3 +305,4 @@ u32 csp_dma_clear_irqpend(u32 index)
 	DMA_WRITE_REG(uret, ureg_addr);
 	return uret;
 }
+

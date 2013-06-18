@@ -131,7 +131,7 @@ PVRSRVTimeTraceAllocItem(IMG_UINT32 **pui32Item, IMG_UINT32 ui32Size)
 			PVR_DPF((PVR_DBG_ERROR, "PVRSRVTimeTraceAllocItem: Failed to create buffer"));
 			return;
 		}
-
+		
 		psBuffer = (sTimeTraceBuffer *) HASH_Retrieve(g_psBufferTable, (IMG_UINTPTR_T) ui32PID);
 		if (psBuffer == IMG_NULL)
 		{

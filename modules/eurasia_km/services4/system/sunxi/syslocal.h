@@ -38,7 +38,7 @@ PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+  
 */ /**************************************************************************/
 
 #if !defined(__SYSLOCAL_H__)
@@ -84,11 +84,11 @@ extern "C" {
 /*****************************************************************************
  * system specific data structures
  *****************************************************************************/
-
+ 
 /*****************************************************************************
  * system specific function prototypes
  *****************************************************************************/
-
+ 
 IMG_VOID DisableSystemClocks(SYS_DATA *psSysData);
 PVRSRV_ERROR EnableSystemClocks(SYS_DATA *psSysData);
 
@@ -121,7 +121,7 @@ PVRSRV_ERROR EnableSGXClocks(SYS_DATA *psSysData);
 #define	SYS_SPECIFIC_DATA_CLEAR(psSysSpecData, flag) ((IMG_VOID)((psSysSpecData)->ui32SysSpecificData &= ~(flag)))
 
 #define	SYS_SPECIFIC_DATA_TEST(psSysSpecData, flag) (((psSysSpecData)->ui32SysSpecificData & (flag)) != 0)
-
+ 
 typedef struct _SYS_SPECIFIC_DATA_TAG_
 {
 	IMG_UINT32	ui32SysSpecificData;
@@ -213,3 +213,5 @@ static INLINE PVRSRV_ERROR SysDvfsDeinitialize(void)
 #endif
 
 #endif	/* __SYSLOCAL_H__ */
+
+

@@ -179,3 +179,4 @@ struct aw_gpio_chip {
 };
 
 #endif  /* __GPIO_COMMON_H */
+

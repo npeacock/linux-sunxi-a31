@@ -21,9 +21,10 @@
 #include "super_cfg.h"
 #include <mach/ccmu.h>
 
-#define REGS_BASE_PA	   			(0x01C00000)		//å¯„å­˜å™¨ç‰©ç†åœ°å€
+#define REGS_BASE_PA	   			(0x01C00000)		//¼Ä´æÆ÷ÎïÀíµØÖ·
 #define CCMU_REGS_BASE_PA         		(REGS_BASE_PA + 0x20000)    //clock manager unit
 
 extern __u32   cpu_ms_loopcnt;
 
 #endif  /* __SUPER_CLOCK_H__ */
+

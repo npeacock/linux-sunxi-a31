@@ -13,7 +13,7 @@ CC = $(CROSS_COMPILE)gcc
 
 CFLAGS = -g -c -nostdlib -march=armv7-a -marm -fno-unwind-tables -fno-asynchronous-unwind-tables -mlittle-endian -O2 --min_array_alignment=4 --no_unaligned_access
 
-LD_FLAGS = -static
+LD_FLAGS = -static 
 #LIBS = -lgcc -L/home/pannan/fiber/lichee/buildroot/output/external-toolchain/lib/gcc/arm-linux-gnueabi/4.6.3
 
 all:
@@ -35,6 +35,7 @@ all:
 	@echo ----------------------------------------
 	@echo well done!
 
-
+	
 clean:
 	-rm *.code *.map *.lst *.bin *.elf
+

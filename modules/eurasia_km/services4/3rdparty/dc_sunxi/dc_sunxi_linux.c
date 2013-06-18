@@ -37,7 +37,7 @@ PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+  
 */ /**************************************************************************/
 
 /**************************************************************************
@@ -50,7 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  with an API abstraction of the system's underlying display hardware, allowing
  the client drivers to indirectly control the display hardware and access its
  associated memory.
-
+ 
  Functions of the API include
  - query primary surface attributes (width, height, stride, pixel format, CPU
      physical and virtual address)
@@ -285,7 +285,7 @@ void SUNXILFBFlip(SUNXILFB_DEVINFO *psDevInfo, SUNXILFB_BUFFER *psBuffer)
 		}
 	}
 	else
-	{
+	{		
 		res = fb_pan_display(psDevInfo->psLINFBInfo, &sFBVar);
 		if (res != 0)
 		{
@@ -359,7 +359,7 @@ SUNXILFB_ERROR SUNXILFBDisableLFBEventNotification(SUNXILFB_DEVINFO *psDevInfo)
 
 /* Insert the driver into the kernel */
 static int __init SUNXILFB_Init(void)
-{
+{    
 	if(SUNXILFBInit() != SUNXILFB_OK)
 	{
 		printk(KERN_ERR DRIVER_PREFIX ": %s: SUNXILFBInit failed\n", __FUNCTION__);
@@ -372,7 +372,7 @@ static int __init SUNXILFB_Init(void)
 
 /* Remove the driver from the kernel */
 static void __exit SUNXILFB_Cleanup(void)
-{
+{    
 	if(SUNXILFBDeInit() != SUNXILFB_OK)
 	{
 		printk(KERN_ERR DRIVER_PREFIX ": %s: SUNXILFBDeInit failed\n", __FUNCTION__);

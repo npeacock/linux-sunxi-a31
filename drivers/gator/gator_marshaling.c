@@ -45,7 +45,7 @@ static bool marshal_backtrace_header(int exec_cookie, int tgid, int pid, int inK
 		gator_buffer_write_packed_int(cpu, BACKTRACE_BUF, MESSAGE_START_BACKTRACE);
 		gator_buffer_write_packed_int64(cpu, BACKTRACE_BUF, gator_get_time());
 		gator_buffer_write_packed_int(cpu, BACKTRACE_BUF, exec_cookie);
-		gator_buffer_write_packed_int(cpu, BACKTRACE_BUF, tgid);
+		gator_buffer_write_packed_int(cpu, BACKTRACE_BUF, tgid); 
 		gator_buffer_write_packed_int(cpu, BACKTRACE_BUF, pid);
 		gator_buffer_write_packed_int(cpu, BACKTRACE_BUF, inKernel);
 		return true;
@@ -74,7 +74,7 @@ static void marshal_backtrace_footer(void) {
 static bool marshal_event_header(void) {
 	unsigned long flags, cpu = smp_processor_id();
 	bool retval = false;
-
+	
 	local_irq_save(flags);
 	if (buffer_check_space(cpu, COUNTER_BUF, MAXSIZE_PACK32 + MAXSIZE_PACK64)) {
 		gator_buffer_write_packed_int(cpu, COUNTER_BUF, 0); // key of zero indicates a timestamp
@@ -94,7 +94,7 @@ static void marshal_event(int len, int* buffer) {
 
 	if (len <= 0)
 		return;
-
+	
 	// length must be even since all data is a (key, value) pair
 	if (len & 0x1) {
 		pr_err("gator: invalid counter data detected and discarded");
@@ -122,7 +122,7 @@ static void marshal_event64(int len, long long* buffer64) {
 
 	if (len <= 0)
 		return;
-
+	
 	// length must be even since all data is a (key, value) pair
 	if (len & 0x1) {
 		pr_err("gator: invalid counter data detected and discarded");
@@ -148,7 +148,7 @@ static void marshal_event64(int len, long long* buffer64) {
 #if GATOR_CPU_FREQ_SUPPORT
 static void marshal_event_single(int core, int key, int value) {
 	unsigned long flags, cpu;
-
+	
 	local_irq_save(flags);
 	cpu = smp_processor_id();
 	if (buffer_check_space(cpu, COUNTER2_BUF, MAXSIZE_PACK64 + MAXSIZE_PACK32 * 3)) {
@@ -209,7 +209,7 @@ static void marshal_sched_trace(int type, int pid, int tgid, int cookie, int sta
 #if GATOR_CPU_FREQ_SUPPORT
 static void marshal_wfi(int core, int state) {
 	unsigned long flags, cpu;
-
+	
 	local_irq_save(flags);
 	cpu = smp_processor_id();
 	if (buffer_check_space(cpu, WFI_BUF, MAXSIZE_PACK64 + MAXSIZE_PACK32 * 2)) {

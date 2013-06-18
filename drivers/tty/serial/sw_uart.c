@@ -373,6 +373,31 @@ static irqreturn_t sw_uart_irq(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
+/*
+ * uart buadrate and apb2 clock config selection
+ * We should select an apb2 clock as low as possible
+ * for lower power comsumpition, which can satisfy the
+ * different baudrates of different ttyS applications.
+ * 
+ * the reference table as follows:
+ * pll6 600M
+ * apb2div      0        20       19       18       17       16       15       14       13       12       11       10       9        8        7        6         5
+ * apbclk       24000000 30000000 31578947 33333333 35294117 37500000 40000000 42857142 46153846 50000000 54545454 60000000 66666666 75000000 85714285 100000000 120000000 
+ * 115200            *      *         *        *        *        *        *        *        *        *        *        *        *        *       *         *         *
+ * 230400                   *         *        *        *        *        *        *        *        *        *        *        *        *       *         *         *
+ * 380400            *      *         *                 *        *                 *        *        *        *        *        *        *       *         *         *
+ * 460800                   *                                    *                 *        *        *        *        *        *        *       *         *         *
+ * 921600                   *                                                      *        *                          *                 *       *         *         *
+ * 1000000                            *        *                                            *        *                          *                          *
+ * 1500000           *                                                                      *        *                                   *                 *         *
+ * 1750000                                                                                                    *                                  *
+ * 2000000                            *        *                                                                                *                          *
+ * 2500000                                                                *                                                                                          *
+ * 3000000                                                                                  *        *                                                     *
+ * 3250000                                                                                                    *                                            *         
+ * 3500000                                                                                                    *
+ * 4000000                                                                                                                      *
+ */
 struct baudset {
 	u32 baud;
 	u32 uartclk_min;
@@ -383,17 +408,20 @@ static inline int sw_uart_check_baudset(struct uart_port *port, unsigned int bau
 {
 	struct sw_uart_port *sw_uport = UART_TO_SPORT(port);
 	static struct baudset  baud_set[] = {
-		{115200, 24000000, 24000000},
-		{230400, 30000000, 30000000},
-		{380400, 24000000, 24000000},
-		{460800, 30000000, 30000000},
-		{921600, 30000000, 30000000},
-		{1000000, 31000000, 32000000}, //31578947
-		{1500000, 24000000, 24000000},
-		{1750000, 54000000, 55000000}, //54545454
-		{2000000, 31000000, 32000000}, //31578947
-		{3000000, 46000000, 47000000}, //46153846
-		{4000000, 66000000, 67000000}, //66666666
+		{115200, 24000000, 120000000},
+		{230400, 30000000, 120000000},
+		{380400, 24000000, 120000000},
+		{460800, 30000000, 120000000},
+		{921600, 30000000, 120000000},
+		{1000000, 31000000, 120000000}, //31578947
+		{1500000, 24000000, 120000000},
+		{1750000, 54000000, 120000000}, //54545454
+		{2000000, 31000000, 120000000}, //31578947
+		{2500000, 40000000, 120000000}, //40000000
+		{3000000, 46000000, 120000000}, //46153846
+		{3250000, 54000000, 120000000}, //54545454
+		{3500000, 54000000, 120000000}, //54545454
+		{4000000, 66000000, 120000000}, //66666666
 	};
 	struct baudset *setsel;
 	int i;
@@ -415,8 +443,8 @@ static inline int sw_uart_check_baudset(struct uart_port *port, unsigned int bau
 		setsel = &baud_set[i];
 		if (port->uartclk < setsel->uartclk_min
 			|| port->uartclk > setsel->uartclk_max) {
-			SERIAL_MSG("uart%d, uartclk %d beyond rance[%d, %d]\n",
-				sw_uport->id, port->uartclk,
+			SERIAL_MSG("uart%d, select set %d, baud %d, uartclk %d beyond rance[%d, %d]\n",
+				sw_uport->id, i, baud, port->uartclk,
 				setsel->uartclk_min, setsel->uartclk_max);
 			return -1;
 		}

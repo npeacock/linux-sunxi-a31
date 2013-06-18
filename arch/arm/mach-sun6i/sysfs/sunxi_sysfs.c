@@ -56,3 +56,5 @@ static int __init sunxi_sys_dev_init(void)
 	return platform_add_devices(sunxi_sysfs_pdevs, ARRAY_SIZE(sunxi_sysfs_pdevs));
 }
 module_init(sunxi_sys_dev_init);
+
+

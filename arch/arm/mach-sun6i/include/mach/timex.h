@@ -23,3 +23,4 @@
 #define __ASM_ARCH_TIMERX_H
 #include <mach/timer.h>
 #endif
+

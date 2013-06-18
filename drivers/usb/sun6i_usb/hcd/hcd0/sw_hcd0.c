@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: ä¸»æœºæŽ§åˆ¶å™¨é©±åŠ¨
+* Description 	: Ö÷»ú¿ØÖÆÆ÷Çý¶¯
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -41,7 +41,7 @@
 #include  "../include/sw_hcd_dma.h"
 
 //---------------------------------------------------------------
-//  å…¨å±€ä¿¡æ¯ å®šä¹‰
+//  È«¾ÖÐÅÏ¢ ¶¨Òå
 //---------------------------------------------------------------
 
 #define  DRIVER_AUTHOR      "Javen"
@@ -101,7 +101,7 @@ static struct sw_hcd *g_sw_hcd0 = NULL;
 
 
 //---------------------------------------------------------------
-//  å‡½æ•°åŒº
+//  º¯ÊýÇø
 //---------------------------------------------------------------
 
 #define res_size(_r) (((_r)->end - (_r)->start) + 1)
@@ -190,10 +190,10 @@ static s32 usb_clock_exit(sw_hcd_io_t *sw_hcd_io)
 */
 static s32 open_usb_clock(sw_hcd_io_t *sw_hcd_io)
 {
-	DMSG_INFO_HCD0("open_usb_clock\n");
+ 	DMSG_INFO_HCD0("open_usb_clock\n");
 
 	if(sw_hcd_io->ahb_otg && sw_hcd_io->mod_usbotg && sw_hcd_io->mod_usbphy && !sw_hcd_io->clk_is_open){
-		clk_enable(sw_hcd_io->ahb_otg);
+	   	clk_enable(sw_hcd_io->ahb_otg);
 		mdelay(10);
 
 	    //clk_enable(sw_hcd_io->mod_usbotg); /*NO SCLK_GATING_OTG */
@@ -238,7 +238,7 @@ static s32 open_usb_clock(sw_hcd_io_t *sw_hcd_io)
 */
 static s32 close_usb_clock(sw_hcd_io_t *sw_hcd_io)
 {
-	DMSG_INFO_HCD0("close_usb_clock\n");
+ 	DMSG_INFO_HCD0("close_usb_clock\n");
 
 	if(sw_hcd_io->ahb_otg && sw_hcd_io->mod_usbotg && sw_hcd_io->mod_usbphy && sw_hcd_io->clk_is_open){
 		clk_reset(sw_hcd_io->mod_usbphy, AW_CCU_CLK_RESET);
@@ -306,17 +306,18 @@ static __s32 pin_init(sw_hcd_io_t *sw_hcd_io)
 	}
 
     if(sw_hcd_io->drv_vbus_valid){
-	ret = gpio_request(sw_hcd_io->drv_vbus_gpio_set.gpio.gpio, "otg_drv_vbus");
-	if(ret != 0){
-		DMSG_PANIC("ERR: gpio_request failed\n");
-		sw_hcd_io->drv_vbus_valid = 0;
-	}else{
-		/* set config, ouput */
-		sw_gpio_setcfg(sw_hcd_io->drv_vbus_gpio_set.gpio.gpio, 1);
+    	ret = gpio_request(sw_hcd_io->drv_vbus_gpio_set.gpio.gpio, "otg_drv_vbus");
+    	if(ret != 0){
+    		DMSG_PANIC("ERR: gpio_request failed\n");
+    		sw_hcd_io->drv_vbus_valid = 0;
+    	}else{
+        	/* set config, ouput */
+        	//sw_gpio_setcfg(sw_hcd_io->drv_vbus_gpio_set.gpio.gpio, 1);
 
-		/* reserved is pull down */
-		sw_gpio_setpull(sw_hcd_io->drv_vbus_gpio_set.gpio.gpio, 2);
-	}
+        	/* reserved is pull down */
+        	//sw_gpio_setpull(sw_hcd_io->drv_vbus_gpio_set.gpio.gpio, 2);
+			gpio_direction_output(sw_hcd_io->drv_vbus_gpio_set.gpio.gpio, 0);
+    	}
 	}
 
 #else
@@ -612,18 +613,18 @@ static void sw_hcd_shutdown(struct platform_device *pdev)
 
     if(pdev == NULL){
         DMSG_INFO("err: Invalid argment\n");
-	return ;
+    	return ;
     }
 
     sw_hcd = dev_to_sw_hcd(&pdev->dev);
     if(sw_hcd == NULL){
         DMSG_INFO("err: sw_hcd is null\n");
-	return ;
+    	return ;
     }
 
     if(!sw_hcd->enable){
-	DMSG_INFO("wrn: hcd is disable, need not shutdown\n");
-	return ;
+    	DMSG_INFO("wrn: hcd is disable, need not shutdown\n");
+    	return ;
     }
 
     DMSG_INFO_HCD0("sw_hcd shutdown start\n");
@@ -728,8 +729,8 @@ static int fifo_setup(struct sw_hcd *sw_hcd,
 				            maxpacket,
 				            offset);
 
-		hw_ep->tx_double_buffered = is_double_fifo;
-		hw_ep->max_packet_sz_tx = maxpacket;
+    		hw_ep->tx_double_buffered = is_double_fifo;
+    		hw_ep->max_packet_sz_tx = maxpacket;
 	    }
 		break;
 
@@ -741,8 +742,8 @@ static int fifo_setup(struct sw_hcd *sw_hcd,
 				            maxpacket,
 				            offset);
 
-		hw_ep->rx_double_buffered = is_double_fifo;
-		hw_ep->max_packet_sz_rx = maxpacket;
+    		hw_ep->rx_double_buffered = is_double_fifo;
+    		hw_ep->max_packet_sz_rx = maxpacket;
 	    }
 		break;
 
@@ -755,16 +756,16 @@ static int fifo_setup(struct sw_hcd *sw_hcd,
 					            maxpacket,
 					            offset);
 
-				hw_ep->tx_double_buffered = 0;
+		   		hw_ep->tx_double_buffered = 0;
 				hw_ep->rx_double_buffered = 0;
 
-			hw_ep->max_packet_sz_tx = maxpacket;
+		    	hw_ep->max_packet_sz_tx = maxpacket;
 				hw_ep->max_packet_sz_rx = maxpacket;
 			}else{
 				DMSG_PANIC("ERR: fifo_setup, FIFO_RXTX not support\n");
 			}
 
-		hw_ep->is_shared_fifo = true;
+    		hw_ep->is_shared_fifo = true;
 	    }
 		break;
 	}
@@ -1029,18 +1030,18 @@ static int sw_hcd_core_init(u16 sw_hcd_type, struct sw_hcd *sw_hcd)
 /*
 		if (hw_ep->max_packet_sz_tx) {
 			DMSG_INFO_HCD0("%s: hw_ep %d%s, %smax %d\n",
-					sw_hcd_driver_name, i,
-					(hw_ep->is_shared_fifo ? "shared" : "tx"),
-					(hw_ep->tx_double_buffered ? "doublebuffer, " : ""),
-					hw_ep->max_packet_sz_tx);
+        				sw_hcd_driver_name, i,
+        				(hw_ep->is_shared_fifo ? "shared" : "tx"),
+        				(hw_ep->tx_double_buffered ? "doublebuffer, " : ""),
+        				hw_ep->max_packet_sz_tx);
 		}
 
         if (hw_ep->max_packet_sz_rx && !hw_ep->is_shared_fifo) {
 			DMSG_INFO_HCD0("%s: hw_ep %d%s, %smax %d\n",
-					sw_hcd_driver_name, i,
-					"rx",
-					(hw_ep->rx_double_buffered ? "doublebuffer, " : ""),
-					hw_ep->max_packet_sz_rx);
+        				sw_hcd_driver_name, i,
+        				"rx",
+        				(hw_ep->rx_double_buffered ? "doublebuffer, " : ""),
+        				hw_ep->max_packet_sz_rx);
 		}
 
         if (!(hw_ep->max_packet_sz_tx || hw_ep->max_packet_sz_rx)){
@@ -1164,7 +1165,7 @@ static struct sw_hcd *allocate_instance(struct device *dev,
 #else
     if(sw_hcd->config->port_info->port_type == USB_PORT_TYPE_HOST){
         g_sw_hcd0 = sw_hcd;
-	sw_hcd->enable = 1;
+    	sw_hcd->enable = 1;
     }
 #endif
 
@@ -1293,9 +1294,9 @@ static int sw_hcd_init_controller(struct device *dev, int nIrq, void __iomem *ct
             DMSG_INFO_HCD0("platform is usb host\n");
 		break;
 
-	default:
-		DMSG_PANIC("ERR: unkown platform mode(%d)\n", plat->mode);
-		return -EINVAL;
+    	default:
+    		DMSG_PANIC("ERR: unkown platform mode(%d)\n", plat->mode);
+    		return -EINVAL;
 	}
 
 	/* allocate */
@@ -1370,11 +1371,11 @@ static int sw_hcd_init_controller(struct device *dev, int nIrq, void __iomem *ct
 	}
 
 	DMSG_INFO_HCD0("sw_hcd_init_controller: %s: USB %s mode controller at %p using %s, IRQ %d\n",
-				sw_hcd_driver_name,
-				"Host",
-				ctrl,
-				is_hcd_support_dma(sw_hcd->usbc_no) ? "DMA" : "PIO",
-				sw_hcd->nIrq);
+        			sw_hcd_driver_name,
+        			"Host",
+        			ctrl,
+        			is_hcd_support_dma(sw_hcd->usbc_no) ? "DMA" : "PIO",
+        			sw_hcd->nIrq);
 
 	/* host side needs more setup, except for no-host modes */
 	if (sw_hcd->board_mode != SW_HCD_PERIPHERAL) {
@@ -1485,8 +1486,8 @@ int sw_usb_host0_enable(void)
 	sw_hcd_restore_context(sw_hcd);
 	sw_hcd_start(sw_hcd);
 	spin_unlock_irqrestore(&sw_hcd->lock, flags);
-
-
+    /* port power on */
+	sw_hcd_set_vbus(sw_hcd, 1);
 
 	DMSG_INFO_HCD0("sw_usb_host0_enable end\n");
 #endif
@@ -1542,9 +1543,9 @@ int sw_usb_host0_disable(void)
 	spin_lock_irqsave(&sw_hcd->lock, flags);
 	sw_hcd_soft_disconnect(sw_hcd);
 	sw_hcd_port_suspend_ex(sw_hcd);
-	sw_hcd_set_vbus(sw_hcd, 0);
 	sw_hcd_stop(sw_hcd);
 	spin_unlock_irqrestore(&sw_hcd->lock, flags);
+	sw_hcd_set_vbus(sw_hcd, 0);
 
 	/* release usb irq */
 	if (sw_hcd->nIrq >= 0) {
@@ -1979,7 +1980,7 @@ int sw_usb_disable_hcd0(void)
 	struct sw_hcd *sw_hcd = NULL;
 
 	DMSG_INFO("sw_usb_disable_hcd0 start, clk_is_open = %d\n",
-				sw_hcd->sw_hcd_io->clk_is_open);
+		      		sw_hcd->sw_hcd_io->clk_is_open);
 
 	if(!g_sw_hcd0){
 		DMSG_PANIC("WRN: hcd is disable, g_sw_hcd0 is null\n");
@@ -2018,9 +2019,9 @@ int sw_usb_disable_hcd0(void)
 	spin_lock_irqsave(&sw_hcd->lock, flags);
 	sw_hcd_port_suspend_ex(sw_hcd);
 	sw_hcd_stop(sw_hcd);
-	sw_hcd_set_vbus(sw_hcd, 0);
 	sw_hcd_save_context(sw_hcd);
 	spin_unlock_irqrestore(&sw_hcd->lock, flags);
+	sw_hcd_set_vbus(sw_hcd, 0);
 
 	close_usb_clock(sw_hcd->sw_hcd_io);
 
@@ -2063,7 +2064,7 @@ int sw_usb_enable_hcd0(void)
 	struct sw_hcd	*sw_hcd = NULL;
 
 	DMSG_INFO("sw_usb_enable_hcd0 start, clk_is_open = %d\n",
-				sw_hcd->sw_hcd_io->clk_is_open);
+		      		sw_hcd->sw_hcd_io->clk_is_open);
 
 	if(!g_sw_hcd0){
 		DMSG_PANIC("WRN: g_sw_hcd0 is null\n");
@@ -2109,6 +2110,8 @@ int sw_usb_enable_hcd0(void)
 	sw_hcd_restore_context(sw_hcd);
 	sw_hcd_start(sw_hcd);
 	spin_unlock_irqrestore(&sw_hcd->lock, flags);
+    /* port power on */
+	sw_hcd_set_vbus(sw_hcd, 1);
 
 	DMSG_INFO("sw_usb_enable_hcd0 end\n");
 #endif
@@ -2157,9 +2160,9 @@ static int sw_hcd_suspend(struct device *dev)
 	sw_hcd->suspend = 1;
 	sw_hcd_port_suspend_ex(sw_hcd);
 	sw_hcd_stop(sw_hcd);
-	sw_hcd_set_vbus(sw_hcd, 0);
 	sw_hcd_save_context(sw_hcd);
 	spin_unlock_irqrestore(&sw_hcd->lock, flags);
+	sw_hcd_set_vbus(sw_hcd, 0);
 
 	close_usb_clock(sw_hcd->sw_hcd_io);
 
@@ -2211,6 +2214,8 @@ static int sw_hcd_resume(struct device *dev)
 	sw_hcd_start(sw_hcd);
 	sw_hcd->suspend = 0;
 	spin_unlock_irqrestore(&sw_hcd->lock, flags);
+    /* port power on */
+	sw_hcd_set_vbus(sw_hcd, 1);
 
 	DMSG_INFO_HCD0("sw_hcd_resume_early end\n");
 
@@ -2297,3 +2302,5 @@ static void __exit sw_hcd_cleanup(void)
 }
 
 module_exit(sw_hcd_cleanup);
+
+

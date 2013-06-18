@@ -24,3 +24,4 @@ extern unsigned long xfer_arr[];
 extern u32 dma_check_handle(dm_hdl_t dma_hdl);
 
 #endif  /* __DMA_INTERFACE_H */
+

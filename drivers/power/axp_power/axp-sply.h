@@ -156,17 +156,17 @@ const unsigned int AXP18_NOTIFIER_ON	=	AXP18_IRQ_EXTOV |
 
 const unsigned int AXP19_NOTIFIER_ON = 		AXP19_IRQ_USBOV |
 											AXP19_IRQ_USBIN |
-										AXP19_IRQ_USBRE |
-										AXP19_IRQ_USBLO |
-										AXP19_IRQ_ACOV |
-										AXP19_IRQ_ACIN |
-										AXP19_IRQ_ACRE |
-										AXP19_IRQ_TEMOV |
-										AXP19_IRQ_TEMLO |
-										AXP19_IRQ_BATIN |
-										AXP19_IRQ_BATRE |
-										AXP19_IRQ_PEKLO |
-										AXP19_IRQ_PEKSH ;
+				        					AXP19_IRQ_USBRE |
+				       						AXP19_IRQ_USBLO |
+				       						AXP19_IRQ_ACOV |
+				       						AXP19_IRQ_ACIN |
+				       						AXP19_IRQ_ACRE |
+				       						AXP19_IRQ_TEMOV |
+				       						AXP19_IRQ_TEMLO |
+				       						AXP19_IRQ_BATIN |
+				       						AXP19_IRQ_BATRE |
+				       						AXP19_IRQ_PEKLO |
+				       						AXP19_IRQ_PEKSH ;
 
 
 /*      AXP20      */
@@ -286,19 +286,19 @@ const unsigned int AXP19_NOTIFIER_ON = 		AXP19_IRQ_USBOV |
 
 const unsigned int AXP20_NOTIFIER_ON = 		//AXP20_IRQ_USBOV |
 											AXP20_IRQ_USBIN |
-										AXP20_IRQ_USBRE |
-										//AXP20_IRQ_USBLO |
-										//AXP20_IRQ_ACOV |
-										AXP20_IRQ_ACIN |
-										AXP20_IRQ_ACRE |
-										//AXP20_IRQ_TEMOV |
-										//AXP20_IRQ_TEMLO |
-										AXP20_IRQ_BATIN |
-										AXP20_IRQ_BATRE |
-										AXP20_IRQ_PEKLO |
-										AXP20_IRQ_PEKSH |
-										AXP20_IRQ_CHAST	|
-										AXP20_IRQ_CHAOV;
+				        					AXP20_IRQ_USBRE |
+				       						//AXP20_IRQ_USBLO |
+				       						//AXP20_IRQ_ACOV |
+				       						AXP20_IRQ_ACIN |
+				       						AXP20_IRQ_ACRE |
+				       						//AXP20_IRQ_TEMOV |
+				       						//AXP20_IRQ_TEMLO |
+				       						AXP20_IRQ_BATIN |
+				       						AXP20_IRQ_BATRE |
+				       						AXP20_IRQ_PEKLO |
+				       						AXP20_IRQ_PEKSH |
+				       						AXP20_IRQ_CHAST	|
+				       						AXP20_IRQ_CHAOV;
 
 
 
@@ -381,9 +381,9 @@ const unsigned int AXP20_NOTIFIER_ON = 		//AXP20_IRQ_USBOV |
 const uint64_t AXP22_NOTIFIER_ON = (AXP22_IRQ_USBIN | AXP22_IRQ_USBRE |
                                     AXP22_IRQ_ACIN  | AXP22_IRQ_ACRE |
                                     AXP22_IRQ_BATIN | AXP22_IRQ_BATRE |
-								AXP22_IRQ_CHAST |  AXP22_IRQ_CHAOV |
-								(uint64_t)AXP22_IRQ_PEKFE |
-								(uint64_t)AXP22_IRQ_PEKRE);
+				       				AXP22_IRQ_CHAST |  AXP22_IRQ_CHAOV | 
+				       				(uint64_t)AXP22_IRQ_PEKFE |
+				       				(uint64_t)AXP22_IRQ_PEKRE);
 
 
 #define AXP_CHG_ATTR(_name)					\
@@ -467,7 +467,7 @@ struct axp_charger {
 	int vusb;
 	int iusb;
 	int ocv;
-
+	
 	int disvbat;
 	int disibat;
 

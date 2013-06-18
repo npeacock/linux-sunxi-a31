@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -18,7 +18,7 @@
  *
  ******************************************************************************/
 #ifndef __IOCTL_CFG80211_H__
-#define __IOCTL_CFG80211_H__
+#define __IOCTL_CFG80211_H__ 
 
 #if defined(CONFIG_IOCTL_CFG80211) && !defined(CONFIG_CFG80211) && !defined(CONFIG_CFG80211_MODULE)
 	#error "Can't define CONFIG_IOCTL_CFG80211 because neither CONFIG_CFG80211 nor CONFIG_CFG80211_MODULE is defined in kernel"
@@ -32,9 +32,9 @@
 #endif
 
 struct rtw_wdev_priv
-{
+{	
 	struct wireless_dev *rtw_wdev;
-
+	
 	_adapter *padapter;
 
 	struct cfg80211_scan_request *scan_request;
@@ -52,9 +52,9 @@ struct rtw_wdev_priv
 
 #ifdef CONFIG_CONCURRENT_MODE
 	ATOMIC_T ro_ch_to;
-	ATOMIC_T switch_ch_to;
-#endif
-
+	ATOMIC_T switch_ch_to;	
+#endif	
+	
 };
 
 #define wdev_to_priv(w) ((struct rtw_wdev_priv *)(wdev_priv(w)))
@@ -96,3 +96,4 @@ int rtw_cfg80211_set_mgnt_wpsp2pie(struct net_device *net, char *buf, int len, i
 #endif
 
 #endif //__IOCTL_CFG80211_H__
+

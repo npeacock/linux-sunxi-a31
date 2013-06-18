@@ -6,3 +6,4 @@ config DMA_TEST_DRIVER
 	default m
 	help
 	Nothing help.
+

@@ -35,19 +35,19 @@ static spinlock_t asyn_channel_lock;
 int ar100_hwmsgbox_init(void)
 {
 	int ret;
-
+	
 	/* register msgbox interrupt */
-	ret = request_irq(AW_IRQ_MBOX, ar100_hwmsgbox_int_handler,
+	ret = request_irq(AW_IRQ_MBOX, ar100_hwmsgbox_int_handler, 
 			IRQF_DISABLED, "ar100_hwmsgbox_irq", NULL);
 	if (ret) {
 		AR100_ERR("request_irq error, return %d\n", ret);
 		return ret;
 	}
-
+	
 	/* initialize syn and asyn spinlock */
 	spin_lock_init(&(syn_channel_lock));
 	spin_lock_init(&(asyn_channel_lock));
-
+	
 	return 0;
 }
 
@@ -73,9 +73,9 @@ int ar100_hwmsgbox_send_message(struct ar100_message *pmessage, unsigned int tim
 {
 	volatile unsigned long value;
 	unsigned long          expire;
-
+	
 	expire = msecs_to_jiffies(timeout) + jiffies;
-
+	
 	if (pmessage == NULL) {
 		return -EINVAL;
 	}
@@ -90,10 +90,10 @@ int ar100_hwmsgbox_send_message(struct ar100_message *pmessage, unsigned int tim
 				return -ETIMEDOUT;
 			}
 		}
-		value = ((volatile unsigned long)pmessage) - ar100_sram_a2_vbase;
+		value = ((volatile unsigned long)pmessage) - ar100_sram_a2_vbase; 
 		AR100_INF("ac327 send hard syn message : %x\n", (unsigned int)value);
 		writel(value, IO_ADDRESS(AW_MSGBOX_MSG_REG(AR100_HWMSGBOX_AC327_SYN_TX_CH)));
-
+		
 		/* hwsyn messsage must feedback use syn rx channel */
 		while (readl(IO_ADDRESS(AW_MSGBOX_MSG_STATUS_REG(AR100_HWMSGBOX_AC327_SYN_RX_CH))) == 0) {
 			if (time_is_before_eq_jiffies(expire)) {
@@ -122,7 +122,7 @@ int ar100_hwmsgbox_send_message(struct ar100_message *pmessage, unsigned int tim
 		spin_unlock(&syn_channel_lock);
 		return 0;
 	}
-
+	
 	/* use ac327 asyn transmit channel */
 	spin_lock(&asyn_channel_lock);
 	while (readl(IO_ADDRESS(AW_MSGBOX_FIFO_STATUS_REG(AR100_HWMSGBOX_AR100_ASYN_RX_CH))) == 1) {
@@ -134,12 +134,12 @@ int ar100_hwmsgbox_send_message(struct ar100_message *pmessage, unsigned int tim
 		}
 	}
 	/* write message to message-queue fifo */
-	value = ((volatile unsigned long)pmessage) - ar100_sram_a2_vbase;
+	value = ((volatile unsigned long)pmessage) - ar100_sram_a2_vbase; 
 	AR100_INF("ac327 send message : %x\n", (unsigned int)value);
 	writel(value, IO_ADDRESS(AW_MSGBOX_MSG_REG(AR100_HWMSGBOX_AR100_ASYN_RX_CH)));
-
+	
 	spin_unlock(&asyn_channel_lock);
-
+	
 	/* syn messsage must wait message feedback */
 	if (pmessage->attr & AR100_MESSAGE_ATTR_SOFTSYN) {
 		ar100_hwmsgbox_wait_message_feedback(pmessage);
@@ -151,9 +151,9 @@ int ar100_hwmsgbox_feedback_message(struct ar100_message *pmessage, unsigned int
 {
 	volatile unsigned long value;
 	unsigned long          expire;
-
+	
 	expire = msecs_to_jiffies(timeout) + jiffies;
-
+	
 	if (pmessage->attr & AR100_MESSAGE_ATTR_HARDSYN) {
 		/* use ac327 hard syn receiver channel */
 		spin_lock(&syn_channel_lock);
@@ -187,7 +187,7 @@ int ar100_hwmsgbox_feedback_message(struct ar100_message *pmessage, unsigned int
 		spin_unlock(&asyn_channel_lock);
 		return 0;
 	}
-
+	
 	/* invalid syn message */
 	return -EINVAL;
 }
@@ -202,12 +202,12 @@ int ar100_hwmsgbox_feedback_message(struct ar100_message *pmessage, unsigned int
 int ar100_hwmsgbox_enable_receiver_int(int queue, int user)
 {
 	volatile unsigned int value;
-
+	
 	value  =  readl(IO_ADDRESS(AW_MSGBOX_IRQ_EN_REG(user)));
 	value &= ~(0x1 << (queue * 2));
 	value |=  (0x1 << (queue * 2));
 	writel(value, IO_ADDRESS(AW_MSGBOX_IRQ_EN_REG(user)));
-
+	
 	return 0;
 }
 
@@ -221,11 +221,11 @@ int ar100_hwmsgbox_enable_receiver_int(int queue, int user)
 int ar100_hwmsgbox_disable_receiver_int(int queue, int user)
 {
 	volatile unsigned int value;
-
+	
 	value  =  readl(IO_ADDRESS(AW_MSGBOX_IRQ_EN_REG(user)));
 	value &= ~(0x1 << (queue * 2));
 	writel(value, IO_ADDRESS(AW_MSGBOX_IRQ_EN_REG(user)));
-
+	
 	return 0;
 }
 
@@ -239,9 +239,9 @@ int ar100_hwmsgbox_disable_receiver_int(int queue, int user)
 int ar100_hwmsgbox_query_receiver_pending(int queue, int user)
 {
 	volatile unsigned long value;
-
+	
 	value  =  readl(IO_ADDRESS((AW_MSGBOX_IRQ_STATUS_REG(user))));
-
+	
 	return value & (0x1 << (queue * 2));
 }
 
@@ -255,7 +255,7 @@ int ar100_hwmsgbox_query_receiver_pending(int queue, int user)
 int ar100_hwmsgbox_clear_receiver_pending(int queue, int user)
 {
 	writel((0x1 << (queue * 2)), IO_ADDRESS(AW_MSGBOX_IRQ_STATUS_REG(user)));
-
+	
 	return 0;
 }
 
@@ -268,7 +268,7 @@ int ar100_hwmsgbox_clear_receiver_pending(int queue, int user)
 irqreturn_t ar100_hwmsgbox_int_handler(int irq, void *dev)
 {
 	AR100_INF("ac327 msgbox interrupt handler...\n");
-
+	
 	/* process ac327 asyn received channel, process all received messages */
 	while (readl(IO_ADDRESS(AW_MSGBOX_MSG_STATUS_REG(AR100_HWMSGBOX_AR100_ASYN_TX_CH)))) {
 		volatile unsigned long value;
@@ -281,7 +281,7 @@ irqreturn_t ar100_hwmsgbox_int_handler(int irq, void *dev)
 				/* if error call the callback function. by superm */
 				if (pmessage->result != 0) {
 					if (pmessage->cb.handler == NULL) {
-						AR100_WRN("message [%x] error, callback not install\n",
+						AR100_WRN("message [%x] error, callback not install\n", 
 								  (unsigned int)pmessage->type);
 					} else {
 						/* call callback function */
@@ -290,9 +290,9 @@ irqreturn_t ar100_hwmsgbox_int_handler(int irq, void *dev)
 						(*(pmessage->cb.handler))(pmessage->cb.arg);
 					}
 				}
-				/*
+				/* 
 				 * AR100_MESSAGE_PROCESSED->AR100_MESSAGE_FEEDBACKED,
-				 * process feedback message
+				 * process feedback message 
 				 */
 				pmessage->state = AR100_MESSAGE_FEEDBACKED;
 				if (pmessage->attr & AR100_MESSAGE_ATTR_SOFTSYN)
@@ -300,7 +300,7 @@ irqreturn_t ar100_hwmsgbox_int_handler(int irq, void *dev)
 				else if (pmessage->attr == 0)
 					ar100_message_free(pmessage);
 			} else {
-				/*
+				/* 
 				 * AR100_MESSAGE_INITIALIZED->AR100_MESSAGE_RECEIVED,
 				 * notify new message coming.
 				 */
@@ -313,7 +313,7 @@ irqreturn_t ar100_hwmsgbox_int_handler(int irq, void *dev)
 	}
 	/* clear pending */
 	ar100_hwmsgbox_clear_receiver_pending(AR100_HWMSGBOX_AR100_ASYN_TX_CH, AW_HWMSG_QUEUE_USER_AC327);
-
+	
 	/* process ac327 syn received channel, process only one message */
 	if (readl(IO_ADDRESS(AW_MSGBOX_MSG_STATUS_REG(AR100_HWMSGBOX_AR100_SYN_TX_CH)))) {
 		volatile unsigned long value;
@@ -323,12 +323,12 @@ irqreturn_t ar100_hwmsgbox_int_handler(int irq, void *dev)
 		if (ar100_message_valid(pmessage)) {
 			/* message state switch */
 			if (pmessage->state == AR100_MESSAGE_PROCESSED) {
-				/*
+				/* 
 				 * AR100_MESSAGE_PROCESSED->AR100_MESSAGE_FEEDBACKED,
 				 * process feedback message.
 				 */
 				pmessage->state = AR100_MESSAGE_FEEDBACKED;
-				ar100_hwmsgbox_message_feedback(pmessage);
+				ar100_hwmsgbox_message_feedback(pmessage);	
 			} else {
 				/*
 				 * AR100_MESSAGE_INITIALIZED->AR100_MESSAGE_RECEIVED,
@@ -343,7 +343,7 @@ irqreturn_t ar100_hwmsgbox_int_handler(int irq, void *dev)
 	}
 	/* clear pending */
 	ar100_hwmsgbox_clear_receiver_pending(AR100_HWMSGBOX_AR100_SYN_TX_CH, AW_HWMSG_QUEUE_USER_AC327);
-
+	
 	return IRQ_HANDLED;
 }
 
@@ -356,13 +356,13 @@ irqreturn_t ar100_hwmsgbox_int_handler(int irq, void *dev)
 struct ar100_message *ar100_hwmsgbox_query_message(void)
 {
 	struct ar100_message *pmessage = NULL;
-
+	
 	/* query ac327 asyn received channel */
 	if (readl(IO_ADDRESS(AW_MSGBOX_MSG_STATUS_REG(AR100_HWMSGBOX_AR100_ASYN_TX_CH)))) {
 		volatile unsigned long value;
 		value = readl(IO_ADDRESS(AW_MSGBOX_MSG_REG(AR100_HWMSGBOX_AR100_ASYN_TX_CH)));
 		pmessage = (struct ar100_message *)(value + ar100_sram_a2_vbase);
-
+		
 		if (ar100_message_valid(pmessage)) {
 			/* message state switch */
 			if (pmessage->state == AR100_MESSAGE_PROCESSED) {
@@ -401,7 +401,7 @@ struct ar100_message *ar100_hwmsgbox_query_message(void)
 		ar100_hwmsgbox_clear_receiver_pending(AR100_HWMSGBOX_AR100_SYN_TX_CH, AW_HWMSG_QUEUE_USER_AC327);
 		return pmessage;
 	}
-
+	
 	/* no valid message now */
 	return NULL;
 }
@@ -409,34 +409,34 @@ struct ar100_message *ar100_hwmsgbox_query_message(void)
 int ar100_hwmsgbox_wait_message_feedback(struct ar100_message *pmessage)
 {
 	/* linux method: wait semaphore flag to set */
-	AR100_INF("down semaphore for message feedback, semp=0x%x.\n",
+	AR100_INF("down semaphore for message feedback, semp=0x%x.\n", 
 			   (unsigned int)(pmessage->private));
 	down((struct semaphore *)(pmessage->private));
-
+	
 	AR100_INF("message : %x finished\n", (unsigned int)pmessage);
-
+	
 	return 0;
 }
 
 int ar100_hwmsgbox_message_feedback(struct ar100_message *pmessage)
 {
 	/* linux method: wait semaphore flag to set */
-	AR100_INF("up semaphore for message feedback, sem=0x%x.\n",
+	AR100_INF("up semaphore for message feedback, sem=0x%x.\n", 
 			   (unsigned int)(pmessage->private));
 	up((struct semaphore *)(pmessage->private));
-
+	
 	return 0;
 }
 
 int ar100_message_valid(struct ar100_message *pmessage)
 {
-	if ((((u32)pmessage) >= (AR100_MESSAGE_POOL_START + ar100_sram_a2_vbase)) &&
+	if ((((u32)pmessage) >= (AR100_MESSAGE_POOL_START + ar100_sram_a2_vbase)) && 
 		(((u32)pmessage) <  (AR100_MESSAGE_POOL_END   + ar100_sram_a2_vbase))) {
-
+		
 		/* valid message */
 		return 1;
 	}
-
+	
 	return 0;
 }
 
@@ -444,10 +444,10 @@ int ar100_hwmsgbox_standby_suspend(void)
 {
 	/* enable ar100 asyn tx interrupt */
 	ar100_hwmsgbox_disable_receiver_int(AR100_HWMSGBOX_AR100_ASYN_TX_CH, AW_HWMSG_QUEUE_USER_AC327);
-
+	
 	/* enable ar100 syn tx interrupt */
 	ar100_hwmsgbox_disable_receiver_int(AR100_HWMSGBOX_AR100_SYN_TX_CH, AW_HWMSG_QUEUE_USER_AC327);
-
+	
 	return 0;
 }
 
@@ -455,9 +455,9 @@ int ar100_hwmsgbox_standby_resume(void)
 {
 	/* enable ar100 asyn tx interrupt */
 	ar100_hwmsgbox_enable_receiver_int(AR100_HWMSGBOX_AR100_ASYN_TX_CH, AW_HWMSG_QUEUE_USER_AC327);
-
+	
 	/* enable ar100 syn tx interrupt */
 	ar100_hwmsgbox_enable_receiver_int(AR100_HWMSGBOX_AR100_SYN_TX_CH, AW_HWMSG_QUEUE_USER_AC327);
-
+	
 	return 0;
 }

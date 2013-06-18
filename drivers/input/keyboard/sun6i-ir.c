@@ -14,7 +14,7 @@
 #include <asm/irq.h>
 #include <asm/io.h>
 #include <linux/slab.h>
-#include <linux/timer.h>
+#include <linux/timer.h> 
 #include <mach/clock.h>
 #include <linux/gpio.h>
 #include <mach/sys_config.h>
@@ -50,7 +50,7 @@ static struct clk *ir_clk_source;
 #ifdef SYS_GPIO_CFG_EN
 static struct gpio_hdle {
 	script_item_u	val;
-	script_item_value_type_e  type;
+	script_item_value_type_e  type;		
 }ir_gpio_hdle;
 #endif
 
@@ -64,7 +64,7 @@ static struct gpio_hdle {
 #define CCM_BASE         0xf1c20000
 /* PIO register */
 #define PI_BASE          0xf1c20800
-
+                                    
 #define IR_CTRL_REG      IR_REG(0x00)     /* IR Control */
 #define IR_RXCFG_REG     IR_REG(0x10)     /* Rx Config */
 #define IR_RXDAT_REG     IR_REG(0x20)     /* Rx Data */
@@ -85,13 +85,13 @@ static struct gpio_hdle {
 #define IR_RXIDLE_VAL    (5)              /* Idle Threshold = (2+1)*128*42.7 = ~16.4ms > 9ms */
 
 #define IR_L1_MIN        (160)            /* 80*42.7 = ~3.4ms, Lead1(4.5ms) > IR_L1_MIN */
-#define IR_L0_MIN        (80)             /* 40*42.7 = ~1.7ms, Lead0(4.5ms) Lead0R(2.25ms)> IR_L0_MIN */
+#define IR_L0_MIN        (80)             /* 40*42.7 = ~1.7ms, Lead0(4.5ms) Lead0R(2.25ms)> IR_L0_MIN */ 
 #define IR_PMAX          (52)             /* 26*42.7 = ~1109us ~= 561*2, Pluse < IR_PMAX */
 #define IR_DMID          (52)             /* 26*42.7 = ~1109us ~= 561*2, D1 > IR_DMID, D0 =< IR_DMID */
 #define IR_DMAX          (106)            /* 53*42.7 = ~2263us ~= 561*4, D < IR_DMAX */
 
 #else
-#define IR_RXFILT_VAL    (8)              /* Filter Threshold = 8*42.7 = ~341us	< 500us */
+#define IR_RXFILT_VAL    (8)              /* Filter Threshold = 8*42.7 = ~341us	< 500us */	
 #define IR_RXIDLE_VAL    (2)              /* Idle Threshold = (2+1)*128*42.7 = ~16.4ms > 9ms */
 
 #define IR_L1_MIN        (80)             /* 80*42.7 = ~3.4ms, Lead1(4.5ms) > IR_L1_MIN */
@@ -106,7 +106,7 @@ static struct gpio_hdle {
 #define DRV_VERSION      "1.00"
 
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND	
 struct sun6i_ir_data {
 	struct early_suspend early_suspend;
 };
@@ -115,12 +115,12 @@ struct sun6i_ir_data {
 struct ir_raw_buffer {
 	unsigned long dcnt;                  		/*Packet Count*/
 	#define	IR_RAW_BUF_SIZE		128
-	unsigned char buf[IR_RAW_BUF_SIZE];
+	unsigned char buf[IR_RAW_BUF_SIZE];	
 };
 
 static unsigned int ir_cnt = 0;
 static struct input_dev *ir_dev;
-static struct timer_list *s_timer;
+static struct timer_list *s_timer; 
 static unsigned long ir_code=0;
 static int timer_used=0;
 static struct ir_raw_buffer	ir_rawbuf;
@@ -154,7 +154,7 @@ static inline void ir_reset_rawbuffer(void)
 
 static inline void ir_write_rawbuffer(unsigned char data)
 {
-	if (ir_rawbuf.dcnt < IR_RAW_BUF_SIZE)
+	if (ir_rawbuf.dcnt < IR_RAW_BUF_SIZE) 
 		ir_rawbuf.buf[ir_rawbuf.dcnt++] = data;
 	else
 		printk(KERN_DEBUG "ir_write_rawbuffer: IR Rx Buffer Full!!\n");
@@ -163,10 +163,10 @@ static inline void ir_write_rawbuffer(unsigned char data)
 static inline unsigned char ir_read_rawbuffer(void)
 {
 	unsigned char data = 0x00;
-
+	
 	if (ir_rawbuf.dcnt > 0)
 		data = ir_rawbuf.buf[--ir_rawbuf.dcnt];
-
+		
 	return data;
 }
 
@@ -177,19 +177,19 @@ static inline int ir_rawbuffer_empty(void)
 
 static inline int ir_rawbuffer_full(void)
 {
-	return (ir_rawbuf.dcnt >= IR_RAW_BUF_SIZE);
+	return (ir_rawbuf.dcnt >= IR_RAW_BUF_SIZE);	
 }
 
 static void ir_clk_cfg(void)
 {
 #ifdef SYS_CLK_CFG_EN
-	unsigned long rate = 3000000; /* 3Mhz */
+	unsigned long rate = 3000000; /* 3Mhz */    
 #else
 	unsigned long tmp = 0;
 #endif
-
+	
 #ifdef SYS_CLK_CFG_EN
-	ir_clk_source = clk_get(NULL, CLK_SYS_HOSC);
+	ir_clk_source = clk_get(NULL, CLK_SYS_HOSC);		
 	if (!ir_clk_source || IS_ERR(ir_clk_source)) {
 		printk(KERN_DEBUG "try to get ir_clk_source clock failed!\n");
 		return;
@@ -198,7 +198,7 @@ static void ir_clk_cfg(void)
 	rate = clk_get_rate(ir_clk_source);
 	dprintk(DEBUG_INIT, "%s: get ir_clk_source rate %dHZ\n", __func__, (__u32)rate);
 
-	ir_clk = clk_get(NULL, CLK_MOD_R_CIR);
+	ir_clk = clk_get(NULL, CLK_MOD_R_CIR);		
 	if (!ir_clk || IS_ERR(ir_clk)) {
 		printk(KERN_DEBUG "try to get ir clock failed!\n");
 		return;
@@ -211,26 +211,26 @@ static void ir_clk_cfg(void)
 		printk(KERN_DEBUG "set ir clock freq to 3M failed!\n");
 	}
 
-
+	
 	if (clk_enable(ir_clk)) {
-			printk(KERN_DEBUG "try to enable ir_clk failed!\n");
+			printk(KERN_DEBUG "try to enable ir_clk failed!\n");	
 	}
-
+	
 	if (clk_reset(ir_clk, AW_CCU_CLK_NRESET)) {
-			printk(KERN_DEBUG "try to nreset ir_clk failed!\n");
+			printk(KERN_DEBUG "try to nreset ir_clk failed!\n");	
 	}
-#else
-	/* Enable APB Clock for IR */
+#else	
+	/* Enable APB Clock for IR */	
 	tmp = readl(CCM_BASE + 0x10);
-	tmp |= 0x1<<10;  //IR
-	writel(tmp, CCM_BASE + 0x10);
+	tmp |= 0x1<<10;  //IR	
+	writel(tmp, CCM_BASE + 0x10);	
 
 	/* config Special Clock for IR	(24/8=3MHz) */
 	tmp = readl(CCM_BASE + 0x34);
-	tmp &= ~(0x3<<8);
+	tmp &= ~(0x3<<8);  	
 	tmp |= (0x1<<8);   	/* Select 24MHz */
 	tmp |= (0x1<<7);   	/* Open Clock */
-	tmp &= ~(0x3f<<0);
+	tmp &= ~(0x3f<<0);  
 	tmp |= (7<<0);	 	/* Divisor = 8 */
 	writel(tmp, CCM_BASE + 0x34);
 #endif
@@ -253,32 +253,32 @@ static void ir_clk_uncfg(void)
 	if(NULL == ir_clk_source || IS_ERR(ir_clk_source)) {
 		printk("ir_clk_source handle is invalid, just return!\n");
 		return;
-	} else {
+	} else {	
 		clk_put(ir_clk_source);
 		ir_clk_source = NULL;
 	}
-#else
+#else	
 #endif
-
+ 
 	return;
 }
 static void ir_sys_cfg(void)
 {
 #ifdef SYS_GPIO_CFG_EN
 	ir_gpio_hdle.type = script_get_item("ir_para", "ir_rx", &(ir_gpio_hdle.val));
-
+	
 	if(SCIRPT_ITEM_VALUE_TYPE_PIO != ir_gpio_hdle.type)
 		printk(KERN_ERR "IR gpio type err! \n");
-
-	dprintk(DEBUG_INIT, "value is: gpio %d, mul_sel %d, pull %d, drv_level %d, data %d\n",
-		ir_gpio_hdle.val.gpio.gpio, ir_gpio_hdle.val.gpio.mul_sel, ir_gpio_hdle.val.gpio.pull,
+	
+	dprintk(DEBUG_INIT, "value is: gpio %d, mul_sel %d, pull %d, drv_level %d, data %d\n", 
+		ir_gpio_hdle.val.gpio.gpio, ir_gpio_hdle.val.gpio.mul_sel, ir_gpio_hdle.val.gpio.pull,  
 		ir_gpio_hdle.val.gpio.drv_level, ir_gpio_hdle.val.gpio.data);
-
-	if(0 != gpio_request(ir_gpio_hdle.val.gpio.gpio, NULL)) {
+	 
+	if(0 != gpio_request(ir_gpio_hdle.val.gpio.gpio, NULL)) {	
 		printk(KERN_ERR "ERROR: IR Gpio_request is failed\n");
 	}
 
-
+	
 	if (0 != sw_gpio_setall_range(&ir_gpio_hdle.val.gpio, 1)) {
 		printk(KERN_ERR "IR gpio set err!");
 		goto end;
@@ -294,13 +294,13 @@ static void ir_sys_cfg(void)
 
 	ir_clk_cfg();
 
-	return;
+	return;	
 #ifdef SYS_GPIO_CFG_EN
 end:
 	gpio_free(ir_gpio_hdle.val.gpio.gpio);
 	return;
 #endif
-
+	
 }
 
 static void ir_sys_uncfg(void)
@@ -312,7 +312,7 @@ static void ir_sys_uncfg(void)
 
 	ir_clk_uncfg();
 
-	return;
+	return;	
 }
 
 static void ir_reg_cfg(void)
@@ -321,31 +321,31 @@ static void ir_reg_cfg(void)
 	/* Enable IR Mode */
 	tmp = 0x3<<4;
 	writel(tmp, IR_BASE+IR_CTRL_REG);
-
+	
 	/* Config IR Smaple Register */
 #ifdef FPGA_SIM_CONFIG
 	tmp = 0x3<<0;  /* Fsample = 24MHz/512 = 46875Hz (21.33us) */
 #else
 	tmp = 0x1<<0;  /* Fsample = 3MHz/128 =23437.5Hz (42.7us) */
 #endif
-
-
+ 
+        
 	tmp |= (IR_RXFILT_VAL&0x3f)<<2;		/* Set Filter Threshold */
 	tmp |= (IR_RXIDLE_VAL&0xff)<<8; 	/* Set Idle Threshold */
 	writel(tmp, IR_BASE+IR_SPLCFG_REG);
-
+	
 	/* Invert Input Signal */
 	writel(0x1<<2, IR_BASE+IR_RXCFG_REG);
-
+	
 	/* Clear All Rx Interrupt Status */
 	writel(0xff, IR_BASE+IR_RXINTS_REG);
-
+	
 	/* Set Rx Interrupt Enable */
 	tmp = (0x1<<4)|0x3;
 	//tmp |= ((IR_FIFO_SIZE>>1)-1)<<8; 	/* Rx FIFO Threshold = FIFOsz/2; */
 	tmp |= ((IR_FIFO_SIZE>>2)-1)<<8;	/* Rx FIFO Threshold = FIFOsz/4; */
 	writel(tmp, IR_BASE+IR_RXINTE_REG);
-
+	
 	/* Enable IR Module */
 	tmp = readl(IR_BASE+IR_CTRL_REG);
 	tmp |= 0x3;
@@ -355,15 +355,15 @@ static void ir_reg_cfg(void)
 }
 
 static void ir_setup(void)
-{
+{	
 	dprintk(DEBUG_INIT, "ir_setup: ir setup start!!\n");
 
 	ir_code = 0;
 	timer_used = 0;
-	ir_reset_rawbuffer();
-	ir_sys_cfg();
+	ir_reset_rawbuffer();	
+	ir_sys_cfg();	
 	ir_reg_cfg();
-
+	
 	dprintk(DEBUG_INIT, "ir_setup: ir setup end!!\n");
 
 	return;
@@ -396,11 +396,11 @@ static unsigned long ir_packet_handler(unsigned char *buf, unsigned long dcnt)
 	unsigned long code = 0;
 	int bitCnt = 0;
 	unsigned long i=0;
-
+	
 	//print_hex_dump_bytes("--- ", DUMP_PREFIX_NONE, buf, dcnt);
 
 	dprintk(DEBUG_DATA_INFO, "dcnt = %d \n", (int)dcnt);
-
+	
 	/* Find Lead '1' */
 	len = 0;
 	for (i=0; i<dcnt; i++) {
@@ -410,38 +410,38 @@ static unsigned long ir_packet_handler(unsigned char *buf, unsigned long dcnt)
 		} else {
 			if (len > IR_L1_MIN)
 				break;
-
+			
 			len = 0;
 		}
 	}
 
 	if ((val&0x80) || (len<=IR_L1_MIN))
 		return IR_ERROR_CODE; /* Invalid Code */
-
+		
 	/* Find Lead '0' */
 	len = 0;
 	for (; i<dcnt; i++) {
-		val = buf[i];
+		val = buf[i];		
 		if (val & 0x80) {
 			if(len > IR_L0_MIN)
 				break;
-
+			
 			len = 0;
 		} else {
 			len += val & 0x7f;
-		}
+		}		
 	}
-
+	
 	if ((!(val&0x80)) || (len<=IR_L0_MIN))
 		return IR_ERROR_CODE; /* Invalid Code */
-
+	
 	/* go decoding */
 	code = 0;  /* 0 for Repeat Code */
 	bitCnt = 0;
 	last = 1;
 	len = 0;
 	for (; i<dcnt; i++) {
-		val = buf[i];
+		val = buf[i];		
 		if (last) {
 			if (val & 0x80) {
 				len += val & 0x7f;
@@ -464,7 +464,7 @@ static unsigned long ir_packet_handler(unsigned char *buf, unsigned long dcnt)
 					bitCnt ++;
 					if (bitCnt == 32)
 						break;  /* decode over */
-				}
+				}	
 				last = 1;
 				len = val & 0x7f;
 			} else {
@@ -472,7 +472,7 @@ static unsigned long ir_packet_handler(unsigned char *buf, unsigned long dcnt)
 			}
 		}
 	}
-
+	
 	return code;
 }
 
@@ -484,16 +484,16 @@ static int ir_code_valid(unsigned long code)
 	/* Check Address Value */
 	if ((code&0xffff) != (IR_ADDR_CODE&0xffff))
 		return 0; /* Address Error */
-
+	
 	tmp1 = code & 0x00ff0000;
 	tmp2 = (code & 0xff000000)>>8;
-
+	
 	return ((tmp1^tmp2)==0x00ff0000);  /* Check User Code */
-#else
+#else	
 	/* Do Not Check Address Value */
 	tmp1 = code & 0x00ff00ff;
 	tmp2 = (code & 0xff00ff00)>>8;
-
+	
 	//return ((tmp1^tmp2)==0x00ff00ff);
 	return (((tmp1^tmp2) & 0x00ff0000)==0x00ff0000 );
 #endif /* #ifdef IR_CHECK_ADDR_CODE */
@@ -502,46 +502,46 @@ static int ir_code_valid(unsigned long code)
 static irqreturn_t ir_irq_service(int irqno, void *dev_id)
 {
 	unsigned long intsta = ir_get_intsta();
-
+	
 	dprintk(DEBUG_INT, "IR IRQ Serve\n");
 
 	ir_clr_intsta(intsta);
-
+	
 	//if(intsta & (IR_RXINTS_RXDA|IR_RXINTS_RXPE))  /* FIFO Data Valid */
 	/*Read Data Every Time Enter this Routine*/
 	{
 		//unsigned long dcnt =  (ir_get_intsta()>>8) & 0x1f;
 		unsigned long dcnt =  (ir_get_intsta()>>8) & 0x3f;
 		unsigned long i = 0;
-
+		
 		/* Read FIFO */
 		for (i=0; i<dcnt; i++) {
 			if (ir_rawbuffer_full()) {
-
+			
 				dprintk(DEBUG_INT, "ir_irq_service: Raw Buffer Full!!\n");
-
+				
 				break;
 			} else {
 				ir_write_rawbuffer(ir_get_data());
-			}
-		}
+			}			
+		}		
 	}
-
+	
 	if (intsta & IR_RXINTS_RXPE) {	 /* Packet End */
 		unsigned long code;
 		int code_valid;
-
+		
 		code = ir_packet_handler(ir_rawbuf.buf, ir_rawbuf.dcnt);
 		ir_rawbuf.dcnt = 0;
 		code_valid = ir_code_valid(code);
-
+					
 		if (timer_used) {
-			if (code_valid) {  /* the pre-key is released */
+			if (code_valid) {  /* the pre-key is released */ 			
 				input_report_key(ir_dev, ir_keycodes[(ir_code>>16)&0xff], 0);
-				input_sync(ir_dev);
-
+				input_sync(ir_dev);	
+				
 				dprintk(DEBUG_INT, "IR KEY UP\n");
-
+				
 				ir_cnt = 0;
 			}
 			if ((code==IR_REPEAT_CODE)||(code_valid)) {	/* Error, may interfere from other sources */
@@ -551,42 +551,42 @@ static irqreturn_t ir_irq_service(int irqno, void *dev_id)
 			if (code_valid) {
 				s_timer->expires = jiffies + (HZ/5);	/* 200ms timeout */
 				add_timer(s_timer);
-				timer_used = 1;
+				timer_used = 1;	
 			}
 		}
-
+		
 		if (timer_used) {
 			ir_cnt++;
 			if (ir_cnt == 1) {
-				if (code_valid)
+				if (code_valid)	
 					ir_code = code;  /* update saved code with a new valid code */
-
+				
 					dprintk(DEBUG_INT, "IR RAW CODE : %lu\n",(ir_code>>16)&0xff);
-
+				
 					input_report_key(ir_dev, ir_keycodes[(ir_code>>16)&0xff], 1);
-
+			
 					dprintk(DEBUG_INT, "IR CODE : %d\n",ir_keycodes[(ir_code>>16)&0xff]);
-
-				input_sync(ir_dev);
-
+				
+				input_sync(ir_dev);			
+				
 				dprintk(DEBUG_INT, "IR KEY VALE %d\n",ir_keycodes[(ir_code>>16)&0xff]);
-
+				
 			}
 
-
+			
 		}
-
+		
 		dprintk(DEBUG_INT, "ir_irq_service: Rx Packet End, code=0x%x, ir_code=0x%x, timer_used=%d \n", (int)code, (int)ir_code, timer_used);
-	}
-
+	}	
+	
 	if (intsta & IR_RXINTS_RXOF) {  /* FIFO Overflow */
 		/* flush raw buffer */
-		ir_reset_rawbuffer();
+		ir_reset_rawbuffer();		
 
 		dprintk(DEBUG_INT, "ir_irq_service: Rx FIFO Overflow!!\n");
 
-	}
-
+	}	
+	
 	return IRQ_HANDLED;
 }
 
@@ -596,16 +596,16 @@ static void ir_timer_handle(unsigned long arg)
 	timer_used = 0;
 	/* Time Out, means that the key is up */
 	input_report_key(ir_dev, ir_keycodes[(ir_code>>16)&0xff], 0);
-	input_sync(ir_dev);
+	input_sync(ir_dev);	
 
 	dprintk(DEBUG_INT, "IR KEY TIMER OUT UP\n");
 
 	ir_cnt = 0;
-
-	dprintk(DEBUG_INT, "ir_timer_handle: timeout \n");
+	
+	dprintk(DEBUG_INT, "ir_timer_handle: timeout \n");	
 }
 
-/* 鍋滅敤璁惧 */
+/* 停用设备 */
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static void sun6i_ir_early_suspend(struct early_suspend *h)
 {
@@ -622,14 +622,14 @@ static void sun6i_ir_early_suspend(struct early_suspend *h)
 	if(NULL == ir_clk || IS_ERR(ir_clk)) {
 		printk("ir_clk handle is invalid, just return!\n");
 		return;
-	} else {
+	} else {	
 		clk_disable(ir_clk);
 	}
 #endif
 	return ;
 }
 
-/* 閲嶆柊鍞ら啋 */
+/* 重新唤醒 */
 static void sun6i_ir_late_resume(struct early_suspend *h)
 {
 	//unsigned long tmp = 0;
@@ -639,12 +639,12 @@ static void sun6i_ir_late_resume(struct early_suspend *h)
 	dprintk(DEBUG_SUSPEND, "enter laterresume: sun6i_ir_resume. \n");
 
 	ir_code = 0;
-	timer_used = 0;
-	ir_reset_rawbuffer();
-	ir_clk_cfg();
+	timer_used = 0;	
+	ir_reset_rawbuffer();	
+	ir_clk_cfg();	
 	ir_reg_cfg();
 
-	return ;
+	return ; 
 }
 #else
 #ifdef CONFIG_PM
@@ -660,26 +660,26 @@ static int sun6i_ir_suspend(struct device *dev)
 	if(NULL == ir_clk || IS_ERR(ir_clk)) {
 		printk("ir_clk handle is invalid, just return!\n");
 		return -1;
-	} else {
+	} else {	
 		clk_disable(ir_clk);
 	}
-#endif
+#endif 
 	return 0;
 }
 
-/* 閲嶆柊鍞ら啋 */
+/* 重新唤醒 */
 static int sun6i_ir_resume(struct device *dev)
 {
 
 	dprintk(DEBUG_SUSPEND, "enter laterresume: sun6i_ir_resume. \n");
 
 	ir_code = 0;
-	timer_used = 0;
-	ir_reset_rawbuffer();
-	ir_clk_cfg();
+	timer_used = 0;	
+	ir_reset_rawbuffer();	
+	ir_clk_cfg();	
 	ir_reg_cfg();
 
-	return 0;
+	return 0; 
 }
 #endif
 #endif
@@ -696,9 +696,9 @@ static int __init ir_init(void)
 		goto fail1;
 	}
 
-	ir_dev->name = "sun6i-ir";
-	ir_dev->phys = "RemoteIR/input1";
-	ir_dev->id.bustype = BUS_HOST;
+	ir_dev->name = "sun6i-ir";  
+	ir_dev->phys = "RemoteIR/input1"; 
+	ir_dev->id.bustype = BUS_HOST;      
 	ir_dev->id.vendor = 0x0001;
 	ir_dev->id.product = 0x0001;
 	ir_dev->id.version = 0x0100;
@@ -706,12 +706,12 @@ static int __init ir_init(void)
     #ifdef REPORT_REPEAT_KEY_VALUE
 	ir_dev->evbit[0] = BIT_MASK(EV_KEY)|BIT_MASK(EV_REP) ;
     #else
-	ir_dev->evbit[0] = BIT_MASK(EV_KEY);
+    	ir_dev->evbit[0] = BIT_MASK(EV_KEY);
     #endif
-
+    
 	for (i = 0; i < 256; i++)
 		set_bit(ir_keycodes[i], ir_dev->keybit);
-
+		
 	if (request_irq(IR_IRQNO, ir_irq_service, 0, "RemoteIR",
 			ir_dev)) {
 		err = -EBUSY;
@@ -719,7 +719,7 @@ static int __init ir_init(void)
 	}
 
 	ir_setup();
-
+	  
 	s_timer = kmalloc(sizeof(struct timer_list), GFP_KERNEL);
 	if (!s_timer) {
 		ret =  - ENOMEM;
@@ -734,7 +734,7 @@ static int __init ir_init(void)
 #ifdef CONFIG_PM
 	ir_pm_domain.ops.suspend = sun6i_ir_suspend;
 	ir_pm_domain.ops.resume = sun6i_ir_resume;
-	ir_dev->dev.pm_domain = &ir_pm_domain;
+	ir_dev->dev.pm_domain = &ir_pm_domain;	
 #endif
 #endif
 
@@ -743,7 +743,7 @@ static int __init ir_init(void)
 		goto fail4;
 	printk("IR Initial OK\n");
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND	
 	dprintk(DEBUG_INIT, "==register_early_suspend =\n");
 	ir_data = kzalloc(sizeof(*ir_data), GFP_KERNEL);
 	if (ir_data == NULL) {
@@ -751,9 +751,9 @@ static int __init ir_init(void)
 		goto err_alloc_data_failed;
 	}
 
-	ir_data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
+	ir_data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;	
 	ir_data->early_suspend.suspend = sun6i_ir_early_suspend;
-	ir_data->early_suspend.resume	= sun6i_ir_late_resume;
+	ir_data->early_suspend.resume	= sun6i_ir_late_resume;	
 	register_early_suspend(&ir_data->early_suspend);
 #endif
 
@@ -764,26 +764,26 @@ static int __init ir_init(void)
 #ifdef CONFIG_HAS_EARLYSUSPEND
 err_alloc_data_failed:
 #endif
-fail4:
-	kfree(s_timer);
-fail3:
-	free_irq(IR_IRQNO, ir_dev);
-fail2:
-	input_free_device(ir_dev);
-fail1:
-	return err;
+fail4:	
+ 	kfree(s_timer);
+fail3:	
+ 	free_irq(IR_IRQNO, ir_dev);
+fail2:	
+ 	input_free_device(ir_dev);
+fail1:	
+ 	return err;
 }
 
 static void __exit ir_exit(void)
-{
-#ifdef CONFIG_HAS_EARLYSUSPEND
-	unregister_early_suspend(&ir_data->early_suspend);
+{	
+#ifdef CONFIG_HAS_EARLYSUSPEND	
+	unregister_early_suspend(&ir_data->early_suspend);	
 #endif
 
 	free_irq(IR_IRQNO, ir_dev);
 	input_unregister_device(ir_dev);
 	ir_sys_uncfg();
-	kfree(s_timer);
+ 	kfree(s_timer);
 }
 
 module_init(ir_init);
@@ -792,3 +792,4 @@ module_exit(ir_exit);
 MODULE_DESCRIPTION("Remote IR driver");
 MODULE_AUTHOR("DanielWang");
 MODULE_LICENSE("GPL");
+

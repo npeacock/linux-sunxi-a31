@@ -20,7 +20,7 @@ __s32 mem_tmr_save(__mem_tmr_reg_t *ptmr_state)
 
 	/* set timer register base */
 	TmrReg = (__mem_tmr_reg_t *)IO_ADDRESS(AW_TIMER_BASE);
-
+	
 	/* backup timer registers */
 	ptmr_state->IntCtl   = TmrReg->IntCtl;
 	ptmr_state->Tmr0Ctl     = TmrReg->Tmr0Ctl;
@@ -29,7 +29,7 @@ __s32 mem_tmr_save(__mem_tmr_reg_t *ptmr_state)
 	ptmr_state->Tmr1Ctl     = TmrReg->Tmr1Ctl;
 	ptmr_state->Tmr1IntVal  = TmrReg->Tmr1IntVal;
 	ptmr_state->Tmr1CntVal  = TmrReg->Tmr1CntVal;
-
+	
 	return 0;
 }
 
@@ -55,7 +55,7 @@ __s32 mem_tmr_restore(__mem_tmr_reg_t *ptmr_state)
 	TmrReg->Tmr1CntVal  = ptmr_state->Tmr1CntVal;
 	TmrReg->Tmr1Ctl     = ptmr_state->Tmr1Ctl;
 	TmrReg->IntCtl      = ptmr_state->IntCtl;
-
+	
 	return 0;
 }
 
@@ -75,7 +75,7 @@ __s32 mem_tmr_init(void)
 {
 	/* set timer register base */
 	TmrReg = (__mem_tmr_reg_t *)(IO_ADDRESS(AW_TIMER_BASE));
-
+	
 	WatchDog1_Config_Reg_Bak = (TmrReg->WDog1_Cfg_Reg);
 	WatchDog1_Mod_Reg_Bak = (TmrReg->WDog1_Mode_Reg);
 	WatchDog1_Irq_En_Bak = (TmrReg->WDog1_Irq_En);
@@ -122,15 +122,15 @@ __s32 mem_tmr_exit(void)
 void mem_tmr_enable_watchdog(void)
 {
 
-	/* set watch-dog reset to whole system*/
+	/* set watch-dog reset to whole system*/ 
 	(TmrReg->WDog1_Cfg_Reg) &= ~(0x3);
 	(TmrReg->WDog1_Cfg_Reg) |= 0x1;
 	/*  timeout is 16 seconds */
 	(TmrReg->WDog1_Mode_Reg) = (0xb<<4);
-
+	
 	/* enable watch-dog interrupt*/
 	(TmrReg->WDog1_Irq_En) |= (1<<0);
-
+	
 	/* enable watch-dog */
 	(TmrReg->WDog1_Mode_Reg) |= (1<<0);
 
@@ -157,10 +157,12 @@ void mem_tmr_disable_watchdog(void)
 	/* disable watch-dog reset: only intterupt */
 	(TmrReg->WDog1_Cfg_Reg) &= ~(0x3);
 	(TmrReg->WDog1_Cfg_Reg) |= 0x2;
-
+	
 	/* disable watch-dog intterupt */
 	(TmrReg->WDog1_Irq_En) &= ~(1<<0);
-
+	
 	/* disable watch-dog */
 	TmrReg->WDog1_Mode_Reg &= ~(1<<0);
 }
+
+

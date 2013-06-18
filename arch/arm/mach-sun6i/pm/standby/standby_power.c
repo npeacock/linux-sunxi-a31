@@ -153,3 +153,5 @@ __u32 standby_get_voltage(enum power_vol_type_e type)
 	else
 		return axp20_ldo4_data[val]*1000;
 }
+
+

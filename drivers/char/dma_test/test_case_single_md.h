@@ -19,3 +19,4 @@
 u32 __dtc_single_mode(void);
 
 #endif /* __TEST_CASE_SINGLE_MODE_H */
+

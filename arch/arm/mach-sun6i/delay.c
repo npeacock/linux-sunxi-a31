@@ -71,3 +71,4 @@ void use_time_delay(void)
 	delay_fn = aw_delay;
 	printk("[aw_delay]: It is use use_time_delay function!\n");
 }
+

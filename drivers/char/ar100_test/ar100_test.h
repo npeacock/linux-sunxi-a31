@@ -39,3 +39,4 @@
 
 
 #endif /* __SUN6I_AR100_TEST_H */
+

@@ -24,10 +24,10 @@ enum {
 	AXP22_ID_LDOIO0,
 	AXP22_ID_LDOIO1,
 	AXP22_ID_SUPPLY,
-	AXP22_ID_GPIO,
+	AXP22_ID_GPIO,	
 };
 
-/*For AXP22*/
+/*For AXP22*/ 
 #define AXP22                     (22)
 #define AXP22_STATUS              (0x00)
 #define AXP22_MODE_CHGSTATUS      (0x01)
@@ -84,7 +84,7 @@ enum {
 #define AXP22_ALDO3OUT_VOL        (0x2A)
 
 #define AXP22_DCDC_MODESET        (0x80)
-#define AXP22_DCDC_FREQSET        (0x37)
+#define AXP22_DCDC_FREQSET        (0x37) 
 #define AXP22_ADC_EN              (0x82)
 #define AXP22_HOTOVER_CTL         (0x8F)
 
@@ -147,7 +147,7 @@ enum {
 #define AXP22_STATUS_ACEN	    ( 1 <<  7)
 
 #define AXP22_STATUS_BATINACT  	( 1 << 11)
-
+                               	
 #define AXP22_STATUS_BATEN     	( 1 << 13)
 #define AXP22_STATUS_INCHAR    	( 1 << 14)
 #define AXP22_STATUS_ICTEMOV   	( 1 << 15)

@@ -17,10 +17,10 @@
 //the sync mode between ar100 and ac327
 #define STANDBY_AR100_SYNC (1<<1)
 #define STANDBY_AR100_ASYNC (1<<2)
-
+ 
  int standby_ar100_init(void);
  int standby_ar100_exit(void);
-
+ 
 /*
  * notify ar100 to wakeup: restore cpus freq, volt, and init_dram.
  * para:  mode.

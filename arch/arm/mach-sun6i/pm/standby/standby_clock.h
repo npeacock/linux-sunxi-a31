@@ -40,3 +40,4 @@ void standby_clk_ldoenable(void);
 extern __u32   cpu_ms_loopcnt;
 
 #endif  /* __STANDBY_CLOCK_H__ */
+

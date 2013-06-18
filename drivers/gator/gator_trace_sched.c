@@ -32,7 +32,7 @@ void emit_pid_name(struct task_struct* task)
 	unsigned long x, cpu = smp_processor_id();
 	uint64_t *keys = &(per_cpu(taskname_keys, cpu)[(task->pid & 0xFF) * TASK_MAX_COLLISIONS]);
 	uint64_t value;
-
+	
 	value = gator_chksum_crc32(task->comm);
 	value = (value << 32) | (uint32_t)task->pid;
 

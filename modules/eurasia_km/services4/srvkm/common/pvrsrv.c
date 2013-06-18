@@ -251,7 +251,7 @@ IMG_VOID WriteHWRegs(IMG_PVOID pvLinRegBaseAddr, IMG_UINT32 ui32Count, PVRSRV_HW
  Enumerates the device node (if is of the same class as given).
 
  @Input psDeviceNode	- The device node to be enumerated
-		va				- variable arguments list, with:
+ 		va				- variable arguments list, with:
 							pui32DevCount	- The device count pointer (to be increased)
 							ppui32DevID		- The pointer to the device IDs pointer (to be updated and increased)
 ******************************************************************************/
@@ -296,17 +296,17 @@ static IMG_VOID PVRSRVEnumerateDevicesKM_ForEachVaCb(PVRSRV_DEVICE_NODE *psDevic
  to find the index of the MBX device
 
  @output pui32NumDevices :	On success, contains the number of devices present
-							in the system
+ 							in the system
 
  @output psDevIdList	 :	Pointer to called supplied buffer to receive the
-							list of PVRSRV_DEVICE_IDENTIFIER
+ 							list of PVRSRV_DEVICE_IDENTIFIER
 
  @return PVRSRV_ERROR  :	PVRSRV_NO_ERROR
 
 ******************************************************************************/
 IMG_EXPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVEnumerateDevicesKM(IMG_UINT32 *pui32NumDevices,
-												   PVRSRV_DEVICE_IDENTIFIER *psDevIdList)
+											 	   PVRSRV_DEVICE_IDENTIFIER *psDevIdList)
 {
 	SYS_DATA			*psSysData;
 /*	PVRSRV_DEVICE_NODE	*psDeviceNode; */
@@ -472,7 +472,7 @@ IMG_VOID IMG_CALLCONV PVRSRVDeInit(PSYS_DATA psSysData)
 	{
 		PDUMPDEINIT();
 	}
-
+	
 	/* destroy event object */
 	if(psSysData->psGlobalEventObject)
 	{
@@ -523,7 +523,7 @@ IMG_VOID IMG_CALLCONV PVRSRVDeInit(PSYS_DATA psSysData)
 PVRSRV_ERROR IMG_CALLCONV PVRSRVRegisterDevice(PSYS_DATA psSysData,
 											  PVRSRV_ERROR (*pfnRegisterDevice)(PVRSRV_DEVICE_NODE*),
 											  IMG_UINT32 ui32SOCInterruptBit,
-											  IMG_UINT32 *pui32DeviceIndex)
+			 								  IMG_UINT32 *pui32DeviceIndex)
 {
 	PVRSRV_ERROR		eError;
 	PVRSRV_DEVICE_NODE	*psDeviceNode;
@@ -754,7 +754,7 @@ PVRSRV_ERROR PVRSRVDevInitCompatCheck(PVRSRV_DEVICE_NODE *psDeviceNode)
 			eDeviceType : Required device type. If type is unknown use ui32DevIndex
 						 to locate device data
 
-			ui32DevIndex : Index to the required device obtained from the
+ 			ui32DevIndex : Index to the required device obtained from the
 						PVRSRVEnumerateDevice function
 
  @Return   PVRSRV_ERROR  :
@@ -953,10 +953,10 @@ PVRSRV_ERROR IMG_CALLCONV PollForValueKM (volatile IMG_UINT32*	pui32LinMemAddr,
 		PVR_UNREFERENCED_PARAMETER(bAllowPreemption);
 		#if !defined(__linux__)
 		PVR_UNREFERENCED_PARAMETER(ui32PollPeriodus);
-		#endif
-
+		#endif	
+		
 		/* For the Emulator we want the system to stop when a lock-up is detected so the state can be analysed.
-		 * Also the Emulator is much slower than real silicon so timeouts are not valid.
+		 * Also the Emulator is much slower than real silicon so timeouts are not valid. 
 		 */
 		do
 		{
@@ -969,7 +969,7 @@ PVRSRV_ERROR IMG_CALLCONV PollForValueKM (volatile IMG_UINT32*	pui32LinMemAddr,
 			OSWaitus(ui32PollPeriodus);
 			#else
 			OSReleaseThreadQuanta();
-			#endif
+			#endif	
 
 		} while (ui32Timeoutus); /* Endless loop only for the Emulator */
 	}
@@ -990,7 +990,7 @@ PVRSRV_ERROR IMG_CALLCONV PollForValueKM (volatile IMG_UINT32*	pui32LinMemAddr,
 			{
 				return PVRSRV_OK;
 			}
-
+			
 			if (bAllowPreemption)
 			{
 				OSSleepms(ui32PollPeriodus / 1000);
@@ -1000,7 +1000,7 @@ PVRSRV_ERROR IMG_CALLCONV PollForValueKM (volatile IMG_UINT32*	pui32LinMemAddr,
 				OSWaitus(ui32PollPeriodus);
 			}
 		} END_LOOP_UNTIL_TIMEOUT();
-
+	
 		PVR_DPF((PVR_DBG_ERROR,"PollForValueKM: Timeout. Expected 0x%x but found 0x%x (mask 0x%x).",
 				ui32Value, ui32ActualValue, ui32Mask));
 	}
@@ -1115,7 +1115,7 @@ static PVRSRV_ERROR PVRSRVGetMiscInfoKM_Device_AnyVaCb(PVRSRV_DEVICE_NODE *psDev
 	/* double loop app contexts:heaps */
 	return List_BM_CONTEXT_PVRSRV_ERROR_Any_va(psDeviceNode->sDevMemoryInfo.pBMContext,
 												&PVRSRVGetMiscInfoKM_BMContext_AnyVaCb,
-												pui32StrLen,
+							 					pui32StrLen,
 												pi32Count,
 												ppszStr,
 												ui32Mode);
@@ -1249,10 +1249,10 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVGetMiscInfoKM(PVRSRV_MISC_INFO *psMiscInfo)
 		IMG_CHAR			*pszStr;
 		IMG_UINT32			ui32StrLen;
 		IMG_INT32			i32Count;
-
+		
 		pszStr = psMiscInfo->pszMemoryStr;
 		ui32StrLen = psMiscInfo->ui32MemoryStrLen;
-
+  
 		psMiscInfo->ui32StatePresent |= PVRSRV_MISC_INFO_FREEMEM_PRESENT;
 
 		/* triple loop over devices:contexts:heaps */
@@ -1262,7 +1262,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVGetMiscInfoKM(PVRSRV_MISC_INFO *psMiscInfo)
 													&i32Count,
 													&pszStr,
 													PVRSRV_MISC_INFO_FREEMEM_PRESENT);
-
+		
 		i32Count = OSSNPrintf(pszStr, 100, "\n");
 		UPDATE_SPACE(pszStr, i32Count, ui32StrLen);
 	}
@@ -1761,7 +1761,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVSaveRestoreLiveSegments(IMG_HANDLE hArena, IMG_P
  @Description	Returns a text string relating to the PVRSRV_ERROR enum.
 
  @Note		case statement used rather than an indexed arrary to ensure text is
-			synchronised with the correct enum
+ 			synchronised with the correct enum
 
  @Input		eError : PVRSRV_ERROR enum
 
@@ -1773,7 +1773,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVSaveRestoreLiveSegments(IMG_HANDLE hArena, IMG_P
 
 IMG_EXPORT
 const IMG_CHAR *PVRSRVGetErrorStringKM(PVRSRV_ERROR eError)
-{
+{ 
 /* PRQA S 5087 1 */ /* include file required here */
 #include "pvrsrv_errors.h"
 }
@@ -1815,7 +1815,7 @@ IMG_VOID PVRSRVScheduleDeviceCallbacks(IMG_VOID)
  @Function	PVRSRVScheduleDevices
 
  @Description	Schedules all Services-Managed Devices to check their pending
-				command queues. The intention is that ScheduleDevices be called by the
+ 				command queues. The intention is that ScheduleDevices be called by the
 				3rd party BC driver after it has finished writing new data to its output
 				texture.
 

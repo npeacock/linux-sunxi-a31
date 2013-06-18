@@ -22,3 +22,4 @@ u32 __dtc_conti_mode(void);
 
 
 #endif /* __TEST_CASE_OTHER_H */
+

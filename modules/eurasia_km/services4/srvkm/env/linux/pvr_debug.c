@@ -112,7 +112,7 @@ static DEFINE_SPINLOCK(gsDebugLockIRQ);
 #endif
 
 #if !defined(PVR_DEBUG_ALWAYS_USE_SPINLOCK)
-#if !defined (USE_SPIN_LOCK) /* to keep QAC happy */
+#if !defined (USE_SPIN_LOCK) /* to keep QAC happy */ 
 #define	USE_SPIN_LOCK (in_interrupt() || !preemptible())
 #endif
 #endif
@@ -390,7 +390,7 @@ IMG_VOID PVRSRVDebugPrintf	(
 				/* Buffer for rewriting filepath in log messages */
 				static IMG_CHAR szFileNameRewrite[PVR_MAX_FILEPATH_LEN];
 
-				IMG_CHAR* pszTruncIter;
+   				IMG_CHAR* pszTruncIter;
 				IMG_CHAR* pszTruncBackInter;
 
 				/* Truncate path (DEBUG_LOG_PATH_TRUNCATE shoud be set to EURASIA env var)*/
@@ -448,7 +448,7 @@ IMG_VOID PVRSRVDebugPrintf	(
 				if (pszLeafName)
 				{
 					pszFileName = pszLeafName;
-			}
+		       	}
 #endif /* __sh__ */
 
 				if (BAppend(pszBuf, ui32BufSiz, " [%u, %s]", ui32Line, pszFileName))

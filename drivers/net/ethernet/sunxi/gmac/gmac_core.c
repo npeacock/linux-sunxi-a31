@@ -769,18 +769,14 @@ static void gmac_check_ether_addr(struct gmac_priv *priv)
 	char *p = mac_str;
 	/* verify if the MAC address is valid, in case of failures it
 	 * generates a random MAC address */
-	if (!is_valid_ether_addr(priv->ndev->dev_addr)) {
-		gmac_get_umac_addr((void __iomem *)
-					     priv->ndev->base_addr,
-					     priv->ndev->dev_addr, 0);
-		if  (!is_valid_ether_addr(priv->ndev->dev_addr)) {
-			for (i=0; i<6; i++,p++)
+	if  (!is_valid_ether_addr(priv->ndev->dev_addr)) {
+		for (i=0; i<6; i++,p++)
 				priv->ndev->dev_addr[i] = simple_strtoul(p, &p, 16);
 		}
 
 		if  (!is_valid_ether_addr(priv->ndev->dev_addr))
 			random_ether_addr(priv->ndev->dev_addr);
-	}
+
 	printk(KERN_WARNING "%s: device MAC address %pM\n", priv->ndev->name,
 						   priv->ndev->dev_addr);
 }
@@ -800,7 +796,6 @@ static int gmac_open(struct net_device *ndev)
 	int ret;
 
 	gmac_clk_ctl(priv, 1);
-	gmac_check_ether_addr(priv);
 
 	/* MDIO bus Registration */
 	ret = gmac_mdio_register(ndev);
@@ -1572,6 +1567,7 @@ struct gmac_priv *gmac_dvr_probe(struct device *device,
 		printk(KERN_ERR "ERROR: %i registering the device\n", ret);
 		goto error;
 	}
+	gmac_check_ether_addr(priv);
 
 	return priv;
 
@@ -1688,7 +1684,8 @@ static int __init set_mac_addr(char *str)
 {
 	char *p = str;
 
-	memcpy(mac_str, p, 18);
+	if (str && strlen(str))
+		memcpy(mac_str, p, 18);
 
 	return 0;
 }
@@ -1737,3 +1734,4 @@ module_exit(gmac_remove);
 MODULE_DESCRIPTION("SUN6I 10/100/1000Mbps Ethernet device driver");
 MODULE_AUTHOR("Shuge <shugeLinux@gmail.com>");
 MODULE_LICENSE("GPL v2");
+

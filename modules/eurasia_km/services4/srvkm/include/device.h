@@ -46,7 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if defined(__cplusplus)
 extern "C" {
 #endif
-
+	
 #include "ra.h"  		/* RA_ARENA */
 #include "resman.h"		/* PRESMAN_ITEM */
 
@@ -87,7 +87,7 @@ typedef struct _DEVICE_MEMORY_HEAP_INFO_
 
 	/* backing store identifier string */
 	IMG_CHAR				*pszBSName;
-
+	
 	/* Device virtual address of base of heap */
 	IMG_DEV_VIRTADDR		sDevVAddrBase;
 
@@ -99,10 +99,10 @@ typedef struct _DEVICE_MEMORY_HEAP_INFO_
 
 	/* Heap type: per device, kernel only, shared, shared_exported */
 	DEVICE_MEMORY_HEAP_TYPE	DevMemHeapType;
-
+	
 	/* kernel heap handle */
 	IMG_HANDLE				hDevMemHeap;
-
+	
 	/* ptr to local memory allocator for this heap */
 	RA_ARENA				*psLocalDevMemArena;
 
@@ -118,18 +118,18 @@ typedef struct _DEVICE_MEMORY_INFO_
 	/* size of address space, as log2 */
 	IMG_UINT32				ui32AddressSpaceSizeLog2;
 
-	/*
-		flags, includes physical memory resource types available to the system.
-		Allows for validation at heap creation, define PVRSRV_BACKINGSTORE_XXX
+	/* 
+		flags, includes physical memory resource types available to the system.  
+		Allows for validation at heap creation, define PVRSRV_BACKINGSTORE_XXX 
 	*/
 	IMG_UINT32				ui32Flags;
 
 	/* heap count.  Doesn't include additional heaps from PVRSRVCreateDeviceMemHeap */
 	IMG_UINT32				ui32HeapCount;
-
+	
 	/* the sync heap id - common code needs to know */
 	IMG_UINT32				ui32SyncHeapID;
-
+	
 	/* heap for buffer mappings  */
 	IMG_UINT32				ui32MappingHeapID;
 
@@ -178,9 +178,9 @@ typedef struct DEV_ARENA_DESCRIPTOR_TAG
 typedef struct _PDUMP_MMU_ATTRIB_
 {
 	PVRSRV_DEVICE_IDENTIFIER	sDevId;
-
+	
 	IMG_CHAR	*pszPDRegRegion;
-
+	
 	/* data page info */
 	IMG_UINT32 ui32DataPageMask;
 
@@ -247,7 +247,7 @@ typedef struct _PVRSRV_DEVICE_NODE_
 
 	IMG_VOID				(*pfnMMUMapShadow)(MMU_HEAP            *pMMU,
 											   IMG_DEV_VIRTADDR    MapBaseDevVAddr,
-											   IMG_SIZE_T          uSize,
+											   IMG_SIZE_T          uSize, 
 											   IMG_CPU_VIRTADDR    CpuVAddr,
 											   IMG_HANDLE          hOSMemHandle,
 											   IMG_DEV_VIRTADDR    *pDevVAddr,
@@ -314,21 +314,21 @@ typedef struct _PVRSRV_DEVICE_NODE_
 	/* private device information */
 	IMG_VOID				*pvDevice;
 	IMG_UINT32				ui32pvDeviceSize; /* required by GetClassDeviceInfo API */
-
+		
 	/* Resource Manager Context */
 	PRESMAN_CONTEXT			hResManContext;
-
+	
 	/* pointer back to parent sysdata */
 	PSYS_DATA				psSysData;
-
+	
 	/* default MMU PT/PD backing store to use for the device */
 	RA_ARENA				*psLocalDevMemArena;
-
+	
 	IMG_UINT32				ui32Flags;
-
+	
 	struct _PVRSRV_DEVICE_NODE_	*psNext;
 	struct _PVRSRV_DEVICE_NODE_	**ppsThis;
-
+	
 #if defined(PDUMP)
 	/* 	device-level callback which is called when pdump.exe starts.
 	 *	Should be implemented in device-specific init code, e.g. sgxinit.c
@@ -342,7 +342,7 @@ typedef struct _PVRSRV_DEVICE_NODE_
 PVRSRV_ERROR IMG_CALLCONV PVRSRVRegisterDevice(PSYS_DATA psSysData,
 											  PVRSRV_ERROR (*pfnRegisterDevice)(PVRSRV_DEVICE_NODE*),
 											  IMG_UINT32 ui32SOCInterruptBit,
-											  IMG_UINT32 *pui32DeviceIndex );
+			 								  IMG_UINT32 *pui32DeviceIndex );
 
 PVRSRV_ERROR IMG_CALLCONV PVRSRVInitialiseDevice(IMG_UINT32 ui32DevIndex);
 PVRSRV_ERROR IMG_CALLCONV PVRSRVFinaliseSystem(IMG_BOOL bInitSuccesful);
@@ -389,8 +389,8 @@ PVRSRV_ERROR IMG_CALLCONV PollForInterruptKM(IMG_UINT32 ui32Value,
 
 #endif /* #if defined (USING_ISR_INTERRUPTS) */
 
-/* The following functions don't really belong here (srvkm.h might be a better
- * place), but as they use the device data structures, this is the most convenient
+/* The following functions don't really belong here (srvkm.h might be a better 
+ * place), but as they use the device data structures, this is the most convenient 
  * place for them. */
 PVRSRV_ERROR IMG_CALLCONV PVRSRVInit(PSYS_DATA psSysData);
 IMG_VOID IMG_CALLCONV PVRSRVDeInit(PSYS_DATA psSysData);
@@ -401,7 +401,7 @@ IMG_VOID IMG_CALLCONV PVRSRVMISR(IMG_VOID *pvSysData);
 #if defined(__cplusplus)
 }
 #endif
-
+	
 #endif /* __DEVICE_H__ */
 
 /******************************************************************************

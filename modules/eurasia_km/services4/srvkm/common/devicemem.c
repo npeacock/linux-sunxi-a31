@@ -405,7 +405,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVGetDeviceMemHeapInfoKM(IMG_HANDLE					hDevCookie
 				{
 					hDevMemHeap = BM_CreateHeap(hDevMemContext,
 												&psDeviceMemoryHeap[i]);
-
+				
 					if (hDevMemHeap == IMG_NULL)
 					{
 						return PVRSRV_ERROR_OUT_OF_MEMORY;
@@ -481,7 +481,7 @@ static PVRSRV_ERROR AllocDeviceMem(IMG_HANDLE		hDevCookie,
 								   IMG_BOOL			*pabMapChunk,
 								   PVRSRV_KERNEL_MEM_INFO **ppsMemInfo)
 {
-	PVRSRV_KERNEL_MEM_INFO	*psMemInfo;
+ 	PVRSRV_KERNEL_MEM_INFO	*psMemInfo;
 	BM_HANDLE 		hBuffer;
 	/* Pointer to implementation details within the mem_info */
 	PVRSRV_MEMBLK	*psMemBlock;
@@ -666,7 +666,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVAllocSyncInfoKM(IMG_HANDLE					hDevCookie,
 		OSFreeMem(PVRSRV_PAGEABLE_SELECT, sizeof(PVRSRV_KERNEL_SYNC_INFO), psKernelSyncInfo, IMG_NULL);
 		return PVRSRV_ERROR_OUT_OF_MEMORY;
 	}
-
+	
 
 	/* Get the devnode from the devheap */
 	pBMContext = (BM_CONTEXT*)hDevMemContext;
@@ -763,7 +763,7 @@ IMG_VOID IMG_CALLCONV PVRSRVReleaseSyncInfoKM(PVRSRV_KERNEL_SYNC_INFO	*psKernelS
 	if (OSAtomicDecAndTest(psKernelSyncInfo->pvRefCount))
 	{
 		FreeDeviceMem(psKernelSyncInfo->psSyncDataMemInfoKM);
-
+	
 		/* Catch anyone who is trying to access the freed structure */
 		psKernelSyncInfo->psSyncDataMemInfoKM = IMG_NULL;
 		psKernelSyncInfo->psSyncData = IMG_NULL;
@@ -933,7 +933,7 @@ static PVRSRV_ERROR FreeDeviceMemCallBack(IMG_PVOID  pvParam,
 										  IMG_BOOL   bDummy)
 {
 	PVRSRV_KERNEL_MEM_INFO	*psMemInfo = (PVRSRV_KERNEL_MEM_INFO *)pvParam;
-
+	
 	PVR_UNREFERENCED_PARAMETER(bDummy);
 
 	return FreeMemCallBackCommon(psMemInfo, ui32Param,
@@ -1159,7 +1159,7 @@ static PVRSRV_ERROR IonUnmapCallback(IMG_PVOID  pvParam,
 									 IMG_BOOL   bDummy)
 {
 	PVRSRV_KERNEL_MEM_INFO	*psMemInfo = (PVRSRV_KERNEL_MEM_INFO *)pvParam;
-
+	
 	PVR_UNREFERENCED_PARAMETER(bDummy);
 
 	return FreeMemCallBackCommon(psMemInfo, ui32Param, PVRSRV_FREE_CALLBACK_ORIGIN_ALLOCATOR);
@@ -1195,7 +1195,7 @@ PVRSRV_ERROR PVRSRVMapIonHandleKM(PVRSRV_PER_PROCESS_DATA *psPerProc,
 								  PVRSRV_KERNEL_MEM_INFO **ppsKernelMemInfo)
 {
 	PVRSRV_ENV_PER_PROCESS_DATA *psPerProcEnv = PVRSRVProcessPrivateData(psPerProc);
-	PVRSRV_DEVICE_NODE *psDeviceNode;
+	PVRSRV_DEVICE_NODE *psDeviceNode; 
 	PVRSRV_KERNEL_MEM_INFO *psNewKernelMemInfo;
 	DEVICE_MEMORY_INFO *psDevMemoryInfo;
 	DEVICE_MEMORY_HEAP_INFO *psDeviceMemoryHeap;
@@ -1232,7 +1232,7 @@ PVRSRV_ERROR PVRSRVMapIonHandleKM(PVRSRV_PER_PROCESS_DATA *psPerProc,
 	/* Choose the heap to map to */
 	ui32HeapCount = psDeviceNode->sDevMemoryInfo.ui32HeapCount;
 	psDevMemoryInfo = &psDeviceNode->sDevMemoryInfo;
-	psDeviceMemoryHeap = psDeviceNode->sDevMemoryInfo.psDeviceMemoryHeap;
+	psDeviceMemoryHeap = psDeviceNode->sDevMemoryInfo.psDeviceMemoryHeap;	
 	for(i=0; i<PVRSRV_MAX_CLIENT_HEAPS; i++)
 	{
 		if(HEAP_IDX(psDeviceMemoryHeap[i].ui32HeapID) == psDevMemoryInfo->ui32IonHeapID)
@@ -1255,7 +1255,7 @@ PVRSRV_ERROR PVRSRVMapIonHandleKM(PVRSRV_PER_PROCESS_DATA *psPerProc,
 			break;
 		}
 	}
-
+	
 	if (hDevMemHeap == IMG_NULL)
 	{
 		PVR_DPF((PVR_DBG_ERROR, "%s: Failed to get ION heap", __FUNCTION__));
@@ -1504,7 +1504,7 @@ static PVRSRV_ERROR UnwrapExtMemoryCallBack(IMG_PVOID  pvParam,
 											IMG_BOOL   bDummy)
 {
 	PVRSRV_KERNEL_MEM_INFO	*psMemInfo = (PVRSRV_KERNEL_MEM_INFO *)pvParam;
-
+	
 	PVR_UNREFERENCED_PARAMETER(bDummy);
 
 	return FreeMemCallBackCommon(psMemInfo, ui32Param,
@@ -1605,9 +1605,21 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVWrapExtMemoryKM(IMG_HANDLE				hDevCookie,
 		psExtSysPAddr = psIntSysPAddr;
 
 		/* assume memory is not physically contiguous;
-		   we shouldn't trust what the user says here
-		*/
+  		   we shouldn't trust what the user says here
+  		*/
 		bPhysContig = IMG_FALSE;
+	}
+	else
+	{
+		if (psExtSysPAddr)
+		{
+			PVR_DPF((PVR_DBG_ERROR, "PVRSRVWrapExtMemoryKM: invalid parameter, physical address passing is not supported"));
+		}
+		else
+		{
+			PVR_DPF((PVR_DBG_ERROR, "PVRSRVWrapExtMemoryKM: invalid parameter, no address specificed"));
+		}
+		return PVRSRV_ERROR_INVALID_PARAMS;
 	}
 
 	/* Choose the heap to map to */
@@ -1766,7 +1778,7 @@ ErrorExitPhase1:
  @Function	PVRSRVUnmapDeviceMemoryKM
 
  @Description
-		Unmaps an existing allocation previously mapped by PVRSRVMapDeviceMemory
+ 		Unmaps an existing allocation previously mapped by PVRSRVMapDeviceMemory
 
  @Input    psMemInfo
 
@@ -1841,8 +1853,8 @@ static PVRSRV_ERROR UnmapDeviceMemoryCallBack(IMG_PVOID  pvParam,
  @Function	PVRSRVMapDeviceMemoryKM
 
  @Description
-		Maps an existing allocation to a specific device address space and heap
-		Note: it's valid to map from one physical device to another
+ 		Maps an existing allocation to a specific device address space and heap
+ 		Note: it's valid to map from one physical device to another
 
  @Input	   psPerProc : Per-process data
  @Input    psSrcMemInfo
@@ -2357,7 +2369,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVMapDeviceClassMemoryKM(PVRSRV_PER_PROCESS_DATA	*
 		 *
 		 *	A better method is to pdump the allocation from the DC driver, so the
 		 *	BM_Wrap pdumps only the virtual memory which better represents the driver
-		 *	behaviour.
+		 *	behaviour.	
 		 */
 		PDUMPCOMMENT("Dump display surface");
 		PDUMPMEM(IMG_NULL, psMemInfo, ui32Offset, psMemInfo->uAllocSize, PDUMP_FLAGS_CONTINUOUS, ((BM_BUF*)psMemInfo->sMemBlk.hBuffer)->pMapping);
@@ -2427,3 +2439,4 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVChangeDeviceMemoryAttributesKM(IMG_HANDLE hKerne
 /******************************************************************************
  End of file (devicemem.c)
 ******************************************************************************/
+

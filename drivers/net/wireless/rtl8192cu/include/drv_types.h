@@ -96,7 +96,7 @@ typedef struct _ADAPTER _adapter, ADAPTER,*PADAPTER;
 #endif	// CONFIG_BR_EXT
 
 #ifdef CONFIG_IOCTL_CFG80211
-	#include "ioctl_cfg80211.h"
+	#include "ioctl_cfg80211.h"	
 #endif //CONFIG_IOCTL_CFG80211
 
 #define SPEC_DEV_ID_NONE BIT(0)
@@ -380,11 +380,11 @@ struct co_data_priv{
 	//george@20120518
 	//current operating channel/bw/ch_offset
 	//save the correct ch/bw/ch_offset whatever the inputted values are
-	//when calling set_channel_bwmode() at concurrent mode
-	//for debug check or reporting to layer app (such as wpa_supplicant for nl80211)
+	//when calling set_channel_bwmode() at concurrent mode 
+	//for debug check or reporting to layer app (such as wpa_supplicant for nl80211) 
 	u8 co_ch;
 	u8 co_bw;
-	u8 co_ch_offset;
+	u8 co_ch_offset;	
 	u8 rsvd;
 
 };
@@ -396,7 +396,7 @@ typedef enum _DRIVER_STATE{
 	DRIVER_REPLACE_DONGLE = 2,
 }DRIVER_STATE;
 
-#ifdef CONFIG_INTEL_PROXIM
+#ifdef CONFIG_INTEL_PROXIM	
 struct proxim {
 	bool proxim_support;
 	bool proxim_on;
@@ -577,7 +577,7 @@ struct _ADAPTER{
 	_mutex *psetch_mutex;
 	_mutex *psetbw_mutex;
 
-	struct co_data_priv *pcodatapriv;//data buffer shared among interfaces
+	struct co_data_priv *pcodatapriv;//data buffer shared among interfaces	
 #endif
 
 #ifdef CONFIG_DUALMAC_CONCURRENT
@@ -599,9 +599,9 @@ struct _ADAPTER{
 	struct br_ext_info		ethBrExtInfo;
 #endif	// CONFIG_BR_EXT
 
-#ifdef CONFIG_INTEL_PROXIM
+#ifdef CONFIG_INTEL_PROXIM	
 	/* intel Proximity, should be alloc mem
-	 * in intel Proximity module and can only
+	 * in intel Proximity module and can only 
 	 * be used in intel Proximity mode */
 	struct proxim proximity;
 #endif	//CONFIG_INTEL_PROXIM
@@ -623,3 +623,4 @@ __inline static u8 *myid(struct eeprom_priv *peepriv)
 
 
 #endif //__DRV_TYPES_H__
+

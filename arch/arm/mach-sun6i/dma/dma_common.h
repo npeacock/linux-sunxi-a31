@@ -134,3 +134,4 @@ extern struct dma_mgr_t g_dma_mgr;
 #define DMA_CHAN_UNLOCK(lock, flag)	spin_unlock_irqrestore((lock), (flag))
 
 #endif  /* __DMA_COMMON_H */
+

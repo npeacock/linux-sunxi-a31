@@ -9,8 +9,8 @@
  * under the terms of the GNU General Public License version 2 as published by
  * the Free Software Foundation.
  */
-
-#ifdef CONFIG_ARCH_SUN4I
+ 
+#ifdef CONFIG_ARCH_SUN4I 
 	#define PERMANENT_REG (0xf1c20d20)
 	#define PERMANENT_REG_PA (0x01c20d20)
 	#define STATUS_REG (0xf1c20d20)
@@ -59,7 +59,7 @@ void init_event_counter (__u32 do_reset, __u32 enable_divider);
 
 /*
  * if return true, means a is after b;
- */
+ */	
 #define counter_after(a,b) \
 (typecheck(__u32, a) && \
 typecheck(__u32, b) && \
@@ -75,7 +75,7 @@ typecheck(__u32, b) && \
 
 void busy_waiting(void);
 /*
- * notice: when resume, boot0 need to clear the flag,
+ * notice: when resume, boot0 need to clear the flag, 
  * in case the data in dram be destoryed result in the system is re-resume in cycle.
 */
 void save_mem_flag(void);
@@ -92,3 +92,4 @@ void io_init_low(void);
 void io_high(int num);
 
 #endif /*_PM_DEBUG_H*/
+

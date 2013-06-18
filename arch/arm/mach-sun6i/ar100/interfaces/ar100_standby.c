@@ -18,10 +18,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+ 
 #include "..//ar100_i.h"
 #include <asm/tlbflush.h>
 #include <asm/cacheflush.h>
+#include <mach/sys_config.h>
 
 /* record super-standby wakeup event */
 static unsigned long wakeup_event = 0;
@@ -41,20 +42,20 @@ extern unsigned int ar100_debug_dram_crc_en;
 int ar100_standby_super(struct super_standby_para *para, ar100_cb_t cb, void *cb_arg)
 {
 	struct ar100_message *pmessage;
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
 		AR100_ERR("allocate message for super-standby request failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* check super_standby_para size valid or not */
 	if (sizeof(struct super_standby_para) > sizeof(pmessage->paras)) {
 		AR100_ERR("super-standby parameters number too long\n");
 		return -EINVAL;
 	}
-
+	
 	/* initialize message */
 	pmessage->type       = AR100_SSTANDBY_ENTER_REQ;
 	pmessage->attr       = 0;
@@ -62,10 +63,10 @@ int ar100_standby_super(struct super_standby_para *para, ar100_cb_t cb, void *cb
 	pmessage->cb.arg     = cb_arg;
 	memcpy(pmessage->paras, para, sizeof(struct super_standby_para));
 	pmessage->state      = AR100_MESSAGE_INITIALIZED;
-
+	
 	/* send enter super-standby request to ar100 */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	return 0;
 }
 EXPORT_SYMBOL(ar100_standby_super);
@@ -81,7 +82,7 @@ EXPORT_SYMBOL(ar100_standby_super);
 int ar100_query_wakeup_source(unsigned long *event)
 {
 	*event = wakeup_event;
-
+	
 	return 0;
 }
 EXPORT_SYMBOL(ar100_query_wakeup_source);
@@ -99,7 +100,7 @@ int ar100_query_dram_crc_result(unsigned long *perror, unsigned long *ptotal_cou
 	*perror = dram_crc_error;
 	*ptotal_count = dram_crc_total_count;
 	*perror_count = dram_crc_error_count;
-
+	
 	return 0;
 }
 EXPORT_SYMBOL(ar100_query_dram_crc_result);
@@ -110,7 +111,7 @@ int ar100_set_dram_crc_result(unsigned long error, unsigned long total_count,
 	dram_crc_error = error;
 	dram_crc_total_count = total_count;
 	dram_crc_error_count = error_count;
-
+	
 	return 0;
 }
 EXPORT_SYMBOL(ar100_set_dram_crc_result);
@@ -124,25 +125,25 @@ EXPORT_SYMBOL(ar100_set_dram_crc_result);
 int ar100_cpux_ready_notify(void)
 {
 	struct ar100_message *pmessage;
-
+	
 	/* notify hwspinlock and hwmsgbox resume first */
 	ar100_hwmsgbox_standby_resume();
 	ar100_hwspinlock_standby_resume();
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type     = AR100_SSTANDBY_RESTORE_NOTIFY;
 	pmessage->attr     = AR100_MESSAGE_ATTR_HARDSYN;
 	pmessage->state    = AR100_MESSAGE_INITIALIZED;
-
+	
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* record wakeup event */
 	wakeup_event   = pmessage->paras[0];
 	if (ar100_debug_dram_crc_en) {
@@ -150,10 +151,10 @@ int ar100_cpux_ready_notify(void)
 		dram_crc_total_count++;
 		dram_crc_error_count += (dram_crc_error ? 1 : 0);
 	}
-
+	
 	/* free message */
 	ar100_message_free(pmessage);
-
+	
 	return 0;
 }
 EXPORT_SYMBOL(ar100_cpux_ready_notify);
@@ -168,20 +169,20 @@ EXPORT_SYMBOL(ar100_cpux_ready_notify);
 int ar100_standby_talk(struct super_standby_para *para, ar100_cb_t cb, void *cb_arg)
 {
 	struct ar100_message *pmessage;
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
 		AR100_ERR("allocate message for talk-standby request failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* check super_standby_para size valid or not */
 	if (sizeof(struct super_standby_para) > sizeof(pmessage->paras)) {
 		AR100_ERR("talk-standby parameters number too long\n");
 		return -EINVAL;
 	}
-
+	
 	/* initialize message */
 	pmessage->type       = AR100_TSTANDBY_ENTER_REQ;
 	pmessage->attr       = 0;
@@ -189,10 +190,10 @@ int ar100_standby_talk(struct super_standby_para *para, ar100_cb_t cb, void *cb_
 	pmessage->cb.arg     = cb_arg;
 	memcpy(pmessage->paras, para, sizeof(struct super_standby_para));
 	pmessage->state      = AR100_MESSAGE_INITIALIZED;
-
+	
 	/* send enter super-standby request to ar100 */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	return 0;
 }
 EXPORT_SYMBOL(ar100_standby_talk);
@@ -206,25 +207,25 @@ EXPORT_SYMBOL(ar100_standby_talk);
 int ar100_cpux_talkstandby_ready_notify(void)
 {
 	struct ar100_message *pmessage;
-
+	
 	/* notify hwspinlock and hwmsgbox resume first */
 	ar100_hwmsgbox_standby_resume();
 	ar100_hwspinlock_standby_resume();
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type     = AR100_TSTANDBY_RESTORE_NOTIFY;
 	pmessage->attr     = AR100_MESSAGE_ATTR_HARDSYN;
 	pmessage->state    = AR100_MESSAGE_INITIALIZED;
-
+	
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* record wakeup event */
 	wakeup_event   = pmessage->paras[0];
 	if (ar100_debug_dram_crc_en) {
@@ -232,10 +233,42 @@ int ar100_cpux_talkstandby_ready_notify(void)
 		dram_crc_total_count++;
 		dram_crc_error_count += (dram_crc_error ? 1 : 0);
 	}
-
+	
 	/* free message */
 	ar100_message_free(pmessage);
-
+	
 	return 0;
 }
 EXPORT_SYMBOL(ar100_cpux_talkstandby_ready_notify);
+
+/**
+ * enter fake power off.
+ */
+void ar100_fake_power_off(void)
+{
+	struct ar100_message *pmessage;
+	script_item_u script_val;
+	script_item_value_type_e type;
+	
+	/* allocate a message frame */
+	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
+	if (pmessage == NULL) {
+		AR100_ERR("allocate message for fake power off request failed\n");
+	}
+
+	type = script_get_item("pmu_para", "pmu_ir_power_key_code", &script_val);
+	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
+		printk("get ir power off key config type err!");
+		script_val.val = 0;
+	}
+	
+	/* initialize message */
+	pmessage->type       = AR100_FAKE_POWER_OFF_REQ;
+	pmessage->attr       = 0;
+	pmessage->state      = AR100_MESSAGE_INITIALIZED;
+	pmessage->paras[0]   = script_val.val;
+	
+	/* send enter fake power off request to ar100 */
+	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
+}
+EXPORT_SYMBOL(ar100_fake_power_off);

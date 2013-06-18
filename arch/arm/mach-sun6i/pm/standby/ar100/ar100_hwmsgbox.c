@@ -79,7 +79,7 @@ int ar100_hwmsgbox_exit(void)
 int ar100_hwmsgbox_send_message(struct ar100_message *pmessage, unsigned int timeout)
 {
 	volatile unsigned long value;
-
+	
 	if (pmessage == NULL) {
 		return -EINVAL;
 	}
@@ -89,10 +89,10 @@ int ar100_hwmsgbox_send_message(struct ar100_message *pmessage, unsigned int tim
 			//message-queue fifo is full, waiting always
 			;
 		}
-		value = ((volatile unsigned long)pmessage) - ar100_sram_a2_vbase;
+		value = ((volatile unsigned long)pmessage) - ar100_sram_a2_vbase; 
 		AR100_INF("ac327 send hard syn message : %x\n", (unsigned int)value);
 		writel(value, IO_ADDRESS(AW_MSGBOX_MSG_REG(AR100_HWMSGBOX_AC327_SYN_TX_CH)));
-
+		
 		//hwsyn messsage must feedback use syn rx channel
 		while (readl(IO_ADDRESS(AW_MSGBOX_MSG_STATUS_REG(AR100_HWMSGBOX_AC327_SYN_RX_CH))) == 0) {
 			//message not valid
@@ -106,30 +106,30 @@ int ar100_hwmsgbox_send_message(struct ar100_message *pmessage, unsigned int tim
 		AR100_INF("ac327 hard syn message [%x, %x] feedback\n", (unsigned int)value, (unsigned int)pmessage->type);
 		return 0;
 	}
-
+	
 	//use ac327 asyn transmit channel.
 	while (readl(IO_ADDRESS(AW_MSGBOX_FIFO_STATUS_REG(AR100_HWMSGBOX_AR100_ASYN_RX_CH))) == 1) {
 		//message-queue fifo is full, waiting always
 		;
 	}
 	//write message to message-queue fifo.
-	value = ((volatile unsigned long)pmessage) - ar100_sram_a2_vbase;
+	value = ((volatile unsigned long)pmessage) - ar100_sram_a2_vbase; 
 	AR100_LOG("ac327 send message : %x\n", (unsigned int)value);
 	writel(value, IO_ADDRESS(AW_MSGBOX_MSG_REG(AR100_HWMSGBOX_AR100_ASYN_RX_CH)));
-
+	
 	//syn messsage must wait message feedback
 	if (pmessage->attr & AR100_MESSAGE_ATTR_SOFTSYN) {
 		AR100_ERR("standby ar100 driver not support soft syn message transfer\n");
 		return -EINVAL;
 	}
-
+	
 	return 0;
 }
 
 int ar100_hwmsgbox_feedback_message(struct ar100_message *pmessage, unsigned int timeout)
 {
 	volatile unsigned long value;
-
+	
 	if (pmessage->attr & AR100_MESSAGE_ATTR_HARDSYN) {
 		//use ac327 hard syn receiver channel.
 		while (readl(IO_ADDRESS(AW_MSGBOX_FIFO_STATUS_REG(AR100_HWMSGBOX_AR100_SYN_RX_CH))) == 1) {
@@ -153,7 +153,7 @@ int ar100_hwmsgbox_feedback_message(struct ar100_message *pmessage, unsigned int
 		writel(value, IO_ADDRESS(AW_MSGBOX_MSG_REG(AR100_HWMSGBOX_AR100_ASYN_RX_CH)));
 		return 0;
 	}
-
+	
 	//invalid syn message
 	return -EINVAL;
 }
@@ -173,12 +173,12 @@ int ar100_hwmsgbox_feedback_message(struct ar100_message *pmessage, unsigned int
 int ar100_hwmsgbox_enable_receiver_int(int queue, int user)
 {
 	volatile unsigned int value;
-
+	
 	value  =  readl(IO_ADDRESS(AW_MSGBOX_IRQ_EN_REG(user)));
 	value &= ~(0x1 << (queue * 2));
 	value |=  (0x1 << (queue * 2));
 	writel(value, IO_ADDRESS(AW_MSGBOX_IRQ_EN_REG(user)));
-
+	
 	return 0;
 }
 
@@ -197,9 +197,9 @@ int ar100_hwmsgbox_enable_receiver_int(int queue, int user)
 int ar100_hwmsgbox_query_receiver_pending(int queue, int user)
 {
 	volatile unsigned long value;
-
+	
 	value  =  readl(IO_ADDRESS((AW_MSGBOX_IRQ_STATUS_REG(user))));
-
+	
 	return value & (0x1 << (queue * 2));
 }
 
@@ -218,7 +218,7 @@ int ar100_hwmsgbox_query_receiver_pending(int queue, int user)
 int ar100_hwmsgbox_clear_receiver_pending(int queue, int user)
 {
 	writel((0x1 << (queue * 2)), IO_ADDRESS(AW_MSGBOX_IRQ_STATUS_REG(user)));
-
+	
 	return 0;
 }
 
@@ -236,7 +236,7 @@ int ar100_hwmsgbox_clear_receiver_pending(int queue, int user)
 struct ar100_message *ar100_hwmsgbox_query_message(void)
 {
 	struct ar100_message *pmessage = NULL;
-
+	
 	//query ac327 asyn received channel
 	if (readl(IO_ADDRESS(AW_MSGBOX_MSG_STATUS_REG(AR100_HWMSGBOX_AR100_ASYN_TX_CH)))) {
 		volatile unsigned long value;
@@ -288,7 +288,7 @@ struct ar100_message *ar100_hwmsgbox_query_message(void)
 
 int ar100_message_valid(struct ar100_message *pmessage)
 {
-	if ((((__u32)pmessage) >= (AR100_MESSAGE_POOL_START + ar100_sram_a2_vbase)) &&
+	if ((((__u32)pmessage) >= (AR100_MESSAGE_POOL_START + ar100_sram_a2_vbase)) && 
 		(((__u32)pmessage) <  (AR100_MESSAGE_POOL_END   + ar100_sram_a2_vbase))) {
 		//valid message
 		return 1;

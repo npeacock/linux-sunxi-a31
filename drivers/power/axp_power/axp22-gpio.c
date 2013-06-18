@@ -40,7 +40,7 @@ int axp_gpio_set_io(int gpio, int io_mode)
 			case 1: return axp_clr_bits(&axp->dev,AXP22_GPIO1_CFG, 0x06);
 			case 2: return 0;
 			case 3: return axp_clr_bits(&axp->dev,AXP22_GPIO3_CFG, 0x08);
-			case 4: return axp_clr_bits(&axp->dev,AXP22_GPIO4_CFG, 0x10);
+			case 4: return axp_clr_bits(&axp->dev,AXP22_GPIO4_CFG, 0x10);	
 			default:return -ENXIO;
 		}
 	}
@@ -52,14 +52,14 @@ int axp_gpio_set_io(int gpio, int io_mode)
 			case 1: axp_clr_bits(&axp->dev,AXP22_GPIO1_CFG,0x05);
 					return axp_set_bits(&axp->dev,AXP22_GPIO1_CFG,0x02);
 			case 2:
-					printk("This IO can not config as an input!");
+					printk("This IO can not config as an input!"); 
 					return -EINVAL;
-			case 3:
-					printk("This IO can not config as an input!");
+			case 3: 
+					printk("This IO can not config as an input!"); 
 					return -EINVAL;
-			case 4:
-					printk("This IO can not config as an input!");
-					return -EINVAL;
+			case 4: 
+					printk("This IO can not config as an input!"); 
+					return -EINVAL;	
 			default:return -ENXIO;
 		}
 	}
@@ -95,13 +95,13 @@ int axp_gpio_get_io(int gpio, int *io_mode)
 				if(!val)
 					*io_mode = 1;
 				else
-					return -EIO;
+					return -EIO;	
 				break;
 		case 4: axp_read(&axp->dev,AXP22_GPIO4_CFG,&val);val &= 0x10;
 				if(!val)
 					*io_mode = 1;
 				else
-					return -EIO;
+					return -EIO;			
 				break;
 
 		default:return -ENXIO;
@@ -219,13 +219,13 @@ int axp_gpio_get_value(int gpio, int *value)
 							return -ENXIO;
 					  }
 					  if((val & 0x30) == 0x30)
-						{
-							*value = 0;
-						}
-						else
-							{
-								*value = 1;
-							}
+					  	{
+					  		*value = 0;
+					  	}
+					  	else
+					  		{
+					  			*value = 1;
+					  		}
 					break;
 			case 4:
 					ret =axp_read(&axp->dev,AXP22_GPIO4_STA,&val);
@@ -277,10 +277,10 @@ static int __axp_gpio_output(struct gpio_chip *chip, unsigned offset, int value)
 	u32  index = chip->base + (int)offset;
 	int  ret = 0;
 	int  id = index - GPIO_AXP(0);
-
+	
 //	printk("%s: line %d,%d,%d\n", __func__, __LINE__,offset,value);
 	switch(id) {
-		case 0:
+		case 0: 
 			ret = axp_gpio_set_io(0, 1); /* set to output */
 			if(ret)
 				return ret;
@@ -297,7 +297,7 @@ static int __axp_gpio_output(struct gpio_chip *chip, unsigned offset, int value)
 			return axp_gpio_set_value(2, value); /* set value */
 		case 3:
 			ret = axp_gpio_set_io(3, 1); /* set to output */
-			if(ret)
+			if(ret) 
 				return ret;
 			return axp_gpio_set_value(3, value); /* set value */
 		case 4:
@@ -320,7 +320,7 @@ static void __axp_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
 		case 2:axp_gpio_set_value(2, value);break;
 		case 3:axp_gpio_set_value(3, value);break;
 		case 4:axp_gpio_set_value(4, value);break;
-		default:WARN_ON(1);
+		default:WARN_ON(1);	
 	}
 }
 static int __axp_gpio_get(struct gpio_chip *chip, unsigned offset)

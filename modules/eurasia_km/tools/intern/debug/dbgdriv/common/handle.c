@@ -85,7 +85,7 @@ PDBG_STREAM SID2PStream(IMG_SID hStream)
 	}
 	else
 	{
-	return (PDBG_STREAM)IMG_NULL;
+    	return (PDBG_STREAM)IMG_NULL;
     }
 }
 

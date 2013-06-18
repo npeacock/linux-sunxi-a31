@@ -15,7 +15,7 @@
 
 #include "dma_include.h"
 
-/* æ‰¾åˆ°é“¾ä¸Šç¬¬ä¸€ä¸ªbuffer, ç§»å‡ºé˜Ÿåˆ—, startå®ƒ */
+/* ÕÒµ½Á´ÉÏµÚÒ»¸öbuffer, ÒÆ³ö¶ÓÁÐ, startËü */
 u32 __dma_start(dm_hdl_t dma_hdl)
 {
 	u32	uret = 0;
@@ -29,7 +29,7 @@ u32 __dma_start(dm_hdl_t dma_hdl)
 
 	/* remove from list */
 	pdes_item = list_entry(pchan->buf_list_head.next, des_item, list);
-	list_del(&pdes_item->list); /* åªæ˜¯ä»Žé“¾è¡¨ç§»é™¤, æœªé‡Šæ”¾ç©ºé—´ */
+	list_del(&pdes_item->list); /* Ö»ÊÇ´ÓÁ´±íÒÆ³ý, Î´ÊÍ·Å¿Õ¼ä */
 
 	DMA_WRITE_REG(pdes_item->paddr, pchan->reg_base + DMA_OFF_REG_START);
 	csp_dma_chan_start(pchan);
@@ -96,7 +96,7 @@ u32 __dma_free_allbuf(struct dma_channel_t *pchan)
 	return 0;
 }
 
-/* abortå›žè°ƒ, ç¡¬ä»¶ä¸Šstop, é‡Šæ”¾å½“å‰buffer(å¦‚æžœæœ‰), é‡Šæ”¾list buffer */
+/* abort»Øµ÷, Ó²¼þÉÏstop, ÊÍ·Åµ±Ç°buffer(Èç¹ûÓÐ), ÊÍ·Ålist buffer */
 u32 __dma_stop(dm_hdl_t dma_hdl)
 {
 	u32 	uret = 0;
@@ -235,7 +235,7 @@ u32 __dma_enqueue(dm_hdl_t dma_hdl, struct cofig_des_t *pdes, enum dma_enque_pha
 	pdes_itm->des = *pdes;
 	pdes_itm->paddr = utemp;
 
-	/* ä¸ç®¡çŠ¶æ€æ€Žæ ·, enqueue to list */
+	/* ²»¹Ü×´Ì¬ÔõÑù, enqueue to list */
 	list_add_tail(&pdes_itm->list, &pchan->buf_list_head);
 
 	if(SINGLE_STA_LAST_DONE == STATE_SGL(pchan)) {
@@ -620,3 +620,4 @@ void dma_irq_hdl_single(struct dma_channel_t *pchan, u32 upend_bits)
 			__handle_qd_sgmd(pchan);
 	}
 }
+

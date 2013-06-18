@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <linux/workqueue.h>
 #endif
 
-/*
+/* 
  *	Env data specific to linux - convenient place to put this
  */
 

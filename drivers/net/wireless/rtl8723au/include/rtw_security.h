@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -32,9 +32,10 @@
 #define _TKIP_WTMIC_		0x3
 #define _AES_				0x4
 #define _WEP104_			0x5
-#define _WEP_WPA_MIXED_	0x06  // WEP + WPA
-#define _SMS4_				0x07
+#define _WEP_WPA_MIXED_	0x07  // WEP + WPA
+#define _SMS4_				0x06
 
+#define is_wep_enc(alg) (((alg) == _WEP40_) || ((alg) == _WEP104_))
 
 #define _WPA_IE_ID_	0xdd
 #define _WPA2_IE_ID_	0x30
@@ -42,6 +43,16 @@
 #define SHA256_MAC_LEN 32
 #define AES_BLOCK_SIZE 16
 #define AES_PRIV_SIZE (4 * 44)
+
+typedef enum {
+	ENCRYP_PROTOCOL_OPENSYS,   //open system
+	ENCRYP_PROTOCOL_WEP,       //WEP
+	ENCRYP_PROTOCOL_WPA,       //WPA
+	ENCRYP_PROTOCOL_WPA2,      //WPA2
+	ENCRYP_PROTOCOL_WAPI,      //WAPI: Not support in this version
+	ENCRYP_PROTOCOL_MAX
+}ENCRYP_PROTOCOL_E;
+
 
 #ifndef Ndis802_11AuthModeWPA2
 #define Ndis802_11AuthModeWPA2 (Ndis802_11AuthModeWPANone + 1)
@@ -52,9 +63,9 @@
 #endif
 
 union pn48	{
-
+	
 	u64	val;
-
+	
 #ifdef CONFIG_LITTLE_ENDIAN
 
 struct {
@@ -67,7 +78,7 @@ struct {
   u8 TSC6;
   u8 TSC7;
 } _byte_;
-
+ 
 #elif defined(CONFIG_BIG_ENDIAN)
 
 struct {
@@ -80,7 +91,7 @@ struct {
   u8 TSC1;
   u8 TSC0;
 } _byte_;
-
+ 
 #endif
 
 };
@@ -104,48 +115,47 @@ typedef struct _RT_PMKID_LIST
 
 struct security_priv
 {
-	u32	  dot11AuthAlgrthm;		// 802.11 auth, could be open, shared, 8021x and authswitch
+	u32	  dot11AuthAlgrthm;		// 802.11 auth, could be open, shared, 8021x and authswitch 
 	u32	  dot11PrivacyAlgrthm;	// This specify the privacy for shared auth. algorithm.
 
 	/* WEP */
 	u32	  dot11PrivacyKeyIndex;	// this is only valid for legendary wep, 0~3 for key id. (tx key index)
-	union Keytype dot11DefKey[4];			// this is only valid for def. key
+	union Keytype dot11DefKey[4];			// this is only valid for def. key	
 	u32 	dot11DefKeylen[4];
 
-	u32 dot118021XGrpPrivacy;	// This specify the privacy algthm. used for Grp key
+	u32 dot118021XGrpPrivacy;	// This specify the privacy algthm. used for Grp key 
 	u32	dot118021XGrpKeyid;		// key id used for Grp Key ( tx key index)
-	union Keytype	dot118021XGrpKey[4];	// 802.1x Group Key, for inx0 and inx1
+	union Keytype	dot118021XGrpKey[4];	// 802.1x Group Key, for inx0 and inx1	
 	union Keytype	dot118021XGrptxmickey[4];
 	union Keytype	dot118021XGrprxmickey[4];
 	union pn48		dot11Grptxpn;			// PN48 used for Grp Key xmit.
 	union pn48		dot11Grprxpn;			// PN48 used for Grp Key recv.
 
 #ifdef CONFIG_AP_MODE
-	//extend security capabilities for AP_MODE
+	//extend security capabilities for AP_MODE 
 	unsigned int dot8021xalg;//0:disable, 1:psk, 2:802.1x
 	unsigned int wpa_psk;//0:disable, bit(0): WPA, bit(1):WPA2
 	unsigned int wpa_group_cipher;
 	unsigned int wpa2_group_cipher;
 	unsigned int wpa_pairwise_cipher;
-	unsigned int wpa2_pairwise_cipher;
+	unsigned int wpa2_pairwise_cipher;	
 #endif
 
-	u8 wps_phase;//for wps
 	u8 wps_ie[MAX_WPS_IE_LEN];//added in assoc req
 	int wps_ie_len;
-
-
+	
+	
 	u8	binstallGrpkey;
 	u8	busetkipkey;
 	//_timer tkip_timer;
 	u8	bcheck_grpkey;
 	u8	bgrpkey_handshake;
-
+	
 	//u8	packet_cnt;//unused, removed
-
+	
 	s32	sw_encrypt;//from registry_priv
 	s32	sw_decrypt;//from registry_priv
-
+	
 	s32 	hw_decrypted;//if the rx packets is hw_decrypted==_FALSE, it means the hw has not been ready.
 
 
@@ -168,7 +178,7 @@ struct security_priv
 
 
 	//for tkip countermeasure
-	u32 last_mic_err_time;
+	u32 last_mic_err_time;	
 	u8	btkip_countermeasure;
 	u8	btkip_wait_report;
 	u32 btkip_countermeasure_time;
@@ -183,6 +193,7 @@ struct security_priv
 	//u32				PMKIDCount;						// Added by Annie, 2006-10-13.
 	//u8				szCapability[256];				// For WPA2-PSK using zero-config, by Annie, 2005-09-20.
 
+	u8 bWepDefaultKeyIdxSet;
 };
 
 struct sha256_state {
@@ -206,6 +217,9 @@ do{\
 			else\
 				encry_algo =(u8) psta->dot118021XPrivacy;\
 			break;\
+	     case dot11AuthAlgrthm_WAPI:\
+		     encry_algo = (u8)psecuritypriv->dot11PrivacyAlgrthm;\
+		     break;\
 	}\
 }while(0)
 
@@ -226,6 +240,10 @@ do{\
 		case _AES_:\
 			iv_len = 8;\
 			icv_len = 8;\
+			break;\
+		case _SMS4_:\
+			iv_len = 18;\
+			icv_len = 16;\
 			break;\
 		default:\
 			iv_len = 0;\
@@ -340,7 +358,7 @@ static inline u32 rotr(u32 val, int bits)
 		(a)[6] = (u8) (((u64) (val)) >> 8);	\
 		(a)[7] = (u8) (((u64) (val)) & 0xff);	\
 	} while (0)
-
+	
 /* ===== start - public domain SHA256 implementation ===== */
 
 /* This is based on SHA256 implementation in LibTomCrypt that was released into
@@ -369,7 +387,7 @@ static const unsigned long K[64] = {
 ( ((((unsigned long) (x) & 0xFFFFFFFFUL) >> (unsigned long) ((y) & 31)) | \
    ((unsigned long) (x) << (unsigned long) (32 - ((y) & 31)))) & 0xFFFFFFFFUL)
 #define Ch(x,y,z)       (z ^ (x & (y ^ z)))
-#define Maj(x,y,z)      (((x | y) & z) | (x & y))
+#define Maj(x,y,z)      (((x | y) & z) | (x & y)) 
 #define S(x, n)         RORc((x), (n))
 #define R(x, n)         (((x)&0xFFFFFFFFUL)>>(n))
 #define Sigma0(x)       (S(x, 2) ^ S(x, 13) ^ S(x, 22))
@@ -403,10 +421,10 @@ void rtw_wep_decrypt(_adapter *padapter, u8  *precvframe);
 
 #ifdef CONFIG_TDLS
 void wpa_tdls_generate_tpk(_adapter *padapter, struct sta_info *psta);
-int wpa_tdls_ftie_mic(u8 *kck, u8 trans_seq,
+int wpa_tdls_ftie_mic(u8 *kck, u8 trans_seq, 
 						u8 *lnkid, u8 *rsnie, u8 *timeoutie, u8 *ftie,
 						u8 *mic);
-int tdls_verify_mic(u8 *kck, u8 trans_seq,
+int tdls_verify_mic(u8 *kck, u8 trans_seq, 
 						u8 *lnkid, u8 *rsnie, u8 *timeoutie, u8 *ftie);
 #endif //CONFIG_TDLS
 
@@ -426,3 +444,4 @@ void rtw_use_tkipkey_handler(void* FunctionContext);
 void rtw_use_tkipkey_handler(void* FunctionContext);
 #endif //PLATFORM_FREEBSD
 #endif	//__RTL871X_SECURITY_H_
+

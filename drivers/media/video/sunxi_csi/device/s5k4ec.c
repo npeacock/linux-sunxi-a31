@@ -26,11 +26,11 @@ MODULE_DESCRIPTION("A low-level driver for samsung s5k4ec sensors");
 MODULE_LICENSE("GPL");
 
 //for internel driver debug
-#define DEV_DBG_EN   		0
-#if(DEV_DBG_EN == 1)
+#define DEV_DBG_EN   		0 
+#if(DEV_DBG_EN == 1)		
 #define csi_dev_dbg(x,arg...) printk("[CSI_DEBUG][s5k4ec]"x,##arg)
 #else
-#define csi_dev_dbg(x,arg...)
+#define csi_dev_dbg(x,arg...) 
 #endif
 #define csi_dev_err(x,arg...) printk("[CSI_ERR][s5k4ec]"x,##arg)
 #define csi_dev_print(x,arg...) printk("[CSI][s5k4ec]"x,##arg)
@@ -106,16 +106,16 @@ MODULE_LICENSE("GPL");
 /* Registers */
 
 
-static int sensor_s_band_filter(struct v4l2_subdev *sd,
+static int sensor_s_band_filter(struct v4l2_subdev *sd, 
 		enum v4l2_power_line_frequency value);
 
-
+		
 /*
  * Information we maintain about a known sensor.
  */
 struct sensor_format_struct;  /* coming later */
 struct snesor_colorfx_struct; /* coming later */
-__csi_subdev_info_t ccm_info_con =
+__csi_subdev_info_t ccm_info_con = 
 {
 	.mclk 	= MCLK,
 	.vref 	= VREF_POL,
@@ -150,7 +150,7 @@ struct sensor_info {
 	enum v4l2_power_line_frequency band_filter;
 	enum v4l2_autofocus_mode af_mode;
 	enum v4l2_autofocus_ctrl af_ctrl;
-	struct v4l2_fract tpf;
+	struct v4l2_fract tpf;			
 };
 
 static inline struct sensor_info *to_state(struct v4l2_subdev *sd)
@@ -181,58 +181,58 @@ static struct regval_list sensor_default_regs[] = {
 //20110728 : ESD Check Register Address Changed
 //20110829 : TnP Changed by S.Y.Lee
 //20120104 : init Parm Update sequence changed
-//20120201 : FlashçŸ« æž—å‡½ä½• Green Noise ä¿ºæ€¥ setting
+//20120201 : Flash½Ã ÁÖº¯ºÎ Green Noise °³¼± setting 
 //20120228 : Add Brightness Block
 //==================================================================================
-
+  
 //==================================================================================
 // 01.Start Setting
 //==================================================================================
 
-{{0xFC,0xFC},{0xD0,0x00}},
+{{0xFC,0xFC},{0xD0,0x00}},	
 {{0x00,0x10},{0x00,0x01}},	//S/W Reset
 {{0x10,0x30},{0x00,0x00}},	//contint_host_int
 {{0x00,0x14},{0x00,0x01}},	//sw_load_complete - Release CORE (Arm) from reset state
 
 {{0xff,0xff},{0x00,10}}, //Delay 10ms
 
-//==================================================================================
-// 02.ETC Setting
-//==================================================================================
-
-{{0x00,0x28},{0xD0,0x00}},	//Driving Current
-{{0x00,0x2A},{0x10,0x82}},
-{{0x0f,0x12},{0x00,0x00}}, 	//cregs_d0_d4_cd10 //D4[9:8], D3[7:6], D2[5:4], D1[3:2], D0[1:0]
-{{0x00,0x2A},{0x10,0x84}},
-{{0x0f,0x12},{0x00,0x00}}, 	//cregs_d5_d9_cd10 //D9[9:8], D8[7:6], D7[5:4], D6[3:2], D5[1:0]
-{{0x00,0x2A},{0x10,0x88}},
-{{0x0f,0x12},{0x00,0x00}},	//cregs_clks_output_cd10 //SDA[11:10], SCL[9:8], PCLK[7:6], VSYNC[3:2], HSYNC[1:0]
-
+//==================================================================================                
+// 02.ETC Setting                                                                                    
+//==================================================================================                
+                                                                                                    
+{{0x00,0x28},{0xD0,0x00}},	//Driving Current                                                                   
+{{0x00,0x2A},{0x10,0x82}},	
+{{0x0f,0x12},{0x00,0x00}}, 	//cregs_d0_d4_cd10 //D4[9:8], D3[7:6], D2[5:4], D1[3:2], D0[1:0]                    
+{{0x00,0x2A},{0x10,0x84}},                                                                                           
+{{0x0f,0x12},{0x00,0x00}}, 	//cregs_d5_d9_cd10 //D9[9:8], D8[7:6], D7[5:4], D6[3:2], D5[1:0]                    
+{{0x00,0x2A},{0x10,0x88}},                                                                                           
+{{0x0f,0x12},{0x00,0x00}},	//cregs_clks_output_cd10 //SDA[11:10], SCL[9:8], PCLK[7:6], VSYNC[3:2], HSYNC[1:0]  
+	                                                                                            
 //==================================================================================
 // 03.Analog Setting1 & ASP Control
 //==================================================================================
-//This register is for FACTORY ONLY.
+//This register is for FACTORY ONLY. 
 //If you change it without prior notification
 //YOU are RESPONSIBLE for the FAILURE that will happen in the future
 
 {{0x00,0x28},{0xD0,0x00}},
 {{0x00,0x2A},{0x00,0x7A}},
-{{0x0f,0x12},{0x00,0x00}},
+{{0x0f,0x12},{0x00,0x00}},	
 {{0x00,0x2A},{0xE4,0x06}},	//[7]f_ladlc_en [6:5]f max [4]fadlc_en [3:2]L max [1]ladlc_en [0]adlc_ch_sel
-{{0x0F,0x12},{0x00,0x92}},
-{{0x00,0x2A},{0xE4,0x10}},
-{{0x0F,0x12},{0x38,0x04}},	//[15:8]fadlc_filter_co_b, [7:0]fadlc_filter_co_a
-{{0x00,0x2A},{0xE4,0x1A}},
-{{0x0F,0x12},{0x00,0x10}},
-{{0x00,0x2A},{0xE4,0x20}},
-{{0x0F,0x12},{0x00,0x03}},	//adlc_fadlc_filter_refresh
+{{0x0F,0x12},{0x00,0x92}},	
+{{0x00,0x2A},{0xE4,0x10}},	
+{{0x0F,0x12},{0x38,0x04}},	//[15:8]fadlc_filter_co_b, [7:0]fadlc_filter_co_a	
+{{0x00,0x2A},{0xE4,0x1A}},	
+{{0x0F,0x12},{0x00,0x10}},	 	
+{{0x00,0x2A},{0xE4,0x20}},	
+{{0x0F,0x12},{0x00,0x03}},	//adlc_fadlc_filter_refresh 	
 {{0x0F,0x12},{0x00,0x60}},	//adlc_filter_level_diff_threshold
-{{0x00,0x2A},{0xE4,0x2E}},
+{{0x00,0x2A},{0xE4,0x2E}},	
 {{0x0F,0x12},{0x00,0x04}},	//dithered l-ADLC(4bit)
-{{0x00,0x2A},{0xF4,0x00}},
-{{0x0F,0x12},{0x5A,0x3C}},	//[15:8]stx_width, [7:0]dstx_width
-{{0x0F,0x12},{0x00,0x23}},	//[14]binning_test [13]gain_mode [11:12]row_id [10]cfpn_test [9]pd_pix [8]teg_en, [7]adc_res, [6]smp_en, [5]ldb_en, [4]ld_en, [3]clp_en [2]srx_en, [1]dshut_en, [0]dcds_en
-{{0x0F,0x12},{0x80,0x80}},	//CDS option
+{{0x00,0x2A},{0xF4,0x00}},	
+{{0x0F,0x12},{0x5A,0x3C}},	//[15:8]stx_width, [7:0]dstx_width 
+{{0x0F,0x12},{0x00,0x23}},	//[14]binning_test [13]gain_mode [11:12]row_id [10]cfpn_test [9]pd_pix [8]teg_en, [7]adc_res, [6]smp_en, [5]ldb_en, [4]ld_en, [3]clp_en [2]srx_en, [1]dshut_en, [0]dcds_en 
+{{0x0F,0x12},{0x80,0x80}},	//CDS option 
 {{0x0F,0x12},{0x03,0xAF}},	//[11:6]rst_mx, [5:0]sig_mx
 {{0x0F,0x12},{0x00,0x0A}},	//Avg mode
 {{0x0F,0x12},{0xAA,0x54}},	//x1~x1.49:No MS, x1.5~x3.99:MS2, x4~x16:MS4
@@ -242,26 +242,26 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x02,0x40}},	//bist_sig_width_o
 {{0x0F,0x12},{0x00,0x40}},	//[9]dbs_bist_en, [8:0]bist_rst_width
 {{0x0F,0x12},{0x10,0x00}},	//[15]aac_en, [14]GCLK_DIV2_EN, [13:10]dl_cont [9:8]dbs_mode, [7:0]dbs_option
-{{0x0F,0x12},{0x55,0xFF}},	//bias [15:12]pix, [11:8]pix_bst [7:4]comp2, [3:0]comp1
+{{0x0F,0x12},{0x55,0xFF}},	//bias [15:12]pix, [11:8]pix_bst [7:4]comp2, [3:0]comp1  	
 {{0x0F,0x12},{0xD0,0x00}},	//[15:8]clp_lvl, [7:0]ref_option, [5]pix_bst_en
 {{0x0F,0x12},{0x00,0x10}},	//[7:0]monit
 {{0x0F,0x12},{0x02,0x02}},	//[15:8]dbr_tune_tgsl, [7:0]dbr_tune_pix
-{{0x0F,0x12},{0x04,0x01}},	//[15:8]dbr_tune_ntg, [7:0]dbr_tune_rg
-{{0x0F,0x12},{0x00,0x22}},	//[15:8]reg_option, [7:4]rosc_tune_ncp, [3:0]rosc_tune_cp
-{{0x0F,0x12},{0x00,0x88}},	//PD [8]inrush_ctrl, [7]fblv, [6]reg_ntg, [5]reg_tgsl, [4]reg_rg, [3]reg_pix, [2]ncp_rosc, [1]cp_rosc, [0]cp
-{{0x0F,0x12},{0x00,0x9F}},	//[9]capa_ctrl_en, [8:7]fb_lv, [6:5]dbr_clk_sel, [4:0]cp_capa
-{{0x0F,0x12},{0x00,0x00}},	//[15:0]blst_en_cintr
-{{0x0F,0x12},{0x18,0x00}},	//[11]blst_en, [10]rfpn_test, [9]sl_off, [8]tx_off, [7:0]rdv_option
-{{0x0F,0x12},{0x00,0x88}},	//[15:0]pmg_reg_tune
-{{0x0F,0x12},{0x00,0x00}},	//[15:1]analog_dummy, [0]pd_reg_test
+{{0x0F,0x12},{0x04,0x01}},	//[15:8]dbr_tune_ntg, [7:0]dbr_tune_rg                                                                       
+{{0x0F,0x12},{0x00,0x22}},	//[15:8]reg_option, [7:4]rosc_tune_ncp, [3:0]rosc_tune_cp                                                    
+{{0x0F,0x12},{0x00,0x88}},	//PD [8]inrush_ctrl, [7]fblv, [6]reg_ntg, [5]reg_tgsl, [4]reg_rg, [3]reg_pix, [2]ncp_rosc, [1]cp_rosc, [0]cp 
+{{0x0F,0x12},{0x00,0x9F}},	//[9]capa_ctrl_en, [8:7]fb_lv, [6:5]dbr_clk_sel, [4:0]cp_capa                                                
+{{0x0F,0x12},{0x00,0x00}},	//[15:0]blst_en_cintr                                                                                        
+{{0x0F,0x12},{0x18,0x00}},	//[11]blst_en, [10]rfpn_test, [9]sl_off, [8]tx_off, [7:0]rdv_option                                          
+{{0x0F,0x12},{0x00,0x88}},	//[15:0]pmg_reg_tune                                                                                         
+{{0x0F,0x12},{0x00,0x00}},	//[15:1]analog_dummy, [0]pd_reg_test 
 {{0x0F,0x12},{0x24,0x28}},	//[13:11]srx_gap1, [10:8]srx_gap0, [7:0]stx_gap
-{{0x0F,0x12},{0x00,0x00}},	//[0]atx_option
+{{0x0F,0x12},{0x00,0x00}},	//[0]atx_option       
 {{0x0F,0x12},{0x03,0xEE}},	//aig_avg_half
-{{0x0F,0x12},{0x00,0x00}},	//[0]hvs_test_reg
-{{0x0F,0x12},{0x00,0x00}},	//[0]dbus_bist_auto
-{{0x0F,0x12},{0x00,0x00}},	//[7:0]dbr_option
-{{0x00,0x2A},{0xF5,0x52}},
-{{0x0F,0x12},{0x07,0x08}},	//[7:0]lat_st, [15:8]lat_width
+{{0x0F,0x12},{0x00,0x00}},	//[0]hvs_test_reg     
+{{0x0F,0x12},{0x00,0x00}},	//[0]dbus_bist_auto   
+{{0x0F,0x12},{0x00,0x00}},	//[7:0]dbr_option	    
+{{0x00,0x2A},{0xF5,0x52}},	
+{{0x0F,0x12},{0x07,0x08}},	//[7:0]lat_st, [15:8]lat_width  
 {{0x0F,0x12},{0x08,0x0C}},	//[7:0]hold_st, [15:8]hold_width
 
 //=================================================================================
@@ -269,25 +269,25 @@ static struct regval_list sensor_default_regs[] = {
 //=================================================================================
 // Start of Patch data
 
-{{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x3A,0xF8}},
+{{0x00,0x28},{0x70,0x00}},                             
+{{0x00,0x2A},{0x3A,0xF8}},                             
 {{0x0F,0x12},{0xB5,0xF8}},    // 70003AF8
 {{0x0F,0x12},{0x4B,0x44}},    // 70003AFA
 {{0x0F,0x12},{0x49,0x44}},    // 70003AFC
 {{0x0F,0x12},{0x48,0x45}},    // 70003AFE
-{{0x0F,0x12},{0x22,0x00}},	// 70003B00
-{{0x0F,0x12},{0xC0,0x08}},	// 70003B02
-{{0x0F,0x12},{0x60,0x01}},	// 70003B04
+{{0x0F,0x12},{0x22,0x00}},	// 70003B00              
+{{0x0F,0x12},{0xC0,0x08}},	// 70003B02              
+{{0x0F,0x12},{0x60,0x01}},	// 70003B04              
 {{0x0F,0x12},{0x49,0x44}},    // 70003B06
 {{0x0F,0x12},{0x48,0x44}},    // 70003B08
-{{0x0F,0x12},{0x24,0x01}},	// 70003B0A
-{{0x0F,0x12},{0xF0,0x00}},	// 70003B0C
+{{0x0F,0x12},{0x24,0x01}},	// 70003B0A              
+{{0x0F,0x12},{0xF0,0x00}},	// 70003B0C              
 {{0x0F,0x12},{0xFC,0xA4}},    // 70003B0E
 {{0x0F,0x12},{0x49,0x43}},    // 70003B10
 {{0x0F,0x12},{0x48,0x44}},    // 70003B12
 {{0x0F,0x12},{0x27,0x02}},    // 70003B14
-{{0x0F,0x12},{0x00,0x22}},	// 70003B16
-{{0x0F,0x12},{0xF0,0x00}},	// 70003B18
+{{0x0F,0x12},{0x00,0x22}},	// 70003B16              
+{{0x0F,0x12},{0xF0,0x00}},	// 70003B18              
 {{0x0F,0x12},{0xFC,0x9E}},    // 70003B1A
 {{0x0F,0x12},{0x02,0x60}},    // 70003B1C
 {{0x0F,0x12},{0x4C,0x42}},    // 70003B1E
@@ -296,40 +296,40 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x80,0x66}},    // 70003B24
 {{0x0F,0x12},{0x49,0x41}},    // 70003B26
 {{0x0F,0x12},{0x48,0x41}},    // 70003B28
-{{0x0F,0x12},{0x60,0x41}},	// 70003B2A
+{{0x0F,0x12},{0x60,0x41}},	// 70003B2A              
 {{0x0F,0x12},{0x49,0x41}},    // 70003B2C
 {{0x0F,0x12},{0x48,0x42}},    // 70003B2E
 {{0x0F,0x12},{0x00,0x3A}},    // 70003B30
 {{0x0F,0x12},{0x25,0x03}},    // 70003B32
-{{0x0F,0x12},{0xF0,0x00}},	// 70003B34
+{{0x0F,0x12},{0xF0,0x00}},	// 70003B34              
 {{0x0F,0x12},{0xFC,0x90}},    // 70003B36
 {{0x0F,0x12},{0x48,0x3D}},    // 70003B38
 {{0x0F,0x12},{0x49,0x40}},    // 70003B3A
-{{0x0F,0x12},{0x30,0xC0}},	// 70003B3C
-{{0x0F,0x12},{0x63,0xC1}},	// 70003B3E
+{{0x0F,0x12},{0x30,0xC0}},	// 70003B3C              
+{{0x0F,0x12},{0x63,0xC1}},	// 70003B3E              
 {{0x0F,0x12},{0x4F,0x3B}},    // 70003B40
 {{0x0F,0x12},{0x48,0x3F}},    // 70003B42
 {{0x0F,0x12},{0x3F,0x80}},    // 70003B44
 {{0x0F,0x12},{0x64,0x38}},    // 70003B46
 {{0x0F,0x12},{0x48,0x3E}},    // 70003B48
 {{0x0F,0x12},{0x49,0x3F}},    // 70003B4A
-{{0x0F,0x12},{0x63,0x88}},	// 70003B4C
+{{0x0F,0x12},{0x63,0x88}},	// 70003B4C              
 {{0x0F,0x12},{0x00,0x2A}},    // 70003B4E
 {{0x0F,0x12},{0x49,0x3E}},    // 70003B50
 {{0x0F,0x12},{0x48,0x3F}},    // 70003B52
-{{0x0F,0x12},{0x25,0x04}},	// 70003B54
-{{0x0F,0x12},{0xF0,0x00}},	// 70003B56
+{{0x0F,0x12},{0x25,0x04}},	// 70003B54              
+{{0x0F,0x12},{0xF0,0x00}},	// 70003B56              
 {{0x0F,0x12},{0xFC,0x7F}},    // 70003B58
 {{0x0F,0x12},{0x00,0x2A}},    // 70003B5A
 {{0x0F,0x12},{0x49,0x3D}},    // 70003B5C
 {{0x0F,0x12},{0x48,0x3E}},    // 70003B5E
 {{0x0F,0x12},{0x25,0x05}},    // 70003B60
-{{0x0F,0x12},{0xF0,0x00}},	// 70003B62
+{{0x0F,0x12},{0xF0,0x00}},	// 70003B62              
 {{0x0F,0x12},{0xF8,0xA7}},    // 70003B64
 {{0x0F,0x12},{0x48,0x3C}},    // 70003B66
 {{0x0F,0x12},{0x00,0x2A}},    // 70003B68
 {{0x0F,0x12},{0x49,0x3C}},    // 70003B6A
-{{0x0F,0x12},{0x25,0x06}},	// 70003B6C
+{{0x0F,0x12},{0x25,0x06}},	// 70003B6C              
 {{0x0F,0x12},{0x1D,0x80}},    // 70003B6E
 {{0x0F,0x12},{0xF0,0x00}},    // 70003B70
 {{0x0F,0x12},{0xF8,0xA0}},    // 70003B72
@@ -381,7 +381,7 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x49,0x30}},    // 70003BCE
 {{0x0F,0x12},{0x48,0x30}},    // 70003BD0
 {{0x0F,0x12},{0x25,0x0E}},    // 70003BD2
-{{0x0F,0x12},{0xF0,0x00}},	// 70003BD4
+{{0x0F,0x12},{0xF0,0x00}},	// 70003BD4              
 {{0x0F,0x12},{0xFC,0x40}},    // 70003BD6
 {{0x0F,0x12},{0x00,0x2A}},    // 70003BD8
 {{0x0F,0x12},{0x49,0x2F}},    // 70003BDA
@@ -414,15 +414,15 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x73,0xFF}},    // 70003C10
 {{0x0F,0x12},{0x00,0x00}},    // 70003C12
 {{0x0F,0x12},{0x1F,0x90}},    // 70003C14
-{{0x0F,0x12},{0x70,0x00}},	// 70003C16
+{{0x0F,0x12},{0x70,0x00}},	// 70003C16              
 {{0x0F,0x12},{0x3C,0xCD}},    // 70003C18
 {{0x0F,0x12},{0x70,0x00}},    // 70003C1A
 {{0x0F,0x12},{0xE3,0x8B}},    // 70003C1C
 {{0x0F,0x12},{0x00,0x00}},    // 70003C1E
 {{0x0F,0x12},{0x3D,0x05}},    // 70003C20
-{{0x0F,0x12},{0x70,0x00}},	// 70003C22
+{{0x0F,0x12},{0x70,0x00}},	// 70003C22              
 {{0x0F,0x12},{0xC3,0xB1}},    // 70003C24
-{{0x0F,0x12},{0x00,0x00}},	// 70003C26
+{{0x0F,0x12},{0x00,0x00}},	// 70003C26              
 {{0x0F,0x12},{0x47,0x80}},    // 70003C28
 {{0x0F,0x12},{0x70,0x00}},    // 70003C2A
 {{0x0F,0x12},{0x3D,0x63}},    // 70003C2C
@@ -436,11 +436,11 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x3E,0x4B}},    // 70003C3C
 {{0x0F,0x12},{0x70,0x00}},    // 70003C3E
 {{0x0F,0x12},{0x3D,0xFF}},    // 70003C40
-{{0x0F,0x12},{0x70,0x00}},	// 70003C42
+{{0x0F,0x12},{0x70,0x00}},	// 70003C42              
 {{0x0F,0x12},{0xFF,0xFF}},    // 70003C44
 {{0x0F,0x12},{0x00,0xFF}},    // 70003C46
 {{0x0F,0x12},{0x17,0xE0}},    // 70003C48
-{{0x0F,0x12},{0x70,0x00}},	// 70003C4A
+{{0x0F,0x12},{0x70,0x00}},	// 70003C4A              
 {{0x0F,0x12},{0x3F,0xC7}},    // 70003C4C
 {{0x0F,0x12},{0x70,0x00}},    // 70003C4E
 {{0x0F,0x12},{0x05,0x3D}},    // 70003C50
@@ -450,7 +450,7 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x6C,0xD2}},    // 70003C58
 {{0x0F,0x12},{0x00,0x00}},    // 70003C5A
 {{0x0F,0x12},{0x02,0xC9}},    // 70003C5C
-{{0x0F,0x12},{0x00,0x00}},	// 70003C5E
+{{0x0F,0x12},{0x00,0x00}},	// 70003C5E              
 {{0x0F,0x12},{0x00,0x00}},    // 70003C60
 {{0x0F,0x12},{0x0A,0x9A}},    // 70003C62
 {{0x0F,0x12},{0x00,0x00}},    // 70003C64
@@ -693,7 +693,7 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x49,0xA5}},    // 70003E3E
 {{0x0F,0x12},{0x88,0xC9}},    // 70003E40
 {{0x0F,0x12},{0x63,0xC1}},    // 70003E42
-{{0x0F,0x12},{0xF0,0x00}},	// 70003E44
+{{0x0F,0x12},{0xF0,0x00}},	// 70003E44              
 {{0x0F,0x12},{0xFB,0x40}},    // 70003E46
 {{0x0F,0x12},{0xE7,0xA6}},    // 70003E48
 {{0x0F,0x12},{0xB5,0xF0}},    // 70003E4A
@@ -998,9 +998,9 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x60,0x20}},    // 700040A0
 {{0x0F,0x12},{0xE7,0xD2}},    // 700040A2
 {{0x0F,0x12},{0x38,0xD4}},    // 700040A4
-{{0x0F,0x12},{0x70,0x00}},	// 700040A6
+{{0x0F,0x12},{0x70,0x00}},	// 700040A6              
 {{0x0F,0x12},{0x17,0xD0}},    // 700040A8
-{{0x0F,0x12},{0x70,0x00}},	// 700040AA
+{{0x0F,0x12},{0x70,0x00}},	// 700040AA              
 {{0x0F,0x12},{0x50,0x00}},    // 700040AC
 {{0x0F,0x12},{0xD0,0x00}},    // 700040AE
 {{0x0F,0x12},{0x11,0x00}},    // 700040B0
@@ -1102,7 +1102,7 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0xD1,0x03}},    // 70004170
 {{0x0F,0x12},{0x98,0x01}},    // 70004172
 {{0x0F,0x12},{0x00,0x29}},    // 70004174
-{{0x0F,0x12},{0xF0,0x00}},	// 70004176
+{{0x0F,0x12},{0xF0,0x00}},	// 70004176              
 {{0x0F,0x12},{0xFA,0x03}},    // 70004178
 {{0x0F,0x12},{0x88,0x39}},    // 7000417A
 {{0x0F,0x12},{0x98,0x00}},    // 7000417C
@@ -1732,7 +1732,7 @@ static struct regval_list sensor_default_regs[] = {
 // End of Patch Data(Last : 7000465Ah)
 // Total Size 2916 (0x0B64)
 // Addr : 3AF8 , Size : 2914(B62h)
-
+        
 // TNP_USER_MBCV_CONTROL
 // TNP_4EC_MBR_TUNE
 // TNP_4EC_FORBIDDEN_TUNE
@@ -1748,475 +1748,475 @@ static struct regval_list sensor_default_regs[] = {
 // TNP_TG_OFF_CFG_CHG_IN_SPOOF_MODE
 
 //==================================================================================
-// 05.OTP Control
+// 05.OTP Control 
 //==================================================================================
-
+          
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x07,0x22}},
-{{0x0F,0x12},{0x01,0x00}},	//skl_OTP_usWaitTime This register should be positioned in fornt of D0001000
-{{0x00,0x2A},{0x07,0x26}},
-{{0x0F,0x12},{0x00,0x01}},	//skl_bUseOTPfunc This is OTP on/off function
-{{0x00,0x2A},{0x08,0xD6}},
-{{0x0F,0x12},{0x00,0x01}},	//ash_bUseOTPData
-{{0x00,0x2A},{0x14,0x6E}},
-{{0x0F,0x12},{0x00,0x00}},	//awbb_otp_disable
-{{0x00,0x2A},{0x08,0xDC}},
-{{0x0F,0x12},{0x00,0x00}},	//ash_bUseGasAlphaOTP
+{{0x00,0x2A},{0x07,0x22}},	
+{{0x0F,0x12},{0x01,0x00}},	//skl_OTP_usWaitTime This register should be positioned in fornt of D0001000	
+{{0x00,0x2A},{0x07,0x26}},	
+{{0x0F,0x12},{0x00,0x01}},	//skl_bUseOTPfunc This is OTP on/off function	
+{{0x00,0x2A},{0x08,0xD6}},	
+{{0x0F,0x12},{0x00,0x01}},	//ash_bUseOTPData	
+{{0x00,0x2A},{0x14,0x6E}},	
+{{0x0F,0x12},{0x00,0x00}},	//awbb_otp_disable	
+{{0x00,0x2A},{0x08,0xDC}},	
+{{0x0F,0x12},{0x00,0x00}},	//ash_bUseGasAlphaOTP	          
 
 {{0x00,0x28},{0xD0,0x00}},
 {{0x00,0x2A},{0x10,0x00}},
-{{0x0F,0x12},{0x00,0x01}},
+{{0x0F,0x12},{0x00,0x01}},  
 
 //==================================================================================
 //06.Gas_Anti Shading
 //==================================================================================
 
-// Refer Mon_AWB_RotGain
+// Refer Mon_AWB_RotGain         	
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x08,0xB4}},
-{{0x0F,0x12},{0x00,0x01}},	//wbt_bUseOutdoorASH
-{{0x00,0x2A},{0x08,0xBC}},
-{{0x0F,0x12},{0x00,0xC0}},	//TVAR_ash_AwbAshCord_0_ 2300K
-{{0x0F,0x12},{0x00,0xDF}},	//TVAR_ash_AwbAshCord_1_ 2750K
-{{0x0F,0x12},{0x01,0x00}},	//TVAR_ash_AwbAshCord_2_ 3300K
-{{0x0F,0x12},{0x01,0x25}},	//TVAR_ash_AwbAshCord_3_ 4150K
-{{0x0F,0x12},{0x01,0x5F}},	//TVAR_ash_AwbAshCord_4_ 5250K
-{{0x0F,0x12},{0x01,0x7C}},	//TVAR_ash_AwbAshCord_5_ 6400K
-{{0x0F,0x12},{0x01,0x94}},	//TVAR_ash_AwbAshCord_6_ 7500K
+{{0x00,0x2A},{0x08,0xB4}},	
+{{0x0F,0x12},{0x00,0x01}},	//wbt_bUseOutdoorASH	
+{{0x00,0x2A},{0x08,0xBC}},	
+{{0x0F,0x12},{0x00,0xC0}},	//TVAR_ash_AwbAshCord_0_ 2300K	
+{{0x0F,0x12},{0x00,0xDF}},	//TVAR_ash_AwbAshCord_1_ 2750K	
+{{0x0F,0x12},{0x01,0x00}},	//TVAR_ash_AwbAshCord_2_ 3300K	
+{{0x0F,0x12},{0x01,0x25}},	//TVAR_ash_AwbAshCord_3_ 4150K	
+{{0x0F,0x12},{0x01,0x5F}},	//TVAR_ash_AwbAshCord_4_ 5250K	
+{{0x0F,0x12},{0x01,0x7C}},	//TVAR_ash_AwbAshCord_5_ 6400K	
+{{0x0F,0x12},{0x01,0x94}},	//TVAR_ash_AwbAshCord_6_ 7500K	
+	
+{{0x00,0x2A},{0x08,0xF6}},	
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_0__0_ R  // 2300K     	
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_0__1_ GR          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_0__2_ GB          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_0__3_ B    
 
-{{0x00,0x2A},{0x08,0xF6}},
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_0__0_ R  // 2300K
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_0__1_ GR
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_0__2_ GB
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_0__3_ B
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_1__0_ R  // 2750K 
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_1__1_ GR          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_1__2_ GB  
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_1__3_ B   
 
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_1__0_ R  // 2750K
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_1__1_ GR
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_1__2_ GB
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_1__3_ B
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_2__0_ R  // 3300K 
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_2__1_ GR          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_2__2_ GB          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_2__3_ B   
 
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_2__0_ R  // 3300K
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_2__1_ GR
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_2__2_ GB
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_2__3_ B
+{{0x0F,0x12},{0x40,0x00}}, 	//TVAR_ash_GASAlpha_3__0_ R  // 4150K 
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_3__1_ GR          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_3__2_ GB          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_3__3_ B    
 
-{{0x0F,0x12},{0x40,0x00}}, 	//TVAR_ash_GASAlpha_3__0_ R  // 4150K
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_3__1_ GR
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_3__2_ GB
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_3__3_ B
+{{0x0F,0x12},{0x40,0x00}}, 	//TVAR_ash_GASAlpha_4__0_ R  // 5250K 
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_4__1_ GR          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_4__2_ GB          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_4__3_ B      
 
-{{0x0F,0x12},{0x40,0x00}}, 	//TVAR_ash_GASAlpha_4__0_ R  // 5250K
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_4__1_ GR
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_4__2_ GB
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_4__3_ B
+{{0x0F,0x12},{0x43,0x00}}, 	//TVAR_ash_GASAlpha_5__0_ R  // 6400K 
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_5__1_ GR          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_5__2_ GB          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_5__3_ B        
 
-{{0x0F,0x12},{0x43,0x00}}, 	//TVAR_ash_GASAlpha_5__0_ R  // 6400K
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_5__1_ GR
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_5__2_ GB
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_5__3_ B
+{{0x0F,0x12},{0x43,0x00}},	//TVAR_ash_GASAlpha_6__0_ R  // 7500K 
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_6__1_ GR          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_6__2_ GB          
+{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_6__3_ B        
 
-{{0x0F,0x12},{0x43,0x00}},	//TVAR_ash_GASAlpha_6__0_ R  // 7500K
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_6__1_ GR
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_6__2_ GB
-{{0x0F,0x12},{0x40,0x00}},	//TVAR_ash_GASAlpha_6__3_ B
+//Outdoor GAS Alpha   
+{{0x0F,0x12},{0x45,0x00}},  	
+{{0x0F,0x12},{0x40,0x00}},	
+{{0x0F,0x12},{0x40,0x00}},	
+{{0x0F,0x12},{0x40,0x00}},	
 
-//Outdoor GAS Alpha
-{{0x0F,0x12},{0x45,0x00}},
-{{0x0F,0x12},{0x40,0x00}},
-{{0x0F,0x12},{0x40,0x00}},
-{{0x0F,0x12},{0x40,0x00}},
-
-{{0x00,0x2A},{0x08,0xF4}},
+{{0x00,0x2A},{0x08,0xF4}},	
 {{0x0F,0x12},{0x00,0x01}},	//ash_bUseGasAlpha
 
 //==================================================================================
-// 07. Analog Setting 2
+// 07. Analog Setting 2 
 //==================================================================================
-//This register is for FACTORY ONLY.
+//This register is for FACTORY ONLY. 
 //If you change it without prior notification
-//YOU are RESPONSIBLE for the FAILURE that will happen in the future
-//For subsampling Size
+//YOU are RESPONSIBLE for the FAILURE that will happen in the future      
+//For subsampling Size	
 
-{{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x18,0xBC}},
-{{0x0F,0x12},{0x00,0x04}},
-{{0x0F,0x12},{0x05,0xB6}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x01}},
-{{0x0F,0x12},{0x05,0xBA}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x07}},
-{{0x0F,0x12},{0x05,0xBA}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x01,0xF4}},
-{{0x0F,0x12},{0x02,0x4E}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x01,0xF4}},
-{{0x0F,0x12},{0x05,0xB6}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x01,0xF4}},
-{{0x0F,0x12},{0x05,0xBA}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x01,0xF4}},
-{{0x0F,0x12},{0x02,0x4F}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x75}},
-{{0x0F,0x12},{0x00,0xCF}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x75}},
-{{0x0F,0x12},{0x00,0xD6}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x04}},
-{{0x0F,0x12},{0x01,0xF4}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0xF0}},
-{{0x0F,0x12},{0x01,0xF4}},
-{{0x0F,0x12},{0x02,0x9E}},
-{{0x0F,0x12},{0x05,0xB2}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x01,0xF8}},
-{{0x0F,0x12},{0x02,0x28}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0x08}},
-{{0x0F,0x12},{0x02,0x38}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0x18}},
-{{0x0F,0x12},{0x02,0x38}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x01}},
-{{0x0F,0x12},{0x00,0x09}},
-{{0x0F,0x12},{0x00,0xDE}},
-{{0x0F,0x12},{0x05,0xC0}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0xDF}},
-{{0x0F,0x12},{0x00,0xE4}},
-{{0x0F,0x12},{0x01,0xF8}},
-{{0x0F,0x12},{0x01,0xFD}},
-{{0x0F,0x12},{0x05,0xB6}},
-{{0x0F,0x12},{0x05,0xBB}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x01,0xF8}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x77}},
-{{0x0F,0x12},{0x00,0x7E}},
-{{0x0F,0x12},{0x02,0x4F}},
-{{0x0F,0x12},{0x02,0x5E}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-
- // For Capture
-
-{{0x0F,0x12},{0x00,0x04}},
-{{0x0F,0x12},{0x09,0xD1}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x01}},
-{{0x0F,0x12},{0x09,0xD5}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x08}},
-{{0x0F,0x12},{0x09,0xD5}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0xAA}},
-{{0x0F,0x12},{0x03,0x26}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0xAA}},
-{{0x0F,0x12},{0x09,0xD1}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0xAA}},
-{{0x0F,0x12},{0x09,0xD5}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0xAA}},
-{{0x0F,0x12},{0x03,0x27}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x08}},
-{{0x0F,0x12},{0x00,0x84}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x08}},
-{{0x0F,0x12},{0x00,0x8D}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x08}},
-{{0x0F,0x12},{0x02,0xAA}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0xAA}},
-{{0x0F,0x12},{0x02,0xAA}},
-{{0x0F,0x12},{0x03,0xAD}},
-{{0x0F,0x12},{0x09,0xCD}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0xAE}},
-{{0x0F,0x12},{0x02,0xDE}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0xBE}},
-{{0x0F,0x12},{0x02,0xEE}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0xCE}},
-{{0x0F,0x12},{0x02,0xEE}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x01}},
-{{0x0F,0x12},{0x00,0x09}},
-{{0x0F,0x12},{0x00,0x95}},
-{{0x0F,0x12},{0x09,0xDB}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x96}},
-{{0x0F,0x12},{0x00,0x9B}},
-{{0x0F,0x12},{0x02,0xAE}},
-{{0x0F,0x12},{0x02,0xB3}},
-{{0x0F,0x12},{0x09,0xD1}},
-{{0x0F,0x12},{0x09,0xD6}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x02,0xAE}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x09}},
-{{0x0F,0x12},{0x00,0x10}},
-{{0x0F,0x12},{0x03,0x27}},
-{{0x0F,0x12},{0x03,0x36}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-
-{{0x00,0x2A},{0x1A,0xF8}},
+{{0x00,0x28},{0x70,0x00}},	
+{{0x00,0x2A},{0x18,0xBC}},	
+{{0x0F,0x12},{0x00,0x04}},	
+{{0x0F,0x12},{0x05,0xB6}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x01}},	
+{{0x0F,0x12},{0x05,0xBA}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x07}},	
+{{0x0F,0x12},{0x05,0xBA}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x01,0xF4}},	
+{{0x0F,0x12},{0x02,0x4E}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x01,0xF4}},	
+{{0x0F,0x12},{0x05,0xB6}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x01,0xF4}},	
+{{0x0F,0x12},{0x05,0xBA}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x01,0xF4}},	
+{{0x0F,0x12},{0x02,0x4F}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x75}},	
+{{0x0F,0x12},{0x00,0xCF}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x75}},	
+{{0x0F,0x12},{0x00,0xD6}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x04}},	
+{{0x0F,0x12},{0x01,0xF4}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0xF0}},	
+{{0x0F,0x12},{0x01,0xF4}},	
+{{0x0F,0x12},{0x02,0x9E}},	
+{{0x0F,0x12},{0x05,0xB2}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x01,0xF8}},	
+{{0x0F,0x12},{0x02,0x28}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0x08}},	
+{{0x0F,0x12},{0x02,0x38}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0x18}},	
+{{0x0F,0x12},{0x02,0x38}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x01}},	
+{{0x0F,0x12},{0x00,0x09}},	
+{{0x0F,0x12},{0x00,0xDE}},	
+{{0x0F,0x12},{0x05,0xC0}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0xDF}},	
+{{0x0F,0x12},{0x00,0xE4}},	
+{{0x0F,0x12},{0x01,0xF8}},	
+{{0x0F,0x12},{0x01,0xFD}},	
+{{0x0F,0x12},{0x05,0xB6}},	
+{{0x0F,0x12},{0x05,0xBB}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x01,0xF8}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x77}},	
+{{0x0F,0x12},{0x00,0x7E}},	
+{{0x0F,0x12},{0x02,0x4F}},	
+{{0x0F,0x12},{0x02,0x5E}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+	
+ // For Capture 	
+	
+{{0x0F,0x12},{0x00,0x04}},	
+{{0x0F,0x12},{0x09,0xD1}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x01}},	
+{{0x0F,0x12},{0x09,0xD5}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x08}},	
+{{0x0F,0x12},{0x09,0xD5}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0xAA}},	
+{{0x0F,0x12},{0x03,0x26}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0xAA}},	
+{{0x0F,0x12},{0x09,0xD1}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0xAA}},	
+{{0x0F,0x12},{0x09,0xD5}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0xAA}},	
+{{0x0F,0x12},{0x03,0x27}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x08}},	
+{{0x0F,0x12},{0x00,0x84}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x08}},	
+{{0x0F,0x12},{0x00,0x8D}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x08}},	
+{{0x0F,0x12},{0x02,0xAA}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0xAA}},	
+{{0x0F,0x12},{0x02,0xAA}},	
+{{0x0F,0x12},{0x03,0xAD}},	
+{{0x0F,0x12},{0x09,0xCD}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0xAE}},	
+{{0x0F,0x12},{0x02,0xDE}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0xBE}},	
+{{0x0F,0x12},{0x02,0xEE}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0xCE}},	
+{{0x0F,0x12},{0x02,0xEE}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x01}},	
+{{0x0F,0x12},{0x00,0x09}},	
+{{0x0F,0x12},{0x00,0x95}},	
+{{0x0F,0x12},{0x09,0xDB}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x96}},	
+{{0x0F,0x12},{0x00,0x9B}},	
+{{0x0F,0x12},{0x02,0xAE}},	
+{{0x0F,0x12},{0x02,0xB3}},	
+{{0x0F,0x12},{0x09,0xD1}},	
+{{0x0F,0x12},{0x09,0xD6}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x02,0xAE}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x09}},	
+{{0x0F,0x12},{0x00,0x10}},	
+{{0x0F,0x12},{0x03,0x27}},	
+{{0x0F,0x12},{0x03,0x36}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+	
+{{0x00,0x2A},{0x1A,0xF8}},	
 {{0x0F,0x12},{0x5A,0x3C}},	//senHal_TuneStr_AngTuneData1_2_D000F400 register at subsampling
-{{0x00,0x2A},{0x18,0x96}},
-{{0x0F,0x12},{0x00,0x02}},	//senHal_SamplingType	0002 03EE: PLA setting
-{{0x0F,0x12},{0x00,0x00}},	//senHal_SamplingMode 0 : 2 PLA / 1 : 4PLA
+{{0x00,0x2A},{0x18,0x96}},	
+{{0x0F,0x12},{0x00,0x02}},	//senHal_SamplingType	0002 03EE: PLA setting          
+{{0x0F,0x12},{0x00,0x00}},	//senHal_SamplingMode 0 : 2 PLA / 1 : 4PLA              
 {{0x0F,0x12},{0x00,0x03}},	//senHal_PLAOption	[0] VPLA enable  [1] HPLA enable
 
-{{0x00,0x2A},{0x1B,0x00}},  //Green Noise ä¿ºæ€¥
+{{0x00,0x2A},{0x1B,0x00}},  //Green Noise °³¼±
 {{0x0F,0x12},{0xF4,0x28}},
 {{0x0F,0x12},{0xFF,0xFF}},
 {{0x0F,0x12},{0x00,0x00}},
 
-{{0x00,0x2A},{0x18,0x9E}},
+{{0x00,0x2A},{0x18,0x9E}},	
 {{0x0F,0x12},{0x0F,0xB0}},	//senHal_ExpMinPixels
-{{0x00,0x2A},{0x18,0xAC}},
-{{0x0F,0x12},{0x00,0x60}},	//senHal_uAddColsBin
+{{0x00,0x2A},{0x18,0xAC}},	
+{{0x0F,0x12},{0x00,0x60}},	//senHal_uAddColsBin  
 {{0x0F,0x12},{0x00,0x60}},	//senHal_uAddColsNoBin
-{{0x0F,0x12},{0x05,0xC0}},	//senHal_uMinColsBin
+{{0x0F,0x12},{0x05,0xC0}},	//senHal_uMinColsBin  
 {{0x0F,0x12},{0x05,0xC0}},	//senHal_uMinColsNoBin
-{{0x00,0x2A},{0x1A,0xEA}},
-{{0x0F,0x12},{0x80,0x80}},	//senHal_SubF404Tune
+{{0x00,0x2A},{0x1A,0xEA}},	
+{{0x0F,0x12},{0x80,0x80}},	//senHal_SubF404Tune 
 {{0x0F,0x12},{0x00,0x80}},	//senHal_FullF404Tune
-{{0x00,0x2A},{0x1A,0xE0}},
-{{0x0F,0x12},{0x00,0x00}},	//senHal_bSenAAC
-{{0x00,0x2A},{0x1A,0x72}},
+{{0x00,0x2A},{0x1A,0xE0}},	                     
+{{0x0F,0x12},{0x00,0x00}},	//senHal_bSenAAC     
+{{0x00,0x2A},{0x1A,0x72}},	
 {{0x0F,0x12},{0x00,0x00}},	//senHal_bSRX	SRX off
-{{0x00,0x2A},{0x18,0xA2}},
-{{0x0F,0x12},{0x00,0x04}},	//senHal_NExpLinesCheckFine extend Forbidden area line
-{{0x00,0x2A},{0x1A,0x6A}},
+{{0x00,0x2A},{0x18,0xA2}},	
+{{0x0F,0x12},{0x00,0x04}},	//senHal_NExpLinesCheckFine extend Forbidden area line       
+{{0x00,0x2A},{0x1A,0x6A}},	                                                             
 {{0x0F,0x12},{0x00,0x9A}},	//senHal_usForbiddenRightOfs extend right Forbidden area line
-{{0x00,0x2A},{0x38,0x5E}},
-{{0x0F,0x12},{0x02,0x4C}},	//Mon_Sen_uExpPixelsOfs
-{{0x00,0x2A},{0x0E,0xE6}},
+{{0x00,0x2A},{0x38,0x5E}},	                                                             
+{{0x0F,0x12},{0x02,0x4C}},	//Mon_Sen_uExpPixelsOfs                                      
+{{0x00,0x2A},{0x0E,0xE6}},	
 {{0x0F,0x12},{0x00,0x00}},	//setot_bUseDigitalHbin
-{{0x00,0x2A},{0x1B,0x2A}},
-{{0x0F,0x12},{0x03,0x00}},	//70001B2A //senHal_TuneStr2_usAngTuneGainTh
-{{0x0F,0x12},{0x00,0xD6}},	//70001B2C //senHal_TuneStr2_AngTuneF4CA_0_
-{{0x0F,0x12},{0x00,0x8D}},	//70001B2E //senHal_TuneStr2_AngTuneF4CA_1_
-{{0x0F,0x12},{0x00,0xCF}},	//70001B30 //senHal_TuneStr2_AngTuneF4C2_0_
+{{0x00,0x2A},{0x1B,0x2A}},	
+{{0x0F,0x12},{0x03,0x00}},	//70001B2A //senHal_TuneStr2_usAngTuneGainTh	
+{{0x0F,0x12},{0x00,0xD6}},	//70001B2C //senHal_TuneStr2_AngTuneF4CA_0_ 
+{{0x0F,0x12},{0x00,0x8D}},	//70001B2E //senHal_TuneStr2_AngTuneF4CA_1_ 
+{{0x0F,0x12},{0x00,0xCF}},	//70001B30 //senHal_TuneStr2_AngTuneF4C2_0_ 
 {{0x0F,0x12},{0x00,0x84}},	//70001B32 //senHal_TuneStr2_AngTuneF4C2_1_
-
+                                                                                     
 //==================================================================================
 // 08.AF Setting
 //==================================================================================
 
-//AF interface setting
-{{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x01,0xFC}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_IPRM_LedGpio
-{{0x00,0x2A},{0x01,0xFE}},
-{{0x0F,0x12},{0x00,0x03}},	//REG_TC_IPRM_CM_Init_AfModeType VCM IIC
-{{0x0F,0x12},{0x00,0x00}},	//REG_TC_IPRM_CM_Init_PwmConfig1
-{{0x00,0x2A},{0x02,0x04}},
-{{0x0F,0x12},{0x00,0x61}},	//REG_TC_IPRM_CM_Init_GpioConfig1 AF Enable GPIO 6
-{{0x00,0x2A},{0x02,0x0C}},
-{{0x0F,0x12},{0x2F,0x0C}},	//REG_TC_IPRM_CM_Init_Mi2cBits
-{{0x0F,0x12},{0x01,0x90}},	//REG_TC_IPRM_CM_Init_Mi2cRateKhz IIC Speed
+//AF interface setting	
+{{0x00,0x28},{0x70,0x00}},                                                                  
+{{0x00,0x2A},{0x01,0xFC}},                                                                  
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_IPRM_LedGpio                                      
+{{0x00,0x2A},{0x01,0xFE}},                                                                  
+{{0x0F,0x12},{0x00,0x03}},	//REG_TC_IPRM_CM_Init_AfModeType VCM IIC                   
+{{0x0F,0x12},{0x00,0x00}},	//REG_TC_IPRM_CM_Init_PwmConfig1                           
+{{0x00,0x2A},{0x02,0x04}},                                                                  
+{{0x0F,0x12},{0x00,0x61}},	//REG_TC_IPRM_CM_Init_GpioConfig1 AF Enable GPIO 6	
+{{0x00,0x2A},{0x02,0x0C}},                                                                  
+{{0x0F,0x12},{0x2F,0x0C}},	//REG_TC_IPRM_CM_Init_Mi2cBits                             
+{{0x0F,0x12},{0x01,0x90}},	//REG_TC_IPRM_CM_Init_Mi2cRateKhz IIC Speed     
 
-{{0x00,0x2A},{0x02,0x94}},
-{{0x0F,0x12},{0x01,0x00}},	//REG_TC_AF_FstWinStartX
-{{0x0F,0x12},{0x00,0xE3}},	//REG_TC_AF_FstWinStartY
-{{0x0F,0x12},{0x02,0x00}},	//REG_TC_AF_FstWinSizeX
-{{0x0F,0x12},{0x02,0x38}},	//REG_TC_AF_FstWinSizeY
-{{0x0F,0x12},{0x01,0xC6}},	//REG_TC_AF_ScndWinStartX
-{{0x0F,0x12},{0x01,0x66}},	//REG_TC_AF_ScndWinStartY
-{{0x0F,0x12},{0x00,0x74}},	//REG_TC_AF_ScndWinSizeX
-{{0x0F,0x12},{0x01,0x32}},	//REG_TC_AF_ScndWinSizeY
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_AF_WinSizesUpdated
-
-
-//2nd search setting
-{{0x00,0x2A},{0x07,0x0E}},
-{{0x0F,0x12},{0x00,0xFF}}, //C0 	//skl_af_StatOvlpExpFactor
-{{0x00,0x2A},{0x07,0x1E}},
-{{0x0F,0x12},{0x00,0x00}}, //01 00 	//skl_af_bAfStatOff
-{{0x00,0x2A},{0x16,0x3C}},
-{{0x0F,0x12},{0x00,0x00}},	//af_search_usAeStable
-{{0x00,0x2A},{0x16,0x48}},
-{{0x0F,0x12},{0x90,0x02}},	//af_search_usSingleAfFlags
-{{0x00,0x2A},{0x16,0x52}},
-{{0x0F,0x12},{0x00,0x02}},	//af_search_usFinePeakCount
-{{0x0F,0x12},{0x00,0x00}},	//af_search_usFineMaxScale
-{{0x00,0x2A},{0x15,0xE0}},
-{{0x0F,0x12},{0x09,0x02}},	//af_pos_usFineStepNumSize
-
-//Peak Threshold
-{{0x00,0x2A},{0x16,0x4C}},
-{{0x0F,0x12},{0x00,0x03}},	//af_search_usMinPeakSamples
-{{0x00,0x2A},{0x16,0x3E}},
-{{0x0F,0x12},{0x00,0xE5}}, //80 //8a //A0 	//A0 af_search_usPeakThr Full search (E5 90%)
-{{0x0F,0x12},{0x00,0x98}}, //80 //a0 //8a  //98	//98 af_search_usPeakThrLow
-{{0x00,0x2A},{0x47,0xA8}},
+{{0x00,0x2A},{0x02,0x94}},                                                                  
+{{0x0F,0x12},{0x01,0x00}},	//REG_TC_AF_FstWinStartX                                   
+{{0x0F,0x12},{0x00,0xE3}},	//REG_TC_AF_FstWinStartY                                   
+{{0x0F,0x12},{0x02,0x00}},	//REG_TC_AF_FstWinSizeX                                    
+{{0x0F,0x12},{0x02,0x38}},	//REG_TC_AF_FstWinSizeY                                    
+{{0x0F,0x12},{0x01,0xC6}},	//REG_TC_AF_ScndWinStartX                                  
+{{0x0F,0x12},{0x01,0x66}},	//REG_TC_AF_ScndWinStartY                                  
+{{0x0F,0x12},{0x00,0x74}},	//REG_TC_AF_ScndWinSizeX                                   
+{{0x0F,0x12},{0x01,0x32}},	//REG_TC_AF_ScndWinSizeY                                   
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_AF_WinSizesUpdated                                
+                                                                           
+	
+//2nd search setting	
+{{0x00,0x2A},{0x07,0x0E}},                                                                  
+{{0x0F,0x12},{0x00,0xFF}}, //C0 	//skl_af_StatOvlpExpFactor                                 
+{{0x00,0x2A},{0x07,0x1E}},                                                                  
+{{0x0F,0x12},{0x00,0x00}}, //01 00 	//skl_af_bAfStatOff                                        
+{{0x00,0x2A},{0x16,0x3C}},                                                                  
+{{0x0F,0x12},{0x00,0x00}},	//af_search_usAeStable                                     
+{{0x00,0x2A},{0x16,0x48}},                                                                  
+{{0x0F,0x12},{0x90,0x02}},	//af_search_usSingleAfFlags                                
+{{0x00,0x2A},{0x16,0x52}},                                                                  
+{{0x0F,0x12},{0x00,0x02}},	//af_search_usFinePeakCount                                
+{{0x0F,0x12},{0x00,0x00}},	//af_search_usFineMaxScale                                 
+{{0x00,0x2A},{0x15,0xE0}},                                                                  
+{{0x0F,0x12},{0x09,0x02}},	//af_pos_usFineStepNumSize                                 
+                                                                           
+//Peak Threshold	
+{{0x00,0x2A},{0x16,0x4C}},                                                                  
+{{0x0F,0x12},{0x00,0x03}},	//af_search_usMinPeakSamples                               
+{{0x00,0x2A},{0x16,0x3E}},                                                                  
+{{0x0F,0x12},{0x00,0xE5}}, //80 //8a //A0 	//A0 af_search_usPeakThr Full search (E5 90%)                 
+{{0x0F,0x12},{0x00,0x98}}, //80 //a0 //8a  //98	//98 af_search_usPeakThrLow                                   
+{{0x00,0x2A},{0x47,0xA8}},	                               
 {{0x0F,0x12},{0x00,0x80}},	//TNP, Macro Threshold register
-
-
-//Home Pos
-{{0x00,0x2A},{0x15,0xD4}},
-{{0x0F,0x12},{0x00,0x00}},	//af_pos_usHomePos
-{{0x0F,0x12},{0xD0,0x00}},	//af_pos_usLowConfPos
-
-
-//AF statistics
-{{0x00,0x2A},{0x16,0x9A}},
-{{0x0F,0x12},{0xFF,0x95}},	//af_search_usConfCheckOrder_1_
-{{0x00,0x2A},{0x16,0x6A}},
-{{0x0F,0x12},{0x02,0x80}},	//af_search_usConfThr_4_
-{{0x00,0x2A},{0x16,0x76}},
-{{0x0F,0x12},{0x03,0xA0}},	//af_search_usConfThr_10_
-{{0x0F,0x12},{0x03,0x20}},	//af_search_usConfThr_11_
-{{0x00,0x2A},{0x16,0xBC}},
-{{0x0F,0x12},{0x00,0x30}},	//af_stat_usMinStatVal
-{{0x00,0x2A},{0x16,0xE0}},
-{{0x0F,0x12},{0x00,0x60}},	//af_scene_usSceneLowNormBrThr
-{{0x00,0x2A},{0x16,0xD4}},
-{{0x0F,0x12},{0x00,0x10}},	//af_stat_usBpfThresh
-{{0x00,0x2A},{0x16,0x56}},
-{{0x0F,0x12},{0x00,0x00}},	//af_search_usCapturePolicy
-{{0x00,0x2A},{0x15,0xE6}},
-{{0x0F,0x12},{0x00,0x3C}},	//af_pos_usCaptureFixedPos
-
-{{0x0F,0x12},{0x00,0x18}},	//af_pos_usTableLastInd
-{{0x0F,0x12},{0x00,0x2A}},	//af_pos_usTable_0_
-{{0x0F,0x12},{0x00,0x30}},	//af_pos_usTable_1_
-{{0x0F,0x12},{0x00,0x36}},	//af_pos_usTable_2_
-{{0x0F,0x12},{0x00,0x3C}},	//af_pos_usTable_3_
-{{0x0F,0x12},{0x00,0x42}},	//af_pos_usTable_4_
-{{0x0F,0x12},{0x00,0x48}},	//af_pos_usTable_5_
-{{0x0F,0x12},{0x00,0x4E}},	//af_pos_usTable_6_
-{{0x0F,0x12},{0x00,0x54}},	//af_pos_usTable_7_
-{{0x0F,0x12},{0x00,0x5A}},	//af_pos_usTable_8_
-{{0x0F,0x12},{0x00,0x60}},	//af_pos_usTable_9_
-{{0x0F,0x12},{0x00,0x66}},	//af_pos_usTable_10
-{{0x0F,0x12},{0x00,0x6C}},	//af_pos_usTable_11_
-{{0x0F,0x12},{0x00,0x72}},	//af_pos_usTable_12_
-{{0x0F,0x12},{0x00,0x78}},	//af_pos_usTable_13_
-{{0x0F,0x12},{0x00,0x7E}},	//af_pos_usTable_14_
-{{0x0F,0x12},{0x00,0x84}},	//af_pos_usTable_15_
-{{0x0F,0x12},{0x00,0x8A}},	//af_pos_usTable_16_
-{{0x0F,0x12},{0x00,0x90}},	//af_pos_usTable_17_
-{{0x0F,0x12},{0x00,0x96}},	//af_pos_usTable_18_
-{{0x0F,0x12},{0x00,0x9C}},	//af_pos_usTable_19_
-{{0x0F,0x12},{0x00,0xA2}},	//af_pos_usTable_20_
-{{0x0F,0x12},{0x00,0xA8}},	//af_pos_usTable_21_
-{{0x0F,0x12},{0x00,0xAE}},	//af_pos_usTable_22_
-{{0x0F,0x12},{0x00,0xB4}},	//af_pos_usTable_23_
-{{0x0F,0x12},{0x00,0xBA}},	//af_pos_usTable_24_
-
-//VCM AF driver with PWM/I2C
-{{0x00,0x2A},{0x17,0x22}},
-{{0x0F,0x12},{0x80,0x00}},	//afd_usParam_0_
-{{0x0F,0x12},{0x00,0x06}},	//afd_usParam_1_
-{{0x0F,0x12},{0x3F,0xF0}},	//afd_usParam_2_
-{{0x0F,0x12},{0x03,0xE8}},	//afd_usParam_3_
-{{0x0F,0x12},{0x00,0x00}},	//afd_usParam_4_
-{{0x0F,0x12},{0x00,0x80}},   //10 afd_usParam_5_
-{{0x0F,0x12},{0x00,0x10}},	//10 afd_usParam_6_
-{{0x0F,0x12},{0x00,0x10}},	//08 afd_usParam_7_
-{{0x0F,0x12},{0x00,0x40}},	//afd_usParam_8_
-{{0x0F,0x12},{0x00,0x80}},	//afd_usParam_9_
-{{0x0F,0x12},{0x00,0xC0}},	//afd_usParam_10_
-{{0x0F,0x12},{0x00,0xE0}},	//afd_usParam_11_
-
-{{0x00,0x2A},{0x02,0x8C}},
-{{0x0F,0x12},{0x00,0x03}},	//REG_TC_AF_AfCmd
+	
+	
+//Home Pos	
+{{0x00,0x2A},{0x15,0xD4}},                                                                  
+{{0x0F,0x12},{0x00,0x00}},	//af_pos_usHomePos                                         
+{{0x0F,0x12},{0xD0,0x00}},	//af_pos_usLowConfPos                                      
+	
+	
+//AF statistics	
+{{0x00,0x2A},{0x16,0x9A}},                                                                  
+{{0x0F,0x12},{0xFF,0x95}},	//af_search_usConfCheckOrder_1_                            
+{{0x00,0x2A},{0x16,0x6A}},                                                                  
+{{0x0F,0x12},{0x02,0x80}},	//af_search_usConfThr_4_                                   
+{{0x00,0x2A},{0x16,0x76}},	                                                           
+{{0x0F,0x12},{0x03,0xA0}},	//af_search_usConfThr_10_                                  
+{{0x0F,0x12},{0x03,0x20}},	//af_search_usConfThr_11_                                  
+{{0x00,0x2A},{0x16,0xBC}},	                                                           
+{{0x0F,0x12},{0x00,0x30}},	//af_stat_usMinStatVal                                     
+{{0x00,0x2A},{0x16,0xE0}},	                                                           
+{{0x0F,0x12},{0x00,0x60}},	//af_scene_usSceneLowNormBrThr                             
+{{0x00,0x2A},{0x16,0xD4}},	                                                           
+{{0x0F,0x12},{0x00,0x10}},	//af_stat_usBpfThresh                                      
+{{0x00,0x2A},{0x16,0x56}},	                                                           
+{{0x0F,0x12},{0x00,0x00}},	//af_search_usCapturePolicy                                
+{{0x00,0x2A},{0x15,0xE6}},                                                                  
+{{0x0F,0x12},{0x00,0x3C}},	//af_pos_usCaptureFixedPos                                 
+                                                                           
+{{0x0F,0x12},{0x00,0x18}},	//af_pos_usTableLastInd                                    
+{{0x0F,0x12},{0x00,0x2A}},	//af_pos_usTable_0_                                        
+{{0x0F,0x12},{0x00,0x30}},	//af_pos_usTable_1_                                        
+{{0x0F,0x12},{0x00,0x36}},	//af_pos_usTable_2_                                        
+{{0x0F,0x12},{0x00,0x3C}},	//af_pos_usTable_3_                                        
+{{0x0F,0x12},{0x00,0x42}},	//af_pos_usTable_4_  
+{{0x0F,0x12},{0x00,0x48}},	//af_pos_usTable_5_                                        
+{{0x0F,0x12},{0x00,0x4E}},	//af_pos_usTable_6_                                        
+{{0x0F,0x12},{0x00,0x54}},	//af_pos_usTable_7_                                        
+{{0x0F,0x12},{0x00,0x5A}},	//af_pos_usTable_8_                                        
+{{0x0F,0x12},{0x00,0x60}},	//af_pos_usTable_9_                                        
+{{0x0F,0x12},{0x00,0x66}},	//af_pos_usTable_10 
+{{0x0F,0x12},{0x00,0x6C}},	//af_pos_usTable_11_                                       
+{{0x0F,0x12},{0x00,0x72}},	//af_pos_usTable_12_                                       
+{{0x0F,0x12},{0x00,0x78}},	//af_pos_usTable_13_                                       
+{{0x0F,0x12},{0x00,0x7E}},	//af_pos_usTable_14_                                       
+{{0x0F,0x12},{0x00,0x84}},	//af_pos_usTable_15_ 
+{{0x0F,0x12},{0x00,0x8A}},	//af_pos_usTable_16_                                       
+{{0x0F,0x12},{0x00,0x90}},	//af_pos_usTable_17_                                       
+{{0x0F,0x12},{0x00,0x96}},	//af_pos_usTable_18_                                       
+{{0x0F,0x12},{0x00,0x9C}},	//af_pos_usTable_19_                                       
+{{0x0F,0x12},{0x00,0xA2}},	//af_pos_usTable_20_                                       
+{{0x0F,0x12},{0x00,0xA8}},	//af_pos_usTable_21_                                       
+{{0x0F,0x12},{0x00,0xAE}},	//af_pos_usTable_22_                                       
+{{0x0F,0x12},{0x00,0xB4}},	//af_pos_usTable_23_                                       
+{{0x0F,0x12},{0x00,0xBA}},	//af_pos_usTable_24_  
+  	
+//VCM AF driver with PWM/I2C                                                                         
+{{0x00,0x2A},{0x17,0x22}},                                                                  
+{{0x0F,0x12},{0x80,0x00}},	//afd_usParam_0_                                           
+{{0x0F,0x12},{0x00,0x06}},	//afd_usParam_1_                                           
+{{0x0F,0x12},{0x3F,0xF0}},	//afd_usParam_2_                                           
+{{0x0F,0x12},{0x03,0xE8}},	//afd_usParam_3_                                           
+{{0x0F,0x12},{0x00,0x00}},	//afd_usParam_4_                                           
+{{0x0F,0x12},{0x00,0x80}},   //10 afd_usParam_5_                                           
+{{0x0F,0x12},{0x00,0x10}},	//10 afd_usParam_6_                                           
+{{0x0F,0x12},{0x00,0x10}},	//08 afd_usParam_7_                                           
+{{0x0F,0x12},{0x00,0x40}},	//afd_usParam_8_                                           
+{{0x0F,0x12},{0x00,0x80}},	//afd_usParam_9_                                           
+{{0x0F,0x12},{0x00,0xC0}},	//afd_usParam_10_                                          
+{{0x0F,0x12},{0x00,0xE0}},	//afd_usParam_11_                                          
+                                                                           
+{{0x00,0x2A},{0x02,0x8C}},                                                                  
+{{0x0F,0x12},{0x00,0x03}},	//REG_TC_AF_AfCmd         
 
 //==================================================================================
 // 09.AWB-BASIC setting
@@ -2233,25 +2233,25 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x00,0x08}},	//awbb_WpFilterMinThr
 {{0x0F,0x12},{0x00,0x60}},	//190 awbb_WpFilterMaxThr
 {{0x0F,0x12},{0x01,0x00}},	//F0 awbb_WpFilterCoef
-{{0x0F,0x12},{0x00,0x04}},	//awbb_WpFilterSize
-{{0x0F,0x12},{0x00,0x02}},	//awbb_GridEnable
+{{0x0F,0x12},{0x00,0x04}},	//awbb_WpFilterSize		
+{{0x0F,0x12},{0x00,0x02}},	//awbb_GridEnable	
 
-{{0x00,0x2A},{0x14,0x4E}},
-{{0x0F,0x12},{0x00,0x00}},	//awbb_RGainOff
-{{0x0F,0x12},{0x00,0x00}},	//awbb_BGainOff
-{{0x0F,0x12},{0x00,0x00}},	//awbb_GGainOff
-{{0x0f,0x12},{0x00,0xC2}},	//awbb_Alpha_Comp_Mode
-{{0x0F,0x12},{0x00,0x02}},	//awbb_Rpl_InvalidOutDoor
-{{0x0F,0x12},{0x00,0x01}},	//awbb_UseGrThrCorr
-{{0x0F,0x12},{0x00,0x74}},	//awbb_Use_Filters
-{{0x0F,0x12},{0x00,0x01}},	//awbb_CorrectMinNumPatches
+{{0x00,0x2A},{0x14,0x4E}},			
+{{0x0F,0x12},{0x00,0x00}},	//awbb_RGainOff 		
+{{0x0F,0x12},{0x00,0x00}},	//awbb_BGainOff 		
+{{0x0F,0x12},{0x00,0x00}},	//awbb_GGainOff 		
+{{0x0f,0x12},{0x00,0xC2}},	//awbb_Alpha_Comp_Mode		
+{{0x0F,0x12},{0x00,0x02}},	//awbb_Rpl_InvalidOutDoor		
+{{0x0F,0x12},{0x00,0x01}},	//awbb_UseGrThrCorr		
+{{0x0F,0x12},{0x00,0x74}},	//awbb_Use_Filters     		
+{{0x0F,0x12},{0x00,0x01}},	//awbb_CorrectMinNumPatches		
 
 // White Locus
 {{0x00,0x2A},{0x11,0xF0}},
 {{0x0F,0x12},{0x01,0x2C}},	//awbb_IntcR
 {{0x0F,0x12},{0x01,0x21}},	//awbb_IntcB
-{{0x0F,0x12},{0x02,0xDF}},	//awbb_GLocusR
-{{0x0F,0x12},{0x03,0x14}},	//awbb_GLocusB
+{{0x0F,0x12},{0x02,0xDF}},	//awbb_GLocusR		
+{{0x0F,0x12},{0x03,0x14}},	//awbb_GLocusB	
 
 {{0x00,0x2A},{0x12,0x0E}},
 {{0x0F,0x12},{0x00,0x00}},	//awbb_MovingScale10
@@ -2278,13 +2278,13 @@ static struct regval_list sensor_default_regs[] = {
 
 {{0x00,0x2A},{0x2B,0xA4}},
 {{0x0F,0x12},{0x00,0x04}},	//Mon_AWB_ByPassMode
+				
+{{0x00,0x2A},{0x11,0xFC}},			
+{{0x0F,0x12},{0x00,0x0C}},	//awbb_MinNumOfFinalPatches  		
 
-{{0x00,0x2A},{0x11,0xFC}},
-{{0x0F,0x12},{0x00,0x0C}},	//awbb_MinNumOfFinalPatches
-
-{{0x00,0x2A},{0x12,0x08}},
+{{0x00,0x2A},{0x12,0x08}},  
 {{0x0F,0x12},{0x00,0x20}},	//awbb_MinNumOfChromaclassifpatches
-
+			
 // Indoor Zone
 {{0x00,0x2A},{0x10,0x1C}},
 {{0x0F,0x12},{0x03,0x60}}, //0360 //0360	//awbb_IndoorGrZones_m_BGrid_0__m_left
@@ -2360,7 +2360,7 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x02,0x48}}, //0248 //0248	//awbb_OutdoorGrZones_m_BGrid_10__m_right
 {{0x0F,0x12},{0x01,0xF4}}, //01F4 //01F4	//awbb_OutdoorGrZones_m_BGrid_11__m_left
 {{0x0F,0x12},{0x02,0x1A}}, //021A //021A	//awbb_OutdoorGrZones_m_BGrid_11__m_right
-
+           
 {{0x0F,0x12},{0x00,0x04}},	//awbb_OutdoorGrZones_m_GridStep
 {{0x00,0x2A},{0x10,0xAC}},
 {{0x0F,0x12},{0x00,0x0C}},	//awbb_OutdoorGrZones_ZInfo_m_GridSz
@@ -2407,9 +2407,9 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x00,0xFE}},
 {{0x0F,0x12},{0x00,0x00}},	//awbb_CrclLowT_B_c
 {{0x0F,0x12},{0x22,0x84}},
-{{0x0F,0x12},{0x00,0x00}},	//awbb_CrclLowT_Rad_c
-
-//AWB - GridCorrection
+{{0x0F,0x12},{0x00,0x00}},	//awbb_CrclLowT_Rad_c   	
+			
+//AWB - GridCorrection			
 {{0x00,0x2A},{0x14,0x34}},
 {{0x0F,0x12},{0x02,0xC1}},	//awbb_GridConst_1_0_
 {{0x0F,0x12},{0x03,0x3A}},	//awbb_GridConst_1_1_
@@ -2425,7 +2425,7 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x00,0xCA}},	//awbb_GridCoeff_R_2
 {{0x0F,0x12},{0x00,0x9D}},	//awbb_GridCoeff_B_2
 
-// Indoor Grid Offset
+// Indoor Grid Offset			
 {{0x00,0x2A},{0x13,0xA4}},
 {{0x0F,0x12},{0x00,0x00}},	//D65 awbb_GridCorr_R_0__0_
 {{0x0F,0x12},{0xff,0xd0}},	//D65 CW awbb_GridCorr_R_0__1_
@@ -2516,17 +2516,17 @@ static struct regval_list sensor_default_regs[] = {
 // 10.Clock Setting
 //==================================================================================
 
-//Input Clock (Mclk)
-{{0x00,0x2A},{0x01,0xF8}},
+//Input Clock (Mclk)	
+{{0x00,0x2A},{0x01,0xF8}},	
 {{0x0F,0x12},{0x5D,0xC0}},	//REG_TC_IPRM_InClockLSBs
-{{0x00,0x2A},{0x02,0x12}},
-{{0x0F,0x12},{0x00,0x02}},   //0	//REG_TC_IPRM_UseNPviClocks
-{{0x0F,0x12},{0x00,0x00}},   //2	//REG_TC_IPRM_UseNMipiClocks
+{{0x00,0x2A},{0x02,0x12}},	                                     
+{{0x0F,0x12},{0x00,0x02}},   //0	//REG_TC_IPRM_UseNPviClocks          
+{{0x0F,0x12},{0x00,0x00}},   //2	//REG_TC_IPRM_UseNMipiClocks         
 {{0x0F,0x12},{0x00,0x00}},   //2	//REG_TC_IPRM_NumberOfMipiLanes
-
-//System Clock & Output clock (Pclk)
-{{0x00,0x2A},{0x02,0x1A}},
-{{0x0F,0x12},{0x34,0xBC}},   //REG_TC_IPRM_OpClk4KHz_0
+	
+//System Clock & Output clock (Pclk)		
+{{0x00,0x2A},{0x02,0x1A}},	
+{{0x0F,0x12},{0x34,0xBC}},   //REG_TC_IPRM_OpClk4KHz_0 
 {{0x0F,0x12},{0x4F,0x1A}},   //REG_TC_IPRM_MinOutRate4KHz_0
 {{0x0F,0x12},{0x4F,0x1A}},   //REG_TC_IPRM_MaxOutRate4KHz_0
 {{0x0F,0x12},{0x4F,0x1A}},   //REG_TC_IPRM_OpClk4KHz_1	SCLK 	 : 81Mhz
@@ -2537,13 +2537,13 @@ static struct regval_list sensor_default_regs[] = {
 // 11.Auto Flicker Detection
 //==================================================================================
 
-{{0x00,0x2A},{0x0F,0x30}},
-{{0x0F,0x12},{0x00,0x01}},   	//AFC_D_ConvAccelerPower
+{{0x00,0x2A},{0x0F,0x30}}, 	
+{{0x0F,0x12},{0x00,0x01}},   	//AFC_D_ConvAccelerPower 
 
-// Auto Flicker (60Mhz start)
-{{0x00,0x2A},{0x0F,0x2A}},
+// Auto Flicker (60Mhz start)	
+{{0x00,0x2A},{0x0F,0x2A}},	
 {{0x0F,0x12},{0x00,0x00}},	//AFC_Default BIT[0] 1:60Hz 0:50Hz
-{{0x00,0x2A},{0x04,0xE6}},
+{{0x00,0x2A},{0x04,0xE6}},	                                      
 {{0x0F,0x12},{0x07,0x5F}},	//REG_TC_DBG 7F: 60Hz  5F:50Hz
 
 {{0x00,0x2A},{0x04,0xE6}},
@@ -2556,90 +2556,90 @@ static struct regval_list sensor_default_regs[] = {
 // 12.AE Setting
 //==================================================================================
 
-//AE Target
-{{0x00,0x2A},{0x14,0x84}},
+//AE Target	
+{{0x00,0x2A},{0x14,0x84}},	
 {{0x0F,0x12},{0x00,0x3C}},   	//TVAR_ae_BrAve
 
-//ae_StatMode bit[3] BLC has to be bypassed to prevent AE weight change especially backlight scene
-{{0x00,0x2A},{0x14,0x8A}},
+//ae_StatMode bit[3] BLC has to be bypassed to prevent AE weight change especially backlight scene 
+{{0x00,0x2A},{0x14,0x8A}},	
 {{0x0F,0x12},{0x00,0x0F}},  	 //ae_StatMode
 
 {{0x00,0x2A},{0x05,0x88}},
 {{0x0F,0x12},{0x00,0x02}},	//lt_uInitPostToleranceCnt
 
-//AE_state
-{{0x00,0x2A},{0x05,0x44}},
+//AE_state                	
+{{0x00,0x2A},{0x05,0x44}},	
 {{0x0F,0x12},{0x01,0x11}},  	 //lt_uLimitHigh
 {{0x0F,0x12},{0x00,0xEF}},  	 //lt_uLimitLow
 
-//AE Concept
-{{0x00,0x2A},{0x06,0x08}},
+//AE Concept	
+{{0x00,0x2A},{0x06,0x08}},                                	
 {{0x0F,0x12},{0x00,0x01}}, 	//lt_ExpGain_uSubsamplingmode
 {{0x0F,0x12},{0x00,0x01}},	//lt_ExpGain_uNonSubsampling
-
-//Exposure
+	
+//Exposure	
 {{0x00,0x2a},{0x06,0x10}},	//lt_ExpGain_ExpCurveGainMaxStr_0__ulExpIn_0
 {{0x0F,0x12},{0x00,0x01}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x0A,0x3C}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x0D,0x05}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x40,0x08}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x70,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x9C,0x00}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0xAD,0x00}},
-{{0x0F,0x12},{0x00,0x01}},
-{{0x0F,0x12},{0xF1,0xD4}},
-{{0x0F,0x12},{0x00,0x02}},
-{{0x0F,0x12},{0xDC,0x00}},
-{{0x0F,0x12},{0x00,0x05}},
-{{0x0F,0x12},{0xDC,0x00}},
-{{0x0F,0x12},{0x00,0x05}},
-
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x0A,0x3C}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x0D,0x05}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x40,0x08}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x70,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x9C,0x00}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0xAD,0x00}},	
+{{0x0F,0x12},{0x00,0x01}},	
+{{0x0F,0x12},{0xF1,0xD4}},	
+{{0x0F,0x12},{0x00,0x02}},	
+{{0x0F,0x12},{0xDC,0x00}},	
+{{0x0F,0x12},{0x00,0x05}},	
+{{0x0F,0x12},{0xDC,0x00}},	
+{{0x0F,0x12},{0x00,0x05}},	
+	
 {{0x00,0x2A},{0x06,0x38}},	//lt_ExpGain_ExpCurveGainMaxStr_0__ulExpOut_0_
-{{0x0F,0x12},{0x00,0x01}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x0A,0x3C}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x0D,0x05}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x34,0x08}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x34,0x08}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x68,0x10}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0x82,0x14}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0xC3,0x50}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0xC3,0x50}},
-{{0x0F,0x12},{0x00,0x00}},
-{{0x0F,0x12},{0xC3,0x50}},
-{{0x0F,0x12},{0x00,0x00}},
-
-//Gain
-{{0x00,0x2A},{0x06,0x0C}},
+{{0x0F,0x12},{0x00,0x01}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x0A,0x3C}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x0D,0x05}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x34,0x08}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x34,0x08}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x68,0x10}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0x82,0x14}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0xC3,0x50}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0xC3,0x50}},	
+{{0x0F,0x12},{0x00,0x00}},	
+{{0x0F,0x12},{0xC3,0x50}},	
+{{0x0F,0x12},{0x00,0x00}},	
+	
+//Gain	
+{{0x00,0x2A},{0x06,0x0C}},	
 {{0x0F,0x12},{0x08,0x00}},	//lt_ExpGain_ExpCurveGainMaxStr
 {{0x0F,0x12},{0x01,0x00}},	//lt_ExpGain_ExpCurveGainMaxStr_0__uMaxDigGain
-{{0x00,0x2A},{0x05,0xa2}},
+{{0x00,0x2A},{0x05,0xa2}},		
 {{0x0F,0x12},{0x10,0x00}},	//lt_uMaxTotGain
-
-// Lei Control
-{{0x00,0x2A},{0x06,0xB8}},
-{{0x0F,0x12},{0x45,0x2C}},
+	
+// Lei Control	
+{{0x00,0x2A},{0x06,0xB8}},               	
+{{0x0F,0x12},{0x45,0x2C}},               	
 {{0x0F,0x12},{0x00,0x05}},  	 //lt_uMaxLei
 
 //==================================================================================
 // 13.AE Weight (Normal)
 //==================================================================================
-
-{{0x00,0x2A},{0x14,0x92}},
-{{0x0F,0x12},{0x01,0x00}},	//ae_WeightTbl_16[0]
+	
+{{0x00,0x2A},{0x14,0x92}},	
+{{0x0F,0x12},{0x01,0x00}},	//ae_WeightTbl_16[0]			
 {{0x0F,0x12},{0x01,0x01}},	//ae_WeightTbl_16[1]
 {{0x0F,0x12},{0x01,0x01}},	//ae_WeightTbl_16[2]
 {{0x0F,0x12},{0x00,0x01}},	//ae_WeightTbl_16[3]
@@ -2676,203 +2676,203 @@ static struct regval_list sensor_default_regs[] = {
 // 14.Flash Setting
 //==================================================================================
 
-{{0x00,0x2A},{0x04,0x84}},
-{{0x0F,0x12},{0x00,0x02}},	//capture flash on
-{{0x00,0x2A},{0x18,0x3A}},
-{{0x0F,0x12},{0x00,0x01}},	//one frame AE
-{{0x00,0x2A},{0x17,0xF6}},
-{{0x0F,0x12},{0x02,0x3C}},	//AWB R point
-{{0x0F,0x12},{0x02,0x48}},	//AWB B point
-{{0x00,0x2A},{0x18,0x40}},
-{{0x0F,0x12},{0x00,0x01}},	// Fls AE tune start
-{{0x0F,0x12},{0x01,0x00}},	// fls_afl_FlsAFIn  Rin
-{{0x0F,0x12},{0x01,0x20}},
-{{0x0F,0x12},{0x01,0x80}},
-{{0x0F,0x12},{0x02,0x00}},
-{{0x0F,0x12},{0x04,0x00}},
-{{0x0F,0x12},{0x08,0x00}},
-{{0x0F,0x12},{0x0A,0x00}},
-{{0x0F,0x12},{0x10,0x00}},
-{{0x0F,0x12},{0x01,0x00}},	// fls_afl_FlsAFOut  Rout
-{{0x0F,0x12},{0x00,0xA0}},
-{{0x0F,0x12},{0x00,0x90}},
-{{0x0F,0x12},{0x00,0x80}},
-{{0x0F,0x12},{0x00,0x70}},
-{{0x0F,0x12},{0x00,0x45}},
-{{0x0F,0x12},{0x00,0x30}},
-{{0x0F,0x12},{0x00,0x10}},
-{{0x00,0x2A},{0x18,0x84}},
-{{0x0F,0x12},{0x01,0x00}},	// fls_afl_FlsNBOut  flash NB default
-{{0x0F,0x12},{0x01,0x00}},
-{{0x0F,0x12},{0x01,0x00}},
-{{0x0F,0x12},{0x01,0x00}},
-{{0x0F,0x12},{0x01,0x00}},
-{{0x0F,0x12},{0x01,0x00}},
-{{0x0F,0x12},{0x01,0x00}},
-{{0x0F,0x12},{0x01,0x00}},
-{{0x00,0x2A},{0x18,0x26}},
+{{0x00,0x2A},{0x04,0x84}},	
+{{0x0F,0x12},{0x00,0x02}},	//capture flash on                         
+{{0x00,0x2A},{0x18,0x3A}},	                                           
+{{0x0F,0x12},{0x00,0x01}},	//one frame AE                             
+{{0x00,0x2A},{0x17,0xF6}},	                                           
+{{0x0F,0x12},{0x02,0x3C}},	//AWB R point                              
+{{0x0F,0x12},{0x02,0x48}},	//AWB B point                              
+{{0x00,0x2A},{0x18,0x40}},	                                           
+{{0x0F,0x12},{0x00,0x01}},	// Fls AE tune start                       
+{{0x0F,0x12},{0x01,0x00}},	// fls_afl_FlsAFIn  Rin                    
+{{0x0F,0x12},{0x01,0x20}},	                                           
+{{0x0F,0x12},{0x01,0x80}},	                                           
+{{0x0F,0x12},{0x02,0x00}},	                                           
+{{0x0F,0x12},{0x04,0x00}},	                                           
+{{0x0F,0x12},{0x08,0x00}},	                                           
+{{0x0F,0x12},{0x0A,0x00}},	                                           
+{{0x0F,0x12},{0x10,0x00}},	                                           
+{{0x0F,0x12},{0x01,0x00}},	// fls_afl_FlsAFOut  Rout                  
+{{0x0F,0x12},{0x00,0xA0}},	                                           
+{{0x0F,0x12},{0x00,0x90}},	                                           
+{{0x0F,0x12},{0x00,0x80}},	                                           
+{{0x0F,0x12},{0x00,0x70}},	                                           
+{{0x0F,0x12},{0x00,0x45}},	                                           
+{{0x0F,0x12},{0x00,0x30}},	                                           
+{{0x0F,0x12},{0x00,0x10}},	                                           
+{{0x00,0x2A},{0x18,0x84}},	                                           
+{{0x0F,0x12},{0x01,0x00}},	// fls_afl_FlsNBOut  flash NB default      
+{{0x0F,0x12},{0x01,0x00}},	                                           
+{{0x0F,0x12},{0x01,0x00}},	                                           
+{{0x0F,0x12},{0x01,0x00}},	                                           
+{{0x0F,0x12},{0x01,0x00}},	                                           
+{{0x0F,0x12},{0x01,0x00}},	                                           
+{{0x0F,0x12},{0x01,0x00}},	                                           
+{{0x0F,0x12},{0x01,0x00}},	                                           
+{{0x00,0x2A},{0x18,0x26}},	                                           
 {{0x0F,0x12},{0x01,0x00}},	// fls_afl_FlashWP_Weight  flash NB default
-{{0x0F,0x12},{0x00,0xC0}},
-{{0x0F,0x12},{0x00,0x80}},
-{{0x0F,0x12},{0x00,0x0A}},
-{{0x0F,0x12},{0x00,0x00}},
+{{0x0F,0x12},{0x00,0xC0}},	                                           
+{{0x0F,0x12},{0x00,0x80}},	                                           
+{{0x0F,0x12},{0x00,0x0A}},	                                           
+{{0x0F,0x12},{0x00,0x00}},	                                           
 {{0x0F,0x12},{0x00,0x30}},	// fls_afl_FlashWP_Weight  flash NB default
-{{0x0F,0x12},{0x00,0x40}},
-{{0x0F,0x12},{0x00,0x48}},
-{{0x0F,0x12},{0x00,0x50}},
-{{0x0F,0x12},{0x00,0x60}},
-{{0x00,0x2A},{0x47,0x84}},
-{{0x0F,0x12},{0x00,0xA0}},	// TNP_Regs_FlsWeightRIn  weight tune start in
-{{0x0F,0x12},{0x00,0xC0}},
-{{0x0F,0x12},{0x00,0xD0}},
-{{0x0F,0x12},{0x01,0x00}},
-{{0x0F,0x12},{0x02,0x00}},
-{{0x0F,0x12},{0x03,0x00}},
-{{0x0F,0x12},{0x00,0x88}},	// TNP_Regs_FlsWeightROut  weight tune start out
-{{0x0F,0x12},{0x00,0xB0}},
-{{0x0F,0x12},{0x00,0xC0}},
-{{0x0F,0x12},{0x01,0x00}},
-{{0x0F,0x12},{0x02,0x00}},
-{{0x0F,0x12},{0x03,0x00}},
-{{0x00,0x2A},{0x47,0x9C}},
+{{0x0F,0x12},{0x00,0x40}},	
+{{0x0F,0x12},{0x00,0x48}},	
+{{0x0F,0x12},{0x00,0x50}},	
+{{0x0F,0x12},{0x00,0x60}},	
+{{0x00,0x2A},{0x47,0x84}},	
+{{0x0F,0x12},{0x00,0xA0}},	// TNP_Regs_FlsWeightRIn  weight tune start in    
+{{0x0F,0x12},{0x00,0xC0}},	     
+{{0x0F,0x12},{0x00,0xD0}},	    
+{{0x0F,0x12},{0x01,0x00}},	      
+{{0x0F,0x12},{0x02,0x00}},	     
+{{0x0F,0x12},{0x03,0x00}},	     
+{{0x0F,0x12},{0x00,0x88}},	// TNP_Regs_FlsWeightROut  weight tune start out  
+{{0x0F,0x12},{0x00,0xB0}},	      
+{{0x0F,0x12},{0x00,0xC0}},	     
+{{0x0F,0x12},{0x01,0x00}},	    
+{{0x0F,0x12},{0x02,0x00}},	  
+{{0x0F,0x12},{0x03,0x00}},	 
+{{0x00,0x2A},{0x47,0x9C}},	   
 {{0x0F,0x12},{0x01,0x20}},	//Fls  BRIn
-{{0x0F,0x12},{0x01,0x50}},
-{{0x0F,0x12},{0x02,0x00}},
+{{0x0F,0x12},{0x01,0x50}},	      
+{{0x0F,0x12},{0x02,0x00}},	     
 {{0x0F,0x12},{0x00,0x3C}},	// Fls  BROut
-{{0x0F,0x12},{0x00,0x3B}},
+{{0x0F,0x12},{0x00,0x3B}},	    
 {{0x0F,0x12},{0x00,0x26}},	//brightness
 
 //==================================================================================
 // 15.CCM Setting
 //==================================================================================
 
-{{0x00,0x2A},{0x08,0xA6}},
+{{0x00,0x2A},{0x08,0xA6}},	
 {{0x0F,0x12},{0x00,0xC0}},	//SARR_AwbCcmCord[0]
 {{0x0F,0x12},{0x01,0x00}},	//SARR_AwbCcmCord[1]
 {{0x0F,0x12},{0x01,0x25}},	//SARR_AwbCcmCord[2]
 {{0x0F,0x12},{0x01,0x5F}},	//SARR_AwbCcmCord[3]
 {{0x0F,0x12},{0x01,0x7C}},	//SARR_AwbCcmCord[4]
 {{0x0F,0x12},{0x01,0x94}},	//SARR_AwbCcmCord[5]
-
-{{0x00,0x2A},{0x08,0x98}},
+	
+{{0x00,0x2A},{0x08,0x98}},	
 {{0x0F,0x12},{0x48,0x00}},	//TVAR_wbt_pBaseCcms
-{{0x0F,0x12},{0x70,0x00}},
-{{0x00,0x2A},{0x08,0xA0}},
+{{0x0F,0x12},{0x70,0x00}},	
+{{0x00,0x2A},{0x08,0xA0}},	
 {{0x0F,0x12},{0x48,0xD8}},	//TVAR_wbt_pOutdoorCcm
-{{0x0F,0x12},{0x70,0x00}},
-
-//Horizon
-{{0x00,0x2A},{0x48,0x00}},
-{{0x0F,0x12},{0x01,0xEB}}, //0210 	//H TVAR_wbt_pBaseCcms[0]
-{{0x0F,0x12},{0xFF,0xD1}}, //FFC0 	//TVAR_wbt_pBaseCcms[1]
-{{0x0F,0x12},{0xFF,0xDC}}, //FFCC 	//TVAR_wbt_pBaseCcms[2]
-{{0x0F,0x12},{0xFF,0x2B}}, //FF34 	//TVAR_wbt_pBaseCcms[3]
-{{0x0F,0x12},{0x02,0x00}}, //01EB 	//TVAR_wbt_pBaseCcms[4]
-{{0x0F,0x12},{0xFE,0xFD}}, //FF09 	//TVAR_wbt_pBaseCcms[5]
-{{0x0F,0x12},{0x00,0x1C}}, //001C 	//TVAR_wbt_pBaseCcms[6]
-{{0x0F,0x12},{0xFF,0xE4}}, //FFE4 	//TVAR_wbt_pBaseCcms[7]
-{{0x0F,0x12},{0x01,0xCD}}, //01CD 	//TVAR_wbt_pBaseCcms[8]
-{{0x0F,0x12},{0x00,0xE3}}, //00D9 	//TVAR_wbt_pBaseCcms[9]
-{{0x0F,0x12},{0x00,0xE3}}, //00D9 	//TVAR_wbt_pBaseCcms[10]
-{{0x0F,0x12},{0xFE,0x80}}, //FE95 	//TVAR_wbt_pBaseCcms[11]
-{{0x0F,0x12},{0x02,0x08}}, //0208 	//TVAR_wbt_pBaseCcms[12]
-{{0x0F,0x12},{0xFF,0x75}}, //FF75 	//TVAR_wbt_pBaseCcms[13]
-{{0x0F,0x12},{0x01,0x99}}, //0199 	//TVAR_wbt_pBaseCcms[14]
-{{0x0F,0x12},{0xFF,0x06}}, //FF06 	//TVAR_wbt_pBaseCcms[15]
-{{0x0F,0x12},{0x01,0xBA}}, //01BA 	//TVAR_wbt_pBaseCcms[16]
-{{0x0F,0x12},{0x01,0x08}}, //0108 	//TVAR_wbt_pBaseCcms[17]
-
-// INCA A
-{{0x0F,0x12},{0x01,0xEB}}, //0210 	//A TVAR_wbt_pBaseCcms[18]
-{{0x0F,0x12},{0xFF,0xD1}}, //FFC0 	//TVAR_wbt_pBaseCcms[19]
-{{0x0F,0x12},{0xFF,0xDC}}, //FFCC 	//TVAR_wbt_pBaseCcms[20]
-{{0x0F,0x12},{0xFF,0x2B}}, //FF34 	//TVAR_wbt_pBaseCcms[21]
-{{0x0F,0x12},{0x02,0x00}}, //01EB 	//TVAR_wbt_pBaseCcms[22]
-{{0x0F,0x12},{0xFE,0xFD}}, //FF09 	//TVAR_wbt_pBaseCcms[23]
-{{0x0F,0x12},{0x00,0x1C}}, //001C 	//TVAR_wbt_pBaseCcms[24]
-{{0x0F,0x12},{0xFF,0xE4}}, //FFE4 	//TVAR_wbt_pBaseCcms[25]
-{{0x0F,0x12},{0x01,0xCD}}, //01CD 	//TVAR_wbt_pBaseCcms[26]
-{{0x0F,0x12},{0x00,0xE3}}, //00D9 	//TVAR_wbt_pBaseCcms[27]
-{{0x0F,0x12},{0x00,0xE3}}, //00D9 	//TVAR_wbt_pBaseCcms[28]
-{{0x0F,0x12},{0xFE,0x80}}, //FE95 	//TVAR_wbt_pBaseCcms[29]
-{{0x0F,0x12},{0x02,0x08}}, //0208 	//TVAR_wbt_pBaseCcms[30]
-{{0x0F,0x12},{0xFF,0x75}}, //FF75 	//TVAR_wbt_pBaseCcms[31]
-{{0x0F,0x12},{0x01,0x99}}, //0199 	//TVAR_wbt_pBaseCcms[32]
-{{0x0F,0x12},{0xFF,0x06}}, //FF06 	//TVAR_wbt_pBaseCcms[33]
-{{0x0F,0x12},{0x01,0xBA}}, //01BA 	//TVAR_wbt_pBaseCcms[34]
-{{0x0F,0x12},{0x01,0x08}}, //0108 	//TVAR_wbt_pBaseCcms[35]
-
-//Warm White
-{{0x0F,0x12},{0x02,0x2B}}, //0230 //0243 //023E //023B //0231 //0227 	//CW TVAR_wbt_pBaseCcms[36]
-{{0x0F,0x12},{0xFF,0x8C}}, //FF9E //FF8E //FF8A //FF8D //FF93 //FF95 	//TVAR_wbt_pBaseCcms[37]
-{{0x0F,0x12},{0xFF,0xD8}}, //FFC5 //FFC3 //FFCC //FFCF //FFD4 //FFE0 	//TVAR_wbt_pBaseCcms[38]
-{{0x0F,0x12},{0xFE,0xCA}}, //FECC //FECE //FED4 //FED2 	//TVAR_wbt_pBaseCcms[39]
-{{0x0F,0x12},{0x01,0x92}}, //018D //0189 //017F //0174 	//TVAR_wbt_pBaseCcms[40]
-{{0x0F,0x12},{0xFF,0x0E}}, //FF10 //FF12 //FF16 //FF1F 	//TVAR_wbt_pBaseCcms[41]
-{{0x0F,0x12},{0xFF,0xD2}}, //FFD2 //FFD2 //FFD2 //FFCB 	//TVAR_wbt_pBaseCcms[42]
-{{0x0F,0x12},{0xFF,0xD2}}, //FFD2 //FFD2 //FFD2 //FFCB 	//TVAR_wbt_pBaseCcms[43]
-{{0x0F,0x12},{0x01,0xC8}}, //01C8 //01C8 //01C8 //01D6 	//TVAR_wbt_pBaseCcms[44]
-{{0x0F,0x12},{0x00,0xF9}}, //00F9 //00F9 //00F9 //00F8 	//TVAR_wbt_pBaseCcms[45]
-{{0x0F,0x12},{0x00,0xDE}}, //00DE //00DE //00DE //00D5 	//TVAR_wbt_pBaseCcms[46]
-{{0x0F,0x12},{0xFF,0x26}}, //FF26 //FF26 //FF26 //FF34 	//TVAR_wbt_pBaseCcms[47]
-{{0x0F,0x12},{0x01,0x51}}, //0151 //0151 //0151 //0151 	//TVAR_wbt_pBaseCcms[48]
-{{0x0F,0x12},{0xFF,0x50}}, //FF50 //FF50 //FF50 //FF50 	//TVAR_wbt_pBaseCcms[49]
-{{0x0F,0x12},{0x01,0x47}}, //0147 //0147 //0147 //0147 	//TVAR_wbt_pBaseCcms[50]
-{{0x0F,0x12},{0xFF,0x86}}, //FF86 //FF86 //FF86 //FF86 //FF75 	//TVAR_wbt_pBaseCcms[51]
-{{0x0F,0x12},{0x01,0xB4}}, //01B4 //01B4 //01B4 //01B4 //0187 	//TVAR_wbt_pBaseCcms[52]
-{{0x0F,0x12},{0x01,0x7E}}, //017E //017E //017E //017E //01BF 	//TVAR_wbt_pBaseCcms[53]
-
-//Cool White
-{{0x0F,0x12},{0x02,0x2B}}, //0230 //0243 //023E //023B //0231 //0227 	//CW TVAR_wbt_pBaseCcms[54]
-{{0x0F,0x12},{0xFF,0x8C}}, //FF9E //FF8E //FF8A //FF8D //FF93 //FF95 	//TVAR_wbt_pBaseCcms[55]
-{{0x0F,0x12},{0xFF,0xD8}}, //FFC5 //FFC3 //FFCC //FFCF //FFD4 //FFE0 	//TVAR_wbt_pBaseCcms[56]
-{{0x0F,0x12},{0xFE,0xCA}}, //FECC //FECE //FED4 //FED2 	//TVAR_wbt_pBaseCcms[57]
-{{0x0F,0x12},{0x01,0x92}}, //018D //0189 //017F //0174 	//TVAR_wbt_pBaseCcms[58]
-{{0x0F,0x12},{0xFF,0x0E}}, //FF10 //FF12 //FF16 //FF1F 	//TVAR_wbt_pBaseCcms[59]
-{{0x0F,0x12},{0xFF,0xD2}}, //FFD2 //FFD2 //FFD2 //FFCB 	//TVAR_wbt_pBaseCcms[60]
-{{0x0F,0x12},{0xFF,0xD2}}, //FFD2 //FFD2 //FFD2 //FFCB 	//TVAR_wbt_pBaseCcms[61]
-{{0x0F,0x12},{0x01,0xC8}}, //01C8 //01C8 //01C8 //01D6 	//TVAR_wbt_pBaseCcms[62]
-{{0x0F,0x12},{0x00,0xF9}}, //00F9 //00F9 //00F9 //00F8 	//TVAR_wbt_pBaseCcms[63]
-{{0x0F,0x12},{0x00,0xDE}}, //00DE //00DE //00DE //00D5 	//TVAR_wbt_pBaseCcms[64]
-{{0x0F,0x12},{0xFF,0x26}}, //FF26 //FF26 //FF26 //FF34 	//TVAR_wbt_pBaseCcms[65]
-{{0x0F,0x12},{0x01,0x51}}, //0151 //0151 //0151 //0151 	//TVAR_wbt_pBaseCcms[66]
-{{0x0F,0x12},{0xFF,0x50}}, //FF50 //FF50 //FF50 //FF50 	//TVAR_wbt_pBaseCcms[67]
-{{0x0F,0x12},{0x01,0x47}}, //0147 //0147 //0147 //0147 	//TVAR_wbt_pBaseCcms[68]
-{{0x0F,0x12},{0xFF,0x86}}, //FF86 //FF86 //FF86 //FF86 //FF75 	//TVAR_wbt_pBaseCcms[69]
-{{0x0F,0x12},{0x01,0xB4}}, //01B4 //01B4 //01B4 //01B4 //0187 	//TVAR_wbt_pBaseCcms[70]
-{{0x0F,0x12},{0x01,0x7E}}, //017E //017E //017E //017E //01BF 	//TVAR_wbt_pBaseCcms[71]
-
-//D50
-{{0x0F,0x12},{0x01,0xEC}}, 	//TVAR_wbt_pBaseCcms[72]
-{{0x0F,0x12},{0xFF,0xB2}}, 	//TVAR_wbt_pBaseCcms[73]
-{{0x0F,0x12},{0x00,0x07}}, 	//TVAR_wbt_pBaseCcms[74]
-{{0x0F,0x12},{0xFE,0xE1}}, 	//TVAR_wbt_pBaseCcms[75]
-{{0x0F,0x12},{0x01,0x3A}}, 	//TVAR_wbt_pBaseCcms[76]
-{{0x0F,0x12},{0xFF,0x3C}}, 	//TVAR_wbt_pBaseCcms[77]
-{{0x0F,0x12},{0xFF,0xDB}}, 	//TVAR_wbt_pBaseCcms[78]
-{{0x0F,0x12},{0xFF,0xDB}}, 	//TVAR_wbt_pBaseCcms[79]
-{{0x0F,0x12},{0x01,0xBE}}, 	//TVAR_wbt_pBaseCcms[80]
-{{0x0F,0x12},{0x00,0xD3}}, 	//TVAR_wbt_pBaseCcms[81]
-{{0x0F,0x12},{0x00,0xE4}}, 	//TVAR_wbt_pBaseCcms[82]
-{{0x0F,0x12},{0xFF,0x4A}}, 	//TVAR_wbt_pBaseCcms[83]
-{{0x0F,0x12},{0x01,0x51}}, 	//TVAR_wbt_pBaseCcms[84]
-{{0x0F,0x12},{0xFF,0x50}}, 	//TVAR_wbt_pBaseCcms[85]
-{{0x0F,0x12},{0x01,0x47}}, 	//TVAR_wbt_pBaseCcms[86]
-{{0x0F,0x12},{0xFF,0x86}}, //FF74 //FF75 	//TVAR_wbt_pBaseCcms[87]
-{{0x0F,0x12},{0x01,0xB4}}, //01A2 //0187 	//TVAR_wbt_pBaseCcms[88]
-{{0x0F,0x12},{0x01,0x7E}}, //01A2 //01BF 	//TVAR_wbt_pBaseCcms[89]
-
-//D65
-{{0x0F,0x12},{0x01,0xEC}}, 	//d65 TVAR_wbt_pBaseCcms[90]
-{{0x0F,0x12},{0xFF,0xB2}}, 	//TVAR_wbt_pBaseCcms[91]
-{{0x0F,0x12},{0x00,0x07}}, 	//TVAR_wbt_pBaseCcms[92]
-{{0x0F,0x12},{0xFE,0xE1}}, 	//TVAR_wbt_pBaseCcms[93]
-{{0x0F,0x12},{0x01,0x3A}}, 	//TVAR_wbt_pBaseCcms[94]
-{{0x0F,0x12},{0xFF,0x3C}}, 	//TVAR_wbt_pBaseCcms[95]
-{{0x0F,0x12},{0xFF,0xDB}}, 	//TVAR_wbt_pBaseCcms[96]
-{{0x0F,0x12},{0xFF,0xDB}}, 	//TVAR_wbt_pBaseCcms[97]
-{{0x0F,0x12},{0x01,0xBE}}, 	//TVAR_wbt_pBaseCcms[98]
-{{0x0F,0x12},{0x00,0xD3}}, 	//TVAR_wbt_pBaseCcms[99]
+{{0x0F,0x12},{0x70,0x00}},	
+	
+//Horizon	
+{{0x00,0x2A},{0x48,0x00}},	
+{{0x0F,0x12},{0x01,0xEB}}, //0210 	//H TVAR_wbt_pBaseCcms[0]  
+{{0x0F,0x12},{0xFF,0xD1}}, //FFC0 	//TVAR_wbt_pBaseCcms[1]  
+{{0x0F,0x12},{0xFF,0xDC}}, //FFCC 	//TVAR_wbt_pBaseCcms[2]  
+{{0x0F,0x12},{0xFF,0x2B}}, //FF34 	//TVAR_wbt_pBaseCcms[3]  
+{{0x0F,0x12},{0x02,0x00}}, //01EB 	//TVAR_wbt_pBaseCcms[4]  
+{{0x0F,0x12},{0xFE,0xFD}}, //FF09 	//TVAR_wbt_pBaseCcms[5]  
+{{0x0F,0x12},{0x00,0x1C}}, //001C 	//TVAR_wbt_pBaseCcms[6]  
+{{0x0F,0x12},{0xFF,0xE4}}, //FFE4 	//TVAR_wbt_pBaseCcms[7]  
+{{0x0F,0x12},{0x01,0xCD}}, //01CD 	//TVAR_wbt_pBaseCcms[8]  
+{{0x0F,0x12},{0x00,0xE3}}, //00D9 	//TVAR_wbt_pBaseCcms[9]  
+{{0x0F,0x12},{0x00,0xE3}}, //00D9 	//TVAR_wbt_pBaseCcms[10] 
+{{0x0F,0x12},{0xFE,0x80}}, //FE95 	//TVAR_wbt_pBaseCcms[11] 
+{{0x0F,0x12},{0x02,0x08}}, //0208 	//TVAR_wbt_pBaseCcms[12] 
+{{0x0F,0x12},{0xFF,0x75}}, //FF75 	//TVAR_wbt_pBaseCcms[13] 
+{{0x0F,0x12},{0x01,0x99}}, //0199 	//TVAR_wbt_pBaseCcms[14] 
+{{0x0F,0x12},{0xFF,0x06}}, //FF06 	//TVAR_wbt_pBaseCcms[15] 
+{{0x0F,0x12},{0x01,0xBA}}, //01BA 	//TVAR_wbt_pBaseCcms[16] 
+{{0x0F,0x12},{0x01,0x08}}, //0108 	//TVAR_wbt_pBaseCcms[17] 
+	
+// INCA A                               	
+{{0x0F,0x12},{0x01,0xEB}}, //0210 	//A TVAR_wbt_pBaseCcms[18] 
+{{0x0F,0x12},{0xFF,0xD1}}, //FFC0 	//TVAR_wbt_pBaseCcms[19] 
+{{0x0F,0x12},{0xFF,0xDC}}, //FFCC 	//TVAR_wbt_pBaseCcms[20] 
+{{0x0F,0x12},{0xFF,0x2B}}, //FF34 	//TVAR_wbt_pBaseCcms[21] 
+{{0x0F,0x12},{0x02,0x00}}, //01EB 	//TVAR_wbt_pBaseCcms[22] 
+{{0x0F,0x12},{0xFE,0xFD}}, //FF09 	//TVAR_wbt_pBaseCcms[23] 
+{{0x0F,0x12},{0x00,0x1C}}, //001C 	//TVAR_wbt_pBaseCcms[24] 
+{{0x0F,0x12},{0xFF,0xE4}}, //FFE4 	//TVAR_wbt_pBaseCcms[25] 
+{{0x0F,0x12},{0x01,0xCD}}, //01CD 	//TVAR_wbt_pBaseCcms[26] 
+{{0x0F,0x12},{0x00,0xE3}}, //00D9 	//TVAR_wbt_pBaseCcms[27] 
+{{0x0F,0x12},{0x00,0xE3}}, //00D9 	//TVAR_wbt_pBaseCcms[28] 
+{{0x0F,0x12},{0xFE,0x80}}, //FE95 	//TVAR_wbt_pBaseCcms[29] 
+{{0x0F,0x12},{0x02,0x08}}, //0208 	//TVAR_wbt_pBaseCcms[30] 
+{{0x0F,0x12},{0xFF,0x75}}, //FF75 	//TVAR_wbt_pBaseCcms[31] 
+{{0x0F,0x12},{0x01,0x99}}, //0199 	//TVAR_wbt_pBaseCcms[32] 
+{{0x0F,0x12},{0xFF,0x06}}, //FF06 	//TVAR_wbt_pBaseCcms[33] 
+{{0x0F,0x12},{0x01,0xBA}}, //01BA 	//TVAR_wbt_pBaseCcms[34] 
+{{0x0F,0x12},{0x01,0x08}}, //0108 	//TVAR_wbt_pBaseCcms[35] 
+	
+//Warm White                    	
+{{0x0F,0x12},{0x02,0x2B}}, //0230 //0243 //023E //023B //0231 //0227 	//CW TVAR_wbt_pBaseCcms[36] 
+{{0x0F,0x12},{0xFF,0x8C}}, //FF9E //FF8E //FF8A //FF8D //FF93 //FF95 	//TVAR_wbt_pBaseCcms[37] 
+{{0x0F,0x12},{0xFF,0xD8}}, //FFC5 //FFC3 //FFCC //FFCF //FFD4 //FFE0 	//TVAR_wbt_pBaseCcms[38] 
+{{0x0F,0x12},{0xFE,0xCA}}, //FECC //FECE //FED4 //FED2 	//TVAR_wbt_pBaseCcms[39] 
+{{0x0F,0x12},{0x01,0x92}}, //018D //0189 //017F //0174 	//TVAR_wbt_pBaseCcms[40] 
+{{0x0F,0x12},{0xFF,0x0E}}, //FF10 //FF12 //FF16 //FF1F 	//TVAR_wbt_pBaseCcms[41] 
+{{0x0F,0x12},{0xFF,0xD2}}, //FFD2 //FFD2 //FFD2 //FFCB 	//TVAR_wbt_pBaseCcms[42] 
+{{0x0F,0x12},{0xFF,0xD2}}, //FFD2 //FFD2 //FFD2 //FFCB 	//TVAR_wbt_pBaseCcms[43] 
+{{0x0F,0x12},{0x01,0xC8}}, //01C8 //01C8 //01C8 //01D6 	//TVAR_wbt_pBaseCcms[44] 
+{{0x0F,0x12},{0x00,0xF9}}, //00F9 //00F9 //00F9 //00F8 	//TVAR_wbt_pBaseCcms[45] 
+{{0x0F,0x12},{0x00,0xDE}}, //00DE //00DE //00DE //00D5 	//TVAR_wbt_pBaseCcms[46] 
+{{0x0F,0x12},{0xFF,0x26}}, //FF26 //FF26 //FF26 //FF34 	//TVAR_wbt_pBaseCcms[47] 
+{{0x0F,0x12},{0x01,0x51}}, //0151 //0151 //0151 //0151 	//TVAR_wbt_pBaseCcms[48] 
+{{0x0F,0x12},{0xFF,0x50}}, //FF50 //FF50 //FF50 //FF50 	//TVAR_wbt_pBaseCcms[49] 
+{{0x0F,0x12},{0x01,0x47}}, //0147 //0147 //0147 //0147 	//TVAR_wbt_pBaseCcms[50] 
+{{0x0F,0x12},{0xFF,0x86}}, //FF86 //FF86 //FF86 //FF86 //FF75 	//TVAR_wbt_pBaseCcms[51] 
+{{0x0F,0x12},{0x01,0xB4}}, //01B4 //01B4 //01B4 //01B4 //0187 	//TVAR_wbt_pBaseCcms[52] 
+{{0x0F,0x12},{0x01,0x7E}}, //017E //017E //017E //017E //01BF 	//TVAR_wbt_pBaseCcms[53] 
+         	
+//Cool White	
+{{0x0F,0x12},{0x02,0x2B}}, //0230 //0243 //023E //023B //0231 //0227 	//CW TVAR_wbt_pBaseCcms[54] 
+{{0x0F,0x12},{0xFF,0x8C}}, //FF9E //FF8E //FF8A //FF8D //FF93 //FF95 	//TVAR_wbt_pBaseCcms[55] 
+{{0x0F,0x12},{0xFF,0xD8}}, //FFC5 //FFC3 //FFCC //FFCF //FFD4 //FFE0 	//TVAR_wbt_pBaseCcms[56] 
+{{0x0F,0x12},{0xFE,0xCA}}, //FECC //FECE //FED4 //FED2 	//TVAR_wbt_pBaseCcms[57] 
+{{0x0F,0x12},{0x01,0x92}}, //018D //0189 //017F //0174 	//TVAR_wbt_pBaseCcms[58] 
+{{0x0F,0x12},{0xFF,0x0E}}, //FF10 //FF12 //FF16 //FF1F 	//TVAR_wbt_pBaseCcms[59] 
+{{0x0F,0x12},{0xFF,0xD2}}, //FFD2 //FFD2 //FFD2 //FFCB 	//TVAR_wbt_pBaseCcms[60] 
+{{0x0F,0x12},{0xFF,0xD2}}, //FFD2 //FFD2 //FFD2 //FFCB 	//TVAR_wbt_pBaseCcms[61] 
+{{0x0F,0x12},{0x01,0xC8}}, //01C8 //01C8 //01C8 //01D6 	//TVAR_wbt_pBaseCcms[62] 
+{{0x0F,0x12},{0x00,0xF9}}, //00F9 //00F9 //00F9 //00F8 	//TVAR_wbt_pBaseCcms[63] 
+{{0x0F,0x12},{0x00,0xDE}}, //00DE //00DE //00DE //00D5 	//TVAR_wbt_pBaseCcms[64] 
+{{0x0F,0x12},{0xFF,0x26}}, //FF26 //FF26 //FF26 //FF34 	//TVAR_wbt_pBaseCcms[65] 
+{{0x0F,0x12},{0x01,0x51}}, //0151 //0151 //0151 //0151 	//TVAR_wbt_pBaseCcms[66] 
+{{0x0F,0x12},{0xFF,0x50}}, //FF50 //FF50 //FF50 //FF50 	//TVAR_wbt_pBaseCcms[67] 
+{{0x0F,0x12},{0x01,0x47}}, //0147 //0147 //0147 //0147 	//TVAR_wbt_pBaseCcms[68] 
+{{0x0F,0x12},{0xFF,0x86}}, //FF86 //FF86 //FF86 //FF86 //FF75 	//TVAR_wbt_pBaseCcms[69] 
+{{0x0F,0x12},{0x01,0xB4}}, //01B4 //01B4 //01B4 //01B4 //0187 	//TVAR_wbt_pBaseCcms[70] 
+{{0x0F,0x12},{0x01,0x7E}}, //017E //017E //017E //017E //01BF 	//TVAR_wbt_pBaseCcms[71] 
+         	
+//D50	
+{{0x0F,0x12},{0x01,0xEC}}, 	//TVAR_wbt_pBaseCcms[72]  
+{{0x0F,0x12},{0xFF,0xB2}}, 	//TVAR_wbt_pBaseCcms[73] 
+{{0x0F,0x12},{0x00,0x07}}, 	//TVAR_wbt_pBaseCcms[74] 
+{{0x0F,0x12},{0xFE,0xE1}}, 	//TVAR_wbt_pBaseCcms[75] 
+{{0x0F,0x12},{0x01,0x3A}}, 	//TVAR_wbt_pBaseCcms[76] 
+{{0x0F,0x12},{0xFF,0x3C}}, 	//TVAR_wbt_pBaseCcms[77] 
+{{0x0F,0x12},{0xFF,0xDB}}, 	//TVAR_wbt_pBaseCcms[78] 
+{{0x0F,0x12},{0xFF,0xDB}}, 	//TVAR_wbt_pBaseCcms[79] 
+{{0x0F,0x12},{0x01,0xBE}}, 	//TVAR_wbt_pBaseCcms[80] 
+{{0x0F,0x12},{0x00,0xD3}}, 	//TVAR_wbt_pBaseCcms[81] 
+{{0x0F,0x12},{0x00,0xE4}}, 	//TVAR_wbt_pBaseCcms[82] 
+{{0x0F,0x12},{0xFF,0x4A}}, 	//TVAR_wbt_pBaseCcms[83] 
+{{0x0F,0x12},{0x01,0x51}}, 	//TVAR_wbt_pBaseCcms[84] 
+{{0x0F,0x12},{0xFF,0x50}}, 	//TVAR_wbt_pBaseCcms[85] 
+{{0x0F,0x12},{0x01,0x47}}, 	//TVAR_wbt_pBaseCcms[86] 
+{{0x0F,0x12},{0xFF,0x86}}, //FF74 //FF75 	//TVAR_wbt_pBaseCcms[87] 
+{{0x0F,0x12},{0x01,0xB4}}, //01A2 //0187 	//TVAR_wbt_pBaseCcms[88] 
+{{0x0F,0x12},{0x01,0x7E}}, //01A2 //01BF 	//TVAR_wbt_pBaseCcms[89] 
+         		
+//D65     	
+{{0x0F,0x12},{0x01,0xEC}}, 	//d65 TVAR_wbt_pBaseCcms[90]  
+{{0x0F,0x12},{0xFF,0xB2}}, 	//TVAR_wbt_pBaseCcms[91] 
+{{0x0F,0x12},{0x00,0x07}}, 	//TVAR_wbt_pBaseCcms[92] 
+{{0x0F,0x12},{0xFE,0xE1}}, 	//TVAR_wbt_pBaseCcms[93] 
+{{0x0F,0x12},{0x01,0x3A}}, 	//TVAR_wbt_pBaseCcms[94] 
+{{0x0F,0x12},{0xFF,0x3C}}, 	//TVAR_wbt_pBaseCcms[95] 
+{{0x0F,0x12},{0xFF,0xDB}}, 	//TVAR_wbt_pBaseCcms[96] 
+{{0x0F,0x12},{0xFF,0xDB}}, 	//TVAR_wbt_pBaseCcms[97] 
+{{0x0F,0x12},{0x01,0xBE}}, 	//TVAR_wbt_pBaseCcms[98] 
+{{0x0F,0x12},{0x00,0xD3}}, 	//TVAR_wbt_pBaseCcms[99] 
 {{0x0F,0x12},{0x00,0xE4}}, 	//TVAR_wbt_pBaseCcms[100]
 {{0x0F,0x12},{0xFF,0x4A}}, 	//TVAR_wbt_pBaseCcms[101]
 {{0x0F,0x12},{0x01,0x51}}, 	//TVAR_wbt_pBaseCcms[102]
@@ -2881,19 +2881,19 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0xFF,0x86}}, //FF74 //FF75 	//TVAR_wbt_pBaseCcms[105]
 {{0x0F,0x12},{0x01,0xB4}}, //01A2 //0187 	//TVAR_wbt_pBaseCcms[106]
 {{0x0F,0x12},{0x01,0x7E}}, //01A2 //01BF 	//TVAR_wbt_pBaseCcms[107]
-
-//Outdoor
-{{0x00,0x2A},{0x48,0xd8}},
-{{0x0F,0x12},{0x01,0xDC}}, //01D2 //01D4 	//TVAR_wbt_pOutdoorCcm[0]
-{{0x0F,0x12},{0xFF,0x91}}, //FF97 //FF9D 	//TVAR_wbt_pOutdoorCcm[1]
-{{0x0F,0x12},{0xFF,0xE9}}, //FFED //FFE8 	//TVAR_wbt_pOutdoorCcm[2]
-{{0x0F,0x12},{0xFE,0xB5}}, //FEA9 	//TVAR_wbt_pOutdoorCcm[3]
-{{0x0F,0x12},{0x01,0x3A}}, //0143 	//TVAR_wbt_pOutdoorCcm[4]
-{{0x0F,0x12},{0xFE,0xFF}}, //FF01 	//TVAR_wbt_pOutdoorCcm[5]
-{{0x0F,0x12},{0xFF,0xB7}}, //FFB7 	//TVAR_wbt_pOutdoorCcm[6]
-{{0x0F,0x12},{0xFF,0xF5}}, //FFF5 	//TVAR_wbt_pOutdoorCcm[7]
-{{0x0F,0x12},{0x02,0x37}}, //0237 	//TVAR_wbt_pOutdoorCcm[8]
-{{0x0F,0x12},{0x00,0xD5}}, //00B9 	//TVAR_wbt_pOutdoorCcm[9]
+	  	
+//Outdoor		
+{{0x00,0x2A},{0x48,0xd8}},		
+{{0x0F,0x12},{0x01,0xDC}}, //01D2 //01D4 	//TVAR_wbt_pOutdoorCcm[0] 
+{{0x0F,0x12},{0xFF,0x91}}, //FF97 //FF9D 	//TVAR_wbt_pOutdoorCcm[1] 
+{{0x0F,0x12},{0xFF,0xE9}}, //FFED //FFE8 	//TVAR_wbt_pOutdoorCcm[2] 
+{{0x0F,0x12},{0xFE,0xB5}}, //FEA9 	//TVAR_wbt_pOutdoorCcm[3] 
+{{0x0F,0x12},{0x01,0x3A}}, //0143 	//TVAR_wbt_pOutdoorCcm[4] 
+{{0x0F,0x12},{0xFE,0xFF}}, //FF01 	//TVAR_wbt_pOutdoorCcm[5] 
+{{0x0F,0x12},{0xFF,0xB7}}, //FFB7 	//TVAR_wbt_pOutdoorCcm[6] 
+{{0x0F,0x12},{0xFF,0xF5}}, //FFF5 	//TVAR_wbt_pOutdoorCcm[7] 
+{{0x0F,0x12},{0x02,0x37}}, //0237 	//TVAR_wbt_pOutdoorCcm[8] 
+{{0x0F,0x12},{0x00,0xD5}}, //00B9 	//TVAR_wbt_pOutdoorCcm[9] 
 {{0x0F,0x12},{0x01,0x01}}, //0126 	//TVAR_wbt_pOutdoorCcm[10]
 {{0x0F,0x12},{0xFF,0x39}}, //FF33 	//TVAR_wbt_pOutdoorCcm[11]
 {{0x0F,0x12},{0x01,0xCE}}, //01CE 	//TVAR_wbt_pOutdoorCcm[12]
@@ -2907,17 +2907,17 @@ static struct regval_list sensor_default_regs[] = {
 // 16.GAMMA
 //==================================================================================
 
-{{0x00,0x2A},{0x07,0x34}},
-{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000	//saRR_usDualGammaLutRGBIndoor[0][0]
-{{0x0F,0x12},{0x00,0x08}}, //0004 //0004 //000A	//saRR_usDualGammaLutRGBIndoor[0][1]
-{{0x0F,0x12},{0x00,0x10}}, //0010 //0010 //0016	//saRR_usDualGammaLutRGBIndoor[0][2]
-{{0x0F,0x12},{0x00,0x28}}, //0020 //0020 //0030	//saRR_usDualGammaLutRGBIndoor[0][3]
-{{0x0F,0x12},{0x00,0x58}}, //0050 //0060 //0066	//saRR_usDualGammaLutRGBIndoor[0][4]
-{{0x0F,0x12},{0x00,0xC8}}, //00C0 //00D5 //00D5	//saRR_usDualGammaLutRGBIndoor[0][5]
-{{0x0F,0x12},{0x01,0x38}}, //0138 //0138 //0138	//saRR_usDualGammaLutRGBIndoor[0][6]
-{{0x0F,0x12},{0x01,0x63}}, //0163 //0163 //0163	//saRR_usDualGammaLutRGBIndoor[0][7]
-{{0x0F,0x12},{0x01,0x89}}, //0189 //0189 //0189	//saRR_usDualGammaLutRGBIndoor[0][8]
-{{0x0F,0x12},{0x01,0xC6}}, //01C6 //01C6 //01C6	//saRR_usDualGammaLutRGBIndoor[0][9]
+{{0x00,0x2A},{0x07,0x34}},	
+{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000	//saRR_usDualGammaLutRGBIndoor[0][0] 
+{{0x0F,0x12},{0x00,0x08}}, //0004 //0004 //000A	//saRR_usDualGammaLutRGBIndoor[0][1] 
+{{0x0F,0x12},{0x00,0x10}}, //0010 //0010 //0016	//saRR_usDualGammaLutRGBIndoor[0][2] 
+{{0x0F,0x12},{0x00,0x28}}, //0020 //0020 //0030	//saRR_usDualGammaLutRGBIndoor[0][3] 
+{{0x0F,0x12},{0x00,0x58}}, //0050 //0060 //0066	//saRR_usDualGammaLutRGBIndoor[0][4] 
+{{0x0F,0x12},{0x00,0xC8}}, //00C0 //00D5 //00D5	//saRR_usDualGammaLutRGBIndoor[0][5] 
+{{0x0F,0x12},{0x01,0x38}}, //0138 //0138 //0138	//saRR_usDualGammaLutRGBIndoor[0][6] 
+{{0x0F,0x12},{0x01,0x63}}, //0163 //0163 //0163	//saRR_usDualGammaLutRGBIndoor[0][7] 
+{{0x0F,0x12},{0x01,0x89}}, //0189 //0189 //0189	//saRR_usDualGammaLutRGBIndoor[0][8] 
+{{0x0F,0x12},{0x01,0xC6}}, //01C6 //01C6 //01C6	//saRR_usDualGammaLutRGBIndoor[0][9] 
 {{0x0F,0x12},{0x01,0xF8}}, //01F8 //01F8 //01F8	//saRR_usDualGammaLutRGBIndoor[0][10]
 {{0x0F,0x12},{0x02,0x22}}, //0222 //0222 //0222	//saRR_usDualGammaLutRGBIndoor[0][11]
 {{0x0F,0x12},{0x02,0x47}}, //0247 //0247 //0247	//saRR_usDualGammaLutRGBIndoor[0][12]
@@ -2928,17 +2928,17 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x03,0xA2}}, //03A2 //03A2 //03A2	//saRR_usDualGammaLutRGBIndoor[0][17]
 {{0x0F,0x12},{0x03,0xD8}}, //03D8 //03D8 //03D8	//saRR_usDualGammaLutRGBIndoor[0][18]
 {{0x0F,0x12},{0x03,0xFF}}, //03FF //03FF //03FF	//saRR_usDualGammaLutRGBIndoor[0][19]
-
-{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000	//saRR_usDualGammaLutRGBIndoor[1][0]
-{{0x0F,0x12},{0x00,0x08}}, //0004 //0004 //000A	//saRR_usDualGammaLutRGBIndoor[1][1]
-{{0x0F,0x12},{0x00,0x10}}, //0010 //0010 //0016	//saRR_usDualGammaLutRGBIndoor[1][2]
-{{0x0F,0x12},{0x00,0x28}}, //0020 //0020 //0030	//saRR_usDualGammaLutRGBIndoor[1][3]
-{{0x0F,0x12},{0x00,0x58}}, //0050 //0060 //0066	//saRR_usDualGammaLutRGBIndoor[1][4]
-{{0x0F,0x12},{0x00,0xC8}}, //00C0 //00D5 //00D5	//saRR_usDualGammaLutRGBIndoor[1][5]
-{{0x0F,0x12},{0x01,0x38}}, //0138 //0138 //0138	//saRR_usDualGammaLutRGBIndoor[1][6]
-{{0x0F,0x12},{0x01,0x63}}, //0163 //0163 //0163	//saRR_usDualGammaLutRGBIndoor[1][7]
-{{0x0F,0x12},{0x01,0x89}}, //0189 //0189 //0189	//saRR_usDualGammaLutRGBIndoor[1][8]
-{{0x0F,0x12},{0x01,0xC6}}, //01C6 //01C6 //01C6	//saRR_usDualGammaLutRGBIndoor[1][9]
+	
+{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000	//saRR_usDualGammaLutRGBIndoor[1][0] 
+{{0x0F,0x12},{0x00,0x08}}, //0004 //0004 //000A	//saRR_usDualGammaLutRGBIndoor[1][1] 
+{{0x0F,0x12},{0x00,0x10}}, //0010 //0010 //0016	//saRR_usDualGammaLutRGBIndoor[1][2] 
+{{0x0F,0x12},{0x00,0x28}}, //0020 //0020 //0030	//saRR_usDualGammaLutRGBIndoor[1][3] 
+{{0x0F,0x12},{0x00,0x58}}, //0050 //0060 //0066	//saRR_usDualGammaLutRGBIndoor[1][4] 
+{{0x0F,0x12},{0x00,0xC8}}, //00C0 //00D5 //00D5	//saRR_usDualGammaLutRGBIndoor[1][5] 
+{{0x0F,0x12},{0x01,0x38}}, //0138 //0138 //0138	//saRR_usDualGammaLutRGBIndoor[1][6] 
+{{0x0F,0x12},{0x01,0x63}}, //0163 //0163 //0163	//saRR_usDualGammaLutRGBIndoor[1][7] 
+{{0x0F,0x12},{0x01,0x89}}, //0189 //0189 //0189	//saRR_usDualGammaLutRGBIndoor[1][8] 
+{{0x0F,0x12},{0x01,0xC6}}, //01C6 //01C6 //01C6	//saRR_usDualGammaLutRGBIndoor[1][9] 
 {{0x0F,0x12},{0x01,0xF8}}, //01F8 //01F8 //01F8	//saRR_usDualGammaLutRGBIndoor[1][10]
 {{0x0F,0x12},{0x02,0x22}}, //0222 //0222 //0222	//saRR_usDualGammaLutRGBIndoor[1][11]
 {{0x0F,0x12},{0x02,0x47}}, //0247 //0247 //0247	//saRR_usDualGammaLutRGBIndoor[1][12]
@@ -2949,17 +2949,17 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x03,0xA2}}, //03A2 //03A2 //03A2	//saRR_usDualGammaLutRGBIndoor[1][17]
 {{0x0F,0x12},{0x03,0xD8}}, //03D8 //03D8 //03D8	//saRR_usDualGammaLutRGBIndoor[1][18]
 {{0x0F,0x12},{0x03,0xFF}}, //03FF //03FF //03FF	//saRR_usDualGammaLutRGBIndoor[1][19]
-
-{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000	//saRR_usDualGammaLutRGBIndoor[2][0]
-{{0x0F,0x12},{0x00,0x08}}, //0004 //0004 //000A	//saRR_usDualGammaLutRGBIndoor[2][1]
-{{0x0F,0x12},{0x00,0x10}}, //0010 //0010 //0016	//saRR_usDualGammaLutRGBIndoor[2][2]
-{{0x0F,0x12},{0x00,0x28}}, //0020 //0020 //0030	//saRR_usDualGammaLutRGBIndoor[2][3]
-{{0x0F,0x12},{0x00,0x58}}, //0050 //0060 //0066	//saRR_usDualGammaLutRGBIndoor[2][4]
-{{0x0F,0x12},{0x00,0xC8}}, //00C0 //00D5 //00D5	//saRR_usDualGammaLutRGBIndoor[2][5]
-{{0x0F,0x12},{0x01,0x38}}, //0138 //0138 //0138	//saRR_usDualGammaLutRGBIndoor[2][6]
-{{0x0F,0x12},{0x01,0x63}}, //0163 //0163 //0163	//saRR_usDualGammaLutRGBIndoor[2][7]
-{{0x0F,0x12},{0x01,0x89}}, //0189 //0189 //0189	//saRR_usDualGammaLutRGBIndoor[2][8]
-{{0x0F,0x12},{0x01,0xC6}}, //01C6 //01C6 //01C6	//saRR_usDualGammaLutRGBIndoor[2][9]
+	
+{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000	//saRR_usDualGammaLutRGBIndoor[2][0] 
+{{0x0F,0x12},{0x00,0x08}}, //0004 //0004 //000A	//saRR_usDualGammaLutRGBIndoor[2][1] 
+{{0x0F,0x12},{0x00,0x10}}, //0010 //0010 //0016	//saRR_usDualGammaLutRGBIndoor[2][2] 
+{{0x0F,0x12},{0x00,0x28}}, //0020 //0020 //0030	//saRR_usDualGammaLutRGBIndoor[2][3] 
+{{0x0F,0x12},{0x00,0x58}}, //0050 //0060 //0066	//saRR_usDualGammaLutRGBIndoor[2][4] 
+{{0x0F,0x12},{0x00,0xC8}}, //00C0 //00D5 //00D5	//saRR_usDualGammaLutRGBIndoor[2][5] 
+{{0x0F,0x12},{0x01,0x38}}, //0138 //0138 //0138	//saRR_usDualGammaLutRGBIndoor[2][6] 
+{{0x0F,0x12},{0x01,0x63}}, //0163 //0163 //0163	//saRR_usDualGammaLutRGBIndoor[2][7] 
+{{0x0F,0x12},{0x01,0x89}}, //0189 //0189 //0189	//saRR_usDualGammaLutRGBIndoor[2][8] 
+{{0x0F,0x12},{0x01,0xC6}}, //01C6 //01C6 //01C6	//saRR_usDualGammaLutRGBIndoor[2][9] 
 {{0x0F,0x12},{0x01,0xF8}}, //01F8 //01F8 //01F8	//saRR_usDualGammaLutRGBIndoor[2][10]
 {{0x0F,0x12},{0x02,0x22}}, //0222 //0222 //0222	//saRR_usDualGammaLutRGBIndoor[2][11]
 {{0x0F,0x12},{0x02,0x47}}, //0247 //0247 //0247	//saRR_usDualGammaLutRGBIndoor[2][12]
@@ -2970,17 +2970,17 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x03,0xA2}}, //03A2 //03A2 //03A2	//saRR_usDualGammaLutRGBIndoor[2][17]
 {{0x0F,0x12},{0x03,0xD8}}, //03D8 //03D8 //03D8	//saRR_usDualGammaLutRGBIndoor[2][18]
 {{0x0F,0x12},{0x03,0xFF}}, //03FF //03FF //03FF	//saRR_usDualGammaLutRGBIndoor[2][19]
-
-{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000 //0000 //0000 //0000	//saRR_usDualGammaLutRGBOutdoor[0][0]
-{{0x0F,0x12},{0x00,0x0B}}, //0004 //0004 //0004 //000C //000B //000B	//saRR_usDualGammaLutRGBOutdoor[0][1]
-{{0x0F,0x12},{0x00,0x19}}, //0010 //0010 //0010 //0020 //0019 //0019	//saRR_usDualGammaLutRGBOutdoor[0][2]
-{{0x0F,0x12},{0x00,0x36}}, //0020 //0020 //0020 //0050 //0048 //0036	//saRR_usDualGammaLutRGBOutdoor[0][3]
-{{0x0F,0x12},{0x00,0x6F}}, //0060 //0060 //0060 //0098 //008C //006F	//saRR_usDualGammaLutRGBOutdoor[0][4]
-{{0x0F,0x12},{0x00,0xD8}}, //00E4 //00F0 //00D8 //00FC //00F0 //00D8	//saRR_usDualGammaLutRGBOutdoor[0][5]
-{{0x0F,0x12},{0x01,0x35}}, //0158 //0168 //0148 //0148 //0140 //0135	//saRR_usDualGammaLutRGBOutdoor[0][6]
-{{0x0F,0x12},{0x01,0x5F}}, //0180 //0190 //0174 //0168 //0164 //015F	//saRR_usDualGammaLutRGBOutdoor[0][7]
-{{0x0F,0x12},{0x01,0x85}}, //01A8 //01B8 //0198 //0185 //0185 //0185	//saRR_usDualGammaLutRGBOutdoor[0][8]
-{{0x0F,0x12},{0x01,0xC1}}, //01E8 //01FC //01D4 //01C1 //01C1 //01C1	//saRR_usDualGammaLutRGBOutdoor[0][9]
+	
+{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000 //0000 //0000 //0000	//saRR_usDualGammaLutRGBOutdoor[0][0] 
+{{0x0F,0x12},{0x00,0x0B}}, //0004 //0004 //0004 //000C //000B //000B	//saRR_usDualGammaLutRGBOutdoor[0][1] 
+{{0x0F,0x12},{0x00,0x19}}, //0010 //0010 //0010 //0020 //0019 //0019	//saRR_usDualGammaLutRGBOutdoor[0][2] 
+{{0x0F,0x12},{0x00,0x36}}, //0020 //0020 //0020 //0050 //0048 //0036	//saRR_usDualGammaLutRGBOutdoor[0][3] 
+{{0x0F,0x12},{0x00,0x6F}}, //0060 //0060 //0060 //0098 //008C //006F	//saRR_usDualGammaLutRGBOutdoor[0][4] 
+{{0x0F,0x12},{0x00,0xD8}}, //00E4 //00F0 //00D8 //00FC //00F0 //00D8	//saRR_usDualGammaLutRGBOutdoor[0][5] 
+{{0x0F,0x12},{0x01,0x35}}, //0158 //0168 //0148 //0148 //0140 //0135	//saRR_usDualGammaLutRGBOutdoor[0][6] 
+{{0x0F,0x12},{0x01,0x5F}}, //0180 //0190 //0174 //0168 //0164 //015F	//saRR_usDualGammaLutRGBOutdoor[0][7] 
+{{0x0F,0x12},{0x01,0x85}}, //01A8 //01B8 //0198 //0185 //0185 //0185	//saRR_usDualGammaLutRGBOutdoor[0][8] 
+{{0x0F,0x12},{0x01,0xC1}}, //01E8 //01FC //01D4 //01C1 //01C1 //01C1	//saRR_usDualGammaLutRGBOutdoor[0][9] 
 {{0x0F,0x12},{0x01,0xF3}}, //021C //0230 //0208 //01F3 //01F3 //01F3	//saRR_usDualGammaLutRGBOutdoor[0][10]
 {{0x0F,0x12},{0x02,0x20}}, //0248 //0260 //0234 //0220 //0220 //0220	//saRR_usDualGammaLutRGBOutdoor[0][11]
 {{0x0F,0x12},{0x02,0x4A}}, //0274 //0288 //0260 //024A //024A //024A	//saRR_usDualGammaLutRGBOutdoor[0][12]
@@ -2991,17 +2991,17 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x03,0x9F}}, //03BC //03C0 //03B0 //039F //039F //039F	//saRR_usDualGammaLutRGBOutdoor[0][17]
 {{0x0F,0x12},{0x03,0xCC}}, //03DC //03E0 //03D8 //03CC //03CC //03CC	//saRR_usDualGammaLutRGBOutdoor[0][18]
 {{0x0F,0x12},{0x03,0xF9}}, //03F9 //03F9 //03F9 //03F9 //03F9 //03F9	//saRR_usDualGammaLutRGBOutdoor[0][19]
-
-{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000 //0000 //0000 //0000	//saRR_usDualGammaLutRGBOutdoor[1][0]
-{{0x0F,0x12},{0x00,0x0B}}, //0004 //0004 //0004 //000C //000B //000B	//saRR_usDualGammaLutRGBOutdoor[1][1]
-{{0x0F,0x12},{0x00,0x19}}, //0010 //0010 //0010 //0020 //0019 //0019	//saRR_usDualGammaLutRGBOutdoor[1][2]
-{{0x0F,0x12},{0x00,0x36}}, //0020 //0020 //0020 //0050 //0048 //0036	//saRR_usDualGammaLutRGBOutdoor[1][3]
-{{0x0F,0x12},{0x00,0x6F}}, //0060 //0060 //0060 //0098 //008C //006F	//saRR_usDualGammaLutRGBOutdoor[1][4]
-{{0x0F,0x12},{0x00,0xD8}}, //00E4 //00F0 //00D8 //00FC //00F0 //00D8	//saRR_usDualGammaLutRGBOutdoor[1][5]
-{{0x0F,0x12},{0x01,0x35}}, //0158 //0168 //0148 //0148 //0140 //0135	//saRR_usDualGammaLutRGBOutdoor[1][6]
-{{0x0F,0x12},{0x01,0x5F}}, //0180 //0190 //0174 //0168 //0164 //015F	//saRR_usDualGammaLutRGBOutdoor[1][7]
-{{0x0F,0x12},{0x01,0x85}}, //01A8 //01B8 //0198 //0185 //0185 //0185	//saRR_usDualGammaLutRGBOutdoor[1][8]
-{{0x0F,0x12},{0x01,0xC1}}, //01E8 //01FC //01D4 //01C1 //01C1 //01C1	//saRR_usDualGammaLutRGBOutdoor[1][9]
+	
+{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000 //0000 //0000 //0000	//saRR_usDualGammaLutRGBOutdoor[1][0] 
+{{0x0F,0x12},{0x00,0x0B}}, //0004 //0004 //0004 //000C //000B //000B	//saRR_usDualGammaLutRGBOutdoor[1][1] 
+{{0x0F,0x12},{0x00,0x19}}, //0010 //0010 //0010 //0020 //0019 //0019	//saRR_usDualGammaLutRGBOutdoor[1][2] 
+{{0x0F,0x12},{0x00,0x36}}, //0020 //0020 //0020 //0050 //0048 //0036	//saRR_usDualGammaLutRGBOutdoor[1][3] 
+{{0x0F,0x12},{0x00,0x6F}}, //0060 //0060 //0060 //0098 //008C //006F	//saRR_usDualGammaLutRGBOutdoor[1][4] 
+{{0x0F,0x12},{0x00,0xD8}}, //00E4 //00F0 //00D8 //00FC //00F0 //00D8	//saRR_usDualGammaLutRGBOutdoor[1][5] 
+{{0x0F,0x12},{0x01,0x35}}, //0158 //0168 //0148 //0148 //0140 //0135	//saRR_usDualGammaLutRGBOutdoor[1][6] 
+{{0x0F,0x12},{0x01,0x5F}}, //0180 //0190 //0174 //0168 //0164 //015F	//saRR_usDualGammaLutRGBOutdoor[1][7] 
+{{0x0F,0x12},{0x01,0x85}}, //01A8 //01B8 //0198 //0185 //0185 //0185	//saRR_usDualGammaLutRGBOutdoor[1][8] 
+{{0x0F,0x12},{0x01,0xC1}}, //01E8 //01FC //01D4 //01C1 //01C1 //01C1	//saRR_usDualGammaLutRGBOutdoor[1][9] 
 {{0x0F,0x12},{0x01,0xF3}}, //021C //0230 //0208 //01F3 //01F3 //01F3	//saRR_usDualGammaLutRGBOutdoor[1][10]
 {{0x0F,0x12},{0x02,0x20}}, //0248 //0260 //0234 //0220 //0220 //0220	//saRR_usDualGammaLutRGBOutdoor[1][11]
 {{0x0F,0x12},{0x02,0x4A}}, //0274 //0288 //0260 //024A //024A //024A	//saRR_usDualGammaLutRGBOutdoor[1][12]
@@ -3012,17 +3012,17 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x03,0x9F}}, //03BC //03C0 //03B0 //039F //039F //039F	//saRR_usDualGammaLutRGBOutdoor[1][17]
 {{0x0F,0x12},{0x03,0xCC}}, //03DC //03E0 //03D8 //03CC //03CC //03CC	//saRR_usDualGammaLutRGBOutdoor[1][18]
 {{0x0F,0x12},{0x03,0xF9}}, //03F9 //03F9 //03F9 //03F9 //03F9 //03F9	//saRR_usDualGammaLutRGBOutdoor[1][19]
-
-{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000 //0000 //0000 //0000	//saRR_usDualGammaLutRGBOutdoor[2][0]
-{{0x0F,0x12},{0x00,0x0B}}, //0004 //0004 //0004 //000C //000B //000B	//saRR_usDualGammaLutRGBOutdoor[2][1]
-{{0x0F,0x12},{0x00,0x19}}, //0010 //0010 //0010 //0020 //0019 //0019	//saRR_usDualGammaLutRGBOutdoor[2][2]
-{{0x0F,0x12},{0x00,0x36}}, //0020 //0020 //0020 //0050 //0048 //0036	//saRR_usDualGammaLutRGBOutdoor[2][3]
-{{0x0F,0x12},{0x00,0x6F}}, //0060 //0060 //0060 //0098 //008C //006F	//saRR_usDualGammaLutRGBOutdoor[2][4]
-{{0x0F,0x12},{0x00,0xD8}}, //00E4 //00F0 //00D8 //00FC //00F0 //00D8	//saRR_usDualGammaLutRGBOutdoor[2][5]
-{{0x0F,0x12},{0x01,0x35}}, //0158 //0168 //0148 //0148 //0140 //0135	//saRR_usDualGammaLutRGBOutdoor[2][6]
-{{0x0F,0x12},{0x01,0x5F}}, //0180 //0190 //0174 //0168 //0164 //015F	//saRR_usDualGammaLutRGBOutdoor[2][7]
-{{0x0F,0x12},{0x01,0x85}}, //01A8 //01B8 //0198 //0185 //0185 //0185	//saRR_usDualGammaLutRGBOutdoor[2][8]
-{{0x0F,0x12},{0x01,0xC1}}, //01E8 //01FC //01D4 //01C1 //01C1 //01C1	//saRR_usDualGammaLutRGBOutdoor[2][9]
+	
+{{0x0F,0x12},{0x00,0x00}}, //0000 //0000 //0000 //0000 //0000 //0000	//saRR_usDualGammaLutRGBOutdoor[2][0] 
+{{0x0F,0x12},{0x00,0x0B}}, //0004 //0004 //0004 //000C //000B //000B	//saRR_usDualGammaLutRGBOutdoor[2][1] 
+{{0x0F,0x12},{0x00,0x19}}, //0010 //0010 //0010 //0020 //0019 //0019	//saRR_usDualGammaLutRGBOutdoor[2][2] 
+{{0x0F,0x12},{0x00,0x36}}, //0020 //0020 //0020 //0050 //0048 //0036	//saRR_usDualGammaLutRGBOutdoor[2][3] 
+{{0x0F,0x12},{0x00,0x6F}}, //0060 //0060 //0060 //0098 //008C //006F	//saRR_usDualGammaLutRGBOutdoor[2][4] 
+{{0x0F,0x12},{0x00,0xD8}}, //00E4 //00F0 //00D8 //00FC //00F0 //00D8	//saRR_usDualGammaLutRGBOutdoor[2][5] 
+{{0x0F,0x12},{0x01,0x35}}, //0158 //0168 //0148 //0148 //0140 //0135	//saRR_usDualGammaLutRGBOutdoor[2][6] 
+{{0x0F,0x12},{0x01,0x5F}}, //0180 //0190 //0174 //0168 //0164 //015F	//saRR_usDualGammaLutRGBOutdoor[2][7] 
+{{0x0F,0x12},{0x01,0x85}}, //01A8 //01B8 //0198 //0185 //0185 //0185	//saRR_usDualGammaLutRGBOutdoor[2][8] 
+{{0x0F,0x12},{0x01,0xC1}}, //01E8 //01FC //01D4 //01C1 //01C1 //01C1	//saRR_usDualGammaLutRGBOutdoor[2][9] 
 {{0x0F,0x12},{0x01,0xF3}}, //021C //0230 //0208 //01F3 //01F3 //01F3	//saRR_usDualGammaLutRGBOutdoor[2][10]
 {{0x0F,0x12},{0x02,0x20}}, //0248 //0260 //0234 //0220 //0220 //0220	//saRR_usDualGammaLutRGBOutdoor[2][11]
 {{0x0F,0x12},{0x02,0x4A}}, //0274 //0288 //0260 //024A //024A //024A	//saRR_usDualGammaLutRGBOutdoor[2][12]
@@ -3038,529 +3038,529 @@ static struct regval_list sensor_default_regs[] = {
 //==================================================================================
 // 17.AFIT
 //==================================================================================
-{{0x00,0x2A},{0x09,0x44}},
+{{0x00,0x2A},{0x09,0x44}},	
 {{0x0F,0x12},{0x00,0x50}},	//afit_uNoiseIndInDoor
 {{0x0F,0x12},{0x00,0xB0}},	//afit_uNoiseIndInDoor
 {{0x0F,0x12},{0x01,0x96}},	//afit_uNoiseIndInDoor
 {{0x0F,0x12},{0x02,0x45}},	//afit_uNoiseIndInDoor
 {{0x0F,0x12},{0x03,0x00}},	//afit_uNoiseIndInDoor
-
-{{0x00,0x2A},{0x09,0x38}},
+	
+{{0x00,0x2A},{0x09,0x38}},	
 {{0x0F,0x12},{0x00,0x00}},	// on/off AFIT by NB option
 {{0x0F,0x12},{0x00,0x14}},	//SARR_uNormBrInDoor
 {{0x0F,0x12},{0x00,0xD2}},	//SARR_uNormBrInDoor
 {{0x0F,0x12},{0x03,0x84}},	//SARR_uNormBrInDoor
 {{0x0F,0x12},{0x07,0xD0}},	//SARR_uNormBrInDoor
 {{0x0F,0x12},{0x13,0x88}},	//SARR_uNormBrInDoor
-
-{{0x00,0x2A},{0x09,0x76}},
-{{0x0F,0x12},{0x00,0x70}},	//afit_usGamutTh
+	
+{{0x00,0x2A},{0x09,0x76}},	
+{{0x0F,0x12},{0x00,0x70}},	//afit_usGamutTh       
 {{0x0F,0x12},{0x00,0x05}},	//afit_usNeargrayOffset
-{{0x0F,0x12},{0x00,0x00}},	//afit_bUseSenBpr
-{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_0_
-{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_1_
-{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_2_
-{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_3_
-{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_4_
+{{0x0F,0x12},{0x00,0x00}},	//afit_bUseSenBpr         
+{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_0_        
+{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_1_        
+{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_2_        
+{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_3_        
+{{0x0F,0x12},{0x01,0xCC}},	//afit_usBprThr_4_        
 {{0x0F,0x12},{0x01,0x80}},	//afit_NIContrastAFITValue
-{{0x0F,0x12},{0x01,0x96}},	//afit_NIContrastTh
-
-{{0x00,0x2A},{0x09,0x8C}},
-{{0x0F,0x12},{0x00,0x00}},	//7000098C//AFIT16_BRIGHTNESS
-{{0x0F,0x12},{0x00,0x00}},	//7000098E//AFIT16_CONTRAST
-{{0x0F,0x12},{0x00,0x00}},	//70000990//AFIT16_SATURATION
-{{0x0F,0x12},{0x00,0x00}},	//70000992//AFIT16_SHARP_BLUR
-{{0x0F,0x12},{0x00,0x00}},	//70000994//AFIT16_GLAMOUR
-{{0x0F,0x12},{0x00,0xC0}},	//70000996//AFIT16_bnr_edge_high
-{{0x0F,0x12},{0x00,0x64}},	//70000998//AFIT16_postdmsc_iLowBright
-{{0x0F,0x12},{0x03,0x84}},	//7000099A//AFIT16_postdmsc_iHighBright
-{{0x0F,0x12},{0x00,0x5F}},	//7000099C//AFIT16_postdmsc_iLowSat
-{{0x0F,0x12},{0x01,0xF4}},	//7000099E//AFIT16_postdmsc_iHighSat
-{{0x0F,0x12},{0x00,0x70}},	//700009A0//AFIT16_postdmsc_iTune
-{{0x0F,0x12},{0x00,0x40}},	//700009A2//AFIT16_yuvemix_mNegRanges_0
-{{0x0F,0x12},{0x00,0xA0}},	//700009A4//AFIT16_yuvemix_mNegRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//700009A6//AFIT16_yuvemix_mNegRanges_2
-{{0x0F,0x12},{0x00,0x10}},	//700009A8//AFIT16_yuvemix_mPosRanges_0
-{{0x0F,0x12},{0x00,0x40}},	//700009AA//AFIT16_yuvemix_mPosRanges_1
-{{0x0F,0x12},{0x00,0xA0}},	//700009AC//AFIT16_yuvemix_mPosRanges_2
-{{0x0F,0x12},{0x14,0x30}},	//700009AE//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh
-{{0x0F,0x12},{0x02,0x01}},	//700009B0//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh
-{{0x0F,0x12},{0x02,0x04}},	//700009B2//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh
-{{0x0F,0x12},{0x36,0x04}},	//700009B4//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low
-{{0x0F,0x12},{0x03,0x2A}},	//700009B6//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low
-{{0x0F,0x12},{0x04,0x03}},	//700009B8//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin
-{{0x0F,0x12},{0x1B,0x06}},	//700009BA//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow
-{{0x0F,0x12},{0x60,0x15}},	//700009BC//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH
-{{0x0F,0x12},{0x00,0xC0}},	//700009BE//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune
-{{0x0F,0x12},{0x60,0x80}},	//700009C0//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh
-{{0x0F,0x12},{0x40,0x80}},	//700009C2//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh
-{{0x0F,0x12},{0x06,0x40}},	//700009C4//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed
-{{0x0F,0x12},{0x03,0x06}},	//700009C6//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh
-{{0x0F,0x12},{0x20,0x03}},	//700009C8//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH
-{{0x0F,0x12},{0xFF,0x01}},	//700009CA//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit
-{{0x0F,0x12},{0x00,0x00}},	//700009CC//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2
-{{0x0F,0x12},{0x04,0x00}},	//700009CE//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower
-{{0x0F,0x12},{0x36,0x5A}},	//700009D0//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow
-{{0x0F,0x12},{0x10,0x2A}},	//700009D2//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow
-{{0x0F,0x12},{0x00,0x0B}},	//700009D4//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow
-{{0x0F,0x12},{0x06,0x00}},	//700009D6//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower
-{{0x0F,0x12},{0x5A,0x0F}},	//700009D8//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit
-{{0x0F,0x12},{0x05,0x05}},	//700009DA//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope
-{{0x0F,0x12},{0x18,0x02}},	//700009DC//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR
-{{0x0F,0x12},{0x00,0x00}},	//700009DE//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres
-{{0x0F,0x12},{0x20,0x06}},	//700009E0//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR
-{{0x0F,0x12},{0x30,0x28}},	//700009E2//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen
-{{0x0F,0x12},{0x04,0x18}},	//700009E4//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh
-{{0x0F,0x12},{0x01,0x01}},	//700009E6//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative
-{{0x0F,0x12},{0x08,0x00}},	//700009E8//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle
-{{0x0F,0x12},{0x18,0x04}},	//700009EA//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh
-{{0x0F,0x12},{0x40,0x08}},	//700009EC//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh
-{{0x0F,0x12},{0x05,0x40}},	//700009EE//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange
-{{0x0F,0x12},{0x80,0x06}},	//700009F0//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad
-{{0x0F,0x12},{0x00,0x20}},	//700009F2//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal
-{{0x0F,0x12},{0x00,0x00}},	//700009F4//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh
-{{0x0F,0x12},{0x18,0x00}},	//700009F6//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat
-{{0x0F,0x12},{0x00,0x00}},	//700009F8//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit
-{{0x0F,0x12},{0x1E,0x10}},	//700009FA//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff
-{{0x0F,0x12},{0x00,0x0B}},	//700009FC//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//700009FE//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2
-{{0x0F,0x12},{0x00,0x05}},	//70000A00//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000A02//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2
-{{0x0F,0x12},{0x04,0x05}},	//70000A04//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY
-{{0x0F,0x12},{0x02,0x05}},	//70000A06//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm
-{{0x0F,0x12},{0x03,0x04}},	//70000A08//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm
-{{0x0F,0x12},{0x04,0x09}},	//70000A0A//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift
-{{0x0F,0x12},{0x03,0x06}},	//70000A0C//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y
-{{0x0F,0x12},{0x04,0x07}},	//70000A0E//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y
-{{0x0F,0x12},{0x1C,0x04}},	//70000A10//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV
-{{0x0F,0x12},{0x02,0x14}},	//70000A12//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y
-{{0x0F,0x12},{0x10,0x02}},	//70000A14//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV
-{{0x0F,0x12},{0x06,0x10}},	//70000A16//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL
-{{0x0F,0x12},{0x1A,0x02}},	//70000A18//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL
-{{0x0F,0x12},{0x4A,0x18}},	//70000A1A//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower
-{{0x0F,0x12},{0x00,0x80}},	//70000A1C//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce
-{{0x0F,0x12},{0x03,0x48}},	//70000A1E//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset
-{{0x0F,0x12},{0x01,0x80}},	//70000A20//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H
-{{0x0F,0x12},{0x0A,0x0A}},	//70000A22//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C
-{{0x0F,0x12},{0x01,0x01}},	//70000A24//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C
-{{0x0F,0x12},{0x2A,0x36}},	//70000A26//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh
-{{0x0F,0x12},{0x60,0x24}},	//70000A28//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower
-{{0x0F,0x12},{0x2A,0x36}},	//70000A2A//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise
-{{0x0F,0x12},{0xFF,0xFF}},	//70000A2C//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp
-{{0x0F,0x12},{0x08,0x08}},	//70000A2E//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope
-{{0x0F,0x12},{0x0A,0x01}},	//70000A30//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin
-{{0x0F,0x12},{0x01,0x0A}},	//70000A32//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin
-{{0x0F,0x12},{0x36,0x01}},	//70000A34//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin
-{{0x0F,0x12},{0x24,0x2A}},	//70000A36//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin
-{{0x0F,0x12},{0x36,0x60}},	//70000A38//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin
-{{0x0F,0x12},{0xFF,0x2A}},	//70000A3A//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin
-{{0x0F,0x12},{0x08,0xFF}},	//70000A3C//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin
-{{0x0F,0x12},{0x00,0x08}},	//70000A3E//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]
-{{0x0F,0x12},{0x00,0x01}},	//70000A40//AFITB_bnr_nClustLevel_C      [0]
-{{0x0F,0x12},{0x00,0x00}},	//70000A42//AFIT16_BRIGHTNESS
-{{0x0F,0x12},{0x00,0x00}},	//70000A44//AFIT16_CONTRAST
-{{0x0F,0x12},{0x00,0x00}},	//70000A46//AFIT16_SATURATION
-{{0x0F,0x12},{0x00,0x00}},	//70000A48//AFIT16_SHARP_BLUR
-{{0x0F,0x12},{0x00,0x00}},	//70000A4A//AFIT16_GLAMOUR
-{{0x0F,0x12},{0x00,0xC0}},	//70000A4C//AFIT16_bnr_edge_high
-{{0x0F,0x12},{0x00,0x64}},	//70000A4E//AFIT16_postdmsc_iLowBright
-{{0x0F,0x12},{0x03,0x84}},	//70000A50//AFIT16_postdmsc_iHighBright
-{{0x0F,0x12},{0x00,0x51}},	//70000A52//AFIT16_postdmsc_iLowSat
-{{0x0F,0x12},{0x01,0xF4}},	//70000A54//AFIT16_postdmsc_iHighSat
-{{0x0F,0x12},{0x00,0x70}},	//70000A56//AFIT16_postdmsc_iTune
-{{0x0F,0x12},{0x00,0x40}},	//70000A58//AFIT16_yuvemix_mNegRanges_0
-{{0x0F,0x12},{0x00,0xA0}},	//70000A5A//AFIT16_yuvemix_mNegRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//70000A5C//AFIT16_yuvemix_mNegRanges_2
-{{0x0F,0x12},{0x00,0x10}},	//70000A5E//AFIT16_yuvemix_mPosRanges_0
-{{0x0F,0x12},{0x00,0x60}},	//70000A60//AFIT16_yuvemix_mPosRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//70000A62//AFIT16_yuvemix_mPosRanges_2
-{{0x0F,0x12},{0x14,0x30}},	//70000A64//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh
-{{0x0F,0x12},{0x02,0x01}},	//70000A66//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh
-{{0x0F,0x12},{0x02,0x04}},	//70000A68//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh
-{{0x0F,0x12},{0x24,0x04}},	//70000A6A//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low
-{{0x0F,0x12},{0x03,0x1B}},	//70000A6C//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low
-{{0x0F,0x12},{0x01,0x03}},	//70000A6E//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin
-{{0x0F,0x12},{0x12,0x05}},	//70000A70//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow
-{{0x0F,0x12},{0x40,0x0D}},	//70000A72//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH
-{{0x0F,0x12},{0x00,0x80}},	//70000A74//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune
-{{0x0F,0x12},{0x20,0x80}},	//70000A76//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh
-{{0x0F,0x12},{0x30,0x40}},	//70000A78//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh
-{{0x0F,0x12},{0x06,0x30}},	//70000A7A//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed
-{{0x0F,0x12},{0x03,0x06}},	//70000A7C//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh
-{{0x0F,0x12},{0x20,0x03}},	//70000A7E//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH
-{{0x0F,0x12},{0xFF,0x01}},	//70000A80//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit
-{{0x0F,0x12},{0x04,0x04}},	//70000A82//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2
-{{0x0F,0x12},{0x03,0x00}},	//70000A84//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower
-{{0x0F,0x12},{0x24,0x5A}},	//70000A86//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow
-{{0x0F,0x12},{0x10,0x18}},	//70000A88//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow
-{{0x0F,0x12},{0x00,0x0B}},	//70000A8A//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow
-{{0x0F,0x12},{0x0B,0x00}},	//70000A8C//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower
-{{0x0F,0x12},{0x5A,0x0F}},	//70000A8E//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit
-{{0x0F,0x12},{0x05,0x05}},	//70000A90//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope
-{{0x0F,0x12},{0x18,0x02}},	//70000A92//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR
-{{0x0F,0x12},{0x00,0x00}},	//70000A94//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres
-{{0x0F,0x12},{0x20,0x06}},	//70000A96//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR
-{{0x0F,0x12},{0x34,0x28}},	//70000A98//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen
-{{0x0F,0x12},{0x04,0x1C}},	//70000A9A//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh
-{{0x0F,0x12},{0x01,0x01}},	//70000A9C//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative
-{{0x0F,0x12},{0x08,0x00}},	//70000A9E//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle
-{{0x0F,0x12},{0x10,0x04}},	//70000AA0//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh
-{{0x0F,0x12},{0x40,0x08}},	//70000AA2//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh
-{{0x0F,0x12},{0x05,0x40}},	//70000AA4//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange
-{{0x0F,0x12},{0x80,0x06}},	//70000AA6//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad
-{{0x0F,0x12},{0x00,0x20}},	//70000AA8//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal
-{{0x0F,0x12},{0x00,0x00}},	//70000AAA//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh
-{{0x0F,0x12},{0x18,0x00}},	//70000AAC//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat
-{{0x0F,0x12},{0x00,0x00}},	//70000AAE//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit
-{{0x0F,0x12},{0x1E,0x10}},	//70000AB0//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff
-{{0x0F,0x12},{0x00,0x0B}},	//70000AB2//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000AB4//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2
-{{0x0F,0x12},{0x00,0x05}},	//70000AB6//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000AB8//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2
-{{0x0F,0x12},{0x04,0x05}},	//70000ABA//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY
-{{0x0F,0x12},{0x02,0x05}},	//70000ABC//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm
-{{0x0F,0x12},{0x03,0x04}},	//70000ABE//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm
-{{0x0F,0x12},{0x04,0x09}},	//70000AC0//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift
-{{0x0F,0x12},{0x03,0x06}},	//70000AC2//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y
-{{0x0F,0x12},{0x04,0x07}},	//70000AC4//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y
-{{0x0F,0x12},{0x1F,0x04}},	//70000AC6//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV
-{{0x0F,0x12},{0x02,0x18}},	//70000AC8//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y
-{{0x0F,0x12},{0x11,0x02}},	//70000ACA//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV
-{{0x0F,0x12},{0x06,0x11}},	//70000ACC//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL
-{{0x0F,0x12},{0x1A,0x02}},	//70000ACE//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL
-{{0x0F,0x12},{0x80,0x18}},	//70000AD0//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower
-{{0x0F,0x12},{0x00,0x80}},	//70000AD2//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce
-{{0x0F,0x12},{0x03,0x80}},	//70000AD4//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset
-{{0x0F,0x12},{0x01,0x80}},	//70000AD6//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H
-{{0x0F,0x12},{0x0A,0x0A}},	//70000AD8//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C
-{{0x0F,0x12},{0x01,0x01}},	//70000ADA//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C
-{{0x0F,0x12},{0x1B,0x24}},	//70000ADC//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh
-{{0x0F,0x12},{0x60,0x24}},	//70000ADE//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower
-{{0x0F,0x12},{0x1D,0x22}},	//70000AE0//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise
-{{0x0F,0x12},{0xFF,0xFF}},	//70000AE2//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp
-{{0x0F,0x12},{0x08,0x08}},	//70000AE4//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope
-{{0x0F,0x12},{0x0A,0x01}},	//70000AE6//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin
-{{0x0F,0x12},{0x01,0x0A}},	//70000AE8//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin
-{{0x0F,0x12},{0x24,0x01}},	//70000AEA//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin
-{{0x0F,0x12},{0x24,0x1B}},	//70000AEC//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin
-{{0x0F,0x12},{0x1E,0x60}},	//70000AEE//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin
-{{0x0F,0x12},{0xFF,0x18}},	//70000AF0//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin
-{{0x0F,0x12},{0x08,0xFF}},	//70000AF2//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin
-{{0x0F,0x12},{0x00,0x08}},	//70000AF4//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]
-{{0x0F,0x12},{0x00,0x01}},	//70000AF6//AFITB_bnr_nClustLevel_C      [0]
-{{0x0F,0x12},{0x00,0x00}},	//70000AF8//AFIT16_BRIGHTNESS
-{{0x0F,0x12},{0x00,0x00}},	//70000AFA//AFIT16_CONTRAST
-{{0x0F,0x12},{0x00,0x00}},	//70000AFC//AFIT16_SATURATION
-{{0x0F,0x12},{0x00,0x00}},	//70000AFE//AFIT16_SHARP_BLUR
-{{0x0F,0x12},{0x00,0x00}},	//70000B00//AFIT16_GLAMOUR
-{{0x0F,0x12},{0x00,0xC0}},	//70000B02//AFIT16_bnr_edge_high
-{{0x0F,0x12},{0x00,0x64}},	//70000B04//AFIT16_postdmsc_iLowBright
-{{0x0F,0x12},{0x03,0x84}},	//70000B06//AFIT16_postdmsc_iHighBright
-{{0x0F,0x12},{0x00,0x43}},	//70000B08//AFIT16_postdmsc_iLowSat
-{{0x0F,0x12},{0x01,0xF4}},	//70000B0A//AFIT16_postdmsc_iHighSat
-{{0x0F,0x12},{0x00,0x70}},	//70000B0C//AFIT16_postdmsc_iTune
-{{0x0F,0x12},{0x00,0x40}},	//70000B0E//AFIT16_yuvemix_mNegRanges_0
-{{0x0F,0x12},{0x00,0xA0}},	//70000B10//AFIT16_yuvemix_mNegRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//70000B12//AFIT16_yuvemix_mNegRanges_2
-{{0x0F,0x12},{0x00,0x10}},	//70000B14//AFIT16_yuvemix_mPosRanges_0
-{{0x0F,0x12},{0x00,0x60}},	//70000B16//AFIT16_yuvemix_mPosRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//70000B18//AFIT16_yuvemix_mPosRanges_2
-{{0x0F,0x12},{0x14,0x30}},	//70000B1A//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh
-{{0x0F,0x12},{0x02,0x01}},	//70000B1C//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh
-{{0x0F,0x12},{0x02,0x04}},	//70000B1E//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh
-{{0x0F,0x12},{0x1B,0x04}},	//70000B20//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low
-{{0x0F,0x12},{0x03,0x12}},	//70000B22//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low
-{{0x0F,0x12},{0x00,0x03}},	//70000B24//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin
-{{0x0F,0x12},{0x0C,0x03}},	//70000B26//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow
-{{0x0F,0x12},{0x28,0x06}},	//70000B28//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH
-{{0x0F,0x12},{0x00,0x60}},	//70000B2A//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune
-{{0x0F,0x12},{0x15,0x80}},	//70000B2C//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh
-{{0x0F,0x12},{0x20,0x20}},	//70000B2E//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh
-{{0x0F,0x12},{0x06,0x20}},	//70000B30//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed
-{{0x0F,0x12},{0x03,0x06}},	//70000B32//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh
-{{0x0F,0x12},{0x20,0x03}},	//70000B34//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH
-{{0x0F,0x12},{0xFF,0x01}},	//70000B36//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit
-{{0x0F,0x12},{0x04,0x04}},	//70000B38//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2
-{{0x0F,0x12},{0x03,0x00}},	//70000B3A//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower
-{{0x0F,0x12},{0x14,0x5A}},	//70000B3C//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow
-{{0x0F,0x12},{0x10,0x10}},	//70000B3E//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow
-{{0x0F,0x12},{0x00,0x0B}},	//70000B40//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow
-{{0x0F,0x12},{0x0E,0x00}},	//70000B42//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower
-{{0x0F,0x12},{0x5A,0x0F}},	//70000B44//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit
-{{0x0F,0x12},{0x05,0x04}},	//70000B46//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope
-{{0x0F,0x12},{0x18,0x02}},	//70000B48//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR
-{{0x0F,0x12},{0x00,0x00}},	//70000B4A//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres
-{{0x0F,0x12},{0x20,0x06}},	//70000B4C//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR
-{{0x0F,0x12},{0x38,0x28}},	//70000B4E//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen
-{{0x0F,0x12},{0x04,0x28}},	//70000B50//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh
-{{0x0F,0x12},{0x01,0x01}},	//70000B52//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative
-{{0x0F,0x12},{0x80,0x00}},	//70000B54//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle
-{{0x0F,0x12},{0x0A,0x04}},	//70000B56//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh
-{{0x0F,0x12},{0x40,0x08}},	//70000B58//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh
-{{0x0F,0x12},{0x05,0x40}},	//70000B5A//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange
-{{0x0F,0x12},{0x80,0x06}},	//70000B5C//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad
-{{0x0F,0x12},{0x00,0x20}},	//70000B5E//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal
-{{0x0F,0x12},{0x00,0x00}},	//70000B60//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh
-{{0x0F,0x12},{0x18,0x00}},	//70000B62//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat
-{{0x0F,0x12},{0x00,0x00}},	//70000B64//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit
-{{0x0F,0x12},{0x1E,0x10}},	//70000B66//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff
-{{0x0F,0x12},{0x00,0x0B}},	//70000B68//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000B6A//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2
-{{0x0F,0x12},{0x00,0x05}},	//70000B6C//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000B6E//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2
-{{0x0F,0x12},{0x04,0x05}},	//70000B70//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY
-{{0x0F,0x12},{0x02,0x07}},	//70000B72//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm
-{{0x0F,0x12},{0x03,0x04}},	//70000B74//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm
-{{0x0F,0x12},{0x04,0x09}},	//70000B76//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift
-{{0x0F,0x12},{0x03,0x06}},	//70000B78//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y
-{{0x0F,0x12},{0x04,0x07}},	//70000B7A//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y
-{{0x0F,0x12},{0x24,0x04}},	//70000B7C//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV
-{{0x0F,0x12},{0x02,0x21}},	//70000B7E//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y
-{{0x0F,0x12},{0x12,0x02}},	//70000B80//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV
-{{0x0F,0x12},{0x06,0x13}},	//70000B82//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL
-{{0x0F,0x12},{0x1A,0x02}},	//70000B84//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL
-{{0x0F,0x12},{0x80,0x18}},	//70000B86//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower
-{{0x0F,0x12},{0x00,0x80}},	//70000B88//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce
-{{0x0F,0x12},{0x00,0x80}},	//70000B8A//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset
-{{0x0F,0x12},{0x01,0x80}},	//70000B8C//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H
-{{0x0F,0x12},{0x0A,0x0A}},	//70000B8E//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C
-{{0x0F,0x12},{0x01,0x01}},	//70000B90//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C
-{{0x0F,0x12},{0x14,0x1D}},	//70000B92//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh
-{{0x0F,0x12},{0x60,0x24}},	//70000B94//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower
-{{0x0F,0x12},{0x0C,0x0C}},	//70000B96//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise
-{{0x0F,0x12},{0xFF,0xFF}},	//70000B98//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp
-{{0x0F,0x12},{0x08,0x08}},	//70000B9A//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope
-{{0x0F,0x12},{0x0A,0x01}},	//70000B9C//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin
-{{0x0F,0x12},{0x01,0x0A}},	//70000B9E//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin
-{{0x0F,0x12},{0x1B,0x01}},	//70000BA0//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin
-{{0x0F,0x12},{0x24,0x12}},	//70000BA2//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin
-{{0x0F,0x12},{0x0C,0x60}},	//70000BA4//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin
-{{0x0F,0x12},{0xFF,0x0C}},	//70000BA6//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin
-{{0x0F,0x12},{0x08,0xFF}},	//70000BA8//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin
-{{0x0F,0x12},{0x00,0x08}},	//70000BAA//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]
-{{0x0F,0x12},{0x00,0x01}},	//70000BAC//AFITB_bnr_nClustLevel_C      [0]
-{{0x0F,0x12},{0x00,0x00}},	//70000BAE//AFIT16_BRIGHTNESS
-{{0x0F,0x12},{0x00,0x00}},	//70000BB0//AFIT16_CONTRAST
-{{0x0F,0x12},{0x00,0x00}},	//70000BB2//AFIT16_SATURATION
-{{0x0F,0x12},{0x00,0x00}},	//70000BB4//AFIT16_SHARP_BLUR
-{{0x0F,0x12},{0x00,0x00}},	//70000BB6//AFIT16_GLAMOUR
-{{0x0F,0x12},{0x00,0xC0}},	//70000BB8//AFIT16_bnr_edge_high
-{{0x0F,0x12},{0x00,0x64}},	//70000BBA//AFIT16_postdmsc_iLowBright
-{{0x0F,0x12},{0x03,0x84}},	//70000BBC//AFIT16_postdmsc_iHighBright
-{{0x0F,0x12},{0x00,0x32}},	//70000BBE//AFIT16_postdmsc_iLowSat
-{{0x0F,0x12},{0x01,0xF4}},	//70000BC0//AFIT16_postdmsc_iHighSat
-{{0x0F,0x12},{0x00,0x70}},	//70000BC2//AFIT16_postdmsc_iTune
-{{0x0F,0x12},{0x00,0x40}},	//70000BC4//AFIT16_yuvemix_mNegRanges_0
-{{0x0F,0x12},{0x00,0xA0}},	//70000BC6//AFIT16_yuvemix_mNegRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//70000BC8//AFIT16_yuvemix_mNegRanges_2
-{{0x0F,0x12},{0x00,0x10}},	//70000BCA//AFIT16_yuvemix_mPosRanges_0
-{{0x0F,0x12},{0x00,0x60}},	//70000BCC//AFIT16_yuvemix_mPosRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//70000BCE//AFIT16_yuvemix_mPosRanges_2
-{{0x0F,0x12},{0x14,0x30}},	//70000BD0//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh
-{{0x0F,0x12},{0x02,0x01}},	//70000BD2//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh
-{{0x0F,0x12},{0x02,0x04}},	//70000BD4//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh
-{{0x0F,0x12},{0x15,0x04}},	//70000BD6//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low
-{{0x0F,0x12},{0x03,0x0F}},	//70000BD8//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low
-{{0x0F,0x12},{0x00,0x03}},	//70000BDA//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin
-{{0x0F,0x12},{0x09,0x02}},	//70000BDC//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow
-{{0x0F,0x12},{0x20,0x04}},	//70000BDE//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH
-{{0x0F,0x12},{0x00,0x50}},	//70000BE0//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune
-{{0x0F,0x12},{0x11,0x40}},	//70000BE2//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh
-{{0x0F,0x12},{0x20,0x1C}},	//70000BE4//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh
-{{0x0F,0x12},{0x06,0x20}},	//70000BE6//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed
-{{0x0F,0x12},{0x03,0x06}},	//70000BE8//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh
-{{0x0F,0x12},{0x20,0x03}},	//70000BEA//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH
-{{0x0F,0x12},{0xFF,0x01}},	//70000BEC//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit
-{{0x0F,0x12},{0x04,0x04}},	//70000BEE//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2
-{{0x0F,0x12},{0x03,0x00}},	//70000BF0//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower
-{{0x0F,0x12},{0x14,0x5A}},	//70000BF2//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow
-{{0x0F,0x12},{0x10,0x10}},	//70000BF4//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow
-{{0x0F,0x12},{0x00,0x0B}},	//70000BF6//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow
-{{0x0F,0x12},{0x10,0x00}},	//70000BF8//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower
-{{0x0F,0x12},{0x5A,0x0F}},	//70000BFA//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit
-{{0x0F,0x12},{0x05,0x03}},	//70000BFC//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope
-{{0x0F,0x12},{0x18,0x02}},	//70000BFE//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR
-{{0x0F,0x12},{0x00,0x00}},	//70000C00//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres
-{{0x0F,0x12},{0x20,0x06}},	//70000C02//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR
-{{0x0F,0x12},{0x3C,0x28}},	//70000C04//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen
-{{0x0F,0x12},{0x04,0x2C}},	//70000C06//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh
-{{0x0F,0x12},{0x01,0x01}},	//70000C08//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative
-{{0x0F,0x12},{0xFF,0x00}},	//70000C0A//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle
-{{0x0F,0x12},{0x09,0x04}},	//70000C0C//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh
-{{0x0F,0x12},{0x40,0x08}},	//70000C0E//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh
-{{0x0F,0x12},{0x05,0x40}},	//70000C10//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange
-{{0x0F,0x12},{0x80,0x06}},	//70000C12//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad
-{{0x0F,0x12},{0x00,0x20}},	//70000C14//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal
-{{0x0F,0x12},{0x00,0x00}},	//70000C16//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh
-{{0x0F,0x12},{0x18,0x00}},	//70000C18//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat
-{{0x0F,0x12},{0x00,0x00}},	//70000C1A//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit
-{{0x0F,0x12},{0x1E,0x10}},	//70000C1C//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff
-{{0x0F,0x12},{0x00,0x0B}},	//70000C1E//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000C20//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2
-{{0x0F,0x12},{0x00,0x05}},	//70000C22//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000C24//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2
-{{0x0F,0x12},{0x04,0x05}},	//70000C26//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY
-{{0x0F,0x12},{0x02,0x06}},	//70000C28//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm
-{{0x0F,0x12},{0x03,0x04}},	//70000C2A//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm
-{{0x0F,0x12},{0x04,0x09}},	//70000C2C//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift
-{{0x0F,0x12},{0x03,0x05}},	//70000C2E//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y
-{{0x0F,0x12},{0x04,0x06}},	//70000C30//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y
-{{0x0F,0x12},{0x28,0x04}},	//70000C32//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV
-{{0x0F,0x12},{0x02,0x28}},	//70000C34//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y
-{{0x0F,0x12},{0x14,0x02}},	//70000C36//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV
-{{0x0F,0x12},{0x06,0x18}},	//70000C38//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL
-{{0x0F,0x12},{0x1A,0x02}},	//70000C3A//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL
-{{0x0F,0x12},{0x80,0x18}},	//70000C3C//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower
-{{0x0F,0x12},{0x00,0x80}},	//70000C3E//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce
-{{0x0F,0x12},{0x00,0x80}},	//70000C40//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset
-{{0x0F,0x12},{0x01,0x80}},	//70000C42//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H
-{{0x0F,0x12},{0x0A,0x0A}},	//70000C44//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C
-{{0x0F,0x12},{0x01,0x01}},	//70000C46//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C
-{{0x0F,0x12},{0x11,0x17}},	//70000C48//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh
-{{0x0F,0x12},{0x60,0x24}},	//70000C4A//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower
-{{0x0F,0x12},{0x0A,0x0A}},	//70000C4C//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise
-{{0x0F,0x12},{0xFF,0xFF}},	//70000C4E//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp
-{{0x0F,0x12},{0x08,0x08}},	//70000C50//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope
-{{0x0F,0x12},{0x0A,0x01}},	//70000C52//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin
-{{0x0F,0x12},{0x01,0x0A}},	//70000C54//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin
-{{0x0F,0x12},{0x15,0x01}},	//70000C56//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin
-{{0x0F,0x12},{0x24,0x0F}},	//70000C58//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin
-{{0x0F,0x12},{0x0A,0x60}},	//70000C5A//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin
-{{0x0F,0x12},{0xFF,0x0A}},	//70000C5C//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin
-{{0x0F,0x12},{0x08,0xFF}},	//70000C5E//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin
-{{0x0F,0x12},{0x00,0x08}},	//70000C60//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]
-{{0x0F,0x12},{0x00,0x01}},	//70000C62//AFITB_bnr_nClustLevel_C      [0]
-{{0x0F,0x12},{0x00,0x00}},	//70000C64//AFIT16_BRIGHTNESS
-{{0x0F,0x12},{0x00,0x00}},	//70000C66//AFIT16_CONTRAST
-{{0x0F,0x12},{0x00,0x00}},	//70000C68//AFIT16_SATURATION
-{{0x0F,0x12},{0x00,0x00}},	//70000C6A//AFIT16_SHARP_BLUR
-{{0x0F,0x12},{0x00,0x00}},	//70000C6C//AFIT16_GLAMOUR
-{{0x0F,0x12},{0x00,0xC0}},	//70000C6E//AFIT16_bnr_edge_high
-{{0x0F,0x12},{0x00,0x64}},	//70000C70//AFIT16_postdmsc_iLowBright
-{{0x0F,0x12},{0x03,0x84}},	//70000C72//AFIT16_postdmsc_iHighBright
-{{0x0F,0x12},{0x00,0x32}},	//70000C74//AFIT16_postdmsc_iLowSat
-{{0x0F,0x12},{0x01,0xF4}},	//70000C76//AFIT16_postdmsc_iHighSat
-{{0x0F,0x12},{0x00,0x70}},	//70000C78//AFIT16_postdmsc_iTune
-{{0x0F,0x12},{0x00,0x40}},	//70000C7A//AFIT16_yuvemix_mNegRanges_0
-{{0x0F,0x12},{0x00,0xA0}},	//70000C7C//AFIT16_yuvemix_mNegRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//70000C7E//AFIT16_yuvemix_mNegRanges_2
-{{0x0F,0x12},{0x00,0x10}},	//70000C80//AFIT16_yuvemix_mPosRanges_0
-{{0x0F,0x12},{0x00,0x60}},	//70000C82//AFIT16_yuvemix_mPosRanges_1
-{{0x0F,0x12},{0x01,0x00}},	//70000C84//AFIT16_yuvemix_mPosRanges_2
-{{0x0F,0x12},{0x14,0x30}},	//70000C86//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh
-{{0x0F,0x12},{0x02,0x01}},	//70000C88//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh
-{{0x0F,0x12},{0x02,0x04}},	//70000C8A//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh
-{{0x0F,0x12},{0x0F,0x04}},	//70000C8C//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low
-{{0x0F,0x12},{0x03,0x0C}},	//70000C8E//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low
-{{0x0F,0x12},{0x00,0x03}},	//70000C90//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin
-{{0x0F,0x12},{0x06,0x02}},	//70000C92//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow
-{{0x0F,0x12},{0x18,0x03}},	//70000C94//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH
-{{0x0F,0x12},{0x00,0x40}},	//70000C96//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune
-{{0x0F,0x12},{0x0E,0x20}},	//70000C98//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh
-{{0x0F,0x12},{0x20,0x18}},	//70000C9A//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh
-{{0x0F,0x12},{0x06,0x20}},	//70000C9C//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed
-{{0x0F,0x12},{0x03,0x06}},	//70000C9E//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh
-{{0x0F,0x12},{0x20,0x03}},	//70000CA0//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH
-{{0x0F,0x12},{0xFF,0x01}},	//70000CA2//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit
-{{0x0F,0x12},{0x04,0x04}},	//70000CA4//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2
-{{0x0F,0x12},{0x02,0x00}},	//70000CA6//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower
-{{0x0F,0x12},{0x14,0x5A}},	//70000CA8//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow
-{{0x0F,0x12},{0x10,0x10}},	//70000CAA//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow
-{{0x0F,0x12},{0x00,0x0B}},	//70000CAC//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow
-{{0x0F,0x12},{0x12,0x00}},	//70000CAE//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower
-{{0x0F,0x12},{0x5A,0x0F}},	//70000CB0//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit
-{{0x0F,0x12},{0x05,0x02}},	//70000CB2//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope
-{{0x0F,0x12},{0x18,0x02}},	//70000CB4//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR
-{{0x0F,0x12},{0x00,0x00}},	//70000CB6//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres
-{{0x0F,0x12},{0x20,0x06}},	//70000CB8//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR
-{{0x0F,0x12},{0x40,0x28}},	//70000CBA//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen
-{{0x0F,0x12},{0x04,0x30}},	//70000CBC//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh
-{{0x0F,0x12},{0x01,0x01}},	//70000CBE//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative
-{{0x0F,0x12},{0xFF,0x00}},	//70000CC0//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle
-{{0x0F,0x12},{0x08,0x04}},	//70000CC2//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh
-{{0x0F,0x12},{0x40,0x08}},	//70000CC4//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh
-{{0x0F,0x12},{0x05,0x40}},	//70000CC6//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange
-{{0x0F,0x12},{0x80,0x06}},	//70000CC8//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad
-{{0x0F,0x12},{0x00,0x20}},	//70000CCA//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal
-{{0x0F,0x12},{0x00,0x00}},	//70000CCC//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh
-{{0x0F,0x12},{0x18,0x00}},	//70000CCE//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat
-{{0x0F,0x12},{0x00,0x00}},	//70000CD0//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit
-{{0x0F,0x12},{0x1E,0x10}},	//70000CD2//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff
-{{0x0F,0x12},{0x00,0x0B}},	//70000CD4//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000CD6//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2
-{{0x0F,0x12},{0x00,0x05}},	//70000CD8//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0
-{{0x0F,0x12},{0x06,0x07}},	//70000CDA//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2
-{{0x0F,0x12},{0x04,0x05}},	//70000CDC//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY
-{{0x0F,0x12},{0x02,0x05}},	//70000CDE//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm
-{{0x0F,0x12},{0x03,0x04}},	//70000CE0//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm
-{{0x0F,0x12},{0x04,0x09}},	//70000CE2//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift
-{{0x0F,0x12},{0x03,0x06}},	//70000CE4//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y
-{{0x0F,0x12},{0x04,0x07}},	//70000CE6//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y
-{{0x0F,0x12},{0x2C,0x04}},	//70000CE8//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV
-{{0x0F,0x12},{0x02,0x2C}},	//70000CEA//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y
-{{0x0F,0x12},{0x14,0x02}},	//70000CEC//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV
-{{0x0F,0x12},{0x06,0x18}},	//70000CEE//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL
-{{0x0F,0x12},{0x1A,0x02}},	//70000CF0//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL
-{{0x0F,0x12},{0x80,0x18}},	//70000CF2//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower
-{{0x0F,0x12},{0x00,0x80}},	//70000CF4//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce
-{{0x0F,0x12},{0x00,0x80}},	//70000CF6//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset
-{{0x0F,0x12},{0x01,0x80}},	//70000CF8//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H
-{{0x0F,0x12},{0x0A,0x0A}},	//70000CFA//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C
-{{0x0F,0x12},{0x01,0x01}},	//70000CFC//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C
-{{0x0F,0x12},{0x0C,0x0F}},	//70000CFE//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh
-{{0x0F,0x12},{0x60,0x24}},	//70000D00//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower
-{{0x0F,0x12},{0x08,0x08}},	//70000D02//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise
-{{0x0F,0x12},{0xFF,0xFF}},	//70000D04//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp
-{{0x0F,0x12},{0x08,0x08}},	//70000D06//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope
-{{0x0F,0x12},{0x0A,0x01}},	//70000D08//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin
-{{0x0F,0x12},{0x01,0x0A}},	//70000D0A//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin
-{{0x0F,0x12},{0x0F,0x01}},	//70000D0C//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin
-{{0x0F,0x12},{0x24,0x0C}},	//70000D0E//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin
-{{0x0F,0x12},{0x08,0x60}},	//70000D10//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin
-{{0x0F,0x12},{0xFF,0x08}},	//70000D12//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin
-{{0x0F,0x12},{0x08,0xFF}},	//70000D14//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin
-{{0x0F,0x12},{0x00,0x08}},	//70000D16//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]
-{{0x0F,0x12},{0x00,0x01}},	//70000D18//AFITB_bnr_nClustLevel_C      [0]
-
+{{0x0F,0x12},{0x01,0x96}},	//afit_NIContrastTh       
+	
+{{0x00,0x2A},{0x09,0x8C}},	
+{{0x0F,0x12},{0x00,0x00}},	//7000098C//AFIT16_BRIGHTNESS           
+{{0x0F,0x12},{0x00,0x00}},	//7000098E//AFIT16_CONTRAST                                                        
+{{0x0F,0x12},{0x00,0x00}},	//70000990//AFIT16_SATURATION                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000992//AFIT16_SHARP_BLUR                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000994//AFIT16_GLAMOUR                                                         
+{{0x0F,0x12},{0x00,0xC0}},	//70000996//AFIT16_bnr_edge_high                                                   
+{{0x0F,0x12},{0x00,0x64}},	//70000998//AFIT16_postdmsc_iLowBright                                             
+{{0x0F,0x12},{0x03,0x84}},	//7000099A//AFIT16_postdmsc_iHighBright                                            
+{{0x0F,0x12},{0x00,0x5F}},	//7000099C//AFIT16_postdmsc_iLowSat                                                
+{{0x0F,0x12},{0x01,0xF4}},	//7000099E//AFIT16_postdmsc_iHighSat                                               
+{{0x0F,0x12},{0x00,0x70}},	//700009A0//AFIT16_postdmsc_iTune                                                  
+{{0x0F,0x12},{0x00,0x40}},	//700009A2//AFIT16_yuvemix_mNegRanges_0                                            
+{{0x0F,0x12},{0x00,0xA0}},	//700009A4//AFIT16_yuvemix_mNegRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//700009A6//AFIT16_yuvemix_mNegRanges_2                                            
+{{0x0F,0x12},{0x00,0x10}},	//700009A8//AFIT16_yuvemix_mPosRanges_0                                            
+{{0x0F,0x12},{0x00,0x40}},	//700009AA//AFIT16_yuvemix_mPosRanges_1                                            
+{{0x0F,0x12},{0x00,0xA0}},	//700009AC//AFIT16_yuvemix_mPosRanges_2                                            
+{{0x0F,0x12},{0x14,0x30}},	//700009AE//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh                        
+{{0x0F,0x12},{0x02,0x01}},	//700009B0//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh                   
+{{0x0F,0x12},{0x02,0x04}},	//700009B2//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh              
+{{0x0F,0x12},{0x36,0x04}},	//700009B4//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low                  
+{{0x0F,0x12},{0x03,0x2A}},	//700009B6//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low                 
+{{0x0F,0x12},{0x04,0x03}},	//700009B8//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin              
+{{0x0F,0x12},{0x1B,0x06}},	//700009BA//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow                
+{{0x0F,0x12},{0x60,0x15}},	//700009BC//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH           
+{{0x0F,0x12},{0x00,0xC0}},	//700009BE//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune            
+{{0x0F,0x12},{0x60,0x80}},	//700009C0//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh          
+{{0x0F,0x12},{0x40,0x80}},	//700009C2//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh    
+{{0x0F,0x12},{0x06,0x40}},	//700009C4//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed     
+{{0x0F,0x12},{0x03,0x06}},	//700009C6//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh       
+{{0x0F,0x12},{0x20,0x03}},	//700009C8//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH              
+{{0x0F,0x12},{0xFF,0x01}},	//700009CA//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit         
+{{0x0F,0x12},{0x00,0x00}},	//700009CC//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2              
+{{0x0F,0x12},{0x04,0x00}},	//700009CE//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower                   
+{{0x0F,0x12},{0x36,0x5A}},	//700009D0//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow                    
+{{0x0F,0x12},{0x10,0x2A}},	//700009D2//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow                     
+{{0x0F,0x12},{0x00,0x0B}},	//700009D4//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow                        
+{{0x0F,0x12},{0x06,0x00}},	//700009D6//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower                        
+{{0x0F,0x12},{0x5A,0x0F}},	//700009D8//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit                   
+{{0x0F,0x12},{0x05,0x05}},	//700009DA//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope                
+{{0x0F,0x12},{0x18,0x02}},	//700009DC//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR                        
+{{0x0F,0x12},{0x00,0x00}},	//700009DE//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres                  
+{{0x0F,0x12},{0x20,0x06}},	//700009E0//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR                  
+{{0x0F,0x12},{0x30,0x28}},	//700009E2//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen                   
+{{0x0F,0x12},{0x04,0x18}},	//700009E4//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh                         
+{{0x0F,0x12},{0x01,0x01}},	//700009E6//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative                   
+{{0x0F,0x12},{0x08,0x00}},	//700009E8//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle                  
+{{0x0F,0x12},{0x18,0x04}},	//700009EA//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh               
+{{0x0F,0x12},{0x40,0x08}},	//700009EC//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh                
+{{0x0F,0x12},{0x05,0x40}},	//700009EE//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange                
+{{0x0F,0x12},{0x80,0x06}},	//700009F0//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad                
+{{0x0F,0x12},{0x00,0x20}},	//700009F2//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal                 
+{{0x0F,0x12},{0x00,0x00}},	//700009F4//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh          
+{{0x0F,0x12},{0x18,0x00}},	//700009F6//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat              
+{{0x0F,0x12},{0x00,0x00}},	//700009F8//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit           
+{{0x0F,0x12},{0x1E,0x10}},	//700009FA//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff                  
+{{0x0F,0x12},{0x00,0x0B}},	//700009FC//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0            
+{{0x0F,0x12},{0x06,0x07}},	//700009FE//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2          
+{{0x0F,0x12},{0x00,0x05}},	//70000A00//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0          
+{{0x0F,0x12},{0x06,0x07}},	//70000A02//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2          
+{{0x0F,0x12},{0x04,0x05}},	//70000A04//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY           
+{{0x0F,0x12},{0x02,0x05}},	//70000A06//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm            
+{{0x0F,0x12},{0x03,0x04}},	//70000A08//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm            
+{{0x0F,0x12},{0x04,0x09}},	//70000A0A//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift          
+{{0x0F,0x12},{0x03,0x06}},	//70000A0C//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y       
+{{0x0F,0x12},{0x04,0x07}},	//70000A0E//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y    
+{{0x0F,0x12},{0x1C,0x04}},	//70000A10//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV   
+{{0x0F,0x12},{0x02,0x14}},	//70000A12//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y    
+{{0x0F,0x12},{0x10,0x02}},	//70000A14//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV     
+{{0x0F,0x12},{0x06,0x10}},	//70000A16//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL     
+{{0x0F,0x12},{0x1A,0x02}},	//70000A18//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL     
+{{0x0F,0x12},{0x4A,0x18}},	//70000A1A//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower     
+{{0x0F,0x12},{0x00,0x80}},	//70000A1C//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce         
+{{0x0F,0x12},{0x03,0x48}},	//70000A1E//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset             
+{{0x0F,0x12},{0x01,0x80}},	//70000A20//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H                 
+{{0x0F,0x12},{0x0A,0x0A}},	//70000A22//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C                  
+{{0x0F,0x12},{0x01,0x01}},	//70000A24//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C              
+{{0x0F,0x12},{0x2A,0x36}},	//70000A26//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh               
+{{0x0F,0x12},{0x60,0x24}},	//70000A28//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower               
+{{0x0F,0x12},{0x2A,0x36}},	//70000A2A//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise                 
+{{0x0F,0x12},{0xFF,0xFF}},	//70000A2C//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp               
+{{0x0F,0x12},{0x08,0x08}},	//70000A2E//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope          
+{{0x0F,0x12},{0x0A,0x01}},	//70000A30//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin         
+{{0x0F,0x12},{0x01,0x0A}},	//70000A32//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin        
+{{0x0F,0x12},{0x36,0x01}},	//70000A34//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin       
+{{0x0F,0x12},{0x24,0x2A}},	//70000A36//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin       
+{{0x0F,0x12},{0x36,0x60}},	//70000A38//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin        
+{{0x0F,0x12},{0xFF,0x2A}},	//70000A3A//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin        
+{{0x0F,0x12},{0x08,0xFF}},	//70000A3C//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin   
+{{0x0F,0x12},{0x00,0x08}},	//70000A3E//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]                                    
+{{0x0F,0x12},{0x00,0x01}},	//70000A40//AFITB_bnr_nClustLevel_C      [0]                                       	
+{{0x0F,0x12},{0x00,0x00}},	//70000A42//AFIT16_BRIGHTNESS           
+{{0x0F,0x12},{0x00,0x00}},	//70000A44//AFIT16_CONTRAST                                                        
+{{0x0F,0x12},{0x00,0x00}},	//70000A46//AFIT16_SATURATION                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000A48//AFIT16_SHARP_BLUR                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000A4A//AFIT16_GLAMOUR                                                         
+{{0x0F,0x12},{0x00,0xC0}},	//70000A4C//AFIT16_bnr_edge_high                                                   
+{{0x0F,0x12},{0x00,0x64}},	//70000A4E//AFIT16_postdmsc_iLowBright                                             
+{{0x0F,0x12},{0x03,0x84}},	//70000A50//AFIT16_postdmsc_iHighBright                                            
+{{0x0F,0x12},{0x00,0x51}},	//70000A52//AFIT16_postdmsc_iLowSat                                                
+{{0x0F,0x12},{0x01,0xF4}},	//70000A54//AFIT16_postdmsc_iHighSat                                               
+{{0x0F,0x12},{0x00,0x70}},	//70000A56//AFIT16_postdmsc_iTune                                                  
+{{0x0F,0x12},{0x00,0x40}},	//70000A58//AFIT16_yuvemix_mNegRanges_0                                            
+{{0x0F,0x12},{0x00,0xA0}},	//70000A5A//AFIT16_yuvemix_mNegRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//70000A5C//AFIT16_yuvemix_mNegRanges_2                                            
+{{0x0F,0x12},{0x00,0x10}},	//70000A5E//AFIT16_yuvemix_mPosRanges_0                                            
+{{0x0F,0x12},{0x00,0x60}},	//70000A60//AFIT16_yuvemix_mPosRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//70000A62//AFIT16_yuvemix_mPosRanges_2                                            
+{{0x0F,0x12},{0x14,0x30}},	//70000A64//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh                        
+{{0x0F,0x12},{0x02,0x01}},	//70000A66//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh                   
+{{0x0F,0x12},{0x02,0x04}},	//70000A68//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh              
+{{0x0F,0x12},{0x24,0x04}},	//70000A6A//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low                  
+{{0x0F,0x12},{0x03,0x1B}},	//70000A6C//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low                 
+{{0x0F,0x12},{0x01,0x03}},	//70000A6E//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin              
+{{0x0F,0x12},{0x12,0x05}},	//70000A70//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow                
+{{0x0F,0x12},{0x40,0x0D}},	//70000A72//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH           
+{{0x0F,0x12},{0x00,0x80}},	//70000A74//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune            
+{{0x0F,0x12},{0x20,0x80}},	//70000A76//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh          
+{{0x0F,0x12},{0x30,0x40}},	//70000A78//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh    
+{{0x0F,0x12},{0x06,0x30}},	//70000A7A//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed     
+{{0x0F,0x12},{0x03,0x06}},	//70000A7C//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh       
+{{0x0F,0x12},{0x20,0x03}},	//70000A7E//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH              
+{{0x0F,0x12},{0xFF,0x01}},	//70000A80//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit         
+{{0x0F,0x12},{0x04,0x04}},	//70000A82//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2              
+{{0x0F,0x12},{0x03,0x00}},	//70000A84//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower                   
+{{0x0F,0x12},{0x24,0x5A}},	//70000A86//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow                    
+{{0x0F,0x12},{0x10,0x18}},	//70000A88//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow                     
+{{0x0F,0x12},{0x00,0x0B}},	//70000A8A//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow                        
+{{0x0F,0x12},{0x0B,0x00}},	//70000A8C//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower                        
+{{0x0F,0x12},{0x5A,0x0F}},	//70000A8E//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit                   
+{{0x0F,0x12},{0x05,0x05}},	//70000A90//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope                
+{{0x0F,0x12},{0x18,0x02}},	//70000A92//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR                        
+{{0x0F,0x12},{0x00,0x00}},	//70000A94//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres                  
+{{0x0F,0x12},{0x20,0x06}},	//70000A96//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR                  
+{{0x0F,0x12},{0x34,0x28}},	//70000A98//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen                   
+{{0x0F,0x12},{0x04,0x1C}},	//70000A9A//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh                         
+{{0x0F,0x12},{0x01,0x01}},	//70000A9C//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative                   
+{{0x0F,0x12},{0x08,0x00}},	//70000A9E//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle                  
+{{0x0F,0x12},{0x10,0x04}},	//70000AA0//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh               
+{{0x0F,0x12},{0x40,0x08}},	//70000AA2//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh                
+{{0x0F,0x12},{0x05,0x40}},	//70000AA4//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange                
+{{0x0F,0x12},{0x80,0x06}},	//70000AA6//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad                
+{{0x0F,0x12},{0x00,0x20}},	//70000AA8//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal                 
+{{0x0F,0x12},{0x00,0x00}},	//70000AAA//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh          
+{{0x0F,0x12},{0x18,0x00}},	//70000AAC//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat              
+{{0x0F,0x12},{0x00,0x00}},	//70000AAE//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit           
+{{0x0F,0x12},{0x1E,0x10}},	//70000AB0//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff                  
+{{0x0F,0x12},{0x00,0x0B}},	//70000AB2//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0            
+{{0x0F,0x12},{0x06,0x07}},	//70000AB4//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2          
+{{0x0F,0x12},{0x00,0x05}},	//70000AB6//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0          
+{{0x0F,0x12},{0x06,0x07}},	//70000AB8//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2          
+{{0x0F,0x12},{0x04,0x05}},	//70000ABA//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY           
+{{0x0F,0x12},{0x02,0x05}},	//70000ABC//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm            
+{{0x0F,0x12},{0x03,0x04}},	//70000ABE//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm            
+{{0x0F,0x12},{0x04,0x09}},	//70000AC0//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift          
+{{0x0F,0x12},{0x03,0x06}},	//70000AC2//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y       
+{{0x0F,0x12},{0x04,0x07}},	//70000AC4//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y    
+{{0x0F,0x12},{0x1F,0x04}},	//70000AC6//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV   
+{{0x0F,0x12},{0x02,0x18}},	//70000AC8//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y    
+{{0x0F,0x12},{0x11,0x02}},	//70000ACA//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV     
+{{0x0F,0x12},{0x06,0x11}},	//70000ACC//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL     
+{{0x0F,0x12},{0x1A,0x02}},	//70000ACE//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL     
+{{0x0F,0x12},{0x80,0x18}},	//70000AD0//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower     
+{{0x0F,0x12},{0x00,0x80}},	//70000AD2//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce         
+{{0x0F,0x12},{0x03,0x80}},	//70000AD4//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset             
+{{0x0F,0x12},{0x01,0x80}},	//70000AD6//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H                 
+{{0x0F,0x12},{0x0A,0x0A}},	//70000AD8//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C                  
+{{0x0F,0x12},{0x01,0x01}},	//70000ADA//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C              
+{{0x0F,0x12},{0x1B,0x24}},	//70000ADC//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh               
+{{0x0F,0x12},{0x60,0x24}},	//70000ADE//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower               
+{{0x0F,0x12},{0x1D,0x22}},	//70000AE0//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise                 
+{{0x0F,0x12},{0xFF,0xFF}},	//70000AE2//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp               
+{{0x0F,0x12},{0x08,0x08}},	//70000AE4//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope          
+{{0x0F,0x12},{0x0A,0x01}},	//70000AE6//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin         
+{{0x0F,0x12},{0x01,0x0A}},	//70000AE8//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin        
+{{0x0F,0x12},{0x24,0x01}},	//70000AEA//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin       
+{{0x0F,0x12},{0x24,0x1B}},	//70000AEC//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin       
+{{0x0F,0x12},{0x1E,0x60}},	//70000AEE//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin        
+{{0x0F,0x12},{0xFF,0x18}},	//70000AF0//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin        
+{{0x0F,0x12},{0x08,0xFF}},	//70000AF2//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin   
+{{0x0F,0x12},{0x00,0x08}},	//70000AF4//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]                                    
+{{0x0F,0x12},{0x00,0x01}},	//70000AF6//AFITB_bnr_nClustLevel_C      [0]                                       	
+{{0x0F,0x12},{0x00,0x00}},	//70000AF8//AFIT16_BRIGHTNESS           
+{{0x0F,0x12},{0x00,0x00}},	//70000AFA//AFIT16_CONTRAST                                                        
+{{0x0F,0x12},{0x00,0x00}},	//70000AFC//AFIT16_SATURATION                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000AFE//AFIT16_SHARP_BLUR                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000B00//AFIT16_GLAMOUR                                                         
+{{0x0F,0x12},{0x00,0xC0}},	//70000B02//AFIT16_bnr_edge_high                                                   
+{{0x0F,0x12},{0x00,0x64}},	//70000B04//AFIT16_postdmsc_iLowBright                                             
+{{0x0F,0x12},{0x03,0x84}},	//70000B06//AFIT16_postdmsc_iHighBright                                            
+{{0x0F,0x12},{0x00,0x43}},	//70000B08//AFIT16_postdmsc_iLowSat                                                
+{{0x0F,0x12},{0x01,0xF4}},	//70000B0A//AFIT16_postdmsc_iHighSat                                               
+{{0x0F,0x12},{0x00,0x70}},	//70000B0C//AFIT16_postdmsc_iTune                                                  
+{{0x0F,0x12},{0x00,0x40}},	//70000B0E//AFIT16_yuvemix_mNegRanges_0                                            
+{{0x0F,0x12},{0x00,0xA0}},	//70000B10//AFIT16_yuvemix_mNegRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//70000B12//AFIT16_yuvemix_mNegRanges_2                                            
+{{0x0F,0x12},{0x00,0x10}},	//70000B14//AFIT16_yuvemix_mPosRanges_0                                            
+{{0x0F,0x12},{0x00,0x60}},	//70000B16//AFIT16_yuvemix_mPosRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//70000B18//AFIT16_yuvemix_mPosRanges_2                                            
+{{0x0F,0x12},{0x14,0x30}},	//70000B1A//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh                        
+{{0x0F,0x12},{0x02,0x01}},	//70000B1C//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh                   
+{{0x0F,0x12},{0x02,0x04}},	//70000B1E//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh              
+{{0x0F,0x12},{0x1B,0x04}},	//70000B20//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low                  
+{{0x0F,0x12},{0x03,0x12}},	//70000B22//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low                 
+{{0x0F,0x12},{0x00,0x03}},	//70000B24//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin              
+{{0x0F,0x12},{0x0C,0x03}},	//70000B26//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow                
+{{0x0F,0x12},{0x28,0x06}},	//70000B28//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH           
+{{0x0F,0x12},{0x00,0x60}},	//70000B2A//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune            
+{{0x0F,0x12},{0x15,0x80}},	//70000B2C//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh          
+{{0x0F,0x12},{0x20,0x20}},	//70000B2E//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh    
+{{0x0F,0x12},{0x06,0x20}},	//70000B30//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed     
+{{0x0F,0x12},{0x03,0x06}},	//70000B32//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh       
+{{0x0F,0x12},{0x20,0x03}},	//70000B34//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH              
+{{0x0F,0x12},{0xFF,0x01}},	//70000B36//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit         
+{{0x0F,0x12},{0x04,0x04}},	//70000B38//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2              
+{{0x0F,0x12},{0x03,0x00}},	//70000B3A//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower                   
+{{0x0F,0x12},{0x14,0x5A}},	//70000B3C//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow                    
+{{0x0F,0x12},{0x10,0x10}},	//70000B3E//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow                     
+{{0x0F,0x12},{0x00,0x0B}},	//70000B40//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow                        
+{{0x0F,0x12},{0x0E,0x00}},	//70000B42//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower                        
+{{0x0F,0x12},{0x5A,0x0F}},	//70000B44//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit                   
+{{0x0F,0x12},{0x05,0x04}},	//70000B46//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope                
+{{0x0F,0x12},{0x18,0x02}},	//70000B48//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR                        
+{{0x0F,0x12},{0x00,0x00}},	//70000B4A//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres                  
+{{0x0F,0x12},{0x20,0x06}},	//70000B4C//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR                  
+{{0x0F,0x12},{0x38,0x28}},	//70000B4E//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen                   
+{{0x0F,0x12},{0x04,0x28}},	//70000B50//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh                         
+{{0x0F,0x12},{0x01,0x01}},	//70000B52//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative                   
+{{0x0F,0x12},{0x80,0x00}},	//70000B54//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle                  
+{{0x0F,0x12},{0x0A,0x04}},	//70000B56//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh               
+{{0x0F,0x12},{0x40,0x08}},	//70000B58//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh                
+{{0x0F,0x12},{0x05,0x40}},	//70000B5A//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange                
+{{0x0F,0x12},{0x80,0x06}},	//70000B5C//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad                
+{{0x0F,0x12},{0x00,0x20}},	//70000B5E//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal                 
+{{0x0F,0x12},{0x00,0x00}},	//70000B60//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh          
+{{0x0F,0x12},{0x18,0x00}},	//70000B62//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat              
+{{0x0F,0x12},{0x00,0x00}},	//70000B64//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit           
+{{0x0F,0x12},{0x1E,0x10}},	//70000B66//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff                  
+{{0x0F,0x12},{0x00,0x0B}},	//70000B68//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0            
+{{0x0F,0x12},{0x06,0x07}},	//70000B6A//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2          
+{{0x0F,0x12},{0x00,0x05}},	//70000B6C//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0          
+{{0x0F,0x12},{0x06,0x07}},	//70000B6E//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2          
+{{0x0F,0x12},{0x04,0x05}},	//70000B70//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY           
+{{0x0F,0x12},{0x02,0x07}},	//70000B72//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm            
+{{0x0F,0x12},{0x03,0x04}},	//70000B74//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm            
+{{0x0F,0x12},{0x04,0x09}},	//70000B76//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift          
+{{0x0F,0x12},{0x03,0x06}},	//70000B78//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y       
+{{0x0F,0x12},{0x04,0x07}},	//70000B7A//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y    
+{{0x0F,0x12},{0x24,0x04}},	//70000B7C//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV   
+{{0x0F,0x12},{0x02,0x21}},	//70000B7E//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y    
+{{0x0F,0x12},{0x12,0x02}},	//70000B80//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV     
+{{0x0F,0x12},{0x06,0x13}},	//70000B82//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL     
+{{0x0F,0x12},{0x1A,0x02}},	//70000B84//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL     
+{{0x0F,0x12},{0x80,0x18}},	//70000B86//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower     
+{{0x0F,0x12},{0x00,0x80}},	//70000B88//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce         
+{{0x0F,0x12},{0x00,0x80}},	//70000B8A//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset             
+{{0x0F,0x12},{0x01,0x80}},	//70000B8C//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H                 
+{{0x0F,0x12},{0x0A,0x0A}},	//70000B8E//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C                  
+{{0x0F,0x12},{0x01,0x01}},	//70000B90//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C              
+{{0x0F,0x12},{0x14,0x1D}},	//70000B92//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh               
+{{0x0F,0x12},{0x60,0x24}},	//70000B94//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower               
+{{0x0F,0x12},{0x0C,0x0C}},	//70000B96//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise                 
+{{0x0F,0x12},{0xFF,0xFF}},	//70000B98//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp               
+{{0x0F,0x12},{0x08,0x08}},	//70000B9A//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope          
+{{0x0F,0x12},{0x0A,0x01}},	//70000B9C//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin         
+{{0x0F,0x12},{0x01,0x0A}},	//70000B9E//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin        
+{{0x0F,0x12},{0x1B,0x01}},	//70000BA0//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin       
+{{0x0F,0x12},{0x24,0x12}},	//70000BA2//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin       
+{{0x0F,0x12},{0x0C,0x60}},	//70000BA4//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin        
+{{0x0F,0x12},{0xFF,0x0C}},	//70000BA6//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin        
+{{0x0F,0x12},{0x08,0xFF}},	//70000BA8//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin   
+{{0x0F,0x12},{0x00,0x08}},	//70000BAA//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]                                    
+{{0x0F,0x12},{0x00,0x01}},	//70000BAC//AFITB_bnr_nClustLevel_C      [0]                                       	
+{{0x0F,0x12},{0x00,0x00}},	//70000BAE//AFIT16_BRIGHTNESS           
+{{0x0F,0x12},{0x00,0x00}},	//70000BB0//AFIT16_CONTRAST                                                        
+{{0x0F,0x12},{0x00,0x00}},	//70000BB2//AFIT16_SATURATION                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000BB4//AFIT16_SHARP_BLUR                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000BB6//AFIT16_GLAMOUR                                                         
+{{0x0F,0x12},{0x00,0xC0}},	//70000BB8//AFIT16_bnr_edge_high                                                   
+{{0x0F,0x12},{0x00,0x64}},	//70000BBA//AFIT16_postdmsc_iLowBright                                             
+{{0x0F,0x12},{0x03,0x84}},	//70000BBC//AFIT16_postdmsc_iHighBright                                            
+{{0x0F,0x12},{0x00,0x32}},	//70000BBE//AFIT16_postdmsc_iLowSat                                                
+{{0x0F,0x12},{0x01,0xF4}},	//70000BC0//AFIT16_postdmsc_iHighSat                                               
+{{0x0F,0x12},{0x00,0x70}},	//70000BC2//AFIT16_postdmsc_iTune                                                  
+{{0x0F,0x12},{0x00,0x40}},	//70000BC4//AFIT16_yuvemix_mNegRanges_0                                            
+{{0x0F,0x12},{0x00,0xA0}},	//70000BC6//AFIT16_yuvemix_mNegRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//70000BC8//AFIT16_yuvemix_mNegRanges_2                                            
+{{0x0F,0x12},{0x00,0x10}},	//70000BCA//AFIT16_yuvemix_mPosRanges_0                                            
+{{0x0F,0x12},{0x00,0x60}},	//70000BCC//AFIT16_yuvemix_mPosRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//70000BCE//AFIT16_yuvemix_mPosRanges_2                                            
+{{0x0F,0x12},{0x14,0x30}},	//70000BD0//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh                        
+{{0x0F,0x12},{0x02,0x01}},	//70000BD2//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh                   
+{{0x0F,0x12},{0x02,0x04}},	//70000BD4//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh              
+{{0x0F,0x12},{0x15,0x04}},	//70000BD6//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low                  
+{{0x0F,0x12},{0x03,0x0F}},	//70000BD8//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low                 
+{{0x0F,0x12},{0x00,0x03}},	//70000BDA//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin              
+{{0x0F,0x12},{0x09,0x02}},	//70000BDC//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow                
+{{0x0F,0x12},{0x20,0x04}},	//70000BDE//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH           
+{{0x0F,0x12},{0x00,0x50}},	//70000BE0//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune            
+{{0x0F,0x12},{0x11,0x40}},	//70000BE2//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh          
+{{0x0F,0x12},{0x20,0x1C}},	//70000BE4//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh    
+{{0x0F,0x12},{0x06,0x20}},	//70000BE6//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed     
+{{0x0F,0x12},{0x03,0x06}},	//70000BE8//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh       
+{{0x0F,0x12},{0x20,0x03}},	//70000BEA//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH              
+{{0x0F,0x12},{0xFF,0x01}},	//70000BEC//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit         
+{{0x0F,0x12},{0x04,0x04}},	//70000BEE//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2              
+{{0x0F,0x12},{0x03,0x00}},	//70000BF0//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower                   
+{{0x0F,0x12},{0x14,0x5A}},	//70000BF2//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow                    
+{{0x0F,0x12},{0x10,0x10}},	//70000BF4//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow                     
+{{0x0F,0x12},{0x00,0x0B}},	//70000BF6//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow                        
+{{0x0F,0x12},{0x10,0x00}},	//70000BF8//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower                        
+{{0x0F,0x12},{0x5A,0x0F}},	//70000BFA//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit                   
+{{0x0F,0x12},{0x05,0x03}},	//70000BFC//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope                
+{{0x0F,0x12},{0x18,0x02}},	//70000BFE//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR                        
+{{0x0F,0x12},{0x00,0x00}},	//70000C00//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres                  
+{{0x0F,0x12},{0x20,0x06}},	//70000C02//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR                  
+{{0x0F,0x12},{0x3C,0x28}},	//70000C04//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen                   
+{{0x0F,0x12},{0x04,0x2C}},	//70000C06//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh                         
+{{0x0F,0x12},{0x01,0x01}},	//70000C08//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative                   
+{{0x0F,0x12},{0xFF,0x00}},	//70000C0A//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle                  
+{{0x0F,0x12},{0x09,0x04}},	//70000C0C//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh               
+{{0x0F,0x12},{0x40,0x08}},	//70000C0E//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh                
+{{0x0F,0x12},{0x05,0x40}},	//70000C10//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange                
+{{0x0F,0x12},{0x80,0x06}},	//70000C12//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad                
+{{0x0F,0x12},{0x00,0x20}},	//70000C14//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal                 
+{{0x0F,0x12},{0x00,0x00}},	//70000C16//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh          
+{{0x0F,0x12},{0x18,0x00}},	//70000C18//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat              
+{{0x0F,0x12},{0x00,0x00}},	//70000C1A//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit           
+{{0x0F,0x12},{0x1E,0x10}},	//70000C1C//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff                  
+{{0x0F,0x12},{0x00,0x0B}},	//70000C1E//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0            
+{{0x0F,0x12},{0x06,0x07}},	//70000C20//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2          
+{{0x0F,0x12},{0x00,0x05}},	//70000C22//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0          
+{{0x0F,0x12},{0x06,0x07}},	//70000C24//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2          
+{{0x0F,0x12},{0x04,0x05}},	//70000C26//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY           
+{{0x0F,0x12},{0x02,0x06}},	//70000C28//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm            
+{{0x0F,0x12},{0x03,0x04}},	//70000C2A//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm            
+{{0x0F,0x12},{0x04,0x09}},	//70000C2C//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift          
+{{0x0F,0x12},{0x03,0x05}},	//70000C2E//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y       
+{{0x0F,0x12},{0x04,0x06}},	//70000C30//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y    
+{{0x0F,0x12},{0x28,0x04}},	//70000C32//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV   
+{{0x0F,0x12},{0x02,0x28}},	//70000C34//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y    
+{{0x0F,0x12},{0x14,0x02}},	//70000C36//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV     
+{{0x0F,0x12},{0x06,0x18}},	//70000C38//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL     
+{{0x0F,0x12},{0x1A,0x02}},	//70000C3A//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL     
+{{0x0F,0x12},{0x80,0x18}},	//70000C3C//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower     
+{{0x0F,0x12},{0x00,0x80}},	//70000C3E//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce         
+{{0x0F,0x12},{0x00,0x80}},	//70000C40//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset             
+{{0x0F,0x12},{0x01,0x80}},	//70000C42//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H                 
+{{0x0F,0x12},{0x0A,0x0A}},	//70000C44//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C                  
+{{0x0F,0x12},{0x01,0x01}},	//70000C46//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C              
+{{0x0F,0x12},{0x11,0x17}},	//70000C48//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh               
+{{0x0F,0x12},{0x60,0x24}},	//70000C4A//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower               
+{{0x0F,0x12},{0x0A,0x0A}},	//70000C4C//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise                 
+{{0x0F,0x12},{0xFF,0xFF}},	//70000C4E//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp               
+{{0x0F,0x12},{0x08,0x08}},	//70000C50//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope          
+{{0x0F,0x12},{0x0A,0x01}},	//70000C52//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin         
+{{0x0F,0x12},{0x01,0x0A}},	//70000C54//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin        
+{{0x0F,0x12},{0x15,0x01}},	//70000C56//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin       
+{{0x0F,0x12},{0x24,0x0F}},	//70000C58//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin       
+{{0x0F,0x12},{0x0A,0x60}},	//70000C5A//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin        
+{{0x0F,0x12},{0xFF,0x0A}},	//70000C5C//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin        
+{{0x0F,0x12},{0x08,0xFF}},	//70000C5E//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin   
+{{0x0F,0x12},{0x00,0x08}},	//70000C60//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]                                    
+{{0x0F,0x12},{0x00,0x01}},	//70000C62//AFITB_bnr_nClustLevel_C      [0]                                       	
+{{0x0F,0x12},{0x00,0x00}},	//70000C64//AFIT16_BRIGHTNESS           
+{{0x0F,0x12},{0x00,0x00}},	//70000C66//AFIT16_CONTRAST                                                        
+{{0x0F,0x12},{0x00,0x00}},	//70000C68//AFIT16_SATURATION                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000C6A//AFIT16_SHARP_BLUR                                                      
+{{0x0F,0x12},{0x00,0x00}},	//70000C6C//AFIT16_GLAMOUR                                                         
+{{0x0F,0x12},{0x00,0xC0}},	//70000C6E//AFIT16_bnr_edge_high                                                   
+{{0x0F,0x12},{0x00,0x64}},	//70000C70//AFIT16_postdmsc_iLowBright                                             
+{{0x0F,0x12},{0x03,0x84}},	//70000C72//AFIT16_postdmsc_iHighBright                                            
+{{0x0F,0x12},{0x00,0x32}},	//70000C74//AFIT16_postdmsc_iLowSat                                                
+{{0x0F,0x12},{0x01,0xF4}},	//70000C76//AFIT16_postdmsc_iHighSat                                               
+{{0x0F,0x12},{0x00,0x70}},	//70000C78//AFIT16_postdmsc_iTune                                                  
+{{0x0F,0x12},{0x00,0x40}},	//70000C7A//AFIT16_yuvemix_mNegRanges_0                                            
+{{0x0F,0x12},{0x00,0xA0}},	//70000C7C//AFIT16_yuvemix_mNegRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//70000C7E//AFIT16_yuvemix_mNegRanges_2                                            
+{{0x0F,0x12},{0x00,0x10}},	//70000C80//AFIT16_yuvemix_mPosRanges_0                                            
+{{0x0F,0x12},{0x00,0x60}},	//70000C82//AFIT16_yuvemix_mPosRanges_1                                            
+{{0x0F,0x12},{0x01,0x00}},	//70000C84//AFIT16_yuvemix_mPosRanges_2                                            
+{{0x0F,0x12},{0x14,0x30}},	//70000C86//AFIT8_bnr_edge_low  [7:0] AFIT8_bnr_repl_thresh                        
+{{0x0F,0x12},{0x02,0x01}},	//70000C88//AFIT8_bnr_repl_force  [7:0] AFIT8_bnr_iHotThreshHigh                   
+{{0x0F,0x12},{0x02,0x04}},	//70000C8A//AFIT8_bnr_iHotThreshLow   [7:0] AFIT8_bnr_iColdThreshHigh              
+{{0x0F,0x12},{0x0F,0x04}},	//70000C8C//AFIT8_bnr_iColdThreshLow   [7:0] AFIT8_bnr_DispTH_Low                  
+{{0x0F,0x12},{0x03,0x0C}},	//70000C8E//AFIT8_bnr_DispTH_High   [7:0] AFIT8_bnr_DISP_Limit_Low                 
+{{0x0F,0x12},{0x00,0x03}},	//70000C90//AFIT8_bnr_DISP_Limit_High   [7:0] AFIT8_bnr_iDistSigmaMin              
+{{0x0F,0x12},{0x06,0x02}},	//70000C92//AFIT8_bnr_iDistSigmaMax   [7:0] AFIT8_bnr_iDiffSigmaLow                
+{{0x0F,0x12},{0x18,0x03}},	//70000C94//AFIT8_bnr_iDiffSigmaHigh   [7:0] AFIT8_bnr_iNormalizedSTD_TH           
+{{0x0F,0x12},{0x00,0x40}},	//70000C96//AFIT8_bnr_iNormalizedSTD_Limit   [7:0] AFIT8_bnr_iDirNRTune            
+{{0x0F,0x12},{0x0E,0x20}},	//70000C98//AFIT8_bnr_iDirMinThres   [7:0] AFIT8_bnr_iDirFltDiffThresHigh          
+{{0x0F,0x12},{0x20,0x18}},	//70000C9A//AFIT8_bnr_iDirFltDiffThresLow   [7:0] AFIT8_bnr_iDirSmoothPowerHigh    
+{{0x0F,0x12},{0x06,0x20}},	//70000C9C//AFIT8_bnr_iDirSmoothPowerLow   [7:0] AFIT8_bnr_iLowMaxSlopeAllowed     
+{{0x0F,0x12},{0x03,0x06}},	//70000C9E//AFIT8_bnr_iHighMaxSlopeAllowed   [7:0] AFIT8_bnr_iLowSlopeThresh       
+{{0x0F,0x12},{0x20,0x03}},	//70000CA0//AFIT8_bnr_iHighSlopeThresh   [7:0] AFIT8_bnr_iSlopenessTH              
+{{0x0F,0x12},{0xFF,0x01}},	//70000CA2//AFIT8_bnr_iSlopeBlurStrength   [7:0] AFIT8_bnr_iSlopenessLimit         
+{{0x0F,0x12},{0x04,0x04}},	//70000CA4//AFIT8_bnr_AddNoisePower1   [7:0] AFIT8_bnr_AddNoisePower2              
+{{0x0F,0x12},{0x02,0x00}},	//70000CA6//AFIT8_bnr_iRadialTune   [7:0] AFIT8_bnr_iRadialPower                   
+{{0x0F,0x12},{0x14,0x5A}},	//70000CA8//AFIT8_bnr_iRadialLimit   [7:0] AFIT8_ee_iFSMagThLow                    
+{{0x0F,0x12},{0x10,0x10}},	//70000CAA//AFIT8_ee_iFSMagThHigh   [7:0] AFIT8_ee_iFSVarThLow                     
+{{0x0F,0x12},{0x00,0x0B}},	//70000CAC//AFIT8_ee_iFSVarThHigh   [7:0] AFIT8_ee_iFSThLow                        
+{{0x0F,0x12},{0x12,0x00}},	//70000CAE//AFIT8_ee_iFSThHigh   [7:0] AFIT8_ee_iFSmagPower                        
+{{0x0F,0x12},{0x5A,0x0F}},	//70000CB0//AFIT8_ee_iFSVarCountTh   [7:0] AFIT8_ee_iRadialLimit                   
+{{0x0F,0x12},{0x05,0x02}},	//70000CB2//AFIT8_ee_iRadialPower   [7:0] AFIT8_ee_iSmoothEdgeSlope                
+{{0x0F,0x12},{0x18,0x02}},	//70000CB4//AFIT8_ee_iROADThres   [7:0] AFIT8_ee_iROADMaxNR                        
+{{0x0F,0x12},{0x00,0x00}},	//70000CB6//AFIT8_ee_iROADSubMaxNR   [7:0] AFIT8_ee_iROADSubThres                  
+{{0x0F,0x12},{0x20,0x06}},	//70000CB8//AFIT8_ee_iROADNeiThres   [7:0] AFIT8_ee_iROADNeiMaxNR                  
+{{0x0F,0x12},{0x40,0x28}},	//70000CBA//AFIT8_ee_iSmoothEdgeThres   [7:0] AFIT8_ee_iMSharpen                   
+{{0x0F,0x12},{0x04,0x30}},	//70000CBC//AFIT8_ee_iWSharpen   [7:0] AFIT8_ee_iMShThresh                         
+{{0x0F,0x12},{0x01,0x01}},	//70000CBE//AFIT8_ee_iWShThresh   [7:0] AFIT8_ee_iReduceNegative                   
+{{0x0F,0x12},{0xFF,0x00}},	//70000CC0//AFIT8_ee_iEmbossCentAdd   [7:0] AFIT8_ee_iShDespeckle                  
+{{0x0F,0x12},{0x08,0x04}},	//70000CC2//AFIT8_ee_iReduceEdgeThresh   [7:0] AFIT8_dmsc_iEnhThresh               
+{{0x0F,0x12},{0x40,0x08}},	//70000CC4//AFIT8_dmsc_iDesatThresh   [7:0] AFIT8_dmsc_iDemBlurHigh                
+{{0x0F,0x12},{0x05,0x40}},	//70000CC6//AFIT8_dmsc_iDemBlurLow   [7:0] AFIT8_dmsc_iDemBlurRange                
+{{0x0F,0x12},{0x80,0x06}},	//70000CC8//AFIT8_dmsc_iDecisionThresh   [7:0] AFIT8_dmsc_iCentGrad                
+{{0x0F,0x12},{0x00,0x20}},	//70000CCA//AFIT8_dmsc_iMonochrom   [7:0] AFIT8_dmsc_iGBDenoiseVal                 
+{{0x0F,0x12},{0x00,0x00}},	//70000CCC//AFIT8_dmsc_iGRDenoiseVal   [7:0] AFIT8_dmsc_iEdgeDesatThrHigh          
+{{0x0F,0x12},{0x18,0x00}},	//70000CCE//AFIT8_dmsc_iEdgeDesatThrLow   [7:0] AFIT8_dmsc_iEdgeDesat              
+{{0x0F,0x12},{0x00,0x00}},	//70000CD0//AFIT8_dmsc_iNearGrayDesat   [7:0] AFIT8_dmsc_iEdgeDesatLimit           
+{{0x0F,0x12},{0x1E,0x10}},	//70000CD2//AFIT8_postdmsc_iBCoeff   [7:0] AFIT8_postdmsc_iGCoeff                  
+{{0x0F,0x12},{0x00,0x0B}},	//70000CD4//AFIT8_postdmsc_iWideMult   [7:0] AFIT8_yuvemix_mNegSlopes_0            
+{{0x0F,0x12},{0x06,0x07}},	//70000CD6//AFIT8_yuvemix_mNegSlopes_1   [7:0] AFIT8_yuvemix_mNegSlopes_2          
+{{0x0F,0x12},{0x00,0x05}},	//70000CD8//AFIT8_yuvemix_mNegSlopes_3   [7:0] AFIT8_yuvemix_mPosSlopes_0          
+{{0x0F,0x12},{0x06,0x07}},	//70000CDA//AFIT8_yuvemix_mPosSlopes_1   [7:0] AFIT8_yuvemix_mPosSlopes_2          
+{{0x0F,0x12},{0x04,0x05}},	//70000CDC//AFIT8_yuvemix_mPosSlopes_3   [7:0] AFIT8_yuviirnr_iXSupportY           
+{{0x0F,0x12},{0x02,0x05}},	//70000CDE//AFIT8_yuviirnr_iXSupportUV   [7:0] AFIT8_yuviirnr_iLowYNorm            
+{{0x0F,0x12},{0x03,0x04}},	//70000CE0//AFIT8_yuviirnr_iHighYNorm   [7:0] AFIT8_yuviirnr_iLowUVNorm            
+{{0x0F,0x12},{0x04,0x09}},	//70000CE2//AFIT8_yuviirnr_iHighUVNorm   [7:0] AFIT8_yuviirnr_iYNormShift          
+{{0x0F,0x12},{0x03,0x06}},	//70000CE4//AFIT8_yuviirnr_iUVNormShift   [7:0] AFIT8_yuviirnr_iVertLength_Y       
+{{0x0F,0x12},{0x04,0x07}},	//70000CE6//AFIT8_yuviirnr_iVertLength_UV   [7:0] AFIT8_yuviirnr_iDiffThreshL_Y    
+{{0x0F,0x12},{0x2C,0x04}},	//70000CE8//AFIT8_yuviirnr_iDiffThreshH_Y   [7:0] AFIT8_yuviirnr_iDiffThreshL_UV   
+{{0x0F,0x12},{0x02,0x2C}},	//70000CEA//AFIT8_yuviirnr_iDiffThreshH_UV   [7:0] AFIT8_yuviirnr_iMaxThreshL_Y    
+{{0x0F,0x12},{0x14,0x02}},	//70000CEC//AFIT8_yuviirnr_iMaxThreshH_Y   [7:0] AFIT8_yuviirnr_iMaxThreshL_UV     
+{{0x0F,0x12},{0x06,0x18}},	//70000CEE//AFIT8_yuviirnr_iMaxThreshH_UV   [7:0] AFIT8_yuviirnr_iYNRStrengthL     
+{{0x0F,0x12},{0x1A,0x02}},	//70000CF0//AFIT8_yuviirnr_iYNRStrengthH   [7:0] AFIT8_yuviirnr_iUVNRStrengthL     
+{{0x0F,0x12},{0x80,0x18}},	//70000CF2//AFIT8_yuviirnr_iUVNRStrengthH   [7:0] AFIT8_byr_gras_iShadingPower     
+{{0x0F,0x12},{0x00,0x80}},	//70000CF4//AFIT8_RGBGamma2_iLinearity   [7:0] AFIT8_RGBGamma2_iDarkReduce         
+{{0x0F,0x12},{0x00,0x80}},	//70000CF6//AFIT8_ccm_oscar_iSaturation   [7:0] AFIT8_RGB2YUV_iYOffset             
+{{0x0F,0x12},{0x01,0x80}},	//70000CF8//AFIT8_RGB2YUV_iRGBGain   [7:0] AFIT8_bnr_nClustLevel_H                 
+{{0x0F,0x12},{0x0A,0x0A}},	//70000CFA//AFIT8_bnr_iClustMulT_H   [7:0] AFIT8_bnr_iClustMulT_C                  
+{{0x0F,0x12},{0x01,0x01}},	//70000CFC//AFIT8_bnr_iClustThresh_H   [7:0] AFIT8_bnr_iClustThresh_C              
+{{0x0F,0x12},{0x0C,0x0F}},	//70000CFE//AFIT8_bnr_iDenThreshLow   [7:0] AFIT8_bnr_iDenThreshHigh               
+{{0x0F,0x12},{0x60,0x24}},	//70000D00//AFIT8_ee_iLowSharpPower   [7:0] AFIT8_ee_iHighSharpPower               
+{{0x0F,0x12},{0x08,0x08}},	//70000D02//AFIT8_ee_iLowShDenoise   [7:0] AFIT8_ee_iHighShDenoise                 
+{{0x0F,0x12},{0xFF,0xFF}},	//70000D04//AFIT8_ee_iLowSharpClamp   [7:0] AFIT8_ee_iHighSharpClamp               
+{{0x0F,0x12},{0x08,0x08}},	//70000D06//AFIT8_ee_iReduceEdgeMinMult   [7:0] AFIT8_ee_iReduceEdgeSlope          
+{{0x0F,0x12},{0x0A,0x01}},	//70000D08//AFIT8_bnr_nClustLevel_H_Bin   [7:0] AFIT8_bnr_iClustMulT_H_Bin         
+{{0x0F,0x12},{0x01,0x0A}},	//70000D0A//AFIT8_bnr_iClustMulT_C_Bin   [7:0] AFIT8_bnr_iClustThresh_H_Bin        
+{{0x0F,0x12},{0x0F,0x01}},	//70000D0C//AFIT8_bnr_iClustThresh_C_Bin   [7:0] AFIT8_bnr_iDenThreshLow_Bin       
+{{0x0F,0x12},{0x24,0x0C}},	//70000D0E//AFIT8_bnr_iDenThreshHigh_Bin   [7:0] AFIT8_ee_iLowSharpPower_Bin       
+{{0x0F,0x12},{0x08,0x60}},	//70000D10//AFIT8_ee_iHighSharpPower_Bin   [7:0] AFIT8_ee_iLowShDenoise_Bin        
+{{0x0F,0x12},{0xFF,0x08}},	//70000D12//AFIT8_ee_iHighShDenoise_Bin   [7:0] AFIT8_ee_iLowSharpClamp_Bin        
+{{0x0F,0x12},{0x08,0xFF}},	//70000D14//AFIT8_ee_iHighSharpClamp_Bin   [7:0] AFIT8_ee_iReduceEdgeMinMult_Bin   
+{{0x0F,0x12},{0x00,0x08}},	//70000D16//AFIT8_ee_iReduceEdgeSlope_Bin [7:0]                                    
+{{0x0F,0x12},{0x00,0x01}},	//70000D18//AFITB_bnr_nClustLevel_C      [0]                                       
+	
 {{0x0F,0x12},{0x23,0xCE}},	//70000D19//ConstAfitBaseVals
 {{0x0F,0x12},{0xFD,0xC8}},	//70000D1A//ConstAfitBaseVals
 {{0x0F,0x12},{0x11,0x2E}},	//70000D1B//ConstAfitBaseVals
 {{0x0F,0x12},{0x93,0xA5}},	//70000D1C//ConstAfitBaseVals
 {{0x0F,0x12},{0xFE,0x67}},	//70000D1D//ConstAfitBaseVals
 {{0x0F,0x12},{0x00,0x00}},	//70000D1E//ConstAfitBaseVals
-
+	
 //==================================================================================
 // 18.JPEG Thumnail Setting
 //==================================================================================
+	
+//s002A0478	
+//s0F12005F	//REG_TC_BRC_usPrevQuality    
+//s0F12005F	//REG_TC_BRC_usCaptureQuality 
+//s0F120001	//REG_TC_THUMB_Thumb_bActive  
+//s0F120280	//REG_TC_THUMB_Thumb_uWidth   
+//s0F1201E0	//REG_TC_THUMB_Thumb_uHeight  
+//s0F120005	//REG_TC_THUMB_Thumb_Format   
 
-//s002A0478
-//s0F12005F	//REG_TC_BRC_usPrevQuality
-//s0F12005F	//REG_TC_BRC_usCaptureQuality
-//s0F120001	//REG_TC_THUMB_Thumb_bActive
-//s0F120280	//REG_TC_THUMB_Thumb_uWidth
-//s0F1201E0	//REG_TC_THUMB_Thumb_uHeight
-//s0F120005	//REG_TC_THUMB_Thumb_Format
-
-//s002A17DC
-//s0F120054	//jpeg_ManualMBCV
-//s002A1AE4
-//s0F12001C	//senHal_bExtraAddLine
-//s002A0284
-//s0F120001	//REG_TC_GP_bBypassScalerJpg
-//s002A028A
+//s002A17DC	
+//s0F120054	//jpeg_ManualMBCV                
+//s002A1AE4	                                 
+//s0F12001C	//senHal_bExtraAddLine           
+//s002A0284	                                 
+//s0F120001	//REG_TC_GP_bBypassScalerJpg     
+//s002A028A	                                 
 //s0F120000	//REG_TC_GP_bUse1FrameCaptureMode
 
-//s002A1CC2	//DRx_uDRxWeight for AutoCont function
-//s0F120100
-//s0F120100
-//s0F120100
-//s0F120100
-
+//s002A1CC2	//DRx_uDRxWeight for AutoCont function  
+//s0F120100                                           
+//s0F120100                                           
+//s0F120100                                           
+//s0F120100   
+                                        
 //==================================================================================
 // 19.Input Size Setting
 //==================================================================================
-//Input Size
-{{0x00,0x2A},{0x02,0x50}},
+//Input Size	
+{{0x00,0x2A},{0x02,0x50}},                            	
 {{0x0F,0x12},{0x0A,0x00}},	//REG_TC_GP_PrevReqInputWidth
 {{0x0F,0x12},{0x07,0x80}},	//REG_TC_GP_PrevReqInputHeight
 {{0x0F,0x12},{0x00,0x10}},	//REG_TC_GP_PrevInputWidthOfs
@@ -3570,108 +3570,108 @@ static struct regval_list sensor_default_regs[] = {
 {{0x0F,0x12},{0x00,0x10}},	//REG_TC_GP_CapInputWidthOfs
 {{0x0F,0x12},{0x00,0x0c}},	//REG_TC_GP_CapInputHeightOfs
 
-{{0x00,0x2A},{0x04,0x94}},
-{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_PZOOM_ZoomInputWidth
-{{0x0F,0x12},{0x07,0x80}},	//REG_TC_PZOOM_ZoomInputHeight
-{{0x0F,0x12},{0x00,0x00}},	//REG_TC_PZOOM_ZoomInputWidthOfs
+{{0x00,0x2A},{0x04,0x94}}, 
+{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_PZOOM_ZoomInputWidth    
+{{0x0F,0x12},{0x07,0x80}},	//REG_TC_PZOOM_ZoomInputHeight   
+{{0x0F,0x12},{0x00,0x00}},	//REG_TC_PZOOM_ZoomInputWidthOfs 
 {{0x0F,0x12},{0x00,0x00}},	//REG_TC_PZOOM_ZoomInputHeightOfs
-{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_CZOOM_ZoomInputWidth
-{{0x0F,0x12},{0x07,0x80}},	//REG_TC_CZOOM_ZoomInputHeight
-{{0x0F,0x12},{0x00,0x00}},	//REG_TC_CZOOM_ZoomInputWidthOfs
+{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_CZOOM_ZoomInputWidth    
+{{0x0F,0x12},{0x07,0x80}},	//REG_TC_CZOOM_ZoomInputHeight   
+{{0x0F,0x12},{0x00,0x00}},	//REG_TC_CZOOM_ZoomInputWidthOfs 
 {{0x0F,0x12},{0x00,0x00}},	//REG_TC_CZOOM_ZoomInputHeightOfs
 
-{{0x00,0x2A},{0x02,0x62}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_bUseReqInputInPre
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_bUseReqInputInCap
-
+{{0x00,0x2A},{0x02,0x62}},                                
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_bUseReqInputInPre  
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_bUseReqInputInCap 
+                       
 //==================================================================================
 // 20.Preview & Capture Configration Setting
 //==================================================================================
-//Preview config[0] 640x480  7.5~30fps
-{{0x00,0x2A},{0x02,0xA6}},
-{{0x0F,0x12},{0x02,0x80}},	//REG_0TC_PCFG_usWidth
-{{0x0F,0x12},{0x01,0xE0}},	//REG_0TC_PCFG_usHeight
-{{0x0F,0x12},{0x00,0x05}},	//REG_0TC_PCFG_Format
-{{0x0F,0x12},{0x4F,0x1A}},	//REG_0TC_PCFG_usMaxOut4KHzRate
-{{0x0F,0x12},{0x4F,0x1A}},	//REG_0TC_PCFG_usMinOut4KHzRate
-{{0x0F,0x12},{0x01,0x00}},	//REG_0TC_PCFG_OutClkPerPix88
-{{0x0F,0x12},{0x03,0x00}},	//REG_0TC_PCFG_uBpp88
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_PVIMask
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_OIFMask
-{{0x0F,0x12},{0x01,0xE0}},	//REG_0TC_PCFG_usJpegPacketSize
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_usJpegTotalPackets
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uClockInd
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_usFrTimeType
-{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_PCFG_FrRateQualityType
-{{0x0F,0x12},{0x05,0x35}},	//REG_0TC_PCFG_usMaxFrTimeMsecMult10
-{{0x0F,0x12},{0x01,0x4D}},	//REG_0TC_PCFG_usMinFrTimeMsecMult10
-{{0x00,0x2A},{0x02,0xD0}},
+//Preview config[0] 640x480  7.5~30fps	
+{{0x00,0x2A},{0x02,0xA6}},	
+{{0x0F,0x12},{0x02,0x80}},	//REG_0TC_PCFG_usWidth              	
+{{0x0F,0x12},{0x01,0xE0}},	//REG_0TC_PCFG_usHeight             	
+{{0x0F,0x12},{0x00,0x05}},	//REG_0TC_PCFG_Format	                
+{{0x0F,0x12},{0x4F,0x1A}},	//REG_0TC_PCFG_usMaxOut4KHzRate     	
+{{0x0F,0x12},{0x4F,0x1A}},	//REG_0TC_PCFG_usMinOut4KHzRate     	
+{{0x0F,0x12},{0x01,0x00}},	//REG_0TC_PCFG_OutClkPerPix88       	
+{{0x0F,0x12},{0x03,0x00}},	//REG_0TC_PCFG_uBpp88               	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_PVIMask              	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_OIFMask              	
+{{0x0F,0x12},{0x01,0xE0}},	//REG_0TC_PCFG_usJpegPacketSize     	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_usJpegTotalPackets   	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uClockInd            	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_usFrTimeType         	
+{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_PCFG_FrRateQualityType    	
+{{0x0F,0x12},{0x05,0x35}},	//REG_0TC_PCFG_usMaxFrTimeMsecMult10	
+{{0x0F,0x12},{0x01,0x4D}},	//REG_0TC_PCFG_usMinFrTimeMsecMult10	
+{{0x00,0x2A},{0x02,0xD0}},	
 {{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uPrevMirror
 {{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uCaptureMirror
-
-//Capture Config[0] 2560x1920   7.5fps
-{{0x00,0x2A},{0x03,0x96}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_CCFG_uCaptureMode
-{{0x0F,0x12},{0x0A,0x00}},	//REG_0TC_CCFG_usWidth
-{{0x0F,0x12},{0x07,0x80}},	//REG_0TC_CCFG_usHeight
-{{0x0F,0x12},{0x00,0x05}},	//REG_0TC_CCFG_Format
-{{0x0F,0x12},{0x4F,0x1A}},	//REG_0TC_CCFG_usMaxOut4KHzRate
-{{0x0F,0x12},{0x4F,0x1A}},	//REG_0TC_CCFG_usMinOut4KHzRate
-{{0x0F,0x12},{0x01,0x00}},	//REG_0TC_CCFG_OutClkPerPix88
-{{0x0F,0x12},{0x03,0x00}},	//REG_0TC_CCFG_uBpp88
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_PVIMask
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_OIFMask
-{{0x0F,0x12},{0x01,0xE0}},	//REG_0TC_CCFG_usJpegPacketSize
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_usJpegTotalPackets
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_uClockInd
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_usFrTimeType
-{{0x0F,0x12},{0x00,0x02}},	//REG_0TC_CCFG_FrRateQualityType
+	
+//Capture Config[0] 2560x1920   7.5fps                           	
+{{0x00,0x2A},{0x03,0x96}},                                     	
+{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_CCFG_uCaptureMode         
+{{0x0F,0x12},{0x0A,0x00}},	//REG_0TC_CCFG_usWidth              
+{{0x0F,0x12},{0x07,0x80}},	//REG_0TC_CCFG_usHeight             
+{{0x0F,0x12},{0x00,0x05}},	//REG_0TC_CCFG_Format               
+{{0x0F,0x12},{0x4F,0x1A}},	//REG_0TC_CCFG_usMaxOut4KHzRate     
+{{0x0F,0x12},{0x4F,0x1A}},	//REG_0TC_CCFG_usMinOut4KHzRate     
+{{0x0F,0x12},{0x01,0x00}},	//REG_0TC_CCFG_OutClkPerPix88       
+{{0x0F,0x12},{0x03,0x00}},	//REG_0TC_CCFG_uBpp88               
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_PVIMask              
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_OIFMask              
+{{0x0F,0x12},{0x01,0xE0}},	//REG_0TC_CCFG_usJpegPacketSize     
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_usJpegTotalPackets   
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_uClockInd            
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_usFrTimeType         
+{{0x0F,0x12},{0x00,0x02}},	//REG_0TC_CCFG_FrRateQualityType    
 {{0x0F,0x12},{0x05,0x35}},	//REG_0TC_CCFG_usMaxFrTimeMsecMult10
 {{0x0F,0x12},{0x05,0x35}},	//REG_0TC_CCFG_usMinFrTimeMsecMult10
 
-{{0x00,0x2A},{0x02,0x2C}},
+{{0x00,0x2A},{0x02,0x2C}},	
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_IPRM_InitParamsUpdated
 
 //==================================================================================
 // 21.Select Cofigration Display
 //==================================================================================
-//PREVIEW
+//PREVIEW                                                                        		
 
-{{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x02,0x66}},
-{{0x0f,0x12},{0x00,0x00}},	//REG_TC_GP_ActivePrevConfig
-{{0x00,0x2A},{0x02,0x6A}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevOpenAfterChange
-{{0x00,0x2A},{0x02,0x68}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged
-{{0x00,0x2A},{0x02,0x6E}},
-{{0x0f,0x12},{0x00,0x00}},       //REG_TC_GP_ActiveCapConfig
-{{0x00,0x2A},{0x02,0x6A}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapOpenAfterChange
-{{0x00,0x2A},{0x02,0x70}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapConfigChanged
-
-{{0x00,0x2A},{0x02,0x4E}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_NewConfigSync
-{{0x00,0x2A},{0x02,0x3E}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreview
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged
+{{0x00,0x28},{0x70,0x00}},                                		                               		
+{{0x00,0x2A},{0x02,0x66}},   
+{{0x0f,0x12},{0x00,0x00}},	//REG_TC_GP_ActivePrevConfig        		
+{{0x00,0x2A},{0x02,0x6A}},	                                   
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevOpenAfterChange     		
+{{0x00,0x2A},{0x02,0x68}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged                             
+{{0x00,0x2A},{0x02,0x6E}},                                          
+{{0x0f,0x12},{0x00,0x00}},       //REG_TC_GP_ActiveCapConfig          
+{{0x00,0x2A},{0x02,0x6A}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapOpenAfterChange           
+{{0x00,0x2A},{0x02,0x70}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapConfigChanged   
+    		
+{{0x00,0x2A},{0x02,0x4E}},	                                   
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_NewConfigSync           		
+{{0x00,0x2A},{0x02,0x3E}},	                                   
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreview           	
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged    	
 
 //===================================================================================
 // 22. ESD Check
 //===================================================================================
 
-{{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x01,0xA8}},	//ESD Check
+{{0x00,0x28},{0x70,0x00}},	                                                                                    
+{{0x00,0x2A},{0x01,0xA8}},	//ESD Check                                                                         
 {{0x0f,0x12},{0xAA,0xAA}},
 
 //===================================================================================
 // 23. Brightness min/Max
 //===================================================================================
 {{0x00,0x28},{0x14,0x7C}},
-{{0x0F,0x12},{0x01,0x80}}, //bp_uMaxBrightnessFactor
+{{0x0F,0x12},{0x01,0x80}}, //bp_uMaxBrightnessFactor	
 {{0x00,0x28},{0x14,0x82}},
-{{0x0F,0x12},{0x01,0x80}}, //bp_uMinBrightnessFactor
+{{0x0F,0x12},{0x01,0x80}}, //bp_uMinBrightnessFactor	
 
 //===================================================================================
 // 24.ISSUE
@@ -3680,26 +3680,26 @@ static struct regval_list sensor_default_regs[] = {
 //20110728 : ESD Check Register Address Change
 //20110829 : TnP Changed by S.Y.Lee
 //20120104 : init Parm Update sequence changed(by J.M.Ahn)
-//20120201 : FlashçŸ« æž—å‡½ä½• Green Noise ä¿ºæ€¥ setting (by J.M.Ahn)
+//20120201 : Flash½Ã ÁÖº¯ºÎ Green Noise °³¼± setting (by J.M.Ahn)
 //20120228 : Add Brightness Block
 
-};
+};                         	                         
 
 #if 0
-//for capture
+//for capture                                                                    	    
 static struct regval_list sensor_qsxga_regs[] = { //qsxga: 2560*1920  5fps
 /* capture setting */
 
 //==================================================================================
 // 20.Preview & Capture Configration Setting
 //==================================================================================
-{{0x00,0x2A},{0x03,0x96}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_CCFG_uCaptureMode
-{{0x0F,0x12},{0x0A,0x00}},	//REG_0TC_CCFG_usWidth
+{{0x00,0x2A},{0x03,0x96}},                                     	
+{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_CCFG_uCaptureMode         
+{{0x0F,0x12},{0x0A,0x00}},	//REG_0TC_CCFG_usWidth              
 {{0x0F,0x12},{0x07,0x80}},	//REG_0TC_CCFG_usHeight
-{{0x00,0x2A},{0x03,0xAE}},
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_uClockInd
-{{0x00,0x2A},{0x03,0xB4}},
+{{0x00,0x2A},{0x03,0xAE}},                                     	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_uClockInd 
+{{0x00,0x2A},{0x03,0xB4}},                                     	
 {{0x0F,0x12},{0x07,0xD0}},	//REG_0TC_CCFG_usMaxFrTimeMsecMult10
 {{0x0F,0x12},{0x07,0xD0}},	//REG_0TC_CCFG_usMinFrTimeMsecMult10
 
@@ -3712,30 +3712,30 @@ static struct regval_list sensor_qsxga_regs[] = { //qsxga: 2560*1920  5fps
 {{0x00,0x2A},{0x02,0x6E}},
 {{0x0F,0x12},{0x00,0x00}}, //REG_TC_GP_ActiveCapConfig
 {{0x0F,0x12},{0x00,0x01}}, // /
-{{0x00,0x2A},{0x02,0x42}}, //
+{{0x00,0x2A},{0x02,0x42}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_EnableCapture
-{{0x00,0x2A},{0x02,0x4E}}, //
+{{0x00,0x2A},{0x02,0x4E}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_NewConfigSync
-{{0x00,0x2A},{0x02,0x44}}, //
+{{0x00,0x2A},{0x02,0x44}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_EnableCaptureChanged
 
 {{0xff,0xff},{0x00,0xc8}},  //delay 200ms
 };
 #else
-//for capture
+//for capture                                                                    	    
 static struct regval_list sensor_qsxga_regs[] = { //qsxga: 2560*1920  7fps
 /* capture setting */
 
 //==================================================================================
 // 20.Preview & Capture Configration Setting
 //==================================================================================
-{{0x00,0x2A},{0x03,0x96}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_CCFG_uCaptureMode
-{{0x0F,0x12},{0x0A,0x00}},	//REG_0TC_CCFG_usWidth
+{{0x00,0x2A},{0x03,0x96}},                                     	
+{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_CCFG_uCaptureMode         
+{{0x0F,0x12},{0x0A,0x00}},	//REG_0TC_CCFG_usWidth              
 {{0x0F,0x12},{0x07,0x80}},	//REG_0TC_CCFG_usHeight
-{{0x00,0x2A},{0x03,0xAE}},
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_uClockInd
-{{0x00,0x2A},{0x03,0xB4}},
+{{0x00,0x2A},{0x03,0xAE}},                                     	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_uClockInd            
+{{0x00,0x2A},{0x03,0xB4}},      
 {{0x0F,0x12},{0x05,0x35}},	//REG_0TC_CCFG_usMaxFrTimeMsecMult10
 {{0x0F,0x12},{0x05,0x35}},	//REG_0TC_CCFG_usMinFrTimeMsecMult10
 
@@ -3748,11 +3748,11 @@ static struct regval_list sensor_qsxga_regs[] = { //qsxga: 2560*1920  7fps
 {{0x00,0x2A},{0x02,0x6E}},
 {{0x0F,0x12},{0x00,0x00}}, //REG_TC_GP_ActiveCapConfig
 {{0x0F,0x12},{0x00,0x01}}, // /
-{{0x00,0x2A},{0x02,0x42}}, //
+{{0x00,0x2A},{0x02,0x42}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_EnableCapture
-{{0x00,0x2A},{0x02,0x4E}}, //
+{{0x00,0x2A},{0x02,0x4E}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_NewConfigSync
-{{0x00,0x2A},{0x02,0x44}}, //
+{{0x00,0x2A},{0x02,0x44}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_EnableCaptureChanged
 
 {{0xff,0xff},{0x00,0xc8}},  //delay 200ms
@@ -3765,13 +3765,13 @@ static struct regval_list sensor_qxga_regs[] = { //qxga: 2048*1536
 //==================================================================================
 // 20.Preview & Capture Configration Setting
 //==================================================================================
-{{0x00,0x2A},{0x03,0x96}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_CCFG_uCaptureMode
-{{0x0F,0x12},{0x08,0x00}},	//REG_0TC_CCFG_usWidth
+{{0x00,0x2A},{0x03,0x96}},                                     	
+{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_CCFG_uCaptureMode         
+{{0x0F,0x12},{0x08,0x00}},	//REG_0TC_CCFG_usWidth              
 {{0x0F,0x12},{0x06,0x00}},	//REG_0TC_CCFG_usHeight
-{{0x00,0x2A},{0x03,0xAE}},
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_uClockInd
-{{0x00,0x2A},{0x03,0xB4}},
+{{0x00,0x2A},{0x03,0xAE}},                                     	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_CCFG_uClockInd    
+{{0x00,0x2A},{0x03,0xB4}},                                     	
 {{0x0F,0x12},{0x05,0x35}},	//REG_0TC_CCFG_usMaxFrTimeMsecMult10
 {{0x0F,0x12},{0x05,0x35}},	//REG_0TC_CCFG_usMinFrTimeMsecMult10
 
@@ -3784,19 +3784,19 @@ static struct regval_list sensor_qxga_regs[] = { //qxga: 2048*1536
 {{0x00,0x2A},{0x02,0x6E}},
 {{0x0F,0x12},{0x00,0x00}}, //REG_TC_GP_ActiveCapConfig
 {{0x0F,0x12},{0x00,0x01}}, // /
-{{0x00,0x2A},{0x02,0x42}}, //
+{{0x00,0x2A},{0x02,0x42}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_EnableCapture
-{{0x00,0x2A},{0x02,0x4E}}, //
+{{0x00,0x2A},{0x02,0x4E}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_NewConfigSync
-{{0x00,0x2A},{0x02,0x44}}, //
+{{0x00,0x2A},{0x02,0x44}}, // 
 {{0x0F,0x12},{0x00,0x01}}, // /#REG_TC_GP_EnableCaptureChanged
 
 {{0xff,0xff},{0x00,0xc8}},  //delay 200ms
-};
+};                                      
 
 
 //for video
-static struct regval_list sensor_1080p_regs[] = { //1080: 1920*1080
+static struct regval_list sensor_1080p_regs[] = { //1080: 1920*1080 
 /* preview setting */
 
 {{0x00,0x2A},{0x18,0xAC}},
@@ -3848,7 +3848,7 @@ static struct regval_list sensor_1080p_regs[] = { //1080: 1920*1080
 {{0x0F,0x12},{0x02,0x9A}},	//REG_0TC_PCFG_usMaxFrTimeMsecMult10
 {{0x0F,0x12},{0x02,0x9A}},	//REG_0TC_PCFG_usMinFrTimeMsecMult10
 
-{{0x00,0x2A},{0x02,0x2C}},
+{{0x00,0x2A},{0x02,0x2C}},	
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_IPRM_InitParamsUpdated
 
 //==================================================================================
@@ -3863,13 +3863,13 @@ static struct regval_list sensor_1080p_regs[] = { //1080: 1920*1080
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevOpenAfterChange
 {{0x00,0x2A},{0x02,0x68}},
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged
-{{0x00,0x2A},{0x02,0x6E}},
-{{0x0f,0x12},{0x00,0x00}},       //REG_TC_GP_ActiveCapConfig
-{{0x00,0x2A},{0x02,0x6A}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapOpenAfterChange
-{{0x00,0x2A},{0x02,0x70}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapConfigChanged
-
+{{0x00,0x2A},{0x02,0x6E}},                                          
+{{0x0f,0x12},{0x00,0x00}},       //REG_TC_GP_ActiveCapConfig          
+{{0x00,0x2A},{0x02,0x6A}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapOpenAfterChange           
+{{0x00,0x2A},{0x02,0x70}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapConfigChanged   
+    		
 {{0x00,0x2A},{0x02,0x4E}},
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_NewConfigSync
 {{0x00,0x2A},{0x02,0x3E}},
@@ -3894,24 +3894,24 @@ static struct regval_list sensor_720p_regs[] = { //1280*720
 //==================================================================================
 //Input Size
 {{0x00,0x2A},{0x02,0x50}},
-{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_GP_PrevReqInputWidth
+{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_GP_PrevReqInputWidth 
 {{0x0F,0x12},{0x05,0xA0}},	//REG_TC_GP_PrevReqInputHeight
-{{0x0F,0x12},{0x00,0x10}},	//REG_TC_GP_PrevInputWidthOfs
+{{0x0F,0x12},{0x00,0x10}},	//REG_TC_GP_PrevInputWidthOfs 
 {{0x0F,0x12},{0x00,0xFC}},	//REG_TC_GP_PrevInputHeightOfs
-{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_GP_CapReqInputWidth
-{{0x0F,0x12},{0x07,0x80}},	//REG_TC_GP_CapReqInputHeight
-{{0x0F,0x12},{0x00,0x10}},	//REG_TC_GP_CapInputWidthOfs
-{{0x0F,0x12},{0x00,0x0C}},	//REG_TC_GP_CapInputHeightOfs
+{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_GP_CapReqInputWidth  
+{{0x0F,0x12},{0x07,0x80}},	//REG_TC_GP_CapReqInputHeight 
+{{0x0F,0x12},{0x00,0x10}},	//REG_TC_GP_CapInputWidthOfs  
+{{0x0F,0x12},{0x00,0x0C}},	//REG_TC_GP_CapInputHeightOfs 
 
 {{0x00,0x2A},{0x04,0x94}},
 {{0x0F,0x12},{0x0A,0x00}},	//REG_TC_PZOOM_ZoomInputWidth
 {{0x0F,0x12},{0x05,0xA0}},	//REG_TC_PZOOM_ZoomInputHeight
-{{0x0F,0x12},{0x00,0x00}},	//REG_TC_PZOOM_ZoomInputWidthOfs
-{{0x0F,0x12},{0x00,0x00}},	//REG_TC_PZOOM_ZoomInputHeightOfs
-{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_CZOOM_ZoomInputWidth
-{{0x0F,0x12},{0x07,0x80}},	//REG_TC_CZOOM_ZoomInputHeight
-{{0x0F,0x12},{0x00,0x00}},	//REG_TC_CZOOM_ZoomInputWidthOfs
-{{0x0F,0x12},{0x00,0x00}},	//REG_TC_CZOOM_ZoomInputHeightOfs
+{{0x0F,0x12},{0x00,0x00}},	//REG_TC_PZOOM_ZoomInputWidthOfs    
+{{0x0F,0x12},{0x00,0x00}},	//REG_TC_PZOOM_ZoomInputHeightOfs   
+{{0x0F,0x12},{0x0A,0x00}},	//REG_TC_CZOOM_ZoomInputWidth       
+{{0x0F,0x12},{0x07,0x80}},	//REG_TC_CZOOM_ZoomInputHeight      
+{{0x0F,0x12},{0x00,0x00}},	//REG_TC_CZOOM_ZoomInputWidthOfs    
+{{0x0F,0x12},{0x00,0x00}},	//REG_TC_CZOOM_ZoomInputHeightOfs  
 
 {{0x00,0x2A},{0x02,0x62}},
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_bUseReqInputInPre
@@ -3932,7 +3932,7 @@ static struct regval_list sensor_720p_regs[] = { //1280*720
 {{0x0F,0x12},{0x01,0x4D}},	//REG_0TC_PCFG_usMaxFrTimeMsecMult10
 {{0x0F,0x12},{0x01,0x4D}},	//REG_0TC_PCFG_usMinFrTimeMsecMult10
 
-{{0x00,0x2A},{0x02,0x2C}},
+{{0x00,0x2A},{0x02,0x2C}},	
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_IPRM_InitParamsUpdated
 
 //==================================================================================
@@ -3945,15 +3945,15 @@ static struct regval_list sensor_720p_regs[] = { //1280*720
 {{0x0f,0x12},{0x00,0x00}},	//REG_TC_GP_ActivePrevConfig
 {{0x00,0x2A},{0x02,0x6A}},
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevOpenAfterChange
-{{0x00,0x2A},{0x02,0x68}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged
-{{0x00,0x2A},{0x02,0x6E}},
-{{0x0f,0x12},{0x00,0x00}},       //REG_TC_GP_ActiveCapConfig
-{{0x00,0x2A},{0x02,0x6A}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapOpenAfterChange
-{{0x00,0x2A},{0x02,0x70}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapConfigChanged
-
+{{0x00,0x2A},{0x02,0x68}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged                             
+{{0x00,0x2A},{0x02,0x6E}},                                          
+{{0x0f,0x12},{0x00,0x00}},       //REG_TC_GP_ActiveCapConfig          
+{{0x00,0x2A},{0x02,0x6A}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapOpenAfterChange           
+{{0x00,0x2A},{0x02,0x70}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapConfigChanged   
+    		
 {{0x00,0x2A},{0x02,0x4E}},
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_NewConfigSync
 {{0x00,0x2A},{0x02,0x3E}},
@@ -4006,17 +4006,17 @@ static struct regval_list sensor_vga_regs[] = { //VGA:  640*480
 //==================================================================================
 {{0xFC,0xFC},{0xD0,0x00}},
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x02,0xA6}},
-{{0x0F,0x12},{0x02,0x80}},	//REG_0TC_PCFG_usWidth
-{{0x0F,0x12},{0x01,0xE0}},	//REG_0TC_PCFG_usHeight
-{{0x00,0x2A},{0x02,0xBC}},
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uClockInd
-{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_usFrTimeType
-{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_PCFG_FrRateQualityType
-{{0x0F,0x12},{0x05,0x35}},	//REG_0TC_PCFG_usMaxFrTimeMsecMult10
-{{0x0F,0x12},{0x01,0x4D}},	//REG_0TC_PCFG_usMinFrTimeMsecMult10
+{{0x00,0x2A},{0x02,0xA6}},	
+{{0x0F,0x12},{0x02,0x80}},	//REG_0TC_PCFG_usWidth              	
+{{0x0F,0x12},{0x01,0xE0}},	//REG_0TC_PCFG_usHeight              	
+{{0x00,0x2A},{0x02,0xBC}},	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uClockInd            	
+{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_usFrTimeType         	
+{{0x0F,0x12},{0x00,0x01}},	//REG_0TC_PCFG_FrRateQualityType    	
+{{0x0F,0x12},{0x05,0x35}},	//REG_0TC_PCFG_usMaxFrTimeMsecMult10	
+{{0x0F,0x12},{0x01,0x4D}},	//REG_0TC_PCFG_usMinFrTimeMsecMult10	
 
-{{0x00,0x2A},{0x02,0x2C}},
+{{0x00,0x2A},{0x02,0x2C}},	
 {{0x0F,0x12},{0x00,0x01}},	//REG_TC_IPRM_InitParamsUpdated
 
 //==================================================================================
@@ -4024,25 +4024,25 @@ static struct regval_list sensor_vga_regs[] = { //VGA:  640*480
 //==================================================================================
 //PREVIEW
 {{0xFC,0xFC},{0xD0,0x00}},
-{{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x02,0x66}},
-{{0x0f,0x12},{0x00,0x00}},	//REG_TC_GP_ActivePrevConfig
-{{0x00,0x2A},{0x02,0x6A}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevOpenAfterChange
-{{0x00,0x2A},{0x02,0x68}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged
-{{0x00,0x2A},{0x02,0x6E}},
-{{0x0f,0x12},{0x00,0x00}},       //REG_TC_GP_ActiveCapConfig
-{{0x00,0x2A},{0x02,0x6A}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapOpenAfterChange
-{{0x00,0x2A},{0x02,0x70}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapConfigChanged
-
-{{0x00,0x2A},{0x02,0x4E}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_NewConfigSync
-{{0x00,0x2A},{0x02,0x3E}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreview
-{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged
+{{0x00,0x28},{0x70,0x00}},                                		                               		
+{{0x00,0x2A},{0x02,0x66}},   
+{{0x0f,0x12},{0x00,0x00}},	//REG_TC_GP_ActivePrevConfig        		
+{{0x00,0x2A},{0x02,0x6A}},	                                   
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevOpenAfterChange     		
+{{0x00,0x2A},{0x02,0x68}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged                             
+{{0x00,0x2A},{0x02,0x6E}},                                          
+{{0x0f,0x12},{0x00,0x00}},       //REG_TC_GP_ActiveCapConfig          
+{{0x00,0x2A},{0x02,0x6A}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapOpenAfterChange           
+{{0x00,0x2A},{0x02,0x70}},	                                         
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_CapConfigChanged   
+    		
+{{0x00,0x2A},{0x02,0x4E}},	                                   
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_NewConfigSync           		
+{{0x00,0x2A},{0x02,0x3E}},	                                   
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreview           	
+{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged   
 
 {{0xff,0xff},{0x00,0xc8}},  //delay 200ms
 #else			//vga fix 30fps
@@ -4087,10 +4087,10 @@ static struct regval_list sensor_vga_regs[] = { //VGA:  640*480
 //==================================================================================
 {{0xFC,0xFC},{0xD0,0x00}},
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x02,0xA6}},
+{{0x00,0x2A},{0x02,0xA6}},	
 {{0x0F,0x12},{0x02,0x80}},	//280 REG_0TC_PCFG_usWidth
 {{0x0F,0x12},{0x01,0xE0}},	//1E0 REG_0TC_PCFG_usHeight
-{{0x00,0x2A},{0x02,0xBC}},
+{{0x00,0x2A},{0x02,0xBC}},	
 {{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uClockInd
 {{0x0F,0x12},{0x00,0x02}},	//REG_0TC_PCFG_usFrTimeType
 {{0x0F,0x12},{0x00,0x01}},	//REG_0TC_PCFG_FrRateQualityType
@@ -4204,7 +4204,7 @@ static struct regval_list sensor_af_macro_regs[] = {
 
 /*
  * The white balance settings
- * Here only tune the R G B channel gain.
+ * Here only tune the R G B channel gain. 
  * The white balance enalbe bit is modified in sensor_s_autowb and sensor_s_wb
  */
 static struct regval_list sensor_wb_auto_regs[] = {
@@ -4214,7 +4214,7 @@ static struct regval_list sensor_wb_auto_regs[] = {
 {{0x0F,0x12},{0x07,0x7F}},
 };
 
-static struct regval_list sensor_wb_cloud_regs[] = {
+static struct regval_list sensor_wb_cloud_regs[] = {	
 {{0xFC,0xFC},{0xD0,0x00}},
 {{0x00,0x28},{0x70,0x00}},
 {{0x00,0x2A},{0x04,0xE6}},
@@ -4265,7 +4265,7 @@ static struct regval_list sensor_wb_fluorescent_regs[] = {
 	//ri guang deng
 {{0xFC,0xFC},{0xD0,0x00}},
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x04,0xE6}},
+{{0x00,0x2A},{0x04,0xE6}}, 
 {{0x0F,0x12},{0x07,0x77}},
 {{0x00,0x2A},{0x04,0xBA}},
 {{0x0F,0x12},{0x06,0xC0}},
@@ -4362,17 +4362,17 @@ static struct regval_list sensor_colorfx_vivid_regs[] = {
  */
 static struct regval_list sensor_flicker_50hz_regs[] = {
 {{0x00,0x2A},{0x04,0xE6}},
-{{0x0F,0x12},{0x07,0x5F}},	//REG_TC_DBG 7F: 60Hz  5F:50Hz
+{{0x0F,0x12},{0x07,0x5F}},	//REG_TC_DBG 7F: 60Hz  5F:50Hz				
 {{0x00,0x2a},{0x04,0xd6}},
-{{0x0F,0x12},{0x00,0x01}},	//REG_SF_USER_FlickerQuant 01h : 50hz  02h : 60hz
+{{0x0F,0x12},{0x00,0x01}},	//REG_SF_USER_FlickerQuant 01h : 50hz  02h : 60hz				
 {{0x0F,0x12},{0x00,0x01}},	//REG_SF_USER_FlickerQuantChanged
 };
 
 static struct regval_list sensor_flicker_60hz_regs[] = {
-{{0x00,0x2A},{0x04,0xE6}},
-{{0x0F,0x12},{0x07,0x5F}},	//REG_TC_DBG 7F: 60Hz  5F:50Hz
+{{0x00,0x2A},{0x04,0xE6}},														
+{{0x0F,0x12},{0x07,0x5F}},	//REG_TC_DBG 7F: 60Hz  5F:50Hz				
 {{0x00,0x2a},{0x04,0xd6}},
-{{0x0f,0x12},{0x00,0x02}},	//REG_SF_USER_FlickerQuant 01h : 50hz  02h : 60hz
+{{0x0f,0x12},{0x00,0x02}},	//REG_SF_USER_FlickerQuant 01h : 50hz  02h : 60hz				
 {{0x0F,0x12},{0x00,0x01}},	//REG_SF_USER_FlickerQuantChanged
 };
 
@@ -4576,7 +4576,7 @@ static struct regval_list sensor_ev_neg1_regs[] = {
 {{0x00,0x28},{0x70,0x00}},
 {{0x00,0x2A},{0x02,0x3A}},
 {{0x0F,0x12},{0x00,0xE0}},   //Control value
-};
+};                     
 
 static struct regval_list sensor_ev_zero_regs[] = {
 {{0xFC,0xFC},{0xD0,0x00}},
@@ -4617,11 +4617,11 @@ static struct regval_list sensor_ev_pos4_regs[] = {
 /*
  * Here we'll try to encapsulate the changes for just the output
  * video format.
- *
+ * 
  */
 
 
-static struct regval_list sensor_fmt_yuv422_yuyv[] = {
+static struct regval_list sensor_fmt_yuv422_yuyv[] = {	
 	//YUYV
 //==================================================================================
 // 20.Preview & Capture Configration Setting
@@ -4629,10 +4629,10 @@ static struct regval_list sensor_fmt_yuv422_yuyv[] = {
 {{0xFF,0xFF},{0x00,0x00}},
 {{0xFC,0xFC},{0xD0,0x00}},
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x02,0xB4}},
-{{0x0F,0x12},{0x00,0x40}},	//REG_0TC_PCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11
-{{0x00,0x2A},{0x03,0xA6}},
-{{0x0F,0x12},{0x00,0x40}},	//REG_0TC_CCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11
+{{0x00,0x2A},{0x02,0xB4}},	
+{{0x0F,0x12},{0x00,0x40}},	//REG_0TC_PCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11        	
+{{0x00,0x2A},{0x03,0xA6}},	
+{{0x0F,0x12},{0x00,0x40}},	//REG_0TC_CCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11  
 
 //==================================================================================
 // 21.Select Cofigration Display
@@ -4650,10 +4650,10 @@ static struct regval_list sensor_fmt_yuv422_yuyv[] = {
 //{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged
 //{{0x00,0x2A},{0x02,0x3E}},
 //{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreview
-//{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged
+//{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged	
 //
-//{{0xFF,0xFF},{0x00,0x20}},
-
+//{{0xFF,0xFF},{0x00,0x20}},	
+   
 };
 
 static struct regval_list sensor_fmt_yuv422_yvyu[] = {
@@ -4663,10 +4663,10 @@ static struct regval_list sensor_fmt_yuv422_yvyu[] = {
 {{0xFF,0xFF},{0x00,0x00}},
 {{0xFC,0xFC},{0xD0,0x00}},
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x02,0xB4}},
-{{0x0F,0x12},{0x00,0x60}},	//REG_0TC_PCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11
-{{0x00,0x2A},{0x03,0xA6}},
-{{0x0F,0x12},{0x00,0x60}},	//REG_0TC_CCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11
+{{0x00,0x2A},{0x02,0xB4}},	
+{{0x0F,0x12},{0x00,0x60}},	//REG_0TC_PCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11        	
+{{0x00,0x2A},{0x03,0xA6}},	
+{{0x0F,0x12},{0x00,0x60}},	//REG_0TC_CCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11  
 
 //==================================================================================
 // 21.Select Cofigration Display
@@ -4684,9 +4684,9 @@ static struct regval_list sensor_fmt_yuv422_yvyu[] = {
 //{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged
 //{{0x00,0x2A},{0x02,0x3E}},
 //{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreview
-//{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged
+//{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged	  
 //
-//{{0xFF,0xFF},{0x00,0x20}},
+//{{0xFF,0xFF},{0x00,0x20}},	
 };
 
 static struct regval_list sensor_fmt_yuv422_vyuy[] = {
@@ -4696,10 +4696,10 @@ static struct regval_list sensor_fmt_yuv422_vyuy[] = {
 {{0xFF,0xFF},{0x00,0x00}},
 {{0xFC,0xFC},{0xD0,0x00}},
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x02,0xB4}},
-{{0x0F,0x12},{0x00,0x70}},	//REG_0TC_PCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11
-{{0x00,0x2A},{0x03,0xA6}},
-{{0x0F,0x12},{0x00,0x70}},	//REG_0TC_CCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11
+{{0x00,0x2A},{0x02,0xB4}},	
+{{0x0F,0x12},{0x00,0x70}},	//REG_0TC_PCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11        	
+{{0x00,0x2A},{0x03,0xA6}},	
+{{0x0F,0x12},{0x00,0x70}},	//REG_0TC_CCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11  
 
 //==================================================================================
 // 21.Select Cofigration Display
@@ -4717,9 +4717,9 @@ static struct regval_list sensor_fmt_yuv422_vyuy[] = {
 //{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged
 //{{0x00,0x2A},{0x02,0x3E}},
 //{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreview
-//{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged
-//
-//{{0xFF,0xFF},{0x00,0x20}},
+//{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged	
+// 
+//{{0xFF,0xFF},{0x00,0x20}},	  
 };
 
 static struct regval_list sensor_fmt_yuv422_uyvy[] = {
@@ -4729,9 +4729,9 @@ static struct regval_list sensor_fmt_yuv422_uyvy[] = {
 {{0xFF,0xFF},{0x00,0x00}},
 {{0xFC,0xFC},{0xD0,0x00}},
 {{0x00,0x28},{0x70,0x00}},
-{{0x00,0x2A},{0x02,0xB4}},
-{{0x0F,0x12},{0x00,0x50}},	//REG_0TC_PCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11
-{{0x00,0x2A},{0x03,0xA6}},
+{{0x00,0x2A},{0x02,0xB4}},	
+{{0x0F,0x12},{0x00,0x50}},	//REG_0TC_PCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11        	
+{{0x00,0x2A},{0x03,0xA6}},	
 {{0x0F,0x12},{0x00,0x50}},	//REG_0TC_CCFG_PVIMask    [5:4] YUYV 00 / UYVY 01 / YVYU 10 / VYUV 11
 
 //==================================================================================
@@ -4750,13 +4750,13 @@ static struct regval_list sensor_fmt_yuv422_uyvy[] = {
 //{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_PrevConfigChanged
 //{{0x00,0x2A},{0x02,0x3E}},
 //{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreview
-//{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged
+//{{0x0F,0x12},{0x00,0x01}},	//REG_TC_GP_EnablePreviewChanged	
 //
-//{{0xFF,0xFF},{0x00,0x20}},
+//{{0xFF,0xFF},{0x00,0x20}},	
 };
 
 //static struct regval_list sensor_fmt_raw[] = {
-//
+//	
 //};
 
 
@@ -4778,10 +4778,10 @@ static int sensor_read(struct v4l2_subdev *sd, unsigned char *reg,
 	u8 data[REG_STEP];
 	struct i2c_msg msg;
 	int ret,i;
-
+	
 	for(i = 0; i < REG_ADDR_STEP; i++)
 		data[i] = reg[i];
-
+	
 	for(i = REG_ADDR_STEP; i < REG_STEP; i++)
 		data[i] = 0xff;
 	/*
@@ -4799,11 +4799,11 @@ static int sensor_read(struct v4l2_subdev *sd, unsigned char *reg,
 	/*
 	 * ...then read back the result.
 	 */
-
+	
 	msg.flags = I2C_M_RD;
 	msg.len = REG_DATA_STEP;
 	msg.buf = &data[REG_ADDR_STEP];
-
+	
 	ret = i2c_transfer(client->adapter, &msg, 1);
 	if (ret >= 0) {
 		for(i = 0; i < REG_DATA_STEP; i++)
@@ -4824,10 +4824,10 @@ static int sensor_read_im(struct v4l2_subdev *sd, unsigned int addr,
 	u8 data[REG_STEP];
 	struct i2c_msg msg;
 	int ret,i,j;
-
+	
 	for(i = 0, j = REG_ADDR_STEP-1; i < REG_ADDR_STEP; i++,j--)
 		data[i] = (addr&(0xff<<(j*8)))>>(j*8);
-
+	
 	for(i = REG_ADDR_STEP; i < REG_STEP; i++)
 		data[i] = 0xff;
 	/*
@@ -4845,11 +4845,11 @@ static int sensor_read_im(struct v4l2_subdev *sd, unsigned int addr,
 	/*
 	 * ...then read back the result.
 	 */
-
+	
 	msg.flags = I2C_M_RD;
 	msg.len = REG_DATA_STEP;
 	msg.buf = &data[REG_ADDR_STEP];
-
+	
 	ret = i2c_transfer(client->adapter, &msg, 1);
 	if (ret >= 0) {
 		for(i = 0,j = REG_DATA_STEP-1; i < REG_DATA_STEP; i++,j--)
@@ -4871,18 +4871,18 @@ static int sensor_write(struct v4l2_subdev *sd, unsigned char *reg,
 	struct i2c_msg msg;
 	unsigned char data[REG_STEP];
 	int ret,i;
-
+	
 	for(i = 0; i < REG_ADDR_STEP; i++)
 			data[i] = reg[i];
 	for(i = REG_ADDR_STEP; i < REG_STEP; i++)
 			data[i] = value[i-REG_ADDR_STEP];
-
+	
 	msg.addr = client->addr;
 	msg.flags = 0;
 	msg.len = REG_STEP;
 	msg.buf = data;
 
-
+	
 	ret = i2c_transfer(client->adapter, &msg, 1);
 	if (ret > 0) {
 		ret = 0;
@@ -4902,14 +4902,14 @@ static int sensor_write_im(struct v4l2_subdev *sd, unsigned int addr,
 	unsigned char data[REG_STEP];
 	int ret;
 	unsigned i,j;
-
+	
 	for(i = 0, j = REG_ADDR_STEP-1; i < REG_ADDR_STEP; i++,j--) {
 			data[i] = (addr&(0xff<<(j*8)))>>(j*8);
 	}
-
+			
 	for(i = REG_ADDR_STEP,j = REG_DATA_STEP-1; i < REG_STEP; i++,j--)
 			data[i] = *((unsigned char*)(&value)+j);
-
+	
 	msg.addr = client->addr;
 	msg.flags = 0;
 	msg.len = REG_STEP;
@@ -4941,8 +4941,8 @@ static int sensor_write_array(struct v4l2_subdev *sd, struct regval_list *vals ,
 	{
 		if(vals->reg_num[0] == 0xff && vals->reg_num[1] == 0xff) {
 			mdelay(vals->value[0]*256+vals->value[1]);
-		}
-		else {
+		}	
+		else {	
 			ret = sensor_write(sd, vals->reg_num, vals->value);
 			if (ret < 0)
 			{
@@ -4952,7 +4952,7 @@ static int sensor_write_array(struct v4l2_subdev *sd, struct regval_list *vals ,
 		}
 		vals++;
 	}
-
+	
 	return 0;
 }
 
@@ -4961,15 +4961,15 @@ static int sensor_write_continuous(struct v4l2_subdev *sd, int addr, char vals[]
 {
 	int i,ret;
 	struct regval_list reg_addr;
-
+	
 	if (size == 0)
 		return -EINVAL;
-
+	
 	for(i = 0; i < size ; i++)
 	{
 		reg_addr.reg_num[0] = (addr&0xff00)>>8;
 		reg_addr.reg_num[1] = (addr&0x00ff);
-
+		
 		ret = sensor_write(sd, reg_addr.reg_num, &vals[i]);
 		if (ret < 0)
 		{
@@ -4978,7 +4978,7 @@ static int sensor_write_continuous(struct v4l2_subdev *sd, int addr, char vals[]
 		}
 		addr++;
 	}
-
+	
 	return 0;
 }
 #endif
@@ -4986,7 +4986,7 @@ static int sensor_write_continuous(struct v4l2_subdev *sd, int addr, char vals[]
 /* stuff about exposure when capturing image */
 
 static int sensor_set_exposure(struct v4l2_subdev *sd)
-{
+{	
 	return 0;
 }
 
@@ -5002,22 +5002,22 @@ static int sensor_download_af_fw(struct v4l2_subdev *sd)
 static int sensor_ae_awb_lockon(struct v4l2_subdev *sd)
 {
 	int ret;
-
+	
 	ret = sensor_write_array(sd, sensor_ae_awb_lockon_regs , ARRAY_SIZE(sensor_ae_awb_lockon_regs));
 	if(ret < 0)
-		csi_dev_err("sensor_ae_awb_lockon error!\n");
-
+		csi_dev_err("sensor_ae_awb_lockon error!\n"); 
+	
 	return ret;
 };
 
 static int sensor_ae_awb_lockoff(struct v4l2_subdev *sd)
 {
 	int ret;
-
+	
 	ret = sensor_write_array(sd, sensor_ae_awb_lockoff_regs , ARRAY_SIZE(sensor_ae_awb_lockoff_regs));
 	if(ret < 0)
-		csi_dev_err("sensor_ae_awb_lockoff error!\n");
-
+		csi_dev_err("sensor_ae_awb_lockoff error!\n"); 
+	
 	return ret;
 };
 
@@ -5026,7 +5026,7 @@ static int sensor_g_single_af(struct v4l2_subdev *sd)
 	unsigned int rdval;
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	csi_dev_dbg("sensor_g_single_af\n");
 	csi_dev_dbg("info->coarse_af_pd = %d\n",info->coarse_af_pd);
 	if(info->coarse_af_pd != 1) {
@@ -5041,7 +5041,7 @@ static int sensor_g_single_af(struct v4l2_subdev *sd)
 			ret = -EAGAIN;
 			goto af_out;
 		}
-
+	
 	  if(rdval == 0x0001 ) {
 			csi_dev_dbg("Single AF 1st is busy,value = 0x%4x\n",rdval);
 			msleep(50);
@@ -5059,7 +5059,7 @@ static int sensor_g_single_af(struct v4l2_subdev *sd)
 			goto af_out;
 		}
 	}
-
+	
 	//wait for 2nd af complete
 	rdval = 0xffff;
 	sensor_write_im(sd, 0x002c , 0x7000);
@@ -5070,7 +5070,7 @@ static int sensor_g_single_af(struct v4l2_subdev *sd)
 		csi_dev_err("sensor_g_single_af read error !\n");
 		goto af_out;
 	}
-
+	
 //	while((rdval&0xff00)!=0x0000){
 //		sensor_read_im(sd, 0x0f12 , &rdval);
 //		msleep(50);
@@ -5080,16 +5080,16 @@ static int sensor_g_single_af(struct v4l2_subdev *sd)
 		csi_dev_dbg("Single AF 2nd is busy,value = 0x%4x\n",rdval);
 		return EBUSY;
 	}
-
+	
 	csi_dev_print("Single AF 2nd is complete,value = 0x%4x\n",rdval);
 	info->focus_status = 0;	//idle
-
+	
 	ret = 0;
-af_out:
-
+af_out:	
+	
 	//ae lock off
 	sensor_ae_awb_lockoff(sd);
-
+	
 	return ret;
 }
 
@@ -5098,29 +5098,29 @@ static int sensor_s_single_af(struct v4l2_subdev *sd)
   int ret;
 	struct sensor_info *info = to_state(sd);
 #if 0
-	unsigned int rdval,cnt;
+	unsigned int rdval,cnt;	
 #endif
 
 	csi_dev_print("sensor_s_single_af\n");
-
+	
 	info->focus_status = 0;	//idle
 	info->coarse_af_pd = 0;
 	//ae lock on
 	sensor_ae_awb_lockon(sd);
-
-	//single trigger
+	
+	//single trigger	
 	ret = sensor_write_array(sd, sensor_af_single_trig_regs , ARRAY_SIZE(sensor_af_single_trig_regs));
 	if(ret < 0) {
-		csi_dev_err("sensor_s_single_af error!\n");
+		csi_dev_err("sensor_s_single_af error!\n"); 
     //ae lock off
 		sensor_ae_awb_lockoff(sd);
   } else if(ret == 0) {
-	info->focus_status = 1;	//busy
+  	info->focus_status = 1;	//busy
   }
-
+	
 	//msleep(100);
-
-#if 0
+	
+#if 0	
 	//wait for 1st af complete
 
   rdval = 0xffff;
@@ -5131,33 +5131,33 @@ static int sensor_s_single_af(struct v4l2_subdev *sd)
 		ret = sensor_write_im(sd, 0x002e , 0x2eee);
 		if(ret < 0)
 		{
-			csi_dev_err("sensor_s_single_af error!\n");
+			csi_dev_err("sensor_s_single_af error!\n"); 
 	    goto af_out;
 	  }
 		ret =  sensor_read_im(sd, 0x0f12 , &rdval);
-	if (ret < 0)
-	{
-		csi_dev_err("sensor_s_single_af read error !\n");
-		goto af_out;
-	}
-	csi_dev_dbg("Single AF 1st ,value = 0x%4x\n",rdval);
-
-	if(rdval!=0x0001 && rdval!=0x0002) {
-		csi_dev_err("Single AF 1st is failed,value = 0x%4x\n",rdval);
+  	if (ret < 0)
+  	{
+  		csi_dev_err("sensor_s_single_af read error !\n");
+  		goto af_out;
+  	}
+  	csi_dev_dbg("Single AF 1st ,value = 0x%4x\n",rdval);
+  	
+  	if(rdval!=0x0001 && rdval!=0x0002) {
+  		csi_dev_err("Single AF 1st is failed,value = 0x%4x\n",rdval);
 			ret = -EFAULT;
-		goto af_out;
-	} else {
+  		goto af_out;
+  	} else {
 			mdelay(15);
 			cnt++;
 			if(cnt>60) {
 				csi_dev_err("Single AF 1st is timeout,value = 0x%4x\n",rdval);
 				ret = -EFAULT;
-			goto af_out;
+	  		goto af_out;
 			}
 		}
 	}
 	csi_dev_print("Single AF 1st is complete,value = 0x%4x\n",rdval);
-
+	
 	//wait for 2nd af complete
 	rdval = 0xffff;
   cnt = 0;
@@ -5167,31 +5167,31 @@ static int sensor_s_single_af(struct v4l2_subdev *sd)
 		ret = sensor_write_im(sd, 0x002e , 0x2207);
 		if(ret < 0)
 		{
-			csi_dev_err("sensor_s_single_af error!\n");
+			csi_dev_err("sensor_s_single_af error!\n"); 
 	    goto af_out;
 	  }
-
+	  
 		ret =  sensor_read_im(sd, 0x0f12 , &rdval);
-	if (ret < 0)
-	{
-		csi_dev_err("sensor_s_single_af read error !\n");
-		goto af_out;
-	}
-	mdelay(5);
-
+  	if (ret < 0)
+  	{
+  		csi_dev_err("sensor_s_single_af read error !\n");
+  		goto af_out;
+  	}
+  	mdelay(5);
+  	
 		cnt++;
 		if(cnt>300) {
 			csi_dev_err("Single AF 2nd is timeout,value = 0x%4x\n",rdval);
 			ret = -EFAULT;
-		goto af_out;
+  		goto af_out;
 		}
 	}
 	csi_dev_print("Single AF 2nd is complete,value = 0x%4x\n",rdval);
-
-af_out:
+	
+af_out:	
 	//ae lock off
 	sensor_ae_awb_lockoff(sd);
-#endif
+#endif	
 
 	return ret;
 }
@@ -5204,31 +5204,31 @@ static int sensor_s_continueous_af(struct v4l2_subdev *sd)
   ret = sensor_write_array(sd,sensor_af_continueous_regs,ARRAY_SIZE(sensor_af_continueous_regs));
   if(ret < 0)
     csi_dev_err("sensor_s_continueous_af error\n");
-
+   
   return ret;
 }
 
 static int sensor_s_infinity_af(struct v4l2_subdev *sd)
 {
   int ret;
-
+  
   csi_dev_print("sensor_s_infinity_af\n");
   ret = sensor_write_array(sd,sensor_af_infinity_regs,ARRAY_SIZE(sensor_af_infinity_regs));
   if(ret < 0)
     csi_dev_err("sensor_s_infinity_af error\n");
-
+   
   return ret;
 }
 
 static int sensor_s_macro_af(struct v4l2_subdev *sd)
 {
   int ret;
-
+  
   csi_dev_print("sensor_s_macro_af\n");
   ret = sensor_write_array(sd,sensor_af_macro_regs,ARRAY_SIZE(sensor_af_macro_regs));
   if(ret < 0)
     csi_dev_err("sensor_af_macro_regs error\n");
-
+   
   return ret;
 }
 
@@ -5253,21 +5253,21 @@ static int sensor_s_af_zone(struct v4l2_subdev *sd, int xc, int yc)
 	int scnd_disp_start_x,scnd_disp_start_y;
 	int scnd_win_size_x = 116,scnd_win_size_y = 306;
 	int scnd_disp_size_x,scnd_disp_size_y;
-
+	
 	if(info->width == 0 || info->height == 0) {
 		csi_dev_err("current width or height is zero!\n");
 		return -EINVAL;
 	}
-
+	
 	if(info->focus_status == 1)	//can not set af zone when focus is busy
 		return 0;
-
+	
 	csi_dev_print("sensor_s_af_zone\n");
-	csi_dev_dbg("af zone input xc=%d,yc=%d\n",xc,yc);
+	csi_dev_dbg("af zone input xc=%d,yc=%d\n",xc,yc);	
 	//first window
-
+	
 	fst_disp_size_x = fst_win_size_x * info->width /1024;
-
+	
 	if(xc + fst_disp_size_x/2 > info->width) {
 		fst_disp_start_x = info->width - fst_disp_size_x;
 	} else if(xc - (fst_disp_size_x/2) < 0) {
@@ -5275,7 +5275,7 @@ static int sensor_s_af_zone(struct v4l2_subdev *sd, int xc, int yc)
 	} else {
 		fst_disp_start_x = xc - (fst_disp_size_x/2);
 	}
-
+	
 	fst_disp_size_y = fst_win_size_y * info->height /1024;
 	if(yc + fst_disp_size_y/2 > info->height) {
 		fst_disp_start_y = info->height - fst_disp_size_y;
@@ -5284,12 +5284,12 @@ static int sensor_s_af_zone(struct v4l2_subdev *sd, int xc, int yc)
 	} else {
 		fst_disp_start_y = yc - fst_disp_size_y/2;
 	}
-
+	
 	fst_win_start_x = fst_disp_start_x * 1024 / info->width;
 	fst_win_start_y = fst_disp_start_y * 1024 / info->height;
-
+	
 	//second window
-
+	
 	scnd_disp_size_x = scnd_win_size_x * info->width /1024;
 	if(xc + scnd_disp_size_x/2 > info->width) {
 		scnd_disp_start_x = info->width - scnd_disp_size_x;
@@ -5298,7 +5298,7 @@ static int sensor_s_af_zone(struct v4l2_subdev *sd, int xc, int yc)
 	} else {
 		scnd_disp_start_x = xc - scnd_disp_size_x/2;
 	}
-
+	
 	scnd_disp_size_y = scnd_win_size_y * info->height /1024;
 	if(yc + scnd_disp_size_y/2 > info->height) {
 		scnd_disp_start_y = info->height - scnd_disp_size_y;
@@ -5307,25 +5307,25 @@ static int sensor_s_af_zone(struct v4l2_subdev *sd, int xc, int yc)
 	} else {
 		scnd_disp_start_y = yc - scnd_disp_size_y/2;
 	}
-
+	
 	scnd_win_start_x = scnd_disp_start_x * 1024 / info->width;
 	scnd_win_start_y = scnd_disp_start_y * 1024 / info->height;
-
+	
 	sensor_write_im(sd,0x0028,0x7000);
 	sensor_write_im(sd,0x002a,0x0294);
-	sensor_write_im(sd,0x0f12,fst_win_start_x);	//REG_TC_AF_FstWinStartX
-	sensor_write_im(sd,0x0f12,fst_win_start_y);	//REG_TC_AF_FstWinStartY
-	sensor_write_im(sd,0x0f12,fst_win_size_x); 	//REG_TC_AF_FstWinSizeX
-	sensor_write_im(sd,0x0f12,fst_win_size_y); 	//REG_TC_AF_FstWinSizeY
+	sensor_write_im(sd,0x0f12,fst_win_start_x);	//REG_TC_AF_FstWinStartX 
+	sensor_write_im(sd,0x0f12,fst_win_start_y);	//REG_TC_AF_FstWinStartY 
+	sensor_write_im(sd,0x0f12,fst_win_size_x); 	//REG_TC_AF_FstWinSizeX  
+	sensor_write_im(sd,0x0f12,fst_win_size_y); 	//REG_TC_AF_FstWinSizeY  
 	sensor_write_im(sd,0x0f12,scnd_win_start_x); //REG_TC_AF_ScndWinStartX
 	sensor_write_im(sd,0x0f12,scnd_win_start_y);	//REG_TC_AF_ScndWinStartY
-	sensor_write_im(sd,0x0f12,scnd_win_size_x);	//REG_TC_AF_ScndWinSizeX
-	sensor_write_im(sd,0x0f12,scnd_win_size_y);	//REG_TC_AF_ScndWinSizeY
+	sensor_write_im(sd,0x0f12,scnd_win_size_x);	//REG_TC_AF_ScndWinSizeX 
+	sensor_write_im(sd,0x0f12,scnd_win_size_y);	//REG_TC_AF_ScndWinSizeY 
 	sensor_write_im(sd,0x0f12,0x0001);						//REG_TC_AF_WinSizesUpdated;
-
+	
 	csi_dev_dbg("af zone 1st window stx=%d,sty=%d,width=%d,height=%d\n",fst_win_start_x,fst_win_start_y,fst_win_size_x,fst_win_size_y);
 	csi_dev_dbg("af zone 2nd window stx=%d,sty=%d,width=%d,height=%d\n",scnd_win_start_x,scnd_win_start_y,scnd_win_size_x,scnd_win_size_y);
-
+	
 	mdelay(30);
 	return 0;
 }
@@ -5348,7 +5348,7 @@ static void csi_gpio_write(struct v4l2_subdev *sd, struct gpio_config *gpio, int
     csi_dev_dbg("invalid gpio\n");
     return;
   }
-
+  
 	if(gpio->mul_sel==1)
 	{
 	  gpio_direction_output(gpio->gpio, level);
@@ -5361,7 +5361,7 @@ static void csi_gpio_write(struct v4l2_subdev *sd, struct gpio_config *gpio, int
 static void csi_gpio_set_status(struct v4l2_subdev *sd, struct gpio_config *gpio, int status)
 {
 //	struct csi_dev *dev=(struct csi_dev *)dev_get_drvdata(sd->v4l2_dev->dev);
-
+	
 	if(1 == status) {  /* output */
 		if(0 != gpio_direction_output(gpio->gpio, gpio->data))
 			csi_dev_dbg("gpio_direction_output failed\n");
@@ -5377,14 +5377,14 @@ static void csi_gpio_set_status(struct v4l2_subdev *sd, struct gpio_config *gpio
 /*
  * Stuff that knows about the sensor.
  */
-
+ 
 static int sensor_power(struct v4l2_subdev *sd, int on)
 {
 	struct csi_dev *dev=(struct csi_dev *)dev_get_drvdata(sd->v4l2_dev->dev);
 	struct i2c_client *client = v4l2_get_subdevdata(sd);
 //	int ret;
-
-  //insure that clk_disable() and clk_enable() are called in pair
+  
+  //insure that clk_disable() and clk_enable() are called in pair 
   //when calling CSI_SUBDEV_STBY_ON/OFF and CSI_SUBDEV_PWR_ON/OFF
   switch(on)
 	{
@@ -5407,7 +5407,7 @@ static int sensor_power(struct v4l2_subdev *sd, int on)
 			//inactive mclk after stadby in
 			clk_disable(dev->csi_module_clk);
 			//remember to unlock i2c adapter, so the device can access the i2c bus again
-			i2c_unlock_adapter(client->adapter);
+			i2c_unlock_adapter(client->adapter);	
 			break;
 		case CSI_SUBDEV_STBY_OFF:
 			csi_dev_dbg("CSI_SUBDEV_STBY_OFF\n");
@@ -5424,7 +5424,7 @@ static int sensor_power(struct v4l2_subdev *sd, int on)
 			csi_gpio_write(sd,&dev->reset_io,CSI_RST_OFF);
 			mdelay(1);
 			//remember to unlock i2c adapter, so the device can access the i2c bus again
-			i2c_unlock_adapter(client->adapter);
+			i2c_unlock_adapter(client->adapter);	
 			break;
 		case CSI_SUBDEV_PWR_ON:
 			csi_dev_dbg("CSI_SUBDEV_PWR_ON\n");
@@ -5456,7 +5456,7 @@ static int sensor_power(struct v4l2_subdev *sd, int on)
 			csi_gpio_write(sd,&dev->reset_io,CSI_RST_OFF);
 			udelay(100);
 			//remember to unlock i2c adapter, so the device can access the i2c bus again
-			i2c_unlock_adapter(client->adapter);
+			i2c_unlock_adapter(client->adapter);	
 			break;
 		case CSI_SUBDEV_PWR_OFF:
 			csi_dev_dbg("CSI_SUBDEV_PWR_OFF\n");
@@ -5470,7 +5470,7 @@ static int sensor_power(struct v4l2_subdev *sd, int on)
 			clk_disable(dev->csi_module_clk);
 			udelay(10);
 			//standy on
-			csi_gpio_write(sd,&dev->standby_io,CSI_STBY_ON);
+			csi_gpio_write(sd,&dev->standby_io,CSI_STBY_ON);		
 			//power supply off
 			csi_gpio_write(sd,&dev->af_power_io,CSI_AF_PWR_OFF);
 			if(dev->dvdd) {
@@ -5487,15 +5487,15 @@ static int sensor_power(struct v4l2_subdev *sd, int on)
 			csi_gpio_set_status(sd,&dev->reset_io,0);//set the gpio to input
 			csi_gpio_set_status(sd,&dev->standby_io,0);//set the gpio to input
 			//remember to unlock i2c adapter, so the device can access the i2c bus again
-			i2c_unlock_adapter(client->adapter);
+			i2c_unlock_adapter(client->adapter);	
 			break;
 		default:
 			return -EINVAL;
-	}
+	}		
 
 	return 0;
 }
-
+ 
 static int sensor_reset(struct v4l2_subdev *sd, u32 val)
 {
 	struct csi_dev *dev=(struct csi_dev *)dev_get_drvdata(sd->v4l2_dev->dev);
@@ -5524,7 +5524,7 @@ static int sensor_reset(struct v4l2_subdev *sd, u32 val)
 		default:
 			return -EINVAL;
 	}
-
+		
 	return 0;
 }
 
@@ -5532,7 +5532,7 @@ static int sensor_detect(struct v4l2_subdev *sd)
 {
 	int ret;
 	unsigned int rdval=0xffff;
-
+	
 	ret = sensor_write_im(sd, 0x002c, 0x7000);
 	ret = sensor_write_im(sd, 0x002e, 0x01a4);
 	if (ret < 0)
@@ -5548,7 +5548,7 @@ static int sensor_detect(struct v4l2_subdev *sd)
 		csi_dev_err("id read from sensor is 0x%4x,not 0x4ec0\n",rdval);
 		return -ENODEV;
 	}
-
+	
 	return 0;
 }
 
@@ -5556,24 +5556,24 @@ static int sensor_init(struct v4l2_subdev *sd, u32 val)
 {
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	csi_dev_dbg("sensor_init\n");
-
+	
 	/*Make sure it is a target sensor*/
 	ret = sensor_detect(sd);
 	if (ret) {
 		csi_dev_err("chip found is not an target chip.\n");
 		return ret;
 	}
-
-	ret = sensor_write_array(sd, sensor_default_regs , ARRAY_SIZE(sensor_default_regs));
+	
+	ret = sensor_write_array(sd, sensor_default_regs , ARRAY_SIZE(sensor_default_regs));	
 	if(ret < 0) {
 		csi_dev_err("write sensor_default_regs error\n");
 		return ret;
 	}
-
+			
 	sensor_s_band_filter(sd, V4L2_CID_POWER_LINE_FREQUENCY_50HZ);
-
+	
 	info->focus_status = 0;
 	info->width = 0;
 	info->height = 0;
@@ -5593,32 +5593,32 @@ static int sensor_init(struct v4l2_subdev *sd, u32 val)
 	info->band_filter = V4L2_CID_POWER_LINE_FREQUENCY_50HZ;
 	info->af_mode = V4L2_AF_FIXED;
 	info->af_ctrl = V4L2_AF_RELEASE;
-	info->tpf.numerator = 1;
+	info->tpf.numerator = 1;            
 	info->tpf.denominator = 30;    /* 30fps */
 	info->width = 0;
 	info->height = 0;
-
+	
 	return 0;
 }
 
 static long sensor_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
 {
 	int ret=0;
-
+	
 	switch(cmd){
-		case CSI_SUBDEV_CMD_GET_INFO:
+		case CSI_SUBDEV_CMD_GET_INFO: 
 		{
 			struct sensor_info *info = to_state(sd);
 			__csi_subdev_info_t *ccm_info = arg;
-
+			
 			csi_dev_dbg("CSI_SUBDEV_CMD_GET_INFO\n");
-
+			
 			ccm_info->mclk 	=	info->ccm_info->mclk ;
 			ccm_info->vref 	=	info->ccm_info->vref ;
 			ccm_info->href 	=	info->ccm_info->href ;
 			ccm_info->clock	=	info->ccm_info->clock;
 			ccm_info->iocfg	=	info->ccm_info->iocfg;
-
+	
 			csi_dev_dbg("ccm_info.mclk=%d\n ",info->ccm_info->mclk);
 			csi_dev_dbg("ccm_info.vref=%x\n ",info->ccm_info->vref);
 			csi_dev_dbg("ccm_info.href=%x\n ",info->ccm_info->href);
@@ -5630,21 +5630,21 @@ static long sensor_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
 		{
 			struct sensor_info *info = to_state(sd);
 			__csi_subdev_info_t *ccm_info = arg;
-
+			
 			csi_dev_dbg("CSI_SUBDEV_CMD_SET_INFO\n");
-
+			
 			info->ccm_info->mclk 	=	ccm_info->mclk 	;
 			info->ccm_info->vref 	=	ccm_info->vref 	;
 			info->ccm_info->href 	=	ccm_info->href 	;
 			info->ccm_info->clock	=	ccm_info->clock	;
 			info->ccm_info->iocfg	=	ccm_info->iocfg	;
-
+			
 			csi_dev_dbg("ccm_info.mclk=%d\n ",info->ccm_info->mclk);
 			csi_dev_dbg("ccm_info.vref=%x\n ",info->ccm_info->vref);
 			csi_dev_dbg("ccm_info.href=%x\n ",info->ccm_info->href);
 			csi_dev_dbg("ccm_info.clock=%x\n ",info->ccm_info->clock);
 			csi_dev_dbg("ccm_info.iocfg=%x\n ",info->ccm_info->iocfg);
-
+			
 			break;
 		}
 		case CSI_SUBDEV_CMD_DETECT:
@@ -5654,13 +5654,13 @@ static long sensor_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
 		}
 		default:
 			return -EINVAL;
-	}
+	}		
 		return ret;
 }
 
 
 /*
- * Store information about the video data format.
+ * Store information about the video data format. 
  */
 static struct sensor_format_struct {
 	__u8 *desc;
@@ -5708,7 +5708,7 @@ static struct sensor_format_struct {
 };
 #define N_FMTS ARRAY_SIZE(sensor_formats)
 
-
+	
 
 /*
  * Then there is the issue of window sizes.  Try to capture the info here.
@@ -5805,22 +5805,22 @@ static int sensor_try_fmt_internal(struct v4l2_subdev *sd,
 	for (index = 0; index < N_FMTS; index++)
 		if (sensor_formats[index].mbus_code == fmt->code)//linux-3.0
 			break;
-
+	
 	if (index >= N_FMTS) {
 		/* default to first format */
 		index = 0;
 		fmt->code = sensor_formats[0].mbus_code;//linux-3.0
 	}
-
+	
 	if (ret_fmt != NULL)
 		*ret_fmt = sensor_formats + index;
-
+		
 	/*
 	 * Fields: the sensor devices claim to be progressive.
 	 */
 	fmt->field = V4L2_FIELD_NONE;//linux-3.0
-
-
+	
+	
 	/*
 	 * Round requested image size down to the nearest
 	 * we support, but not below the smallest.
@@ -5829,7 +5829,7 @@ static int sensor_try_fmt_internal(struct v4l2_subdev *sd,
 	     wsize++)
 		if (fmt->width >= wsize->width && fmt->height >= wsize->height)//linux-3.0
 			break;
-
+		
 	if (wsize >= sensor_win_sizes + N_WIN_SIZES)
 		wsize--;   /* Take the smallest one */
 	if (ret_wsize != NULL)
@@ -5841,11 +5841,11 @@ static int sensor_try_fmt_internal(struct v4l2_subdev *sd,
 	fmt->height = wsize->height;//linux-3.0
 	//pix->bytesperline = pix->width*sensor_formats[index].bpp;//linux-3.0
 	//pix->sizeimage = pix->height*pix->bytesperline;//linux-3.0
-
+	
 	return 0;
 }
 
-static int sensor_try_fmt(struct v4l2_subdev *sd,
+static int sensor_try_fmt(struct v4l2_subdev *sd, 
              struct v4l2_mbus_framefmt *fmt)//linux-3.0
 {
 	return sensor_try_fmt_internal(sd, fmt, NULL, NULL);
@@ -5855,26 +5855,26 @@ static int sensor_try_fmt(struct v4l2_subdev *sd,
 /*
  * Set a format.
  */
-static int sensor_s_fmt(struct v4l2_subdev *sd,
+static int sensor_s_fmt(struct v4l2_subdev *sd, 
              struct v4l2_mbus_framefmt *fmt)//linux-3.0
 {
 	int ret;
 	struct sensor_format_struct *sensor_fmt;
 	struct sensor_win_size *wsize;
 	struct sensor_info *info = to_state(sd);
-
+	
 	csi_dev_dbg("sensor_s_fmt\n");
-
+	
 	ret = sensor_try_fmt_internal(sd, fmt, &sensor_fmt, &wsize);
 	if (ret)
 		return ret;
-
+	
 	if(info->fmt == sensor_fmt && info->width == wsize->width && info->height == wsize->height)
 	{
 		csi_dev_print("format and size remain the same\n");
 		goto update;
 	}
-
+		
 	if(info->capture_mode == V4L2_MODE_VIDEO || info->capture_mode == V4L2_MODE_PREVIEW)
 	{
 		//video
@@ -5884,7 +5884,7 @@ static int sensor_s_fmt(struct v4l2_subdev *sd,
 			{
 				csi_dev_err("sensor_s_release_af err !\n");
 				return ret;
-			}
+			}	
 		}
 	}
 	else if(info->capture_mode == V4L2_MODE_IMAGE)
@@ -5895,13 +5895,13 @@ static int sensor_s_fmt(struct v4l2_subdev *sd,
 		{
 			csi_dev_err("sensor_set_exposure err !\n");
 			return ret;
-		}
+		}	
 	}
-
+	
 	ret = sensor_write_array(sd, sensor_fmt->regs , sensor_fmt->regs_size);
-	if (ret < 0)
+	if (ret < 0)		
 		return ret;
-
+	
 	ret = 0;
 	if (wsize->regs)
 	{
@@ -5909,30 +5909,30 @@ static int sensor_s_fmt(struct v4l2_subdev *sd,
 		if (ret < 0)
 			return ret;
 	}
-
+	
 	if (wsize->set_size)
 	{
 		ret = wsize->set_size(sd);
 		if (ret < 0)
 			return ret;
 	}
-
+  
 	if(info->capture_mode == V4L2_MODE_VIDEO || info->capture_mode == V4L2_MODE_PREVIEW)
 	{
 		//video
 		if(info->af_mode != V4L2_AF_FIXED) {
-
-#if 0
-			if(info->af_mode != V4L2_AF_TOUCH && info->af_mode != V4L2_AF_FACE) {
+			
+#if 0			
+			if(info->af_mode != V4L2_AF_TOUCH && info->af_mode != V4L2_AF_FACE) {				
 				ret = sensor_s_relaunch_af_zone(sd);	//set af zone to default zone
 				if (ret < 0) {
 					csi_dev_err("sensor_s_relaunch_af_zone err !\n");
 					return ret;
-				}
+				}	
 			}
 #endif
 
-#ifdef CONTINUEOUS_AF
+#ifdef CONTINUEOUS_AF				
 			if(info->af_mode != V4L2_AF_INFINITY) {
 				ret = sensor_s_continueous_af(sd);		//set continueous af
 				if (ret < 0) {
@@ -5948,9 +5948,9 @@ update:
 	info->fmt = sensor_fmt;
 	info->width = wsize->width;
 	info->height = wsize->height;
-
+	
 	csi_dev_print("s_fmt set width = %d, height = %d\n",wsize->width,wsize->height);
-
+		
 	return 0;
 }
 
@@ -5965,14 +5965,14 @@ static int sensor_g_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *parms)
 
 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
-
+	
 	memset(cp, 0, sizeof(struct v4l2_captureparm));
 	cp->capability = V4L2_CAP_TIMEPERFRAME;
 	cp->capturemode = info->capture_mode;
-
+	
 	cp->timeperframe.numerator = info->tpf.numerator;
 	cp->timeperframe.denominator = info->tpf.denominator;
-
+	 
 	return 0;
 }
 
@@ -5982,7 +5982,7 @@ static int sensor_s_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *parms)
 }
 
 
-/*
+/* 
  * Code for dealing with controls.
  * fill with different sensor module
  * different sensor module has different settings here
@@ -5996,7 +5996,7 @@ static int sensor_queryctrl(struct v4l2_subdev *sd,
 	/* Fill in min, max, step and default value for these controls. */
 	/* see include/linux/videodev2.h for details */
 	/* see sensor_s_parm and sensor_g_parm for the meaning of value */
-
+	
 	switch (qc->id) {
 //	case V4L2_CID_BRIGHTNESS:
 //		return v4l2_ctrl_query_fill(qc, -4, 4, 1, 1);
@@ -6024,7 +6024,7 @@ static int sensor_queryctrl(struct v4l2_subdev *sd,
 	case V4L2_CID_COLORFX:
 		return v4l2_ctrl_query_fill(qc, 0, 9, 1, 0);
 	case V4L2_CID_CAMERA_FLASH_MODE:
-	  return v4l2_ctrl_query_fill(qc, 0, 4, 1, 0);
+	  return v4l2_ctrl_query_fill(qc, 0, 4, 1, 0);	
 	case V4L2_CID_CAMERA_AF_MODE:
 	  return v4l2_ctrl_query_fill(qc, 0, 5, 1, 0);
 	case V4L2_CID_CAMERA_AF_CTRL:
@@ -6052,10 +6052,10 @@ static int sensor_s_hflip(struct v4l2_subdev *sd, int value)
 		////==================================================================================
 		//{{0xFC,0xFC},{0xD0,0x00}},
 		//{{0x00,0x28},{0x70,0x00}},
-		//{{0x00,0x2A},{0x02,0xD0}},
+		//{{0x00,0x2A},{0x02,0xD0}},	
 		//{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uPrevMirror     Original 00 / H Mirror 05 / V Mirror 0A / HV Mirror 0F
 		//{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uCaptureMirror  Original 00 / H Mirror 05 / V Mirror 0A / HV Mirror 0F
-
+		
 		//==================================================================================
 		// 21.Select Cofigration Display
 		//==================================================================================
@@ -6084,7 +6084,7 @@ static int sensor_s_hflip(struct v4l2_subdev *sd, int value)
 	sensor_read_im(sd, 0x0f12, &cap_val);
 	sensor_write_im(sd, 0x0028, 0x7000);
 	sensor_write_im(sd, 0x002a, 0x02d0);
-
+	
 	switch (value) {
 		case 0:
 		  pre_val &= 0xfa;
@@ -6097,10 +6097,10 @@ static int sensor_s_hflip(struct v4l2_subdev *sd, int value)
 		default:
 			return -EINVAL;
 	}
-
+	
 	sensor_write_im(sd, 0x0f12, pre_val);
   sensor_write_im(sd, 0x0f12, cap_val);
-
+  
 	ret = sensor_write_array(sd, regs, ARRAY_SIZE(regs));
 	if (ret < 0) {
 		csi_dev_err("sensor_write err at sensor_s_hflip!\n");
@@ -6108,7 +6108,7 @@ static int sensor_s_hflip(struct v4l2_subdev *sd, int value)
 	}
 
 	info->hflip = value;
-
+	
 	return 0;
 }
 
@@ -6131,10 +6131,10 @@ static int sensor_s_vflip(struct v4l2_subdev *sd, int value)
 		////==================================================================================
 		//{{0xFC,0xFC},{0xD0,0x00}},
 		//{{0x00,0x28},{0x70,0x00}},
-		//{{0x00,0x2A},{0x02,0xD0}},
+		//{{0x00,0x2A},{0x02,0xD0}},	
 		//{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uPrevMirror     Original 00 / H Mirror 05 / V Mirror 0A / HV Mirror 0F
 		//{{0x0F,0x12},{0x00,0x00}},	//REG_0TC_PCFG_uCaptureMirror  Original 00 / H Mirror 05 / V Mirror 0A / HV Mirror 0F
-
+		
 		//==================================================================================
 		// 21.Select Cofigration Display
 		//==================================================================================
@@ -6156,14 +6156,14 @@ static int sensor_s_vflip(struct v4l2_subdev *sd, int value)
 
 	if(info->vflip == value)
 		return 0;
-
+	
 	sensor_write_im(sd, 0x0028, 0x7000);
 	sensor_write_im(sd, 0x002a, 0x02d0);
 	sensor_write_im(sd, 0x002c , 0x7000);
 	sensor_write_im(sd, 0x002e , 0x02d0);
 	sensor_read_im(sd, 0x0f12, &pre_val);
 	sensor_read_im(sd, 0x0f12, &cap_val);
-
+	
 	switch (value) {
 		case 0:
 		  pre_val &= 0xf5;
@@ -6187,7 +6187,7 @@ static int sensor_s_vflip(struct v4l2_subdev *sd, int value)
 	}
 
 	info->vflip = value;
-
+	
 	return 0;
 }
 
@@ -6215,7 +6215,7 @@ static int sensor_s_autoexp(struct v4l2_subdev *sd,
 static int sensor_g_autowb(struct v4l2_subdev *sd, int *value)
 {
 	struct sensor_info *info = to_state(sd);
-
+	
 	*value = info->autowb;
 	return 0;
 }
@@ -6224,16 +6224,16 @@ static int sensor_s_autowb(struct v4l2_subdev *sd, int value)
 {
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	ret = sensor_write_array(sd, sensor_wb_auto_regs, ARRAY_SIZE(sensor_wb_auto_regs));
 	if (ret < 0) {
 		csi_dev_err("sensor_write_array err at sensor_s_autowb!\n");
 		return ret;
 	}
-
+	
 	mdelay(10);
 	info->autowb = value;
-
+	
 	return 0;
 }
 
@@ -6257,25 +6257,25 @@ static int sensor_s_gain(struct v4l2_subdev *sd, int value)
 	return -EINVAL;
 }
 
-static int sensor_g_band_filter(struct v4l2_subdev *sd,
+static int sensor_g_band_filter(struct v4l2_subdev *sd, 
 		__s32 *value)
 {
 	struct sensor_info *info = to_state(sd);
-
+	
 	*value = info->band_filter;
 	return 0;
 }
 
-static int sensor_s_band_filter(struct v4l2_subdev *sd,
+static int sensor_s_band_filter(struct v4l2_subdev *sd, 
 		enum v4l2_power_line_frequency value)
 {
 	struct sensor_info *info = to_state(sd);
 
 	int ret = 0;
-
+	
 	switch(value) {
 		case V4L2_CID_POWER_LINE_FREQUENCY_DISABLED:
-			break;
+			break;			
 		case V4L2_CID_POWER_LINE_FREQUENCY_50HZ:
 			ret = sensor_write_array(sd, sensor_flicker_50hz_regs, ARRAY_SIZE(sensor_flicker_50hz_regs));
 			if (ret < 0)
@@ -6299,7 +6299,7 @@ static int sensor_s_band_filter(struct v4l2_subdev *sd,
 static int sensor_g_brightness(struct v4l2_subdev *sd, __s32 *value)
 {
 	struct sensor_info *info = to_state(sd);
-
+	
 	*value = info->brightness;
 	return 0;
 }
@@ -6308,7 +6308,7 @@ static int sensor_s_brightness(struct v4l2_subdev *sd, int value)
 {
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	switch (value) {
 		case -4:
 		  ret = sensor_write_array(sd, sensor_brightness_neg4_regs, ARRAY_SIZE(sensor_brightness_neg4_regs));
@@ -6318,11 +6318,11 @@ static int sensor_s_brightness(struct v4l2_subdev *sd, int value)
 			break;
 		case -2:
 			ret = sensor_write_array(sd, sensor_brightness_neg2_regs, ARRAY_SIZE(sensor_brightness_neg2_regs));
-			break;
+			break;   
 		case -1:
 			ret = sensor_write_array(sd, sensor_brightness_neg1_regs, ARRAY_SIZE(sensor_brightness_neg1_regs));
 			break;
-		case 0:
+		case 0:   
 			ret = sensor_write_array(sd, sensor_brightness_zero_regs, ARRAY_SIZE(sensor_brightness_zero_regs));
 			break;
 		case 1:
@@ -6330,7 +6330,7 @@ static int sensor_s_brightness(struct v4l2_subdev *sd, int value)
 			break;
 		case 2:
 			ret = sensor_write_array(sd, sensor_brightness_pos2_regs, ARRAY_SIZE(sensor_brightness_pos2_regs));
-			break;
+			break;	
 		case 3:
 			ret = sensor_write_array(sd, sensor_brightness_pos3_regs, ARRAY_SIZE(sensor_brightness_pos3_regs));
 			break;
@@ -6340,7 +6340,7 @@ static int sensor_s_brightness(struct v4l2_subdev *sd, int value)
 		default:
 			return -EINVAL;
 	}
-
+	
 	if (ret < 0) {
 		csi_dev_err("sensor_write_array err at sensor_s_brightness!\n");
 		return ret;
@@ -6353,7 +6353,7 @@ static int sensor_s_brightness(struct v4l2_subdev *sd, int value)
 static int sensor_g_contrast(struct v4l2_subdev *sd, __s32 *value)
 {
 	struct sensor_info *info = to_state(sd);
-
+	
 	*value = info->contrast;
 	return 0;
 }
@@ -6362,7 +6362,7 @@ static int sensor_s_contrast(struct v4l2_subdev *sd, int value)
 {
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	switch (value) {
 		case -4:
 		  ret = sensor_write_array(sd, sensor_contrast_neg4_regs, ARRAY_SIZE(sensor_contrast_neg4_regs));
@@ -6372,11 +6372,11 @@ static int sensor_s_contrast(struct v4l2_subdev *sd, int value)
 			break;
 		case -2:
 			ret = sensor_write_array(sd, sensor_contrast_neg2_regs, ARRAY_SIZE(sensor_contrast_neg2_regs));
-			break;
+			break;   
 		case -1:
 			ret = sensor_write_array(sd, sensor_contrast_neg1_regs, ARRAY_SIZE(sensor_contrast_neg1_regs));
 			break;
-		case 0:
+		case 0:   
 			ret = sensor_write_array(sd, sensor_contrast_zero_regs, ARRAY_SIZE(sensor_contrast_zero_regs));
 			break;
 		case 1:
@@ -6384,7 +6384,7 @@ static int sensor_s_contrast(struct v4l2_subdev *sd, int value)
 			break;
 		case 2:
 			ret = sensor_write_array(sd, sensor_contrast_pos2_regs, ARRAY_SIZE(sensor_contrast_pos2_regs));
-			break;
+			break;	
 		case 3:
 			ret = sensor_write_array(sd, sensor_contrast_pos3_regs, ARRAY_SIZE(sensor_contrast_pos3_regs));
 			break;
@@ -6394,7 +6394,7 @@ static int sensor_s_contrast(struct v4l2_subdev *sd, int value)
 		default:
 			return -EINVAL;
 	}
-
+	
 	if (ret < 0) {
 		csi_dev_err("sensor_write_array err at sensor_s_contrast!\n");
 		return ret;
@@ -6407,7 +6407,7 @@ static int sensor_s_contrast(struct v4l2_subdev *sd, int value)
 static int sensor_g_saturation(struct v4l2_subdev *sd, __s32 *value)
 {
 	struct sensor_info *info = to_state(sd);
-
+	
 	*value = info->saturation;
 	return 0;
 }
@@ -6416,7 +6416,7 @@ static int sensor_s_saturation(struct v4l2_subdev *sd, int value)
 {
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	switch (value) {
 		case -4:
 		  ret = sensor_write_array(sd, sensor_saturation_neg4_regs, ARRAY_SIZE(sensor_saturation_neg4_regs));
@@ -6426,11 +6426,11 @@ static int sensor_s_saturation(struct v4l2_subdev *sd, int value)
 			break;
 		case -2:
 			ret = sensor_write_array(sd, sensor_saturation_neg2_regs, ARRAY_SIZE(sensor_saturation_neg2_regs));
-			break;
+			break;   
 		case -1:
 			ret = sensor_write_array(sd, sensor_saturation_neg1_regs, ARRAY_SIZE(sensor_saturation_neg1_regs));
 			break;
-		case 0:
+		case 0:   
 			ret = sensor_write_array(sd, sensor_saturation_zero_regs, ARRAY_SIZE(sensor_saturation_zero_regs));
 			break;
 		case 1:
@@ -6438,7 +6438,7 @@ static int sensor_s_saturation(struct v4l2_subdev *sd, int value)
 			break;
 		case 2:
 			ret = sensor_write_array(sd, sensor_saturation_pos2_regs, ARRAY_SIZE(sensor_saturation_pos2_regs));
-			break;
+			break;	
 		case 3:
 			ret = sensor_write_array(sd, sensor_saturation_pos3_regs, ARRAY_SIZE(sensor_saturation_pos3_regs));
 			break;
@@ -6448,7 +6448,7 @@ static int sensor_s_saturation(struct v4l2_subdev *sd, int value)
 		default:
 			return -EINVAL;
 	}
-
+	
 	if (ret < 0) {
 		csi_dev_err("sensor_write_array err at sensor_s_saturation!\n");
 		return ret;
@@ -6461,7 +6461,7 @@ static int sensor_s_saturation(struct v4l2_subdev *sd, int value)
 static int sensor_g_exp(struct v4l2_subdev *sd, __s32 *value)
 {
 	struct sensor_info *info = to_state(sd);
-
+	
 	*value = info->exp;
 	return 0;
 }
@@ -6470,7 +6470,7 @@ static int sensor_s_exp(struct v4l2_subdev *sd, int value)
 {
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	switch (value) {
 		case -4:
 		  ret = sensor_write_array(sd, sensor_ev_neg4_regs, ARRAY_SIZE(sensor_ev_neg4_regs));
@@ -6480,11 +6480,11 @@ static int sensor_s_exp(struct v4l2_subdev *sd, int value)
 			break;
 		case -2:
 			ret = sensor_write_array(sd, sensor_ev_neg2_regs, ARRAY_SIZE(sensor_ev_neg2_regs));
-			break;
+			break;   
 		case -1:
 			ret = sensor_write_array(sd, sensor_ev_neg1_regs, ARRAY_SIZE(sensor_ev_neg1_regs));
 			break;
-		case 0:
+		case 0:   
 			ret = sensor_write_array(sd, sensor_ev_zero_regs, ARRAY_SIZE(sensor_ev_zero_regs));
 			break;
 		case 1:
@@ -6492,7 +6492,7 @@ static int sensor_s_exp(struct v4l2_subdev *sd, int value)
 			break;
 		case 2:
 			ret = sensor_write_array(sd, sensor_ev_pos2_regs, ARRAY_SIZE(sensor_ev_pos2_regs));
-			break;
+			break;	
 		case 3:
 			ret = sensor_write_array(sd, sensor_ev_pos3_regs, ARRAY_SIZE(sensor_ev_pos3_regs));
 			break;
@@ -6502,7 +6502,7 @@ static int sensor_s_exp(struct v4l2_subdev *sd, int value)
 		default:
 			return -EINVAL;
 	}
-
+	
 	if (ret < 0) {
 		csi_dev_err("sensor_write_array err at sensor_s_exp!\n");
 		return ret;
@@ -6516,9 +6516,9 @@ static int sensor_g_wb(struct v4l2_subdev *sd, int *value)
 {
 	struct sensor_info *info = to_state(sd);
 	enum v4l2_whiteblance *wb_type = (enum v4l2_whiteblance*)value;
-
+	
 	*wb_type = info->wb;
-
+	
 	return 0;
 }
 
@@ -6527,18 +6527,18 @@ static int sensor_s_wb(struct v4l2_subdev *sd,
 {
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	if (value == V4L2_WB_AUTO) {
 		ret = sensor_s_autowb(sd, 1);
 		return ret;
-	}
+	} 
 	else {
 		ret = sensor_s_autowb(sd, 0);
 		if(ret < 0) {
 			csi_dev_err("sensor_s_autowb error, return %x!\n",ret);
 			return ret;
 		}
-
+		
 		switch (value) {
 			case V4L2_WB_CLOUD:
 			  ret = sensor_write_array(sd, sensor_wb_cloud_regs, ARRAY_SIZE(sensor_wb_cloud_regs));
@@ -6548,23 +6548,23 @@ static int sensor_s_wb(struct v4l2_subdev *sd,
 				break;
 			case V4L2_WB_INCANDESCENCE:
 				ret = sensor_write_array(sd, sensor_wb_incandescence_regs, ARRAY_SIZE(sensor_wb_incandescence_regs));
-				break;
+				break;    
 			case V4L2_WB_FLUORESCENT:
 				ret = sensor_write_array(sd, sensor_wb_fluorescent_regs, ARRAY_SIZE(sensor_wb_fluorescent_regs));
 				break;
-			case V4L2_WB_TUNGSTEN:
+			case V4L2_WB_TUNGSTEN:   
 				ret = sensor_write_array(sd, sensor_wb_tungsten_regs, ARRAY_SIZE(sensor_wb_tungsten_regs));
 				break;
 			default:
 				return -EINVAL;
-		}
+		} 
 	}
-
+	
 	if (ret < 0) {
 		csi_dev_err("sensor_s_wb error, return %x!\n",ret);
 		return ret;
 	}
-
+	
 	mdelay(10);
 	info->wb = value;
 	return 0;
@@ -6575,7 +6575,7 @@ static int sensor_g_colorfx(struct v4l2_subdev *sd,
 {
 	struct sensor_info *info = to_state(sd);
 	enum v4l2_colorfx *clrfx_type = (enum v4l2_colorfx*)value;
-
+	
 	*clrfx_type = info->clrfx;
 	return 0;
 }
@@ -6585,24 +6585,24 @@ static int sensor_s_colorfx(struct v4l2_subdev *sd,
 {
 	int ret;
 	struct sensor_info *info = to_state(sd);
-
+	
 	switch (value) {
 	case V4L2_COLORFX_NONE:
 	  ret = sensor_write_array(sd, sensor_colorfx_none_regs, ARRAY_SIZE(sensor_colorfx_none_regs));
 		break;
 	case V4L2_COLORFX_BW:
 		ret = sensor_write_array(sd, sensor_colorfx_bw_regs, ARRAY_SIZE(sensor_colorfx_bw_regs));
-		break;
+		break;  
 	case V4L2_COLORFX_SEPIA:
 		ret = sensor_write_array(sd, sensor_colorfx_sepia_regs, ARRAY_SIZE(sensor_colorfx_sepia_regs));
-		break;
+		break;   
 	case V4L2_COLORFX_NEGATIVE:
 		ret = sensor_write_array(sd, sensor_colorfx_negative_regs, ARRAY_SIZE(sensor_colorfx_negative_regs));
 		break;
-	case V4L2_COLORFX_EMBOSS:
+	case V4L2_COLORFX_EMBOSS:   
 		ret = sensor_write_array(sd, sensor_colorfx_emboss_regs, ARRAY_SIZE(sensor_colorfx_emboss_regs));
 		break;
-	case V4L2_COLORFX_SKETCH:
+	case V4L2_COLORFX_SKETCH:     
 		ret = sensor_write_array(sd, sensor_colorfx_sketch_regs, ARRAY_SIZE(sensor_colorfx_sketch_regs));
 		break;
 	case V4L2_COLORFX_SKY_BLUE:
@@ -6620,14 +6620,14 @@ static int sensor_s_colorfx(struct v4l2_subdev *sd,
 	default:
 		return -EINVAL;
 	}
-
+	
 	if (ret < 0) {
 		csi_dev_err("sensor_s_colorfx error, return %x!\n",ret);
 		return ret;
 	}
 	mdelay(10);
 	info->clrfx = value;
-
+	
 	return 0;
 }
 
@@ -6636,7 +6636,7 @@ static int sensor_g_flash_mode(struct v4l2_subdev *sd,
 {
 	struct sensor_info *info = to_state(sd);
 	enum v4l2_flash_mode *flash_mode = (enum v4l2_flash_mode*)value;
-
+	
 	*flash_mode = info->flash_mode;
 	return 0;
 }
@@ -6647,30 +6647,30 @@ static int sensor_s_flash_mode(struct v4l2_subdev *sd,
 	struct sensor_info *info = to_state(sd);
 	struct csi_dev *dev=(struct csi_dev *)dev_get_drvdata(sd->v4l2_dev->dev);
 	int flash_on,flash_off;
-
+	
 	flash_on = (dev->flash_pol!=0)?1:0;
 	flash_off = (flash_on==1)?0:1;
-
+	
 	switch (value) {
 	case V4L2_FLASH_MODE_OFF:
 		csi_gpio_write(sd,&dev->flash_io,flash_off);
 		break;
 	case V4L2_FLASH_MODE_AUTO:
 		return -EINVAL;
-		break;
+		break;  
 	case V4L2_FLASH_MODE_ON:
 		csi_gpio_write(sd,&dev->flash_io,flash_on);
-		break;
+		break;   
 	case V4L2_FLASH_MODE_TORCH:
 		return -EINVAL;
 		break;
-	case V4L2_FLASH_MODE_RED_EYE:
+	case V4L2_FLASH_MODE_RED_EYE:   
 		return -EINVAL;
 		break;
 	default:
 		return -EINVAL;
 	}
-
+	
 	info->flash_mode = value;
 	return 0;
 }
@@ -6679,9 +6679,9 @@ static int sensor_g_autofocus_mode(struct v4l2_subdev *sd,
     __s32 *value)
 {
 	struct sensor_info *info = to_state(sd);
-
+	
 	*value = info->af_mode;
-
+	
 	return 0;
 }
 
@@ -6690,9 +6690,9 @@ static int sensor_s_autofocus_mode(struct v4l2_subdev *sd,
 {
 	struct sensor_info *info = to_state(sd);
 	int ret;
-
+	
 	csi_dev_dbg("sensor_s_autofocus_mode = %d\n",value);
-
+	
 	switch(value) {
 		case V4L2_AF_FIXED:
 			break;
@@ -6723,9 +6723,9 @@ static int sensor_s_autofocus_mode(struct v4l2_subdev *sd,
 //			}
 			break;
 	}
-
+	
 	info->af_mode = value;
-
+	
 	return 0;
 }
 
@@ -6752,9 +6752,9 @@ static int sensor_g_autofocus_ctrl(struct v4l2_subdev *sd,
 		case V4L2_AF_WIN_NUM:
 			break;
 	}
-
+	
 	ctrl->value = info->af_ctrl;
-	return 0;
+	return 0;	
 }
 
 static int sensor_s_autofocus_ctrl(struct v4l2_subdev *sd,
@@ -6763,9 +6763,9 @@ static int sensor_s_autofocus_ctrl(struct v4l2_subdev *sd,
 	struct sensor_info *info = to_state(sd);
 	enum v4l2_autofocus_ctrl af_ctrl = ctrl->value;
 	struct v4l2_pix_size *pix;
-
+	
 	csi_dev_dbg("sensor_s_autofocus_ctrl = %d\n",ctrl->value);
-
+	
 	switch(af_ctrl) {
 		case V4L2_AF_INIT:
 			return sensor_download_af_fw(sd);
@@ -6784,7 +6784,7 @@ static int sensor_s_autofocus_ctrl(struct v4l2_subdev *sd,
 		case V4L2_AF_WIN_NUM:
 			break;
 	}
-
+	
 	info->af_ctrl = ctrl->value;
 	return 0;
 }
@@ -6799,7 +6799,7 @@ static int sensor_g_ctrl(struct v4l2_subdev *sd, struct v4l2_control *ctrl)
 	case V4L2_CID_SATURATION:
 		return sensor_g_saturation(sd, &ctrl->value);
 	case V4L2_CID_HUE:
-		return sensor_g_hue(sd, &ctrl->value);
+		return sensor_g_hue(sd, &ctrl->value);	
 	case V4L2_CID_VFLIP:
 		return sensor_g_vflip(sd, &ctrl->value);
 	case V4L2_CID_HFLIP:
@@ -6840,7 +6840,7 @@ static int sensor_s_ctrl(struct v4l2_subdev *sd, struct v4l2_control *ctrl)
 	case V4L2_CID_SATURATION:
 		return sensor_s_saturation(sd, ctrl->value);
 	case V4L2_CID_HUE:
-		return sensor_s_hue(sd, ctrl->value);
+		return sensor_s_hue(sd, ctrl->value);		
 	case V4L2_CID_VFLIP:
 		return sensor_s_vflip(sd, ctrl->value);
 	case V4L2_CID_HFLIP:
@@ -6856,7 +6856,7 @@ static int sensor_s_ctrl(struct v4l2_subdev *sd, struct v4l2_control *ctrl)
 				(enum v4l2_exposure_auto_type) ctrl->value);
 	case V4L2_CID_DO_WHITE_BALANCE:
 		return sensor_s_wb(sd,
-				(enum v4l2_whiteblance) ctrl->value);
+				(enum v4l2_whiteblance) ctrl->value);	
 	case V4L2_CID_AUTO_WHITE_BALANCE:
 		return sensor_s_autowb(sd, ctrl->value);
 	case V4L2_CID_COLORFX:
@@ -6930,7 +6930,7 @@ static int sensor_probe(struct i2c_client *client,
 
 	info->fmt = &sensor_formats[0];
 	info->ccm_info = &ccm_info_con;
-
+	
 	return 0;
 }
 
@@ -6972,3 +6972,5 @@ static __exit void exit_sensor(void)
 
 module_init(init_sensor);
 module_exit(exit_sensor);
+
+

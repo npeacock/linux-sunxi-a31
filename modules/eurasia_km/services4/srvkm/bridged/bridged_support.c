@@ -91,7 +91,7 @@ PVRSRVLookupOSMemHandle(PVRSRV_HANDLE_BASE *psHandleBase, IMG_HANDLE *phOSMemHan
 		{
 			PVRSRV_KERNEL_SYNC_INFO *psSyncInfo = (PVRSRV_KERNEL_SYNC_INFO *)hMHandleInt;
 			PVRSRV_KERNEL_MEM_INFO *psMemInfo = psSyncInfo->psSyncDataMemInfoKM;
-
+			
 			*phOSMemHandle = psMemInfo->sMemBlk.hOSMemHandle;
 
 			break;

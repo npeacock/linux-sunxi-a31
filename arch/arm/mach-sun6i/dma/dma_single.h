@@ -25,3 +25,4 @@ u32 dma_release_single(dm_hdl_t dma_hdl);
 u32 dma_request_init_single(struct dma_channel_t *pchan);
 
 #endif  /* __DMA_SINGLE_H */
+

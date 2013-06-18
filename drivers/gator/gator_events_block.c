@@ -83,7 +83,7 @@ static int gator_events_block_start(void)
 {
 	int cpu;
 
-	for_each_present_cpu(cpu)
+	for_each_present_cpu(cpu) 
 		per_cpu(new_data_avail, cpu) = true;
 
 	// register tracepoints

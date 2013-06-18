@@ -30,7 +30,7 @@ static void axp_mfd_irq_work(struct work_struct *work)
 {
 	struct axp_mfd_chip *chip = container_of(work, struct axp_mfd_chip, irq_work);
 	uint64_t irqs = 0;
-
+	
 	while (1) {
 		if (chip->ops->read_irqs(chip, &irqs)){
 			printk("read irq fail\n");
@@ -40,7 +40,7 @@ static void axp_mfd_irq_work(struct work_struct *work)
 		if (irqs == 0){
 			break;
 		}
-
+		
 		if(irqs > 0xffffffff){
 			blocking_notifier_call_chain(&chip->notifier_list, (uint32_t)(irqs>>32), (void *)1);
 		}
@@ -285,15 +285,15 @@ static void axp_power_off(void)
     if(power_start != 1){
 		axp_read(&axp->dev, POWER20_STATUS, &val);
 		if(val & 0xF0){
-		axp_read(&axp->dev, POWER20_MODE_CHGSTATUS, &val);
-		if(val & 0x20){
-		printk("[axp] set flag!\n");
-			axp_write(&axp->dev, POWER20_DATA_BUFFERC, 0x0f);
-		mdelay(20);
-			printk("[axp] reboot!\n");
-			arch_reset(0,NULL);
-			printk("[axp] warning!!! arch can't ,reboot, maybe some error happend!\n");
-		}
+	    	axp_read(&axp->dev, POWER20_MODE_CHGSTATUS, &val);
+	    	if(val & 0x20){
+            	printk("[axp] set flag!\n");
+	        	axp_write(&axp->dev, POWER20_DATA_BUFFERC, 0x0f);
+            	mdelay(20);
+		    	printk("[axp] reboot!\n");
+		    	arch_reset(0,NULL);
+		    	printk("[axp] warning!!! arch can't ,reboot, maybe some error happend!\n");
+	    	}
 		}
 	}
     axp_write(&axp->dev, POWER20_DATA_BUFFERC, 0x00);
@@ -338,15 +338,15 @@ static void axp_power_off(void)
     if(power_start != 1){
 		axp_read(&axp->dev, AXP22_STATUS, &val);
 		if(val & 0xF0){
-		axp_read(&axp->dev, AXP22_MODE_CHGSTATUS, &val);
-		if(val & 0x20){
-		printk("[axp] set flag!\n");
-			axp_write(&axp->dev, AXP22_BUFFERC, 0x0f);
-		mdelay(20);
-			printk("[axp] reboot!\n");
-			arch_reset(0,NULL);
-			printk("[axp] warning!!! arch can't ,reboot, maybe some error happend!\n");
-		}
+	    	axp_read(&axp->dev, AXP22_MODE_CHGSTATUS, &val);
+	    	if(val & 0x20){
+            	printk("[axp] set flag!\n");
+	        	axp_write(&axp->dev, AXP22_BUFFERC, 0x0f);
+            	mdelay(20);
+		    	printk("[axp] reboot!\n");
+		    	arch_reset(0,NULL);
+		    	printk("[axp] warning!!! arch can't ,reboot, maybe some error happend!\n");
+	    	}
 		}
 	}
     axp_write(&axp->dev, AXP22_BUFFERC, 0x00);
@@ -364,6 +364,8 @@ static int __devinit axp_mfd_probe(struct i2c_client *client,
 	struct axp_platform_data *pdata = client->dev.platform_data;
 	struct axp_mfd_chip *chip;
 	int ret;
+	script_item_u script_val;
+	script_item_value_type_e type;
 
 	chip = kzalloc(sizeof(struct axp_mfd_chip), GFP_KERNEL);
 	if (chip == NULL)
@@ -388,22 +390,22 @@ static int __devinit axp_mfd_probe(struct i2c_client *client,
 #ifdef	CONFIG_AXP_TWI_USED
 	ret = request_irq(client->irq, axp_mfd_irq_handler,
 		IRQF_SHARED|IRQF_DISABLED, "axp_mfd", chip);
-	if (ret) {
-		dev_err(&client->dev, "failed to request irq %d\n",
-				client->irq);
-		goto out_free_chip;
-	}
+  	if (ret) {
+  		dev_err(&client->dev, "failed to request irq %d\n",
+  				client->irq);
+  		goto out_free_chip;
+  	}
 #else
 	ret = ar100_axp_cb_register(axp_mfd_irq_cb, chip);
 	if (ret) {
-		dev_err(&client->dev, "failed to reg irq cb %d\n",
-				client->irq);
-		goto out_free_chip;
-	}
-	/* enable ar100 system axp irq,
-	 * by sunny at 2013-1-10 9:00:59.
-	 */
-	ar100_enable_axp_irq();
+  		dev_err(&client->dev, "failed to reg irq cb %d\n",
+  				client->irq);
+  		goto out_free_chip;
+  	}
+  	/* enable ar100 system axp irq,
+  	 * by sunny at 2013-1-10 9:00:59.
+  	 */
+  	ar100_enable_axp_irq();
 #endif
 
 	ret = axp_mfd_add_subdevs(chip, pdata);
@@ -411,23 +413,33 @@ static int __devinit axp_mfd_probe(struct i2c_client *client,
 		goto out_free_irq;
 
 	/* PM hookup */
-	if(!pm_power_off)
-		pm_power_off = axp_power_off;
-
+	if(!pm_power_off) {
+		type = script_get_item("pmu_para", "pmu_fake_power_off_enable", &script_val);
+		if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
+			printk("pmu fake power off config type err!");
+			script_val.val = 0;
+		}
+		if (script_val.val) {
+			pm_power_off = ar100_fake_power_off;
+		} else {
+			pm_power_off = axp_power_off;
+		}
+	}
+	
 	ret = axp_mfd_create_attrs(chip);
 	if(ret){
 		return ret;
 	}
-
+	
 	/* set ac/usb_in shutdown mean restart */
-	ret = axp_script_parser_fetch("pmu_para", "power_start", &power_start, sizeof(int));
-	if (ret)
-	{
-	printk("[AXP]axp driver uning configuration failed(%d)\n", __LINE__);
-	power_start = 0;
-	printk("[AXP]power_start = %d\n",power_start);
-	}
-
+  	ret = axp_script_parser_fetch("pmu_para", "power_start", &power_start, sizeof(int));
+  	if (ret)
+  	{
+    	printk("[AXP]axp driver uning configuration failed(%d)\n", __LINE__);
+     	power_start = 0;
+     	printk("[AXP]power_start = %d\n",power_start);
+  	}
+  	
 	return 0;
 
 out_free_irq:

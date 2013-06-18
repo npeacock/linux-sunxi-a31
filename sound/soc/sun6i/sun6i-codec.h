@@ -53,13 +53,13 @@
 #define SUN6I_ADC_DAP_RDAC			 (0x90)		//ADC DAP Right Decay&Attack time Register
 #define SUN6I_ADC_DAP_HPFC			 (0x94)		//ADC DAP HPF Coefficient Register
 
-/*DAC Digital Part Control Register
+/*DAC Digital Part Control Register 
 * codecbase+0x00
 */
 #define DAC_EN                    (31)
 #define DIGITAL_VOL               (12)			//not used yet
 
-/*DAC FIFO Control Register
+/*DAC FIFO Control Register 
 * codecbase+0x04
 */
 #define FIR_VERSION				  (28)
@@ -238,7 +238,7 @@
 #define DAC_MASTER_SOFT_MUTE_CTL		(28)
 #define DAC_SKEW_TIME_VOL_CTL			(24)
 #define DAC_MASTER_VOL					(16)
-#define DAC_LEFT_CHAN_VOL				(8)
+#define DAC_LEFT_CHAN_VOL				(8)					
 #define DAC_RIGHT_CHAN_VOL				(0)
 
 /*ADC DAP Control Register
@@ -311,10 +311,10 @@ void  __iomem *baseaddr;
 #define AUDIO_RATE_DEFAULT	44100
 #define ST_RUNNING		(1<<0)
 #define ST_OPENED		(1<<1)
-
+ 
 struct sun6i_pcm_dma_params {
-	char *name;
-	dma_addr_t dma_addr;
+	char *name;		
+	dma_addr_t dma_addr;	
 };
 
 #define codec_rdreg(reg)	    readl((baseaddr+(reg)))
@@ -326,7 +326,7 @@ struct sun6i_pcm_dma_params {
 #define CODEC_SINGLE_VALUE(xreg, xshift, xmax,	xinvert)\
 		((unsigned long)&(struct codec_mixer_control)\
 		{.reg	=	xreg,	.shift	=	xshift,	.rshift	=	xshift,	.max	=	xmax,\
-	.invert	=	xinvert})
+   	.invert	=	xinvert})
 
 #define CODEC_SINGLE(xname,	reg,	shift,	max,	invert)\
 {	.iface	= SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname,\
@@ -334,7 +334,7 @@ struct sun6i_pcm_dma_params {
 	.put	= snd_codec_put_volsw,\
 	.private_value	= CODEC_SINGLE_VALUE(reg, shift, max, invert)}
 
-/*	mixer control*/
+/*	mixer control*/	
 struct	codec_mixer_control{
 	int	min;
 	int     max;

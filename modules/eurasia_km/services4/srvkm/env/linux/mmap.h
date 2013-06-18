@@ -78,12 +78,12 @@ typedef struct KV_OFFSET_STRUCT_TAG
      * with the area.
      */
     IMG_UINT32                  ui32MMapOffset;
-
+    
     IMG_UINT32			ui32RealByteSize;
 
     /* Memory area associated with this offset structure */
     LinuxMemArea                *psLinuxMemArea;
-
+    
 #if !defined(PVR_MAKE_ALL_PFNS_SPECIAL)
     /* ID of the thread that owns this structure */
     IMG_UINT32			ui32TID;
@@ -113,7 +113,7 @@ typedef struct KV_OFFSET_STRUCT_TAG
 #if defined(DEBUG_LINUX_MMAP_AREAS)
     const IMG_CHAR		*pszName;
 #endif
-
+    
    /* List entry field for MMap list */
    struct list_head		sMMapItem;
 
@@ -140,7 +140,7 @@ IMG_VOID PVRMMapCleanup(IMG_VOID);
 /*!
  *******************************************************************************
  * @Function Registers a memory area with the mmap code
- *
+ *          
  * @Input psLinuxMemArea
  *
  * @Return PVRSRV_ERROR status
@@ -169,7 +169,7 @@ PVRSRV_ERROR PVRMMapRemoveRegisteredArea(LinuxMemArea *psLinuxMemArea);
  * @Input hMHandle              Handle associated with the memory to map.
  *				This is a (secure) handle to the OS specific
  *				memory handle structure (hOSMemHandle), or
- *				a handle to a structure that contains the
+ *				a handle to a structure that contains the 
  *				memory handle.
  * @Output pui32MMapOffset      The page aligned offset that the client must
  *				pass to the mmap2 system call.
@@ -182,7 +182,7 @@ PVRSRV_ERROR PVRMMapRemoveRegisteredArea(LinuxMemArea *psLinuxMemArea);
  * @Output pui32RealByteOffset   The size that the mapping will really be,
  *				that the client must also pass to mmap/munmap.
  *
- * @Output pui32UserVAddr	Pointer to returned user mode address of
+ * @Output pui32UserVAddr	Pointer to returned user mode address of 
  * 				mapping.
  * @Return PVRSRV_ERROR
  ******************************************************************************/
@@ -226,14 +226,15 @@ PVRMMapReleaseMMapData(PVRSRV_PER_PROCESS_DATA *psPerProc,
 /*!
  *******************************************************************************
  * @Function driver mmap entry point
- *
+ * 
  * @Input pFile : user file structure
  *
  * @Input ps_vma : vm area structure
- *
+ * 
  * @Return 0 for success, -errno for failure.
  ******************************************************************************/
 int PVRMMap(struct file* pFile, struct vm_area_struct* ps_vma);
 
 
 #endif	/* __MMAP_H__ */
+

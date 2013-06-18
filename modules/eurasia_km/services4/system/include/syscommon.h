@@ -96,11 +96,11 @@ typedef struct _SYS_DATA_TAG_
     PVRSRV_DEVICE_NODE			*psDeviceNodeList;			/*!< list of private device info structures */
     PVRSRV_POWER_DEV			*psPowerDeviceList;			/*!< list of devices registered with the power manager */
 	PVRSRV_RESOURCE				sPowerStateChangeResource;	/*!< lock for power state transitions */
-	PVRSRV_SYS_POWER_STATE		eCurrentPowerState;			/*!< current Kernel services power state */
-	PVRSRV_SYS_POWER_STATE		eFailedPowerState;			/*!< Kernel services power state (Failed to transition to) */
-	IMG_UINT32		 			ui32CurrentOSPowerState;	/*!< current OS specific power state */
+   	PVRSRV_SYS_POWER_STATE		eCurrentPowerState;			/*!< current Kernel services power state */
+   	PVRSRV_SYS_POWER_STATE		eFailedPowerState;			/*!< Kernel services power state (Failed to transition to) */
+   	IMG_UINT32		 			ui32CurrentOSPowerState;	/*!< current OS specific power state */
     PVRSRV_QUEUE_INFO           *psQueueList;           	/*!< list of all command queues in the system */
-	PVRSRV_KERNEL_SYNC_INFO 	*psSharedSyncInfoList;		/*!< list of cross process syncinfos */
+   	PVRSRV_KERNEL_SYNC_INFO 	*psSharedSyncInfoList;		/*!< list of cross process syncinfos */
     IMG_PVOID                   pvEnvSpecificData;      	/*!< Environment specific data */
     IMG_PVOID                   pvSysSpecificData;    	  	/*!< Unique to system, accessible at system layer only */
 	PVRSRV_RESOURCE				sQProcessResource;			/*!< Command Q processing access lock */
@@ -109,7 +109,7 @@ typedef struct _SYS_DATA_TAG_
 	IMG_UINT32					*pvSOCTimerRegisterKM;		/*!< SOC Timer register (if present) */
 	IMG_VOID					*pvSOCClockGateRegsBase;	/*!< SOC Clock gating registers (if present) */
 	IMG_UINT32					ui32SOCClockGateRegsSize;
-
+															
 	struct _DEVICE_COMMAND_DATA_ *apsDeviceCommandData[SYS_DEVICE_COUNT];
 															/*!< command complete data and callback function store for every command for every device */
 
@@ -201,7 +201,7 @@ extern SYS_DATA* gpsSysData;
  @Function	SysAcquireData
 
  @Description returns reference to to sysdata
-				creating one on first call
+ 				creating one on first call
 
  @Input    ppsSysData - pointer to copy reference into
 
@@ -231,7 +231,7 @@ static INLINE IMG_VOID SysAcquireData(SYS_DATA **ppsSysData)
  @Function	SysAcquireDataNoCheck
 
  @Description returns reference to to sysdata
-				creating one on first call
+ 				creating one on first call
 
  @Input    none
 

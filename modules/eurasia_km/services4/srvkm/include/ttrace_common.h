@@ -1,7 +1,7 @@
 /*************************************************************************/ /*!
 @Title          Timed Trace header
 @Copyright      Copyright (c) Imagination Technologies Ltd. All Rights Reserved
-@Description	Timed Trace common header. Contains shared defines and
+@Description	Timed Trace common header. Contains shared defines and 
                 structures which are shared with the post processing tool.
 @License        Dual MIT/GPLv2
 

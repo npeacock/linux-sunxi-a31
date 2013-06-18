@@ -9,7 +9,7 @@
 #
 #################################################################################
 PWD=$(shell pwd)
-obj-m+=nandtest.o
+obj-m+=nandtest.o 
 nandtest-objs := nandtest/nand_test.o ../../nand/nfd/nand_osal_for_linux.o  libnand.a
 
 install: build

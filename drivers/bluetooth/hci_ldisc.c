@@ -565,12 +565,12 @@ static int __init hci_uart_init(void)
 #ifdef CONFIG_BT_HCIUART_ATH3K
 	ath_init();
 #endif
-//Realtek_add_start
-//add realtek h5 support
+//Realtek_add_start	
+//add realtek h5 support	
 #ifdef CONFIG_BT_HCIUART_RTKH5
 	h5_init();
 #endif
-//Realtek_add_end
+//Realtek_add_end	
 
 	return 0;
 }

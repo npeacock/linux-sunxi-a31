@@ -267,3 +267,4 @@ typedef struct clk
 extern int clk_reset(struct clk *clk, __aw_ccu_clk_reset_e reset);
 
 #endif  /* #ifndef __AW_CLOCK_H__ */
+

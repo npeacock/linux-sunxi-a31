@@ -507,3 +507,4 @@ u32 sw_gpio_resume(void)
 	return 0;
 }
 EXPORT_SYMBOL(sw_gpio_resume);
+

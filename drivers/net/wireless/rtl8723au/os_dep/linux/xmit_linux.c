@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2012 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -32,7 +32,6 @@
 #include <osdep_intf.h>
 #include <circ_buf.h>
 
-
 uint rtw_remainder_len(struct pkt_file *pfile)
 {
 	return (pfile->buf_len - ((SIZE_PTR)(pfile->cur_addr) - (SIZE_PTR)(pfile->buf_start)));
@@ -47,28 +46,28 @@ _func_enter_;
 	pfile->pkt_len = pfile->buf_len = pktptr->len;
 
 	pfile->cur_buffer = pfile->buf_start ;
-
+	
 _func_exit_;
 }
 
 uint _rtw_pktfile_read (struct pkt_file *pfile, u8 *rmem, uint rlen)
-{
+{	
 	uint	len = 0;
-
+	
 _func_enter_;
 
        len =  rtw_remainder_len(pfile);
-	len = (rlen > len)? len: rlen;
+      	len = (rlen > len)? len: rlen;
 
        if(rmem)
 	  skb_copy_bits(pfile->pkt, pfile->buf_len-pfile->pkt_len, rmem, len);
 
        pfile->cur_addr += len;
        pfile->pkt_len -= len;
+	   
+_func_exit_;	       		
 
-_func_exit_;
-
-	return len;
+	return len;	
 }
 
 sint rtw_endofpktfile(struct pkt_file *pfile)
@@ -91,10 +90,10 @@ void rtw_set_tx_chksum_offload(_pkt *pkt, struct pkt_attrib *pattrib)
 #ifdef CONFIG_TCP_CSUM_OFFLOAD_TX
 	struct sk_buff *skb = (struct sk_buff *)pkt;
 	pattrib->hw_tcp_csum = 0;
-
+	
 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
 		if (skb_shinfo(skb)->nr_frags == 0)
-		{
+		{	
                         const struct iphdr *ip = ip_hdr(skb);
                         if (ip->protocol == IPPROTO_TCP) {
                                 // TCP checksum offload by HW
@@ -103,7 +102,7 @@ void rtw_set_tx_chksum_offload(_pkt *pkt, struct pkt_attrib *pattrib)
                                 //skb_checksum_help(skb);
                         } else if (ip->protocol == IPPROTO_UDP) {
                                 //DBG_871X("CHECKSUM_PARTIAL UDP\n");
-#if 1
+#if 1                       
                                 skb_checksum_help(skb);
 #else
                                 // Set UDP checksum = 0 to skip checksum check
@@ -117,27 +116,27 @@ void rtw_set_tx_chksum_offload(_pkt *pkt, struct pkt_attrib *pattrib)
 		}
 		else { // IP fragmentation case
 			DBG_871X("%s-%d nr_frags != 0, using skb_checksum_help(skb);!!\n", __FUNCTION__, __LINE__);
-			skb_checksum_help(skb);
-		}
+                	skb_checksum_help(skb);
+		}		
 	}
-#endif
-
+#endif	
+	
 }
 
 int rtw_os_xmit_resource_alloc(_adapter *padapter, struct xmit_buf *pxmitbuf,u32 alloc_sz)
 {
 #ifdef CONFIG_USB_HCI
 	int i;
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct usb_device	*pusbd = pdvobjpriv->pusbdev;
 
 #ifdef CONFIG_USE_USB_BUFFER_ALLOC_TX
-	pxmitbuf->pallocated_buf = rtw_usb_buffer_alloc(pusbd, (size_t)alloc_sz, GFP_ATOMIC, &pxmitbuf->dma_transfer_addr);
+	pxmitbuf->pallocated_buf = rtw_usb_buffer_alloc(pusbd, (size_t)alloc_sz, &pxmitbuf->dma_transfer_addr);
 	pxmitbuf->pbuf = pxmitbuf->pallocated_buf;
 	if(pxmitbuf->pallocated_buf == NULL)
 		return _FAIL;
 #else // CONFIG_USE_USB_BUFFER_ALLOC_TX
-
+	
 	pxmitbuf->pallocated_buf = rtw_zmalloc(alloc_sz);
 	if (pxmitbuf->pallocated_buf == NULL)
 	{
@@ -150,17 +149,17 @@ int rtw_os_xmit_resource_alloc(_adapter *padapter, struct xmit_buf *pxmitbuf,u32
 #endif // CONFIG_USE_USB_BUFFER_ALLOC_TX
 
 	for(i=0; i<8; i++)
-	{
-		pxmitbuf->pxmit_urb[i] = usb_alloc_urb(0, GFP_KERNEL);
-		if(pxmitbuf->pxmit_urb[i] == NULL)
-		{
-			DBG_871X("pxmitbuf->pxmit_urb[i]==NULL");
-			return _FAIL;
-		}
-
-	}
+      	{
+      		pxmitbuf->pxmit_urb[i] = usb_alloc_urb(0, GFP_KERNEL);
+             	if(pxmitbuf->pxmit_urb[i] == NULL) 
+             	{
+             		DBG_871X("pxmitbuf->pxmit_urb[i]==NULL");
+	        	return _FAIL;	 
+             	}      		  	
+	
+      	}
 #endif
-#if defined(CONFIG_PCI_HCI) || defined(CONFIG_SDIO_HCI)
+#if defined(CONFIG_PCI_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	pxmitbuf->pallocated_buf = rtw_zmalloc(alloc_sz);
 	if (pxmitbuf->pallocated_buf == NULL)
 	{
@@ -170,14 +169,14 @@ int rtw_os_xmit_resource_alloc(_adapter *padapter, struct xmit_buf *pxmitbuf,u32
 	pxmitbuf->pbuf = (u8 *)N_BYTE_ALIGMENT((SIZE_PTR)(pxmitbuf->pallocated_buf), XMITBUF_ALIGN_SZ);
 #endif
 
-	return _SUCCESS;
+	return _SUCCESS;	
 }
 
 void rtw_os_xmit_resource_free(_adapter *padapter, struct xmit_buf *pxmitbuf,u32 free_sz)
 {
 #ifdef CONFIG_USB_HCI
 	int i;
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct usb_device	*pusbd = pdvobjpriv->pusbdev;
 
 
@@ -200,11 +199,13 @@ void rtw_os_xmit_resource_free(_adapter *padapter, struct xmit_buf *pxmitbuf,u32
 #endif	// CONFIG_USE_USB_BUFFER_ALLOC_TX
 
 #endif
-#if defined(CONFIG_PCI_HCI) || defined(CONFIG_SDIO_HCI)
+#if defined(CONFIG_PCI_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	if(pxmitbuf->pallocated_buf)
 		rtw_mfree(pxmitbuf->pallocated_buf, free_sz);
 #endif
 }
+
+#define WMM_XMIT_THRESHOLD	(NR_XMITFRAME*2/5)
 
 void rtw_os_pkt_complete(_adapter *padapter, _pkt *pkt)
 {
@@ -213,10 +214,15 @@ void rtw_os_pkt_complete(_adapter *padapter, _pkt *pkt)
 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
 
 	queue = skb_get_queue_mapping(pkt);
-	if(__netif_subqueue_stopped(padapter->pnetdev, queue) &&
-		(pxmitpriv->hwxmits[queue].accnt < NR_XMITFRAME/2))
-	{
-		netif_wake_subqueue(padapter->pnetdev, queue);
+	if (padapter->registrypriv.wifi_spec) {
+		if(__netif_subqueue_stopped(padapter->pnetdev, queue) &&
+			(pxmitpriv->hwxmits[queue].accnt < WMM_XMIT_THRESHOLD))
+		{
+			netif_wake_subqueue(padapter->pnetdev, queue);
+		}
+	} else {
+		if(__netif_subqueue_stopped(padapter->pnetdev, queue))
+			netif_wake_subqueue(padapter->pnetdev, queue);
 	}
 #else
 	if (netif_queue_stopped(padapter->pnetdev))
@@ -230,12 +236,12 @@ void rtw_os_xmit_complete(_adapter *padapter, struct xmit_frame *pxframe)
 {
 	if(pxframe->pkt)
 	{
-		//RT_TRACE(_module_xmit_osdep_c_,_drv_err_,("linux : rtw_os_xmit_complete, dev_kfree_skb()\n"));
+		//RT_TRACE(_module_xmit_osdep_c_,_drv_err_,("linux : rtw_os_xmit_complete, dev_kfree_skb()\n"));	
 
-		//dev_kfree_skb_any(pxframe->pkt);
+		//dev_kfree_skb_any(pxframe->pkt);	
 		rtw_os_pkt_complete(padapter, pxframe->pkt);
-
-	}
+		
+	}	
 
 	pxframe->pkt = NULL;
 }
@@ -244,7 +250,7 @@ void rtw_os_xmit_schedule(_adapter *padapter)
 {
 	_adapter *pri_adapter = padapter;
 
-#ifdef CONFIG_SDIO_HCI
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	if(!padapter)
 		return;
 
@@ -252,6 +258,7 @@ void rtw_os_xmit_schedule(_adapter *padapter)
 	if(padapter->adapter_type > PRIMARY_ADAPTER)
 		pri_adapter = padapter->pbuddy_adapter;
 #endif
+
 	if (_rtw_queue_empty(&pri_adapter->xmitpriv.pending_xmitbuf_queue) == _FALSE)
 		_rtw_up_sema(&pri_adapter->xmitpriv.xmit_sema);
 
@@ -267,7 +274,7 @@ void rtw_os_xmit_schedule(_adapter *padapter)
 
 	_enter_critical_bh(&pxmitpriv->lock, &irqL);
 
-	if(rtw_txframes_pending(padapter))
+	if(rtw_txframes_pending(padapter))	
 	{
 		tasklet_hi_schedule(&pxmitpriv->xmit_tasklet);
 	}
@@ -276,7 +283,33 @@ void rtw_os_xmit_schedule(_adapter *padapter)
 #endif
 }
 
+static void rtw_check_xmit_resource(_adapter *padapter, _pkt *pkt)
+{
+	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
+#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
+	u16	queue;
 
+	queue = skb_get_queue_mapping(pkt);
+	if (padapter->registrypriv.wifi_spec) {
+		/* No free space for Tx, tx_worker is too slow */
+		if (pxmitpriv->hwxmits[queue].accnt > WMM_XMIT_THRESHOLD) {
+			//DBG_871X("%s(): stop netif_subqueue[%d]\n", __FUNCTION__, queue);
+			netif_stop_subqueue(padapter->pnetdev, queue);
+		}
+	} else {
+		if(pxmitpriv->free_xmitframe_cnt<=4) {
+			if (!netif_tx_queue_stopped(netdev_get_tx_queue(padapter->pnetdev, queue)))
+				netif_stop_subqueue(padapter->pnetdev, queue);
+		}
+	}
+#else
+	if(pxmitpriv->free_xmitframe_cnt<=4)
+	{
+		if (!rtw_netif_queue_stopped(padapter->pnetdev))
+			rtw_netif_stop_queue(padapter->pnetdev);
+	}
+#endif
+}
 
 #ifdef CONFIG_TX_MCAST2UNI
 int rtw_mlcst2unicst(_adapter *padapter, struct sk_buff *skb)
@@ -292,27 +325,27 @@ int rtw_mlcst2unicst(_adapter *padapter, struct sk_buff *skb)
 	_enter_critical_bh(&pstapriv->asoc_list_lock, &irqL);
 	phead = &pstapriv->asoc_list;
 	plist = get_next(phead);
-
+	
 	//free sta asoc_queue
-	while ((rtw_end_of_queue_search(phead, plist)) == _FALSE)
-	{
+	while ((rtw_end_of_queue_search(phead, plist)) == _FALSE)	
+	{		
 		psta = LIST_CONTAINOR(plist, struct sta_info, asoc_list);
-
+		
 		plist = get_next(plist);
 
-		/* avoid   come from STA1 and send back STA1 */
-		if (!memcmp(psta->hwaddr, &skb->data[6], 6))
-			continue;
+		/* avoid   come from STA1 and send back STA1 */ 
+		if (!memcmp(psta->hwaddr, &skb->data[6], 6))	
+			continue; 
 
 		newskb = skb_copy(skb, GFP_ATOMIC);
-
+		
 		if (newskb) {
 			memcpy(newskb->data, psta->hwaddr, 6);
 			res = rtw_xmit(padapter, &newskb);
 			if (res < 0) {
 				DBG_871X("%s()-%d: rtw_xmit() return error!\n", __FUNCTION__, __LINE__);
 				pxmitpriv->tx_drop++;
-				dev_kfree_skb_any(newskb);
+				dev_kfree_skb_any(newskb);			
 			} else
 				pxmitpriv->tx_pkts++;
 		} else {
@@ -339,7 +372,7 @@ int rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev)
 #ifdef CONFIG_TX_MCAST2UNI
 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
 	extern int rtw_mc2u_disable;
-#endif	// CONFIG_TX_MCAST2UNI
+#endif	// CONFIG_TX_MCAST2UNI	
 	s32 res = 0;
 #if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
 	u16 queue;
@@ -357,22 +390,15 @@ _func_enter_;
 		goto drop_packet;
 	}
 
-#if (LINUX_VERSION_CODE>=KERNEL_VERSION(2,6,35))
-	queue = skb_get_queue_mapping(pkt);
-	/* No free space for Tx, tx_worker is too slow */
-	if (pxmitpriv->hwxmits[queue].accnt > NR_XMITFRAME/2) {
-		//DBG_871X("%s(): stop netif_subqueue[%d]\n", __FUNCTION__, queue);
-		netif_stop_subqueue(padapter->pnetdev, queue);
-		return NETDEV_TX_BUSY;
-	}
-#endif
+	rtw_check_xmit_resource(padapter, pkt);
 
 #ifdef CONFIG_TX_MCAST2UNI
 	if ( !rtw_mc2u_disable
 		&& check_fwstate(pmlmepriv, WIFI_AP_STATE) == _TRUE
 		&& ( IP_MCAST_MAC(pkt->data)
 			|| ICMPV6_MCAST_MAC(pkt->data) )
-		)
+		&& (padapter->registrypriv.wifi_spec == 0)
+                )
 	{
 		if ( pxmitpriv->free_xmitframe_cnt > (NR_XMITFRAME/4) ) {
 			res = rtw_mlcst2unicst(padapter, pkt);
@@ -383,8 +409,8 @@ _func_enter_;
 			//DBG_871X("Stop M2U(%d, %d)! ", pxmitpriv->free_xmitframe_cnt, pxmitpriv->free_xmitbuf_cnt);
 			//DBG_871X("!m2u );
 		}
-	}
-#endif	// CONFIG_TX_MCAST2UNI
+	}	
+#endif	// CONFIG_TX_MCAST2UNI	
 
 	res = rtw_xmit(padapter, &pkt);
 	if (res < 0) {
@@ -409,3 +435,4 @@ _func_exit_;
 
 	return 0;
 }
+

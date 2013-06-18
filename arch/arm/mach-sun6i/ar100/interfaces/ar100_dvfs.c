@@ -24,23 +24,23 @@
 
 typedef struct ar100_freq_voltage
 {
-    u32 freq;   	//cpu frequency
-    u32 voltage;   	//voltage for the frequency
+    u32 freq;   	//cpu frequency				
+    u32 voltage;   	//voltage for the frequency 
     u32 axi_div;	//the divide ratio of axi bus
 } ar100_freq_voltage_t;
 
 //cpu voltage-freq table
-static struct ar100_freq_voltage ar100_vf_table[AR100_DVFS_VF_TABLE_MAX] =
+static struct ar100_freq_voltage ar100_vf_table[AR100_DVFS_VF_TABLE_MAX] = 
 {
 	//freq       	//voltage	//axi_div
     {900000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (600Mhz, 1008Mhz]
-    {600000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (420Mhz, 600Mhz]
-    {420000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (360Mhz, 420Mhz]
-    {360000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (300Mhz, 360Mhz]
-    {300000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (240Mhz, 300Mhz]
-    {240000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (120Mhz, 240Mhz]
-    {120000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (60Mhz,  120Mhz]
-    {60000000,      1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (0Mhz,   60Mhz]
+    {600000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (420Mhz, 600Mhz] 
+    {420000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (360Mhz, 420Mhz]  
+    {360000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (300Mhz, 360Mhz]  
+    {300000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (240Mhz, 300Mhz]  
+    {240000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (120Mhz, 240Mhz]  
+    {120000000,  	1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (60Mhz,  120Mhz]       
+    {60000000,      1200, 		3}, //cpu0 vdd is 1.20v if cpu freq is (0Mhz,   60Mhz]    
     {0,             1200, 		3}, //end of cpu dvfs table
     {0,             1200, 		3}, //end of cpu dvfs table
     {0,             1200, 		3}, //end of cpu dvfs table
@@ -73,7 +73,7 @@ int ar100_dvfs_cfg_vf_table(void)
 	int    vf_table_size = 0;
 	char   vf_table_key[256];
 	struct ar100_message *pmessage;
-
+	
 	/* parse system config v-f table information */
 	if (ar100_dvfs_get_cfg("dvfs_table", "LV_count", &vf_table_size)) {
 		AR100_WRN("parse system config dvfs_table size fail\n");
@@ -93,7 +93,7 @@ int ar100_dvfs_cfg_vf_table(void)
 			ar100_vf_table[index].voltage = value;
 		}
 	}
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
@@ -111,13 +111,13 @@ int ar100_dvfs_cfg_vf_table(void)
 		pmessage->state      = AR100_MESSAGE_INITIALIZED;
 		pmessage->cb.handler = NULL;
 		pmessage->cb.arg     = NULL;
-
-		AR100_INF("v-f table: index %d freq %d vol %d axi_div %d\n",
+		
+		AR100_INF("v-f table: index %d freq %d vol %d axi_div %d\n", 
 		pmessage->paras[0], pmessage->paras[1], pmessage->paras[2], pmessage->paras[3]);
-
+		
 		/* send request message */
 		ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+		
 		//check config fail or not
 		if (pmessage->result) {
 			AR100_WRN("config dvfs v-f table [%d] fail\n", index);
@@ -127,7 +127,7 @@ int ar100_dvfs_cfg_vf_table(void)
 	}
 	/* free allocated message */
 	ar100_message_free(pmessage);
-
+	
 	return result;
 }
 
@@ -146,18 +146,18 @@ int ar100_dvfs_set_cpufreq(unsigned int freq, unsigned long mode, ar100_cb_t cb,
 	unsigned int          msg_attr = 0;
 	struct ar100_message *pmessage;
 	int                   result = 0;
-
+	
 	if (mode & AR100_DVFS_SYN) {
 		msg_attr |= AR100_MESSAGE_ATTR_HARDSYN;
 	}
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(msg_attr);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type       = AR100_CPUX_DVFS_REQ;
 	pmessage->attr       = (unsigned char)msg_attr;
@@ -165,16 +165,16 @@ int ar100_dvfs_set_cpufreq(unsigned int freq, unsigned long mode, ar100_cb_t cb,
 	pmessage->state      = AR100_MESSAGE_INITIALIZED;
 	pmessage->cb.handler = cb;
 	pmessage->cb.arg     = cb_arg;
-
+	
 	AR100_INF("ar100 dvfs request : %d\n", freq);
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* dvfs mode : syn or not */
 	if (mode & AR100_DVFS_SYN) {
 		result = pmessage->result;
 		ar100_message_free(pmessage);
 	}
-
+	
 	return result;
 }
 EXPORT_SYMBOL(ar100_dvfs_set_cpufreq);

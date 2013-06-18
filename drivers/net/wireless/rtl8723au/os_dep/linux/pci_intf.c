@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -82,31 +82,21 @@ struct pci_device_id rtw_pci_id_tbl[] = {
 	{},
 };
 
-typedef struct _driver_priv{
-
+struct pci_drv_priv {
 	struct pci_driver rtw_pci_drv;
 	int drv_registered;
-
-#if defined(CONFIG_CONCURRENT_MODE) || defined(CONFIG_DUALMAC_CONCURRENT)
-	//global variable
-	_mutex h2c_fwcmd_mutex;
-	_mutex setch_mutex;
-	_mutex setbw_mutex;
-	_mutex hw_init_mutex;
-#endif
-
-}drv_priv, *pdrv_priv;
+};
 
 
-static drv_priv drvpriv = {
+static struct pci_drv_priv pci_drvpriv = {
 	.rtw_pci_drv.name = (char*)DRV_NAME,
 	.rtw_pci_drv.probe = rtw_drv_init,
 	.rtw_pci_drv.remove = rtw_dev_remove,
 	.rtw_pci_drv.id_table = rtw_pci_id_tbl,
-#ifdef CONFIG_PM
+#ifdef CONFIG_PM	
 	.rtw_pci_drv.suspend = rtw_suspend,
 	.rtw_pci_drv.resume = rtw_resume,
-#else
+#else	
 	.rtw_pci_drv.suspend = NULL,
 	.rtw_pci_drv.resume = NULL,
 #endif
@@ -125,7 +115,7 @@ static u16 pcibridge_vendors[PCI_BRIDGE_VENDOR_MAX] = {
 
 static u8 rtw_pci_platform_switch_device_pci_aspm(_adapter *padapter, u8 value)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	u8	bresult = _SUCCESS;
 	int	error;
 
@@ -142,12 +132,12 @@ static u8 rtw_pci_platform_switch_device_pci_aspm(_adapter *padapter, u8 value)
 	return bresult;
 }
 
-//
-// When we set 0x01 to enable clk request. Set 0x0 to disable clk req.
-//
+// 
+// When we set 0x01 to enable clk request. Set 0x0 to disable clk req.  
+// 
 static u8 rtw_pci_switch_clk_req(_adapter *padapter, u8 value)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	u8	buffer, bresult = _SUCCESS;
 	int	error;
 
@@ -168,11 +158,11 @@ static u8 rtw_pci_switch_clk_req(_adapter *padapter, u8 value)
 }
 
 #if 0
-//Description:
+//Description: 
 //Disable RTL8192SE ASPM & Disable Pci Bridge ASPM
 void rtw_pci_disable_aspm(_adapter *padapter)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct pwrctrl_priv	*pwrpriv = &padapter->pwrctrlpriv;
 	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
 	u32	pcicfg_addrport = 0;
@@ -181,8 +171,8 @@ void rtw_pci_disable_aspm(_adapter *padapter)
 	u16	pcibridge_linkctrlreg, aspmlevel = 0;
 
 	// When there exists anyone's busnum, devnum, and funcnum that are set to 0xff,
-	// we do not execute any action and return.
-	// if it is not intel bus then don't enable ASPM.
+	// we do not execute any action and return. 
+	// if it is not intel bus then don't enable ASPM. 
 	if ((pcipriv->busnumber == 0xff
 		&& pcipriv->devnumber == 0xff
 		&& pcipriv->funcnumber == 0xff)
@@ -235,7 +225,7 @@ void rtw_pci_disable_aspm(_adapter *padapter)
 	}
 	else
 	{
-		//4 //Disable Pci Bridge ASPM
+		//4 //Disable Pci Bridge ASPM 
 		pcicfg_addrport = (pcipriv->pcibridge_busnum << 16) |
 						(pcipriv->pcibridge_devnum << 11) |
 						(pcipriv->pcibridge_funcnum << 8) | (1 << 31);
@@ -248,8 +238,8 @@ void rtw_pci_disable_aspm(_adapter *padapter)
 		NdisRawWritePortUchar(PCI_CONF_DATA, pcibridge_linkctrlreg);
 
 		DBG_871X("rtw_pci_disable_aspm():PciBridge busnumber[%x], DevNumbe[%x], funcnumber[%x], Write reg[%x] = %x\n",
-			pcipriv->pcibridge_busnum, pcipriv->pcibridge_devnum,
-			pcipriv->pcibridge_funcnum,
+			pcipriv->pcibridge_busnum, pcipriv->pcibridge_devnum, 
+			pcipriv->pcibridge_funcnum, 
 			(pcipriv->pcibridge_pciehdr_offset+0x10), pcibridge_linkctrlreg);
 
 		rtw_udelay_os(50);
@@ -257,13 +247,13 @@ void rtw_pci_disable_aspm(_adapter *padapter)
 }
 
 //[ASPM]
-//Description:
+//Description: 
 //              Enable RTL8192SE ASPM & Enable Pci Bridge ASPM for power saving
 //              We should follow the sequence to enable RTL8192SE first then enable Pci Bridge ASPM
 //              or the system will show bluescreen.
 void rtw_pci_enable_aspm(_adapter *padapter)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct pwrctrl_priv	*pwrpriv = &padapter->pwrctrlpriv;
 	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
 	u16	aspmlevel = 0;
@@ -273,8 +263,8 @@ void rtw_pci_enable_aspm(_adapter *padapter)
 	u8	u_device_aspmsetting = 0;
 
 	// When there exists anyone's busnum, devnum, and funcnum that are set to 0xff,
-	// we do not execute any action and return.
-	// if it is not intel bus then don't enable ASPM.
+	// we do not execute any action and return. 
+	// if it is not intel bus then don't enable ASPM. 
 
 	if ((pcipriv->busnumber == 0xff
 		&& pcipriv->devnumber == 0xff
@@ -287,8 +277,8 @@ void rtw_pci_enable_aspm(_adapter *padapter)
 		return;
 	}
 
-	//4 Enable Pci Bridge ASPM
-	pcicfg_addrport = (pcipriv->pcibridge_busnum << 16)
+	//4 Enable Pci Bridge ASPM 
+	pcicfg_addrport = (pcipriv->pcibridge_busnum << 16) 
 					| (pcipriv->pcibridge_devnum << 11)
 					| (pcipriv->pcibridge_funcnum << 8) | (1 << 31);
 	num4bytes = (pcipriv->pcibridge_pciehdr_offset + 0x10) / 4;
@@ -305,10 +295,10 @@ void rtw_pci_enable_aspm(_adapter *padapter)
 	NdisRawWritePortUchar(PCI_CONF_DATA, u_pcibridge_aspmsetting);
 
 	DBG_871X("PlatformEnableASPM():PciBridge busnumber[%x], DevNumbe[%x], funcnumber[%x], Write reg[%x] = %x\n",
-		pcipriv->pcibridge_busnum,
-		pcipriv->pcibridge_devnum,
-		pcipriv->pcibridge_funcnum,
-		(pcipriv->pcibridge_pciehdr_offset+0x10),
+		pcipriv->pcibridge_busnum, 
+		pcipriv->pcibridge_devnum, 
+		pcipriv->pcibridge_funcnum, 
+		(pcipriv->pcibridge_pciehdr_offset+0x10), 
 		u_pcibridge_aspmsetting);
 
 	rtw_udelay_os(50);
@@ -329,14 +319,14 @@ void rtw_pci_enable_aspm(_adapter *padapter)
 }
 
 //
-//Description:
+//Description: 
 //To get link control field by searching from PCIe capability lists.
 //
 static u8
 rtw_get_link_control_field(_adapter *padapter, u8 busnum, u8 devnum,
 				u8 funcnum)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
 	struct rt_pci_capabilities_header capability_hdr;
 	u8	capability_offset, num4bytes;
@@ -362,15 +352,15 @@ rtw_get_link_control_field(_adapter *padapter, u8 busnum, u8 devnum,
 	// now grab data port with device|vendor 4 byte dword
 	NdisRawReadPortUchar(PCI_CONF_DATA, &capability_offset);
 
-	// Loop through the capabilities in search of the power management capability.
+	// Loop through the capabilities in search of the power management capability. 
 	// The list is NULL-terminated, so the last offset will always be zero.
 
 	while (capability_offset != 0) {
-		// First find the number of 4 Byte.
+		// First find the number of 4 Byte. 
 		num4bytes = capability_offset / 4;
 
 		// Read the header of the capability at  this offset. If the retrieved capability is not
-		// the power management capability that we are looking for, follow the link to the
+		// the power management capability that we are looking for, follow the link to the 
 		// next capability and continue looping.
 
 		//4 get capability_hdr
@@ -408,7 +398,7 @@ rtw_get_link_control_field(_adapter *padapter, u8 busnum, u8 devnum,
 	}
 	else
 	{
-		// We didn't find a PCIe capability.
+		// We didn't find a PCIe capability. 
 		DBG_871X("GetLinkControlField(): Cannot Find PCIe Capability\n");
 	}
 
@@ -416,8 +406,8 @@ rtw_get_link_control_field(_adapter *padapter, u8 busnum, u8 devnum,
 }
 
 //
-//Description:
-//To get PCI bus infomation and return busnum, devnum, and funcnum about
+//Description: 
+//To get PCI bus infomation and return busnum, devnum, and funcnum about 
 //the bus(bridge) which the device binds.
 //
 static u8
@@ -427,7 +417,7 @@ rtw_get_pci_bus_info(_adapter *padapter,
 			  u8 irql, u8 basecode, u8 subclass, u8 filed19val,
 			  u8 * busnum, u8 * devnum, u8 * funcnum)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct pci_dev	*pdev = pdvobjpriv->ppcidev;
 	u8	busnum_idx, devicenum_idx, functionnum_idx;
 	u32	pcicfg_addrport = 0;
@@ -460,14 +450,14 @@ rtw_get_pci_bus_info(_adapter *padapter,
 				// <Roger_Notes> We have to skip redundant Bus scan to prevent unexpected system hang
 				// if single function is present in this device.
 				// 2009.02.26.
-				//
+				//                              
 				if (functionnum_idx == 0) {
 					//4 get header type (DWORD #3)
 					pcicfg_addrport = (busnum_idx << 16) | (devicenum_idx << 11) | (functionnum_idx << 8) | (1 << 31);
 					NdisRawWritePortUlong(PCI_CONF_ADDRESS, pcicfg_addrport + (3 << 2));
 					NdisRawReadPortUlong(PCI_CONF_DATA, &headertype);
 					headertype = ((headertype >> 16) & 0x0080) >> 7;	// address 0x0e[7].
-					if (headertype == 0)	//Single function
+					if (headertype == 0)	//Single function                                                                                  
 						b_singlefunc = _TRUE;
 				}
 				else
@@ -599,7 +589,7 @@ rtw_get_pci_brideg_info(_adapter *padapter,
 					NdisRawWritePortUlong(PCI_CONF_ADDRESS, pcicfg_addrport + (3 << 2));
 					NdisRawReadPortUlong(PCI_CONF_DATA, &headertype);
 					headertype = ((headertype >> 16) & 0x0080) >> 7;	// address 0x0e[7].
-					if (headertype == 0)	//Single function
+					if (headertype == 0)	//Single function                                                                                  
 						b_singlefunc = _TRUE;
 				}
 				else
@@ -662,12 +652,12 @@ rtw_get_pci_brideg_info(_adapter *padapter,
 }				// end of GetPciBridegInfo
 
 //
-//Description:
+//Description: 
 //To find specific bridge information.
 //
 static void rtw_find_bridge_info(_adapter *padapter)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
 	u8	pcibridge_busnum = 0xff;
 	u8	pcibridge_devnum = 0xff;
@@ -737,7 +727,7 @@ rtw_get_amd_l1_patch(_adapter *padapter, u8 busnum, u8 devnum,
 /*Disable RTL8192SE ASPM & Disable Pci Bridge ASPM*/
 void rtw_pci_disable_aspm(_adapter *padapter)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct pwrctrl_priv	*pwrpriv = &padapter->pwrctrlpriv;
 	struct pci_dev	*pdev = pdvobjpriv->ppcidev;
 	struct pci_dev	*bridge_pdev = pdev->bus->self;
@@ -773,7 +763,7 @@ void rtw_pci_disable_aspm(_adapter *padapter)
 	}
 
 	{
-		/*for promising device will in L0 state after an I/O.*/
+		/*for promising device will in L0 state after an I/O.*/ 
 		u8 tmp_u1b;
 		pci_read_config_byte(pdev, 0x80, &tmp_u1b);
 	}
@@ -790,14 +780,14 @@ void rtw_pci_disable_aspm(_adapter *padapter)
 	}
 	else
 	{
-		/*Disable Pci Bridge ASPM*/
+		/*Disable Pci Bridge ASPM*/ 
 		//NdisRawWritePortUlong(PCI_CONF_ADDRESS, pcicfg_addrport + (num4bytes << 2));
 		//NdisRawWritePortUchar(PCI_CONF_DATA, pcibridge_linkctrlreg);
 		pci_write_config_byte(bridge_pdev, pcipriv->pcibridge_pciehdr_offset + 0x10, pcibridge_linkctrlreg);
 
 		DBG_871X("rtw_pci_disable_aspm():PciBridge busnumber[%x], DevNumbe[%x], funcnumber[%x], Write reg[%x] = %x\n",
-			pcipriv->pcibridge_busnum, pcipriv->pcibridge_devnum,
-			pcipriv->pcibridge_funcnum,
+			pcipriv->pcibridge_busnum, pcipriv->pcibridge_devnum, 
+			pcipriv->pcibridge_funcnum, 
 			(pcipriv->pcibridge_pciehdr_offset+0x10), pcibridge_linkctrlreg);
 
 		rtw_udelay_os(50);
@@ -805,18 +795,18 @@ void rtw_pci_disable_aspm(_adapter *padapter)
 
 }
 
-/*Enable RTL8192SE ASPM & Enable Pci Bridge ASPM for
-power saving We should follow the sequence to enable
+/*Enable RTL8192SE ASPM & Enable Pci Bridge ASPM for 
+power saving We should follow the sequence to enable 
 RTL8192SE first then enable Pci Bridge ASPM
 or the system will show bluescreen.*/
 void rtw_pci_enable_aspm(_adapter *padapter)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct pwrctrl_priv	*pwrpriv = &padapter->pwrctrlpriv;
 	struct pci_dev	*pdev = pdvobjpriv->ppcidev;
 	struct pci_dev	*bridge_pdev = pdev->bus->self;
 	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
-	u16	aspmlevel = 0;
+	u16	aspmlevel = 0;		
 	u8	u_pcibridge_aspmsetting = 0;
 	u8	u_device_aspmsetting = 0;
 	u32	u_device_aspmsupportsetting = 0;
@@ -827,7 +817,7 @@ void rtw_pci_enable_aspm(_adapter *padapter)
 		return;
 
 	//When there exists anyone's BusNum, DevNum, and FuncNum that are set to 0xff,
-	// we do not execute any action and return. Added by tynli.
+	// we do not execute any action and return. Added by tynli. 
 	if( (pcipriv->busnumber == 0xff && pcipriv->devnumber == 0xff && pcipriv->funcnumber == 0xff) ||
 		(pcipriv->pcibridge_busnum == 0xff && pcipriv->pcibridge_devnum == 0xff && pcipriv->pcibridge_funcnum == 0xff) )
 	{
@@ -878,7 +868,7 @@ void rtw_pci_enable_aspm(_adapter *padapter)
 	}
 
 
-	/*Enable Pci Bridge ASPM*/
+	/*Enable Pci Bridge ASPM*/  
 	//PciCfgAddrPort = (pcipriv->pcibridge_busnum << 16)|(pcipriv->pcibridge_devnum<< 11) |(pcipriv->pcibridge_funcnum <<  8)|(1 << 31);
 	//Num4Bytes = (pcipriv->pcibridge_pciehdr_offset+0x10)/4;
 	// set up address port at 0xCF8 offset field= 0 (dev|vend)
@@ -896,13 +886,13 @@ void rtw_pci_enable_aspm(_adapter *padapter)
 	pci_write_config_byte(bridge_pdev, (pcipriv->pcibridge_pciehdr_offset+0x10), u_pcibridge_aspmsetting);
 
 	DBG_871X("PlatformEnableASPM():PciBridge busnumber[%x], DevNumbe[%x], funcnumber[%x], Write reg[%x] = %x\n",
-		pcipriv->pcibridge_busnum, pcipriv->pcibridge_devnum, pcipriv->pcibridge_funcnum,
-		(pcipriv->pcibridge_pciehdr_offset+0x10),
+		pcipriv->pcibridge_busnum, pcipriv->pcibridge_devnum, pcipriv->pcibridge_funcnum, 
+		(pcipriv->pcibridge_pciehdr_offset+0x10), 
 		u_pcibridge_aspmsetting);
 
 	rtw_udelay_os(50);
 
-	/*Get ASPM level (with/without Clock Req)*/
+	/*Get ASPM level (with/without Clock Req)*/ 
 	aspmlevel |= pdvobjpriv->const_devicepci_aspm_setting;
 	u_device_aspmsetting = pcipriv->linkctrl_reg;
 	u_device_aspmsetting |= aspmlevel; // device 43
@@ -917,9 +907,8 @@ void rtw_pci_enable_aspm(_adapter *padapter)
 	rtw_udelay_os(50);
 }
 
-static u8 rtw_pci_get_amd_l1_patch(_adapter *padapter)
+static u8 rtw_pci_get_amd_l1_patch(struct dvobj_priv *pdvobjpriv)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
 	struct pci_dev	*pdev = pdvobjpriv->ppcidev;
 	struct pci_dev	*bridge_pdev = pdev->bus->self;
 	u8	status = _FALSE;
@@ -945,15 +934,14 @@ static u8 rtw_pci_get_amd_l1_patch(_adapter *padapter)
 	return status;
 }
 
-static void rtw_pci_get_linkcontrol_field(_adapter *padapter)
+static void rtw_pci_get_linkcontrol_field(struct dvobj_priv *pdvobjpriv)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
 	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
 	struct pci_dev	*pdev = pdvobjpriv->ppcidev;
 	struct pci_dev	*bridge_pdev = pdev->bus->self;
 	u8	capabilityoffset = pcipriv->pcibridge_pciehdr_offset;
-	u8	linkctrl_reg;
-
+	u8	linkctrl_reg;	
+			
 	/*Read  Link Control Register*/
 	pci_read_config_byte(bridge_pdev, capabilityoffset + PCI_EXP_LNKCTL, &linkctrl_reg);
 
@@ -961,9 +949,8 @@ static void rtw_pci_get_linkcontrol_field(_adapter *padapter)
 }
 #endif
 
-static void rtw_pci_parse_configuration(struct pci_dev *pdev, _adapter *padapter)
+static void rtw_pci_parse_configuration(struct pci_dev *pdev, struct dvobj_priv *pdvobjpriv)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
 	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
 	u8 tmp;
 	int pos;
@@ -989,7 +976,7 @@ static void rtw_pci_parse_configuration(struct pci_dev *pdev, _adapter *padapter
 //
 static void rtw_pci_update_default_setting(_adapter *padapter)
 {
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
 	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
 	struct pwrctrl_priv	*pwrpriv = &padapter->pwrctrlpriv;
 
@@ -997,7 +984,7 @@ static void rtw_pci_update_default_setting(_adapter *padapter)
 	pwrpriv->reg_rfps_level = 0;
 	pwrpriv->b_support_aspm = 0;
 
-	// Dynamic Mechanism,
+	// Dynamic Mechanism, 
 	//rtw_hal_set_def_var(pAdapter, HAL_DEF_INIT_GAIN, &(pDevice->InitGainState));
 
 	// Update PCI ASPM setting
@@ -1067,7 +1054,7 @@ static void rtw_pci_update_default_setting(_adapter *padapter)
 				pwrpriv->b_support_aspm = b_support_aspm;
 
 				/*if(pAdapter->MgntInfo.CustomerID == RT_CID_TOSHIBA &&
-					pcipriv->pcibridge_vendor == PCI_BRIDGE_VENDOR_AMD &&
+					pcipriv->pcibridge_vendor == PCI_BRIDGE_VENDOR_AMD && 
 					!pcipriv->amd_l1_patch)
 					b_support_backdoor = _FALSE;*/
 
@@ -1076,7 +1063,7 @@ static void rtw_pci_update_default_setting(_adapter *padapter)
 			break;
 
 		case 2:	// Set by Chipset.
-			// ASPM value set by chipset.
+			// ASPM value set by chipset. 
 			if (pcipriv->pcibridge_vendor == PCI_BRIDGE_VENDOR_INTEL) {
 				u8	b_support_aspm = _TRUE;
 				pwrpriv->b_support_aspm = b_support_aspm;
@@ -1109,31 +1096,123 @@ static void rtw_pci_initialize_adapter_common(_adapter *padapter)
 
 static irqreturn_t rtw_pci_interrupt(int irq, void *priv, struct pt_regs *regs)
 {
-	_adapter			*padapter = (_adapter *)priv;
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv *dvobj = (struct dvobj_priv *)priv;
+	_adapter *adapter = dvobj->if1;
 
-
-	if (pdvobjpriv->irq_enabled == 0) {
+	if (dvobj->irq_enabled == 0) {
 		return IRQ_HANDLED;
 	}
 
-	if(rtw_hal_interrupt_handler(padapter) == _FAIL)
+	if(rtw_hal_interrupt_handler(adapter) == _FAIL)
 		return IRQ_HANDLED;
 		//return IRQ_NONE;
 
 	return IRQ_HANDLED;
 }
 
-static u32 pci_dvobj_init(_adapter *padapter)
+#ifdef RTK_DMP_PLATFORM
+#define pci_iounmap(x,y) iounmap(y)
+#endif
+
+int pci_alloc_irq(struct dvobj_priv *dvobj)
 {
-	u32	status = _SUCCESS;
-	struct dvobj_priv	*pdvobjpriv = &padapter->dvobjpriv;
-	struct pci_priv	*pcipriv = &(pdvobjpriv->pcipriv);
-	struct pci_dev	*pdev = pdvobjpriv->ppcidev;
+	int err;
+	struct pci_dev *pdev = dvobj->ppcidev;
+	
+#if defined(IRQF_SHARED)
+	err = request_irq(pdev->irq, &rtw_pci_interrupt, IRQF_SHARED, DRV_NAME, dvobj);
+#else
+	err = request_irq(pdev->irq, &rtw_pci_interrupt, SA_SHIRQ, DRV_NAME, dvobj);
+#endif
+	if (err) {
+		DBG_871X("Error allocating IRQ %d",pdev->irq);
+	} else {
+		dvobj->irq_alloc = 1;
+		DBG_871X("Request_irq OK, IRQ %d\n",pdev->irq);
+	}
+
+	return err?_FAIL:_SUCCESS;
+}
+
+static struct dvobj_priv	*pci_dvobj_init(struct pci_dev *pdev)
+{
+	int err;
+	u32	status = _FAIL;
+	struct dvobj_priv	*dvobj = NULL;
+	struct pci_priv	*pcipriv = NULL;
 	struct pci_dev	*bridge_pdev = pdev->bus->self;
+	unsigned long pmem_start, pmem_len, pmem_flags;
 	u8	tmp;
 
 _func_enter_;
+
+	if ((dvobj = (struct dvobj_priv*)rtw_zmalloc(sizeof(*dvobj))) == NULL) {
+		goto exit;
+	}
+	dvobj->ppcidev = pdev;
+	pcipriv = &(dvobj->pcipriv);
+	pci_set_drvdata(pdev, dvobj);
+
+	_rtw_mutex_init(&dvobj->hw_init_mutex);
+	_rtw_mutex_init(&dvobj->h2c_fwcmd_mutex);
+	_rtw_mutex_init(&dvobj->setch_mutex);
+	_rtw_mutex_init(&dvobj->setbw_mutex);
+
+
+	if ( (err = pci_enable_device(pdev)) != 0) {
+		DBG_871X(KERN_ERR "%s : Cannot enable new PCI device\n", pci_name(pdev));
+		goto free_dvobj;
+	}
+
+#ifdef CONFIG_64BIT_DMA
+	if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
+		DBG_871X("RTL819xCE: Using 64bit DMA\n");
+		if ((err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) != 0) {
+			DBG_871X(KERN_ERR "Unable to obtain 64bit DMA for consistent allocations\n");
+			goto disable_picdev;
+		}
+		dvobj->bdma64 = _TRUE;
+	} else
+#endif
+	{
+		if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
+			if ((err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32))) != 0) {
+				DBG_871X(KERN_ERR "Unable to obtain 32bit DMA for consistent allocations\n");
+				goto disable_picdev;
+			}
+		}
+	}
+
+	pci_set_master(pdev);
+
+	if ((err = pci_request_regions(pdev, DRV_NAME)) != 0) {
+		DBG_871X(KERN_ERR "Can't obtain PCI resources\n");
+		goto disable_picdev;
+	}
+	//MEM map
+	pmem_start = pci_resource_start(pdev, 2);
+	pmem_len = pci_resource_len(pdev, 2);
+	pmem_flags = pci_resource_flags(pdev, 2);
+
+#ifdef RTK_DMP_PLATFORM
+	dvobj->pci_mem_start = (unsigned long)ioremap_nocache(pmem_start, pmem_len);
+#else
+	dvobj->pci_mem_start = (unsigned long)pci_iomap(pdev, 2, pmem_len); /* shared mem start */
+#endif
+	if (dvobj->pci_mem_start == 0) {
+		DBG_871X(KERN_ERR "Can't map PCI mem\n");
+		goto release_regions;
+	}
+
+	DBG_871X("Memory mapped space start: 0x%08lx len:%08lx flags:%08lx, after map:0x%08lx\n",
+		pmem_start, pmem_len, pmem_flags, dvobj->pci_mem_start);
+
+	// Disable Clk Request */
+	pci_write_config_byte(pdev, 0x81, 0);
+	// leave D3 mode */
+	pci_write_config_byte(pdev, 0x44, 0);
+	pci_write_config_byte(pdev, 0x04, 0x06);
+	pci_write_config_byte(pdev, 0x04, 0x07);
 
 #if 1
 	/*find bus info*/
@@ -1166,15 +1245,15 @@ _func_enter_;
 		pcipriv->pcibridge_pciehdr_offset = bridge_pdev->pcie_cap;
 #endif
 
-		rtw_pci_get_linkcontrol_field(padapter);
-
+		rtw_pci_get_linkcontrol_field(dvobj);
+		
 		if (pcipriv->pcibridge_vendor == PCI_BRIDGE_VENDOR_AMD) {
-			pcipriv->amd_l1_patch = rtw_pci_get_amd_l1_patch(padapter);
+			pcipriv->amd_l1_patch = rtw_pci_get_amd_l1_patch(dvobj);
 		}
 	}
 #else
 	//
-	// Find bridge related info.
+	// Find bridge related info. 
 	//
 	rtw_get_pci_bus_info(padapter,
 				  pdev->vendor,
@@ -1206,7 +1285,7 @@ _func_enter_;
 	//
 	// Allow the hardware to look at PCI config information.
 	//
-	rtw_pci_parse_configuration(pdev, padapter);
+	rtw_pci_parse_configuration(pdev, dvobj);
 
 	DBG_871X("pcidev busnumber:devnumber:funcnumber:"
 		"vendor:link_ctl %d:%d:%d:%x:%x\n",
@@ -1217,7 +1296,7 @@ _func_enter_;
 		pcipriv->linkctrl_reg);
 
 	DBG_871X("pci_bridge busnumber:devnumber:funcnumber:vendor:"
-		"pcie_cap:link_ctl_reg: %d:%d:%d:%x:%x:%x:%x\n",
+		"pcie_cap:link_ctl_reg: %d:%d:%d:%x:%x:%x:%x\n", 
 		pcipriv->pcibridge_busnum,
 		pcipriv->pcibridge_devnum,
 		pcipriv->pcibridge_funcnum,
@@ -1226,28 +1305,62 @@ _func_enter_;
 		pcipriv->pcibridge_linkctrlreg,
 		pcipriv->amd_l1_patch);
 
-	//.2
-	if ((rtw_init_io_priv(padapter)) == _FAIL)
-	{
-		RT_TRACE(_module_hci_intfs_c_,_drv_err_,(" \n Can't init io_reqs\n"));
-		status = _FAIL;
+	status = _SUCCESS;
+
+iounmap:
+	if (status != _SUCCESS && dvobj->pci_mem_start != 0) {
+		pci_iounmap(pdev, (void *)dvobj->pci_mem_start);
+		dvobj->pci_mem_start = 0;
 	}
-
-	//.3
-	rtw_hal_read_chip_version(padapter);
-	//.4
-	rtw_hal_chip_configure(padapter);
-
+release_regions:
+	if (status != _SUCCESS)
+		pci_release_regions(pdev);
+disable_picdev:
+	if (status != _SUCCESS)
+		pci_disable_device(pdev);
+free_dvobj:
+	if (status != _SUCCESS && dvobj) {
+		pci_set_drvdata(pdev, NULL);
+		_rtw_mutex_free(&dvobj->hw_init_mutex);
+		_rtw_mutex_free(&dvobj->h2c_fwcmd_mutex);
+		_rtw_mutex_free(&dvobj->setch_mutex);
+		_rtw_mutex_free(&dvobj->setbw_mutex);
+		rtw_mfree((u8*)dvobj, sizeof(*dvobj));
+		dvobj = NULL;
+	}
+exit:
 _func_exit_;
-
-	return status;
+	return dvobj;
 }
 
-static void pci_dvobj_deinit(_adapter * padapter)
-{
-	//struct dvobj_priv *pdvobjpriv=&padapter->dvobjpriv;
 
+static void pci_dvobj_deinit(struct pci_dev *pdev)
+{
+	struct dvobj_priv *dvobj = pci_get_drvdata(pdev);
 _func_enter_;
+
+	pci_set_drvdata(pdev, NULL);
+	if (dvobj) {
+		if (dvobj->irq_alloc) {
+			free_irq(pdev->irq, dvobj);
+			dvobj->irq_alloc = 0;
+		}
+
+		if (dvobj->pci_mem_start != 0) {
+			pci_iounmap(pdev, (void *)dvobj->pci_mem_start);
+			dvobj->pci_mem_start = 0;
+		}
+
+		_rtw_mutex_free(&dvobj->hw_init_mutex);
+		_rtw_mutex_free(&dvobj->h2c_fwcmd_mutex);
+		_rtw_mutex_free(&dvobj->setch_mutex);
+		_rtw_mutex_free(&dvobj->setbw_mutex);
+		
+		rtw_mfree((u8*)dvobj, sizeof(*dvobj));
+	}
+
+	pci_release_regions(pdev);
+	pci_disable_device(pdev);
 
 _func_exit_;
 }
@@ -1257,7 +1370,7 @@ static void decide_chip_type_by_pci_device_id(_adapter *padapter, struct pci_dev
 {
 	u16	venderid, deviceid, irqline;
 	u8	revisionid;
-	struct dvobj_priv	*pdvobjpriv=&padapter->dvobjpriv;
+	struct dvobj_priv	*pdvobjpriv=adapter_to_dvobj(padapter);
 
 
 	venderid = pdev->vendor;
@@ -1272,7 +1385,7 @@ static void decide_chip_type_by_pci_device_id(_adapter *padapter, struct pci_dev
 
 
 	//
-	// Decide hardware type here.
+	// Decide hardware type here. 
 	//
 	if( deviceid == HAL_HW_PCI_8185_DEVICE_ID ||
 	    deviceid == HAL_HW_PCI_8188_DEVICE_ID ||
@@ -1329,7 +1442,7 @@ static void decide_chip_type_by_pci_device_id(_adapter *padapter, struct pci_dev
 	else if (deviceid == HAL_HW_PCI_8192CET_DEVICE_ID ||
 		deviceid == HAL_HW_PCI_8192CE_DEVICE_ID ||
 		deviceid == HAL_HW_PCI_8191CE_DEVICE_ID ||
-		deviceid == HAL_HW_PCI_8188CE_DEVICE_ID)
+		deviceid == HAL_HW_PCI_8188CE_DEVICE_ID) 
 	{
 		DBG_871X("Adapter(8192C PCI-E) is found - vendorid/deviceid=%x/%x\n", venderid, deviceid);
 		padapter->HardwareType = HARDWARE_TYPE_RTL8192CE;
@@ -1344,7 +1457,7 @@ static void decide_chip_type_by_pci_device_id(_adapter *padapter, struct pci_dev
 		padapter->chip_type = RTL8188E;
 		DBG_871X("Adapter(8188EE) is found - VendorID/DeviceID/RID=%X/%X/%X\n", venderid, deviceid, revisionid);
 	}
-
+	
 	else
 	{
 		DBG_871X("Err: Unknown device - vendorid/deviceid=%x/%x\n", venderid, deviceid);
@@ -1394,7 +1507,7 @@ static void pci_intf_stop(_adapter *padapter)
 		tasklet_disable(&(padapter->recvpriv.recv_tasklet));
 		tasklet_disable(&(padapter->recvpriv.irq_prepare_beacon_tasklet));
 		tasklet_disable(&(padapter->xmitpriv.xmit_tasklet));
-
+		
 #ifdef CONFIG_CONCURRENT_MODE
 		/*	This function only be called at driver removing. disable buddy_adapter too
 			don't disable interrupt of buddy_adapter because it is same as primary.
@@ -1410,7 +1523,7 @@ static void pci_intf_stop(_adapter *padapter)
 	else
 	{
 		// Clear irq_enabled to prevent handle interrupt function.
-		padapter->dvobjpriv.irq_enabled = 0;
+		adapter_to_dvobj(padapter)->irq_enabled = 0;
 	}
 
 	RT_TRACE(_module_hci_intfs_c_,_drv_err_,("-pci_intf_stop\n"));
@@ -1427,24 +1540,12 @@ static void rtw_dev_unload(_adapter *padapter)
 	if(padapter->bup == _TRUE)
 	{
 		DBG_871X("+rtw_dev_unload\n");
-		//s1.
-/*		if(pnetdev)
-		{
-			netif_carrier_off(pnetdev);
-			rtw_netif_stop_queue(pnetdev);
-		}
-
-		//s2.
-		//s2-1.  issue rtw_disassoc_cmd to fw
-		rtw_disassoc_cmd(padapter);
-		//s2-2.  indicate disconnect to os
-		rtw_indicate_disconnect(padapter);
-		//s2-3.
-		rtw_free_assoc_resources(padapter, 1);
-		//s2-4.
-		rtw_free_network_queue(padapter, _TRUE);*/
 
 		padapter->bDriverStopped = _TRUE;
+		#ifdef CONFIG_XMIT_ACK
+		if (padapter->xmitpriv.ack_tx)
+			rtw_ack_tx_done(&padapter->xmitpriv, RTW_SCTX_DONE_DRV_STOP);
+		#endif
 
 		//s3.
 		if(padapter->intf_stop)
@@ -1506,7 +1607,7 @@ static void disable_ht_for_spec_devid(const struct pci_device_id *pdid)
 
 #ifdef CONFIG_PM
 static int rtw_suspend(struct pci_dev *pdev, pm_message_t state)
-{
+{	
 	_func_enter_;
 
 
@@ -1520,16 +1621,206 @@ static int rtw_resume(struct pci_dev *pdev)
 
 
 	_func_exit_;
-
+	
 	return 0;
 }
 #endif
 
-#ifdef RTK_DMP_PLATFORM
-#define pci_iounmap(x,y) iounmap(y)
+_adapter *rtw_pci_if1_init(struct dvobj_priv * dvobj, struct pci_dev *pdev, const struct pci_device_id *pdid)
+{
+	_adapter *padapter = NULL;
+	struct net_device *pnetdev = NULL;
+	int status = _FAIL;
+	
+	if ((padapter = (_adapter *)rtw_zvmalloc(sizeof(*padapter))) == NULL) {
+		goto exit;
+	}
+	padapter->dvobj = dvobj;
+	dvobj->if1 = padapter;
+	
+	padapter->bDriverStopped=_TRUE;
+
+#if defined(CONFIG_CONCURRENT_MODE) || defined(CONFIG_DUALMAC_CONCURRENT)
+	//set adapter_type/iface type for primary padapter
+	padapter->isprimary = _TRUE;
+	padapter->adapter_type = PRIMARY_ADAPTER;
+	#ifndef CONFIG_HWPORT_SWAP
+	padapter->iface_type = IFACE_PORT0;
+	#else
+	padapter->iface_type = IFACE_PORT1;
+	#endif
 #endif
 
-extern char* ifname;
+	#ifndef RTW_DVOBJ_CHIP_HW_TYPE
+	//step 1-1., decide the chip_type via vid/pid
+	padapter->interface_type = RTW_PCIE;
+	decide_chip_type_by_pci_device_id(padapter, pdev);
+	#endif
+	
+	if((pnetdev = rtw_init_netdev(padapter)) == NULL) {
+		goto free_adapter;
+	}
+
+	#if LINUX_VERSION_CODE > KERNEL_VERSION(2,5,0)
+	SET_NETDEV_DEV(pnetdev, dvobj_to_dev(dvobj));
+	#endif
+	if (dvobj->bdma64)
+		pnetdev->features |= NETIF_F_HIGHDMA;
+	pnetdev->irq = pdev->irq;
+	
+	padapter = rtw_netdev_priv(pnetdev);
+
+#ifdef CONFIG_IOCTL_CFG80211
+	if(rtw_wdev_alloc(padapter, dvobj_to_dev(dvobj)) != 0) {
+		goto free_adapter;
+	}
+#endif //CONFIG_IOCTL_CFG80211
+
+
+	//step 2.	hook HalFunc, allocate HalData
+	hal_set_hal_ops(padapter);
+
+
+	//step 3.
+	padapter->intf_start=&pci_intf_start;
+	padapter->intf_stop=&pci_intf_stop;
+
+
+	//.2
+	rtw_init_io_priv(padapter, pci_set_intf_ops);
+
+	//.3
+	rtw_hal_read_chip_version(padapter);
+	
+	//.4
+	rtw_hal_chip_configure(padapter);
+
+
+	//step 4. read efuse/eeprom data and get mac_addr
+	rtw_hal_read_chip_info(padapter);	
+
+	//step 5. 
+	if(rtw_init_drv_sw(padapter) ==_FAIL) {
+		RT_TRACE(_module_hci_intfs_c_,_drv_err_,("Initialize driver software resource Failed!\n"));
+		goto free_hal_data;
+	}
+
+	if(rtw_hal_inirp_init(padapter) ==_FAIL) {
+		RT_TRACE(_module_hci_intfs_c_,_drv_err_,("Initialize PCI desc ring Failed!\n"));
+		goto free_hal_data;
+	}
+	rtw_init_netdev_name(pnetdev, padapter->registrypriv.ifname);
+	rtw_macaddr_cfg(padapter->eeprompriv.mac_addr);
+	rtw_init_wifidirect_addrs(padapter, padapter->eeprompriv.mac_addr, padapter->eeprompriv.mac_addr);
+
+	_rtw_memcpy(pnetdev->dev_addr, padapter->eeprompriv.mac_addr, ETH_ALEN);
+	DBG_871X("MAC Address from pnetdev->dev_addr= "MAC_FMT"\n", MAC_ARG(pnetdev->dev_addr));	
+
+
+	rtw_hal_disable_interrupt(padapter);
+
+	//step 6. Init pci related configuration
+	rtw_pci_initialize_adapter_common(padapter);
+
+	//step 7.
+	/* Tell the network stack we exist */
+	if (register_netdev(pnetdev) != 0) {
+		RT_TRACE(_module_hci_intfs_c_,_drv_err_,("register_netdev() failed\n"));
+		goto free_hal_data;
+	}
+
+	RT_TRACE(_module_hci_intfs_c_,_drv_err_,("-drv_init - Adapter->bDriverStopped=%d, Adapter->bSurpriseRemoved=%d\n",padapter->bDriverStopped, padapter->bSurpriseRemoved));
+
+#ifdef CONFIG_HOSTAPD_MLME
+	hostapd_mode_init(padapter);
+#endif
+
+#ifdef CONFIG_PLATFORM_RTD2880B
+	DBG_871X("wlan link up\n");
+	rtd2885_wlan_netlink_sendMsg("linkup", "8712");
+#endif
+
+#ifdef RTK_DMP_PLATFORM
+	rtw_proc_init_one(pnetdev);
+#endif
+
+	status = _SUCCESS;
+
+free_hal_data:
+	if(status != _SUCCESS && padapter->HalData)
+		rtw_mfree(padapter->HalData, sizeof(*(padapter->HalData)));
+
+free_wdev:
+	if(status != _SUCCESS) {
+		#ifdef CONFIG_IOCTL_CFG80211
+		rtw_wdev_unregister(padapter->rtw_wdev);
+		rtw_wdev_free(padapter->rtw_wdev);
+		#endif
+	}
+
+free_adapter:
+	if (status != _SUCCESS) {
+		if (pnetdev)
+			rtw_free_netdev(pnetdev);
+		else if (padapter)
+			rtw_vmfree((u8*)padapter, sizeof(*padapter));
+		padapter = NULL;
+	}
+exit:
+	return padapter;
+}
+
+static void rtw_pci_if1_deinit(_adapter *if1)
+{
+	struct net_device *pnetdev = if1->pnetdev;
+	struct mlme_priv *pmlmepriv= &if1->mlmepriv;
+
+	//	padapter->intf_stop(padapter);
+
+	if(check_fwstate(pmlmepriv, _FW_LINKED))
+		rtw_disassoc_cmd(if1, 0, _FALSE);
+
+#ifdef CONFIG_AP_MODE
+	free_mlme_ap_info(if1);
+	#ifdef CONFIG_HOSTAPD_MLME
+	hostapd_mode_unload(if1);
+	#endif
+#endif
+
+	if (if1->DriverState != DRIVER_DISAPPEAR) {
+		if(pnetdev) {
+			unregister_netdev(pnetdev); //will call netdev_close()
+			rtw_proc_remove_one(pnetdev);
+		}
+	}
+
+	rtw_cancel_all_timer(if1);
+#ifdef CONFIG_WOWLAN
+	if1->pwrctrlpriv.wowlan_mode=_FALSE;
+#endif //CONFIG_WOWLAN
+	rtw_dev_unload(if1);
+
+	DBG_871X("%s, hw_init_completed=%d\n", __func__, if1->hw_init_completed);
+
+	//s6.
+	rtw_handle_dualmac(if1, 0);
+
+#ifdef CONFIG_IOCTL_CFG80211
+	rtw_wdev_unregister(if1->rtw_wdev);
+	rtw_wdev_free(if1->rtw_wdev);
+#endif //CONFIG_IOCTL_CFG80211
+
+	rtw_hal_inirp_deinit(if1);
+	rtw_free_drv_sw(if1);	
+
+	if(pnetdev)
+		rtw_free_netdev(pnetdev);
+	
+#ifdef CONFIG_PLATFORM_RTD2880B
+	DBG_871X("wlan link down\n");
+	rtd2885_wlan_netlink_sendMsg("linkdown", "8712");
+#endif
+}
 
 /*
  * drv_init() - a device potentially for us
@@ -1541,260 +1832,61 @@ static int rtw_drv_init(struct pci_dev *pdev, const struct pci_device_id *pdid)
 {
 	int i, err = -ENODEV;
 
-	uint status;
-	_adapter *padapter = NULL;
-	struct dvobj_priv *pdvobjpriv;
+	int status;
+	_adapter *if1 = NULL, *if2 = NULL;
+	struct dvobj_priv *dvobj;
 	struct net_device *pnetdev;
-	unsigned long pmem_start, pmem_len, pmem_flags;
-	u8	bdma64 = _FALSE;
-	void (*set_hal_ops)(_adapter * padapter);
-
+	
 	RT_TRACE(_module_hci_intfs_c_, _drv_err_, ("+rtw_drv_init\n"));
 	//DBG_871X("+rtw_drv_init\n");
-
-	err = pci_enable_device(pdev);
-	if (err) {
-		DBG_871X(KERN_ERR "%s : Cannot enable new PCI device\n", pci_name(pdev));
-		return err;
-	}
-
-#ifdef CONFIG_64BIT_DMA
-	if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
-		DBG_871X("RTL819xCE: Using 64bit DMA\n");
-		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) {
-			DBG_871X(KERN_ERR "Unable to obtain 64bit DMA for consistent allocations\n");
-			err = -ENOMEM;
-			pci_disable_device(pdev);
-			return err;
-		}
-		bdma64 = _TRUE;
-	} else
-#endif
-	{
-		if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
-			if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32))) {
-				DBG_871X(KERN_ERR "Unable to obtain 32bit DMA for consistent allocations\n");
-				err = -ENOMEM;
-				pci_disable_device(pdev);
-				return err;
-			}
-		}
-	}
-
-	pci_set_master(pdev);
 
 	//step 0.
 	disable_ht_for_spec_devid(pdid);
 
-
-	//step 1. set USB interface data
-	// init data
-	pnetdev = rtw_init_netdev(NULL);
-	if (!pnetdev){
-		err = -ENOMEM;
-		goto fail1;
-	}
-	rtw_init_netdev_name(pnetdev,ifname);
-
-	if(bdma64){
-		pnetdev->features |= NETIF_F_HIGHDMA;
-	}
-
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,5,0)
-	SET_NETDEV_DEV(pnetdev, &pdev->dev);
-#endif
-
-	padapter = rtw_netdev_priv(pnetdev);
-	pdvobjpriv = &padapter->dvobjpriv;
-	pdvobjpriv->padapter = padapter;
-	pdvobjpriv->ppcidev = pdev;
-
-	// set data
-	pci_set_drvdata(pdev, pnetdev);
-
-	err = pci_request_regions(pdev, DRV_NAME);
-	if (err) {
-		DBG_871X(KERN_ERR "Can't obtain PCI resources\n");
-		goto fail1;
-	}
-	//MEM map
-	pmem_start = pci_resource_start(pdev, 2);
-	pmem_len = pci_resource_len(pdev, 2);
-	pmem_flags = pci_resource_flags(pdev, 2);
-
-#ifdef RTK_DMP_PLATFORM
-	pdvobjpriv->pci_mem_start = (unsigned long)ioremap_nocache( pmem_start, pmem_len);
-#else
-	pdvobjpriv->pci_mem_start = (unsigned long)pci_iomap(pdev, 2, pmem_len);	// shared mem start
-#endif
-	if (pdvobjpriv->pci_mem_start == 0) {
-		DBG_871X(KERN_ERR "Can't map PCI mem\n");
-		goto fail2;
-	}
-
-	DBG_871X("Memory mapped space start: 0x%08lx len:%08lx flags:%08lx, after map:0x%08lx\n",
-		pmem_start, pmem_len, pmem_flags, pdvobjpriv->pci_mem_start);
-
-	// Disable Clk Request */
-	pci_write_config_byte(pdev, 0x81, 0);
-	// leave D3 mode */
-	pci_write_config_byte(pdev, 0x44, 0);
-	pci_write_config_byte(pdev, 0x04, 0x06);
-	pci_write_config_byte(pdev, 0x04, 0x07);
-
-
-	//set interface_type to usb
-	padapter->interface_type = RTW_PCIE;
-
-	//step 1-1., decide the chip_type via vid/pid
-	decide_chip_type_by_pci_device_id(padapter, pdev);
-
-	//step 2.
-
-	set_hal_ops =&hal_set_hal_ops;
-	if(set_hal_ops == NULL)
-	{
-		DBG_871X("Detect NULL_CHIP_TYPE\n");
-		status = _FAIL;
-		goto error;
-	}
-	set_hal_ops(padapter);
-
-	//step 3.	initialize the dvobj_priv
-	padapter->dvobj_init=&pci_dvobj_init;
-	padapter->dvobj_deinit=&pci_dvobj_deinit;
-	padapter->intf_start=&pci_intf_start;
-	padapter->intf_stop=&pci_intf_stop;
-
-	if (padapter->dvobj_init == NULL){
-		RT_TRACE(_module_hci_intfs_c_,_drv_err_,("\n Initialize dvobjpriv.dvobj_init error!!!\n"));
-		goto error;
-	}
-
-	status = padapter->dvobj_init(padapter);
-	if (status != _SUCCESS) {
+	/* Initialize dvobj_priv */
+	if ((dvobj = pci_dvobj_init(pdev)) == NULL) {
 		RT_TRACE(_module_hci_intfs_c_, _drv_err_, ("initialize device object priv Failed!\n"));
-		goto error;
+		goto exit;
 	}
 
-	pnetdev->irq = pdev->irq;
-
-	//step 4. read efuse/eeprom data and get mac_addr
-	rtw_hal_read_chip_info(padapter);
-
-	//step 5.
-	status = rtw_init_drv_sw(padapter);
-	if(status ==_FAIL){
-		RT_TRACE(_module_hci_intfs_c_,_drv_err_,("Initialize driver software resource Failed!\n"));
-		goto error;
+	/* Initialize if1 */
+	if ((if1 = rtw_pci_if1_init(dvobj, pdev, pdid)) == NULL) {
+		DBG_871X("rtw_pci_if1_init Failed!\n");
+		goto free_dvobj;
 	}
 
-	status = rtw_hal_inirp_init(padapter);
-	if(status ==_FAIL){
-		RT_TRACE(_module_hci_intfs_c_,_drv_err_,("Initialize PCI desc ring Failed!\n"));
-		goto error;
+	/* Initialize if2 */
+#ifdef CONFIG_CONCURRENT_MODE
+	if((if2 = rtw_drv_if2_init(if1, NULL, pci_set_intf_ops)) == NULL) {
+		goto free_if1;
 	}
-
-	rtw_macaddr_cfg(padapter->eeprompriv.mac_addr);
-
-	_rtw_memcpy(pnetdev->dev_addr, padapter->eeprompriv.mac_addr, ETH_ALEN);
-	DBG_871X("MAC Address from pnetdev->dev_addr= "MAC_FMT"\n", MAC_ARG(pnetdev->dev_addr));
-
-
-	rtw_hal_disable_interrupt(padapter);
-
-#if defined(IRQF_SHARED)
-	err = request_irq(pdev->irq, &rtw_pci_interrupt, IRQF_SHARED, DRV_NAME, padapter);
-#else
-	err = request_irq(pdev->irq, &rtw_pci_interrupt, SA_SHIRQ, DRV_NAME, padapter);
 #endif
-	if (err) {
-		DBG_871X("Error allocating IRQ %d",pdev->irq);
-		goto error;
-	} else {
-		pdvobjpriv->irq_alloc = 1;
-		DBG_871X("Request_irq OK, IRQ %d\n",pdev->irq);
-	}
 
-	//step 6. Init pci related configuration
-	rtw_pci_initialize_adapter_common(padapter);
+	/* alloc irq */
+	if (pci_alloc_irq(dvobj) != _SUCCESS)
+		goto free_if2;
 
-	//step 7.
-	/* Tell the network stack we exist */
-	if (register_netdev(pnetdev) != 0) {
-		RT_TRACE(_module_hci_intfs_c_,_drv_err_,("register_netdev() failed\n"));
-		goto error;
-	}
-
-	RT_TRACE(_module_hci_intfs_c_,_drv_err_,("-drv_init - Adapter->bDriverStopped=%d, Adapter->bSurpriseRemoved=%d\n",padapter->bDriverStopped, padapter->bSurpriseRemoved));
 	RT_TRACE(_module_hci_intfs_c_,_drv_err_,("-871x_drv - drv_init, success!\n"));
 	//DBG_871X("-871x_drv - drv_init, success!\n");
 
-#ifdef CONFIG_PROC_DEBUG
-#ifdef RTK_DMP_PLATFORM
-	rtw_proc_init_one(pnetdev);
-#endif
-#endif
+	status = _SUCCESS;
 
-#ifdef CONFIG_HOSTAPD_MLME
-	hostapd_mode_init(padapter);
-#endif
-
-#ifdef CONFIG_CONCURRENT_MODE
-
-	//set global variable to primary adapter
-	padapter->ph2c_fwcmd_mutex = &drvpriv.h2c_fwcmd_mutex;
-	padapter->psetch_mutex = &drvpriv.setch_mutex;
-	padapter->psetbw_mutex = &drvpriv.setbw_mutex;
-	padapter->hw_init_mutex = &drvpriv.hw_init_mutex;
-#endif
-
-
-
-#ifdef CONFIG_PLATFORM_RTD2880B
-	DBG_871X("wlan link up\n");
-	rtd2885_wlan_netlink_sendMsg("linkup", "8712");
-#endif
-
-#ifdef CONFIG_CONCURRENT_MODE
-	if(rtw_drv_if2_init(padapter, NULL)==_FAIL)
-	{
-		goto error;
+free_if2:
+	if(status != _SUCCESS && if2) {
+		#ifdef CONFIG_CONCURRENT_MODE
+		rtw_drv_if2_stop(if2);
+		rtw_drv_if2_free(if2);
+		#endif
 	}
-#endif
-
-	return 0;
-
-error:
-
-	pci_set_drvdata(pdev, NULL);
-
-	if (pdvobjpriv->irq_alloc) {
-		free_irq(pdev->irq, padapter);
-		pdvobjpriv->irq_alloc = 0;
+free_if1:
+	if (status != _SUCCESS && if1) {
+		rtw_pci_if1_deinit(if1);
 	}
-
-	if (pdvobjpriv->pci_mem_start != 0) {
-		pci_iounmap(pdev, (void *)pdvobjpriv->pci_mem_start);
-	}
-
-	pci_dvobj_deinit(padapter);
-
-	if (pnetdev)
-	{
-		//unregister_netdev(pnetdev);
-		rtw_free_netdev(pnetdev);
-	}
-
-fail2:
-	pci_release_regions(pdev);
-
-fail1:
-	pci_disable_device(pdev);
-
-	DBG_871X("-871x_pci - drv_init, fail!\n");
-
-	return err;
+free_dvobj:
+	if (status != _SUCCESS)
+		pci_dvobj_deinit(pdev);
+exit:
+	return status == _SUCCESS?0:-ENODEV;
 }
 
 /*
@@ -1803,31 +1895,24 @@ fail1:
 //rmmod module & unplug(SurpriseRemoved) will call r871xu_dev_remove() => how to recognize both
 static void rtw_dev_remove(struct pci_dev *pdev)
 {
-	struct net_device *pnetdev=pci_get_drvdata(pdev);
-	_adapter *padapter = (_adapter*)rtw_netdev_priv(pnetdev);
-	struct dvobj_priv *pdvobjpriv = &padapter->dvobjpriv;
+	struct dvobj_priv *pdvobjpriv = pci_get_drvdata(pdev);
+	_adapter *padapter = pdvobjpriv->if1;
+	struct net_device *pnetdev = padapter->pnetdev;
 
 _func_exit_;
+
+	DBG_871X("+rtw_dev_remove\n");
 
 	if (unlikely(!padapter)) {
 		return;
 	}
 
-	DBG_871X("+rtw_dev_remove\n");
-
-#if defined(CONFIG_HAS_EARLYSUSPEND ) || defined(CONFIG_ANDROID_POWER)
-	rtw_unregister_early_suspend(&padapter->pwrctrlpriv);
-#endif
-
-	LeaveAllPowerSaveMode(padapter);
-//	padapter->intf_stop(padapter);
-
-
+	#if 0
 #ifdef RTK_DMP_PLATFORM
 	padapter->bSurpriseRemoved = _FALSE;	// always trate as device exists
-                                                // this will let the driver to disable it's interrupt
+											// this will let the driver to disable it's interrupt
 #else
-	if(drvpriv.drv_registered == _TRUE)
+	if(pci_drvpriv.drv_registered == _TRUE)
 	{
 		//DBG_871X("r871xu_dev_remove():padapter->bSurpriseRemoved == _TRUE\n");
 		padapter->bSurpriseRemoved = _TRUE;
@@ -1838,70 +1923,33 @@ _func_exit_;
 		padapter->hw_init_completed = _FALSE;
 	}*/
 #endif
+	#endif
 
+#if defined(CONFIG_HAS_EARLYSUSPEND) || defined(CONFIG_ANDROID_POWER)
+	rtw_unregister_early_suspend(&padapter->pwrctrlpriv);
+#endif
 
-#ifdef CONFIG_AP_MODE
-		free_mlme_ap_info(padapter);
-#ifdef CONFIG_HOSTAPD_MLME
-		hostapd_mode_unload(padapter);
-#endif //CONFIG_HOSTAPD_MLME
-#endif //CONFIG_AP_MODE
+	rtw_pm_set_ips(padapter, IPS_NONE);
+	rtw_pm_set_lps(padapter, PS_MODE_ACTIVE);
+
+	LeaveAllPowerSaveMode(padapter);
 
 #ifdef CONFIG_CONCURRENT_MODE
-		rtw_drv_if2_free(padapter);
-#endif //CONFIG_CONCURRENT_MODE
-	if(pnetdev){
-		unregister_netdev(pnetdev); //will call netdev_close()
-#ifdef CONFIG_PROC_DEBUG
-		rtw_proc_remove_one(pnetdev);
+	rtw_drv_if2_stop(pdvobjpriv->if2);
 #endif
-	}
 
-	rtw_cancel_all_timer(padapter);
+	rtw_pci_if1_deinit(padapter);
 
-	rtw_dev_unload(padapter);
+#ifdef CONFIG_CONCURRENT_MODE
+	rtw_drv_if2_free(pdvobjpriv->if2);
+#endif
 
-	DBG_871X("+r871xu_dev_remove, hw_init_completed=%d\n", padapter->hw_init_completed);
-
-	if (pdvobjpriv->irq_alloc) {
-		free_irq(pdev->irq, padapter);
-		pdvobjpriv->irq_alloc = 0;
-	}
-
-	if (pdvobjpriv->pci_mem_start != 0) {
-		pci_iounmap(pdev, (void *)pdvobjpriv->pci_mem_start);
-		pci_release_regions(pdev);
-	}
-
-	pci_disable_device(pdev);
-	pci_set_drvdata(pdev, NULL);
-
-	rtw_hal_inirp_deinit(padapter);
-	//s6.
-	if(padapter->dvobj_deinit)
-	{
-		padapter->dvobj_deinit(padapter);
-	}
-	else
-	{
-		RT_TRACE(_module_hci_intfs_c_,_drv_err_,("Initialize hcipriv.hci_priv_init error!!!\n"));
-	}
-
-	rtw_free_drv_sw(padapter);
-
-	//after rtw_free_drv_sw(), padapter has beed freed, don't refer to it.
+	pci_dvobj_deinit(pdev);
 
 	DBG_871X("-r871xu_dev_remove, done\n");
 
-#ifdef CONFIG_PLATFORM_RTD2880B
-	DBG_871X("wlan link down\n");
-	rtd2885_wlan_netlink_sendMsg("linkdown", "8712");
-#endif
-
 _func_exit_;
-
 	return;
-
 }
 
 
@@ -1912,18 +1960,11 @@ static int __init rtw_drv_entry(void)
 	RT_TRACE(_module_hci_intfs_c_,_drv_err_,("+rtw_drv_entry\n"));
 	DBG_871X("rtw driver version=%s\n", DRIVERVERSION);
 	DBG_871X("Build at: %s %s\n", __DATE__, __TIME__);
-	drvpriv.drv_registered = _TRUE;
+	pci_drvpriv.drv_registered = _TRUE;
 
+	rtw_suspend_lock_init();
 
-
-#if defined(CONFIG_CONCURRENT_MODE) || defined(CONFIG_DUALMAC_CONCURRENT)
-	//init global variable
-	_rtw_mutex_init(&drvpriv.h2c_fwcmd_mutex);
-	_rtw_mutex_init(&drvpriv.setch_mutex);
-	_rtw_mutex_init(&drvpriv.setbw_mutex);
-	_rtw_mutex_init(&drvpriv.hw_init_mutex);
-#endif
-	ret = pci_register_driver(&drvpriv.rtw_pci_drv);
+	ret = pci_register_driver(&pci_drvpriv.rtw_pci_drv);
 	if (ret) {
 		RT_TRACE(_module_hci_intfs_c_, _drv_err_, (": No device found\n"));
 	}
@@ -1935,15 +1976,11 @@ static void __exit rtw_drv_halt(void)
 {
 	RT_TRACE(_module_hci_intfs_c_,_drv_err_,("+rtw_drv_halt\n"));
 	DBG_871X("+rtw_drv_halt\n");
-	drvpriv.drv_registered = _FALSE;
 
-#if defined(CONFIG_CONCURRENT_MODE) || defined(CONFIG_DUALMAC_CONCURRENT)
-	_rtw_mutex_free(&drvpriv.h2c_fwcmd_mutex);
-	_rtw_mutex_free(&drvpriv.setch_mutex);
-	_rtw_mutex_free(&drvpriv.setbw_mutex);
-	_rtw_mutex_free(&drvpriv.hw_init_mutex);
-#endif
-	pci_unregister_driver(&drvpriv.rtw_pci_drv);
+	rtw_suspend_lock_uninit();	
+	pci_drvpriv.drv_registered = _FALSE;
+	
+	pci_unregister_driver(&pci_drvpriv.rtw_pci_drv);
 
 	DBG_871X("-rtw_drv_halt\n");
 }
@@ -1951,3 +1988,4 @@ static void __exit rtw_drv_halt(void)
 
 module_init(rtw_drv_entry);
 module_exit(rtw_drv_halt);
+

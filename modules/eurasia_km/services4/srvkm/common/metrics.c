@@ -61,7 +61,7 @@ static volatile IMG_UINT32 *pui32TimerRegister = 0;
 #define PVRSRV_TIMER_COUNT(X)			asTimers[X].ui32Count
 
 
-Temporal_Data asTimers[PVRSRV_NUM_TIMERS];
+Temporal_Data asTimers[PVRSRV_NUM_TIMERS]; 
 
 
 /***********************************************************************************
@@ -146,7 +146,7 @@ IMG_VOID PVRSRVSetupMetricTimers(IMG_VOID *pvDevInfo)
 		/* timer control register */
 		// clock / 1024 when TIMER_DIVISOR = 4
 		// underflow int disabled
-		// we get approx 38 uS per timer tick
+		// we get approx 38 uS per timer tick 
 		*TCR_2 = TIMER_DIVISOR;
 
 		/* reset the timer counter to 0 */
@@ -206,3 +206,4 @@ IMG_VOID PVRSRVOutputMetricTotals(IMG_VOID)
 /******************************************************************************
  End of file (metrics.c)
 ******************************************************************************/
+

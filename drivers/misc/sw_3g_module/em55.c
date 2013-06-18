@@ -13,36 +13,42 @@
 /*
 *******************************************************************************
 *
-*                                   æ¬§å­š EM55
+*                                   Å·æÚ EM55
 *
-* æ¨¡ç»„å†…éƒ¨é»˜è®¤çŠ¶æ€:
-* vbat  : ä½
-* power : é«˜
-* reset : é«˜
-* sleep : é«˜
 *
-* å¼€æœº:
-* (1)ã€sleepæ‹‰ä½
-* (2)ã€vbatæ‹‰é«˜
-* (3)ã€å»¶æ—¶1.2s
-* (4)ã€poweræ‹‰ä½
-* (5)ã€å»¶æ—¶2s
-* (6)ã€poweræ‹‰é«˜
+* ×¢: 1¡¢´ËÃèÊöÎªÄ£×éµÄÄÚ²¿Òı½Å±ä»¯.
+*     2¡¢·½°¸ÖĞÒª×¢ÒâºÍÄ£×éÁ¬½ÓÊ±ÊÇ·ñ´æÔÚÈı¼«¹Ü.Èç¹û´æÔÚÈı¼«¹Ü£¬´úÂëÖĞµÄ²Ù×÷
+*        Ë³ĞòÓ¦¸ÃºÍÄ£×éµÄÒı½Å²Ù×÷Ë³ĞòÏà·´.
 *
-* å…³æœº:
-* (1)ã€å¤ä½å…³æœºï¼Œæ‰§è¡Œå¤ä½è¿‡ç¨‹
 *
-* å¤ä½:
-* (1)ã€resetæ‹‰ä½
-* (2)ã€å»¶æ—¶60ms
-* (3)ã€resetæ‹‰é«˜
-* (4)ã€å»¶æ—¶10ms
+* Ä£×éÄÚ²¿Ä¬ÈÏ×´Ì¬:
+* vbat  : µÍ
+* power : ¸ß
+* reset : ¸ß
+* sleep : ¸ß
 *
-* ä¼‘çœ :
-* (1)ã€sleepæ‹‰é«˜
+* ¿ª»ú:
+* (1)¡¢sleepÀ­µÍ
+* (2)¡¢vbatÀ­¸ß
+* (3)¡¢ÑÓÊ±1.2s
+* (4)¡¢powerÀ­µÍ
+* (5)¡¢ÑÓÊ±2s
+* (6)¡¢powerÀ­¸ß
 *
-* å”¤é†’:
-* (1)ã€sleepæ‹‰ä½
+* ¹Ø»ú:
+* (1)¡¢¸´Î»¹Ø»ú£¬Ö´ĞĞ¸´Î»¹ı³Ì
+*
+* ¸´Î»:
+* (1)¡¢resetÀ­µÍ
+* (2)¡¢ÑÓÊ±60ms
+* (3)¡¢resetÀ­¸ß
+* (4)¡¢ÑÓÊ±10ms
+*
+* ĞİÃß:
+* (1)¡¢sleepÀ­¸ß
+*
+* »½ĞÑ:
+* (1)¡¢sleepÀ­µÍ
 *
 *******************************************************************************
 */
@@ -70,6 +76,7 @@
 #include <mach/gpio.h>
 #include <linux/clk.h>
 #include <linux/gpio.h>
+#include <linux/regulator/consumer.h>
 
 #include "sw_module.h"
 
@@ -97,8 +104,9 @@ void em55_reset(struct sw_modem *modem)
     modem_dbg("reset %s modem\n", modem->name);
 
 	modem_reset(modem, 0);
-    sw_module_mdelay(60);
+    sw_module_mdelay(100);
 	modem_reset(modem, 1);
+	sw_module_mdelay(10);
 
     return;
 }
@@ -106,8 +114,8 @@ void em55_reset(struct sw_modem *modem)
 /*
 *******************************************************************************
 *
-* (1)ã€wankeup : æ‹‰é«˜æŒç»­100æ¯«ç§’, æ‹‰åº•æŒç»­100æ¯«ç§’, å†æ‹‰é«˜æŒç»­100æ¯«ç§’, å†æ‹‰åº•
-* (2)ã€sleep   : æ‹‰é«˜æŒç»­100æ¯«ç§’, æ‹‰åº•æŒç»­100æ¯«ç§’, å†æ‹‰é«˜æŒç»­100æ¯«ç§’, å†æ‹‰é«˜
+* (1)¡¢wankeup : À­¸ß³ÖĞø100ºÁÃë, À­µ×³ÖĞø100ºÁÃë, ÔÙÀ­¸ß³ÖĞø100ºÁÃë, ÔÙÀ­µ×
+* (2)¡¢sleep   : À­¸ß³ÖĞø100ºÁÃë, À­µ×³ÖĞø100ºÁÃë, ÔÙÀ­¸ß³ÖĞø100ºÁÃë, ÔÙÀ­¸ß
 *
 *******************************************************************************
 */
@@ -116,9 +124,9 @@ static void em55_sleep(struct sw_modem *modem, u32 sleep)
     modem_dbg("%s modem %s\n", modem->name, (sleep ? "sleep" : "wakeup"));
 
     if(sleep){
-        modem_sleep(modem, 0);
-    }else{
         modem_sleep(modem, 1);
+    }else{
+        modem_sleep(modem, 0);
     }
 
     return;
@@ -135,73 +143,48 @@ static void em55_rf_disable(struct sw_modem *modem, u32 disable)
 
 /*
 *******************************************************************************
-* é»˜è®¤:
-* vbat  : é«˜
-* power : é«˜
-* reset : é«˜
-* sleep : ä½
 *
-* å¼€æœºè¿‡ç¨‹:
-* (1)ã€vbatæ‹‰é«˜
-* (2)ã€power, æ‹‰ä½æŒç»­1.8sï¼Œåæ‹‰é«˜
-* (3)ã€sleep, æ‹‰é«˜æŒç»­100æ¯«ç§’, æ‹‰åº•æŒç»­100æ¯«ç§’, å†æ‹‰é«˜æŒç»­100æ¯«ç§’, å†æ‹‰åº•
+* ¿ª»ú¹ı³Ì:
+* (1)¡¢Ö´ĞĞ¹Ø»úÁ÷³Ì
+* (2)¡¢ÖÃGPIOÄ¬ÈÏ×´Ì¬
+* (3)¡¢Ö´ĞĞ¿ª»úÁ÷³Ì (×¢Òâ)
+*   (3-1)¡¢powerÀ­µÍ
+*   (3-2)¡¢ÑÓÊ±2s
+*   (3-3)¡¢powerÀ­µÍ
 *
-* å…³æœºè¿‡ç¨‹:
-* (1)ã€vbatæ‹‰ä½
+* ¹Ø»ú¹ı³Ì:
+* (1)¡¢vbatÀ­µÍ
 *
 *******************************************************************************
 */
-#if 0
-void em55_power(struct sw_modem *modem, u32 on)
-{
-    modem_dbg("1set %s modem power %s\n", modem->name, (on ? "on" : "off"));
-
-    if(on){
-	/* power on */
-		modem_vbat(modem, 1);
-		sw_module_mdelay(100);
-
-        modem_power_on_off(modem, 0);
-        sw_module_mdelay(1800);
-        modem_power_on_off(modem, 1);
-        sw_module_mdelay(1000);
-
-        modem_sleep(modem, 1);
-        sw_module_mdelay(100);
-        modem_sleep(modem, 0);
-        sw_module_mdelay(100);
-        modem_sleep(modem, 1);
-        sw_module_mdelay(100);
-        modem_sleep(modem, 0);
-    }else{
-		modem_vbat(modem, 0);
-    }
-
-    return;
-}
-#else
 void em55_power(struct sw_modem *modem, u32 on)
 {
     modem_dbg("set %s modem power %s\n", modem->name, (on ? "on" : "off"));
 
     if(on){
-        modem_sleep(modem, 1);
+		modem_dldo_on_off(modem, 1);
 
-	/* power on */
-		modem_vbat(modem, 1);
-		sw_module_mdelay(100);
+        /* power off, Prevent abnormalities restart of the PAD. */
+        //Èç¹ûµç³ØºÍÄ£×éÊÇÖ±Á¬£¬ÒªÖ´ĞĞÒ»´Î¹Ø»ú¶¯×÷£¬È»ºóÔÙÖ´ĞĞ¿ª»úÁ÷³Ì
+		em55_reset(modem);
 
-        modem_power_on_off(modem, 0);
-        sw_module_mdelay(2000);
+        /* default */
+        modem_sleep(modem, 0);
+
+        /* power on */
         modem_power_on_off(modem, 1);
-        sw_module_mdelay(1000);
+        sw_module_mdelay(2000);
+        modem_power_on_off(modem, 0);
     }else{
-		modem_vbat(modem, 0);
+
+		//modem_vbat(modem, 0);
+		em55_reset(modem);
+
+		modem_dldo_on_off(modem, 0);
     }
 
     return;
 }
-#endif
 
 static int em55_start(struct sw_modem *mdev)
 {
@@ -295,7 +278,7 @@ static int __init em55_init(void)
        goto pin_init_failed;
     }
 
-    /* é˜²æ­¢è„šæœ¬çš„æ¨¡ç»„åç§°bb_nameå’Œé©±åŠ¨åç§°ä¸ä¸€è‡´ï¼Œå› æ­¤åªä½¿ç”¨é©±åŠ¨åç§° */
+    /* ·ÀÖ¹½Å±¾µÄÄ£×éÃû³Æbb_nameºÍÇı¶¯Ãû³Æ²»Ò»ÖÂ£¬Òò´ËÖ»Ê¹ÓÃÇı¶¯Ãû³Æ */
 //    if(g_em55.name[0] == 0){
         strcpy(g_em55.name, g_em55_name);
 //    }
@@ -328,3 +311,5 @@ MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(MODEM_NAME);
 MODULE_VERSION(DRIVER_VERSION);
 MODULE_LICENSE("GPL");
+
+

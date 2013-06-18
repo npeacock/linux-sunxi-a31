@@ -155,9 +155,9 @@ static PVRSRV_ERROR SysLocateDevices(SYS_DATA *psSysData)
 
 	/* SGX Device: */
 	gsSGXDeviceMap.ui32Flags = 0x0;
-
+	
 #if defined(NO_HARDWARE)
-	/*
+	/* 
 	 * For no hardware, allocate some contiguous memory for the
 	 * register block.
 	 */
@@ -209,7 +209,7 @@ static PVRSRV_ERROR SysLocateDevices(SYS_DATA *psSysData)
 		PVR_DPF((PVR_DBG_ERROR, "%s: platform_get_irq failed (%d)", __FUNCTION__, -dev_irq));
 		return PVRSRV_ERROR_INVALID_DEVICE;
 	}
-
+	
 	gsSGXDeviceMap.sRegsSysPBase.uiAddr = dev_res->start;
 	gsSGXDeviceMap.sRegsCpuPBase =
 		SysSysPAddrToCpuPAddr(gsSGXDeviceMap.sRegsSysPBase);
@@ -266,7 +266,7 @@ static PVRSRV_ERROR SysLocateDevices(SYS_DATA *psSysData)
 
  @Function	SysCreateVersionString
 
- @Description Read the version string
+ @Description Read the version string 
 
  @Return   IMG_CHAR *  : Version string
 
@@ -327,10 +327,10 @@ static IMG_CHAR *SysCreateVersionString(void)
 ******************************************************************************
 
  @Function	SysInitialise
-
+ 
  @Description Initialises kernel services at 'driver load' time
-
- @Return   PVRSRV_ERROR  :
+ 
+ @Return   PVRSRV_ERROR  : 
 
 ******************************************************************************/
 PVRSRV_ERROR SysInitialise(IMG_VOID)
@@ -387,14 +387,14 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 	/* Set up timing information*/
 	psTimingInfo = &gsSGXDeviceMap.sTimingInfo;
 	psTimingInfo->ui32CoreClockSpeed = SYS_SGX_CLOCK_SPEED;
-	psTimingInfo->ui32HWRecoveryFreq = SYS_SGX_HWRECOVERY_TIMEOUT_FREQ;
+	psTimingInfo->ui32HWRecoveryFreq = SYS_SGX_HWRECOVERY_TIMEOUT_FREQ; 
 #if defined(SUPPORT_ACTIVE_POWER_MANAGEMENT)
 	psTimingInfo->bEnableActivePM = IMG_TRUE;
-#else
+#else	
 	psTimingInfo->bEnableActivePM = IMG_FALSE;
 #endif /* SUPPORT_ACTIVE_POWER_MANAGEMENT */
-	psTimingInfo->ui32ActivePowManLatencyms = SYS_SGX_ACTIVE_POWER_LATENCY_MS;
-	psTimingInfo->ui32uKernelFreq = SYS_SGX_PDS_TIMER_FREQ;
+	psTimingInfo->ui32ActivePowManLatencyms = SYS_SGX_ACTIVE_POWER_LATENCY_MS; 
+	psTimingInfo->ui32uKernelFreq = SYS_SGX_PDS_TIMER_FREQ; 
 #endif
 
 	/*
@@ -403,8 +403,8 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 	gpsSysSpecificData->ui32SrcClockDiv = 3;
 
 	/*
-		Locate the devices within the system, specifying
-		the physical addresses of each devices components
+		Locate the devices within the system, specifying 
+		the physical addresses of each devices components 
 		(regs, mem, ports etc.)
 	*/
 	eError = SysLocateDevices(gpsSysData);
@@ -455,7 +455,7 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 	/*
 		Once all devices are registered, specify the backing store
 		and, if required, customise the memory heap config
-	*/
+	*/	
 	psDeviceNode = gpsSysData->psDeviceNodeList;
 	while(psDeviceNode)
 	{
@@ -467,7 +467,7 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 				DEVICE_MEMORY_INFO *psDevMemoryInfo;
 				DEVICE_MEMORY_HEAP_INFO *psDeviceMemoryHeap;
 
-				/*
+				/* 
 					specify the backing store to use for the devices MMU PT/PDs
 					- the PT/PDs are always UMA in this system
 				*/
@@ -560,10 +560,10 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 ******************************************************************************
 
  @Function	SysFinalise
-
+ 
  @Description Final part of initialisation at 'driver load' time
-
- @Return   PVRSRV_ERROR  :
+ 
+ @Return   PVRSRV_ERROR  : 
 
 ******************************************************************************/
 PVRSRV_ERROR SysFinalise(IMG_VOID)
@@ -724,7 +724,7 @@ PVRSRV_ERROR SysDeinitialise (SYS_DATA *psSysData)
 	}
 
 	if (SYS_SPECIFIC_DATA_TEST(gpsSysSpecificData, SYS_SPECIFIC_DATA_ENABLE_ENVDATA))
-	{
+	{	
 		eError = OSDeInitEnvData(gpsSysData->pvEnvSpecificData);
 		if (eError != PVRSRV_OK)
 		{
@@ -756,7 +756,7 @@ PVRSRV_ERROR SysDeinitialise (SYS_DATA *psSysData)
 	}
 #endif	/* defined(NO_HARDWARE) || defined(SGX_OCP_REGS_ENABLED) */
 
-
+	
 	gpsSysSpecificData->ui32SysSpecificData = 0;
 	gpsSysSpecificData->bSGXInitComplete = IMG_FALSE;
 
@@ -824,7 +824,7 @@ IMG_DEV_PHYADDR SysCpuPAddrToDevPAddr(PVRSRV_DEVICE_TYPE	eDeviceType,
 
 	/* Note: for UMA system we assume DevP == CpuP */
 	DevPAddr.uiAddr = CpuPAddr.uiAddr;
-
+	
 	return DevPAddr;
 }
 
@@ -879,8 +879,8 @@ IMG_SYS_PHYADDR SysCpuPAddrToSysPAddr (IMG_CPU_PHYADDR cpu_paddr)
 	            address.
 
  @Input           SysPAddr - system physical address.
- @Input           eDeviceType - device type required if DevPAddr
-				address spaces vary across devices
+ @Input           eDeviceType - device type required if DevPAddr 
+				address spaces vary across devices 
 				in the same system
 
  @Return        Device physical address.
@@ -907,8 +907,8 @@ IMG_DEV_PHYADDR SysSysPAddrToDevPAddr(PVRSRV_DEVICE_TYPE eDeviceType, IMG_SYS_PH
 	            address.
 
  @Input           DevPAddr - device physical address.
- @Input           eDeviceType - device type required if DevPAddr
-		  address spaces vary across devices
+ @Input           eDeviceType - device type required if DevPAddr 
+		  address spaces vary across devices 
 		  in the same system
 
  @Return        System physical address.
@@ -966,7 +966,7 @@ IMG_VOID SysRemoveExternalDevice(PVRSRV_DEVICE_NODE *psDeviceNode)
  @Input           psSysData
  @Input           psDeviceNode
 
- @Return        System specific information indicating which device(s)
+ @Return        System specific information indicating which device(s) 
 				generated the interrupt
 
 ******************************************************************************/
@@ -1177,7 +1177,7 @@ PVRSRV_ERROR SysSystemPostPowerState(PVRSRV_SYS_POWER_STATE eNewPowerState)
  @Function	SysDevicePrePowerState
 
  @Description	Perform system level processing required before a device power
-				transition
+ 				transition
 
  @Input		ui32DeviceIndex :
  @Input		eNewPowerState :
@@ -1216,7 +1216,7 @@ PVRSRV_ERROR SysDevicePrePowerState(IMG_UINT32				ui32DeviceIndex,
  @Function	SysDevicePostPowerState
 
  @Description	Perform system level processing required after a device power
-				transition
+ 				transition
 
  @Input		ui32DeviceIndex :
  @Input		eNewPowerState :

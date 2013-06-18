@@ -374,3 +374,4 @@ int aw_ccu_switch_apb_2_pll6(void)
 
     return 0;
 }
+

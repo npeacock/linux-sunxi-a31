@@ -37,7 +37,7 @@ PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+  
 */ /**************************************************************************/
 
 /**************************************************************************
@@ -50,7 +50,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  with an API abstraction of the system's underlying display hardware, allowing
  the client drivers to indirectly control the display hardware and access its
  associated memory.
-
+ 
  Functions of the API include
  - query primary surface attributes (width, height, stride, pixel format, CPU
      physical and virtual address)
@@ -238,7 +238,7 @@ static PVRSRV_ERROR OpenDCDevice(IMG_UINT32 uiPVRDevID,
 
 	/* store the system surface sync data */
 	psDevInfo->sSystemBuffer.psSyncData = psSystemBufferSyncData;
-
+	
 	eError = SUNXILFBUnblankDisplay(psDevInfo);
 	if (eError != SUNXILFB_OK)
 	{
@@ -249,7 +249,7 @@ static PVRSRV_ERROR OpenDCDevice(IMG_UINT32 uiPVRDevID,
 
 	/* return handle to the devinfo */
 	*phDevice = (IMG_HANDLE)psDevInfo;
-
+	
 	return PVRSRV_OK;
 }
 
@@ -258,7 +258,7 @@ static PVRSRV_ERROR OpenDCDevice(IMG_UINT32 uiPVRDevID,
  * Called from services.
  */
 static PVRSRV_ERROR CloseDCDevice(IMG_HANDLE hDevice)
-{
+{    
 	UNREFERENCED_PARAMETER(hDevice);
 	return PVRSRV_OK;
 }
@@ -272,16 +272,16 @@ static PVRSRV_ERROR EnumDCFormats(IMG_HANDLE hDevice,
                                   DISPLAY_FORMAT *psFormat)
 {
 	SUNXILFB_DEVINFO	*psDevInfo;
-
+	
 	if(!hDevice || !pui32NumFormats)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
 	}
 
 	psDevInfo = (SUNXILFB_DEVINFO*)hDevice;
-
+	
 	*pui32NumFormats = 1;
-
+	
 	if(psFormat)
 	{
 		psFormat[0] = psDevInfo->sDisplayFormat;
@@ -294,7 +294,7 @@ static PVRSRV_ERROR EnumDCFormats(IMG_HANDLE hDevice,
  * EnumDCDims
  * Called from services.
  */
-static PVRSRV_ERROR EnumDCDims(IMG_HANDLE hDevice,
+static PVRSRV_ERROR EnumDCDims(IMG_HANDLE hDevice, 
                                DISPLAY_FORMAT *psFormat,
                                IMG_UINT32 *pui32NumDims,
                                DISPLAY_DIMS *psDim)
@@ -315,7 +315,7 @@ static PVRSRV_ERROR EnumDCDims(IMG_HANDLE hDevice,
 	{
 		psDim[0] = psDevInfo->sDisplayDim;
 	}
-
+	
 	return PVRSRV_OK;
 }
 
@@ -327,7 +327,7 @@ static PVRSRV_ERROR EnumDCDims(IMG_HANDLE hDevice,
 static PVRSRV_ERROR GetDCSystemBuffer(IMG_HANDLE hDevice, IMG_HANDLE *phBuffer)
 {
 	SUNXILFB_DEVINFO	*psDevInfo;
-
+	
 	if(!hDevice || !phBuffer)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
@@ -348,7 +348,7 @@ static PVRSRV_ERROR GetDCSystemBuffer(IMG_HANDLE hDevice, IMG_HANDLE *phBuffer)
 static PVRSRV_ERROR GetDCInfo(IMG_HANDLE hDevice, DISPLAY_INFO *psDCInfo)
 {
 	SUNXILFB_DEVINFO	*psDevInfo;
-
+	
 	if(!hDevice || !psDCInfo)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
@@ -366,7 +366,7 @@ static PVRSRV_ERROR GetDCInfo(IMG_HANDLE hDevice, DISPLAY_INFO *psDCInfo)
  * Called from services.
  */
 static PVRSRV_ERROR GetDCBufferAddr(IMG_HANDLE        hDevice,
-                                    IMG_HANDLE        hBuffer,
+                                    IMG_HANDLE        hBuffer, 
                                     IMG_SYS_PHYADDR   **ppsSysAddr,
                                     IMG_UINT32        *pui32ByteSize,
                                     IMG_VOID          **ppvCpuVAddr,
@@ -447,7 +447,7 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 	IMG_UINT32 ui32BuffersToSkip;
 
 	UNREFERENCED_PARAMETER(ui32OEMFlags);
-
+	
 	/* Check parameters */
 	if(!hDevice
 	|| !psDstSurfAttrib
@@ -459,7 +459,7 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 	}
 
 	psDevInfo = (SUNXILFB_DEVINFO*)hDevice;
-
+	
 	/* Do we support swap chains? */
 	if (psDevInfo->sDisplayInfo.ui32MaxSwapChains == 0)
 	{
@@ -474,20 +474,20 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 		eError = PVRSRV_ERROR_FLIP_CHAIN_EXISTS;
 		goto ExitUnLock;
 	}
-
+	
 	/* Check the buffer count */
 	if(ui32BufferCount > psDevInfo->sDisplayInfo.ui32MaxSwapChainBuffers)
 	{
 		printk("###ui32BufferCount:%d, ui32MaxSwapChainBuffers:%d\n", ui32BufferCount,psDevInfo->sDisplayInfo.ui32MaxSwapChainBuffers);
-
+		
 		eError = PVRSRV_ERROR_TOOMANYBUFFERS;
 		goto ExitUnLock;
 	}
-
+	
 	if ((psDevInfo->sFBInfo.ulRoundedBufferSize * (unsigned long)ui32BufferCount) > psDevInfo->sFBInfo.ulFBSize)
 	{
 		printk("###ulRoundedBufferSize:%ld, ulFBSize:%ld\n", psDevInfo->sFBInfo.ulRoundedBufferSize,psDevInfo->sFBInfo.ulFBSize);
-
+		
 		eError = PVRSRV_ERROR_TOOMANYBUFFERS;
 		goto ExitUnLock;
 	}
@@ -499,7 +499,7 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 	 */
 	ui32BuffersToSkip = psDevInfo->sDisplayInfo.ui32MaxSwapChainBuffers - ui32BufferCount;
 
-	/*
+	/* 
 	 *	Verify the DST/SRC attributes,
 	 *	SRC/DST must match the current display mode config
 	*/
@@ -511,7 +511,7 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 		/* DST doesn't match the current mode */
 		eError = PVRSRV_ERROR_INVALID_PARAMS;
 		goto ExitUnLock;
-	}
+	}		
 
 	if(psDstSurfAttrib->pixelformat != psSrcSurfAttrib->pixelformat
 	|| psDstSurfAttrib->sDims.ui32ByteStride != psSrcSurfAttrib->sDims.ui32ByteStride
@@ -521,11 +521,11 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 		/* DST doesn't match the SRC */
 		eError = PVRSRV_ERROR_INVALID_PARAMS;
 		goto ExitUnLock;
-	}
+	}		
 
 	/* check flags if implementation requires them */
 	UNREFERENCED_PARAMETER(ui32Flags);
-
+	
 	/* create a swapchain structure */
 	psSwapChain = (SUNXILFB_SWAPCHAIN*)SUNXILFBAllocKernelMem(sizeof(SUNXILFB_SWAPCHAIN));
 	if(!psSwapChain)
@@ -571,7 +571,7 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 	}
 
 	if (SUNXILFBCreateSwapQueue(psSwapChain) != SUNXILFB_OK)
-	{
+	{ 
 		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Failed to create workqueue\n", __FUNCTION__, psDevInfo->uiFBDevID);
 		eError = PVRSRV_ERROR_UNABLE_TO_INSTALL_ISR;
 		goto ErrorFreeBuffers;
@@ -621,7 +621,7 @@ static PVRSRV_ERROR DestroyDCSwapChain(IMG_HANDLE hDevice,
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
 	}
-
+	
 	psDevInfo = (SUNXILFB_DEVINFO*)hDevice;
 	psSwapChain = (SUNXILFB_SWAPCHAIN*)hSwapChain;
 
@@ -675,7 +675,7 @@ static PVRSRV_ERROR SetDCDstRect(IMG_HANDLE hDevice,
 	UNREFERENCED_PARAMETER(psRect);
 
 	/* Only full display swapchains on this device */
-
+	
 	return PVRSRV_ERROR_NOT_SUPPORTED;
 }
 
@@ -743,16 +743,16 @@ static PVRSRV_ERROR GetDCBuffers(IMG_HANDLE hDevice,
 	SUNXILFB_SWAPCHAIN *psSwapChain;
 	PVRSRV_ERROR eError;
 	unsigned i;
-
+	
 	/* Check parameters */
-	if(!hDevice
+	if(!hDevice 
 	|| !hSwapChain
 	|| !pui32BufferCount
 	|| !phBuffer)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
 	}
-
+	
 	psDevInfo = (SUNXILFB_DEVINFO*)hDevice;
 	psSwapChain = (SUNXILFB_SWAPCHAIN*)hSwapChain;
 
@@ -766,16 +766,16 @@ static PVRSRV_ERROR GetDCBuffers(IMG_HANDLE hDevice,
 		eError = PVRSRV_ERROR_INVALID_PARAMS;
 		goto Exit;
 	}
-
+	
 	/* Return the buffer count */
 	*pui32BufferCount = (IMG_UINT32)psSwapChain->ulBufferCount;
-
+	
 	/* Return the buffers */
 	for(i=0; i<psSwapChain->ulBufferCount; i++)
 	{
 		phBuffer[i] = (IMG_HANDLE)&psSwapChain->psBuffer[i];
 	}
-
+	
 	eError = PVRSRV_OK;
 
 Exit:
@@ -801,7 +801,7 @@ static PVRSRV_ERROR SwapToDCBuffer(IMG_HANDLE hDevice,
 	UNREFERENCED_PARAMETER(hPrivateTag);
 	UNREFERENCED_PARAMETER(ui32ClipRectCount);
 	UNREFERENCED_PARAMETER(psClipRect);
-
+	
 	/* * Nothing to do since Services common code does the work */
 
 	return PVRSRV_OK;
@@ -816,7 +816,7 @@ static PVRSRV_ERROR SwapToDCBuffer(IMG_HANDLE hDevice,
 static SUNXILFB_BOOL WaitForVSyncSettle(SUNXILFB_DEVINFO *psDevInfo)
 {
 		unsigned i;
-
+		
 		for(i = 0; i < SUNXILFB_VSYNC_SETTLE_COUNT; i++)
 		{
 			if (DontWaitForVSync(psDevInfo) || !SUNXILFBWaitForVSync(psDevInfo))
@@ -841,7 +841,7 @@ void SUNXILFBSwapHandler(SUNXILFB_BUFFER *psBuffer)
 	SUNXILFB_DEVINFO *psDevInfo = psBuffer->psDevInfo;
 	SUNXILFB_SWAPCHAIN *psSwapChain = psDevInfo->psSwapChain;
 	SUNXILFB_BOOL bPreviouslyNotVSynced;
-
+    
 	{
 		SUNXILFBFlip(psDevInfo, psBuffer);
 	}
@@ -891,7 +891,7 @@ static IMG_BOOL ProcessFlipV1(IMG_HANDLE hCmdCookie,
 							  SUNXILFB_SWAPCHAIN *psSwapChain,
 							  SUNXILFB_BUFFER *psBuffer,
 							  unsigned long ulSwapInterval)
-{
+{    
 	SUNXILFBCreateSwapChainLock(psDevInfo);
 
 	/* The swap chain has been destroyed */
@@ -937,12 +937,12 @@ static IMG_BOOL ProcessFlipV2(IMG_HANDLE hCmdCookie,
     for(i=0;i < psDispcData->post2_layers;i++)
     {
         IMG_CPU_PHYADDR phyAddr;
-
+        
         psDevInfo->sPVRJTable.pfnPVRSRVDCMemInfoGetCpuPAddr(ppsMemInfos[i], 0, &phyAddr);
 
         psDispcData->layer_info[i].fb.addr[0] = phyAddr.uiAddr;
     }
-
+    
     if(psDispcData->use_sgx)
     {
         IMG_CPU_PHYADDR phyAddr;
@@ -950,13 +950,13 @@ static IMG_BOOL ProcessFlipV2(IMG_HANDLE hCmdCookie,
         struct fb_info *psLINFBInfo;
 
         psLINFBInfo = registered_fb[psDevInfo->uiFBDevID];
-
+        
         psDevInfo->sPVRJTable.pfnPVRSRVDCMemInfoGetCpuPAddr(ppsMemInfos[i], 0, &phyAddr);
         psDispcData->fb_yoffset = (phyAddr.uiAddr - psLINFBInfo->fix.smem_start) / psLINFBInfo->fix.line_length;
     }
 
     dispc_gralloc_queue(psDispcData, ui32DispcDataLength, dispc_proxy_cmdcomplete, (void *)hCmdCookie);
-
+       
     return IMG_TRUE;
 }
 
@@ -1015,9 +1015,9 @@ static IMG_BOOL ProcessFlip(IMG_HANDLE  hCmdCookie,
 ******************************************************************************
 
  @Function	SUNXILFBInitFBDev
-
+ 
  @Description specifies devices in the systems memory map
-
+ 
  @Input    psSysData - sys data
 
  @Return   SUNXILFB_ERROR  :
@@ -1140,11 +1140,11 @@ static SUNXILFB_ERROR SUNXILFBInitFBDev(SUNXILFB_DEVINFO *psDevInfo)
 	if(psLINFBInfo->var.bits_per_pixel == 16)
 	{
 		if((psLINFBInfo->var.red.length == 5) &&
-			(psLINFBInfo->var.green.length == 6) &&
-			(psLINFBInfo->var.blue.length == 5) &&
+			(psLINFBInfo->var.green.length == 6) && 
+			(psLINFBInfo->var.blue.length == 5) && 
 			(psLINFBInfo->var.red.offset == 11) &&
-			(psLINFBInfo->var.green.offset == 5) &&
-			(psLINFBInfo->var.blue.offset == 0) &&
+			(psLINFBInfo->var.green.offset == 5) && 
+			(psLINFBInfo->var.blue.offset == 0) && 
 			(psLINFBInfo->var.red.msb_right == 0))
 		{
 			psPVRFBInfo->ePixelFormat = PVRSRV_PIXEL_FORMAT_RGB565;
@@ -1157,11 +1157,11 @@ static SUNXILFB_ERROR SUNXILFBInitFBDev(SUNXILFB_DEVINFO *psDevInfo)
 	else if(psLINFBInfo->var.bits_per_pixel == 32)
 	{
 		if((psLINFBInfo->var.red.length == 8) &&
-			(psLINFBInfo->var.green.length == 8) &&
-			(psLINFBInfo->var.blue.length == 8) &&
+			(psLINFBInfo->var.green.length == 8) && 
+			(psLINFBInfo->var.blue.length == 8) && 
 			(psLINFBInfo->var.red.offset == 16) &&
-			(psLINFBInfo->var.green.offset == 8) &&
-			(psLINFBInfo->var.blue.offset == 0) &&
+			(psLINFBInfo->var.green.offset == 8) && 
+			(psLINFBInfo->var.blue.offset == 0) && 
 			(psLINFBInfo->var.red.msb_right == 0))
 		{
 			psPVRFBInfo->ePixelFormat = PVRSRV_PIXEL_FORMAT_ARGB8888;
@@ -1170,7 +1170,7 @@ static SUNXILFB_ERROR SUNXILFBInitFBDev(SUNXILFB_DEVINFO *psDevInfo)
 		{
 			printk(KERN_INFO DRIVER_PREFIX ": %s: Device %u: Unknown FB format\n", __FUNCTION__, uiFBDevID);
 		}
-	}
+	}	
 	else
 	{
 		printk(KERN_INFO DRIVER_PREFIX ": %s: Device %u: Unknown FB format\n", __FUNCTION__, uiFBDevID);
@@ -1206,7 +1206,7 @@ static void SUNXILFBDeInitFBDev(SUNXILFB_DEVINFO *psDevInfo)
 
 	psLINFBOwner = psLINFBInfo->fbops->owner;
 
-	if (psLINFBInfo->fbops->fb_release != NULL)
+	if (psLINFBInfo->fbops->fb_release != NULL) 
 	{
 		(void) psLINFBInfo->fbops->fb_release(psLINFBInfo, 0);
 	}
@@ -1322,7 +1322,7 @@ static SUNXILFB_DEVINFO *SUNXILFBInitDev(unsigned uiFBDevID)
 	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
 		": Device %u: PVR Device ID: %u\n",
 		psDevInfo->uiFBDevID, psDevInfo->uiPVRDevID));
-
+	
 	/* Setup private command processing function table ... */
 	pfnCmdProcList[DC_FLIP_COMMAND] = ProcessFlip;
 
@@ -1401,7 +1401,7 @@ static SUNXILFB_BOOL SUNXILFBDeInitDev(SUNXILFB_DEVINFO *psDevInfo)
 			": %s: Device %u: PVR Device %u: Couldn't remove device from PVR Services\n", __FUNCTION__, psDevInfo->uiFBDevID, psDevInfo->uiPVRDevID);
 		return SUNXILFB_FALSE;
 	}
-
+	
 	SUNXILFBDeInitFBDev(psDevInfo);
 
 	SUNXILFBSetDevInfoPtr(psDevInfo->uiFBDevID, NULL);
@@ -1469,3 +1469,4 @@ SUNXILFB_ERROR SUNXILFBDeInit(void)
 /******************************************************************************
  End of file (dc_sunxi_displayclass.c)
 ******************************************************************************/
+

@@ -625,7 +625,7 @@ static int gator_start(void)
 		}
 	}
 
-	// Capture the start time
+	// Capture the start time  
 	gator_summary();
 
 	// start all events

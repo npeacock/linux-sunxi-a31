@@ -7,7 +7,9 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
-
+#ifdef CONFIG_VIDEO_SUNXI_VFE
+#include "v4l2-mediabus_new.h"
+#else
 #ifndef __LINUX_V4L2_MEDIABUS_H
 #define __LINUX_V4L2_MEDIABUS_H
 
@@ -46,10 +48,10 @@ enum v4l2_mbus_pixelcode {
 	V4L2_MBUS_FMT_BGR565_2X8_LE = 0x1006,
 	V4L2_MBUS_FMT_RGB565_2X8_BE = 0x1007,
 	V4L2_MBUS_FMT_RGB565_2X8_LE = 0x1008,
-	//add by raymonxiu
+	//add by raymonxiu	
 	V4L2_MBUS_FMT_RGB565_1X1 = 0x1009,
 
-
+	
 	/* YUV (including grey) - next is 0x2014 */
 	V4L2_MBUS_FMT_Y8_1X8 = 0x2001,
 	V4L2_MBUS_FMT_UYVY8_1_5X8 = 0x2002,
@@ -70,7 +72,7 @@ enum v4l2_mbus_pixelcode {
 	V4L2_MBUS_FMT_YVYU8_1X16 = 0x2012,
 	V4L2_MBUS_FMT_YUYV10_1X20 = 0x200d,
 	V4L2_MBUS_FMT_YVYU10_1X20 = 0x200e,
-
+	
 	//add by raymonxiu
 	V4L2_MBUS_FMT_YUV8_1X24 = 0x2014,
 	V4L2_MBUS_FMT_UYVY8_1X1 = 0x2015,
@@ -78,7 +80,7 @@ enum v4l2_mbus_pixelcode {
 	V4L2_MBUS_FMT_Y8_UYVY8_1X1 = 0x2018,
 	V4L2_MBUS_FMT_Y10_UYVY10_1X1 = 0x2019,
 
-
+	
 	/* Bayer - next is 0x3015 */
 	V4L2_MBUS_FMT_SBGGR8_1X8 = 0x3001,
 	V4L2_MBUS_FMT_SGBRG8_1X8 = 0x3013,
@@ -100,7 +102,7 @@ enum v4l2_mbus_pixelcode {
 	V4L2_MBUS_FMT_SGBRG12_1X12 = 0x3010,
 	V4L2_MBUS_FMT_SGRBG12_1X12 = 0x3011,
 	V4L2_MBUS_FMT_SRGGB12_1X12 = 0x3012,
-
+	
 	//add by raymonxiu
 	V4L2_MBUS_FMT_SBGGR8_1X1 = 0x3015,
 	V4L2_MBUS_FMT_SGBRG8_1X1 = 0x3016,
@@ -113,7 +115,7 @@ enum v4l2_mbus_pixelcode {
 	V4L2_MBUS_FMT_SBGGR12_1X1 = 0x301d,
 	V4L2_MBUS_FMT_SGBRG12_1X1 = 0x301e,
 	V4L2_MBUS_FMT_SGRBG12_1X1 = 0x301f,
-	V4L2_MBUS_FMT_SRGGB12_1X1 = 0x3020,
+	V4L2_MBUS_FMT_SRGGB12_1X1 = 0x3020,	
 
 	/* JPEG compressed formats - next is 0x4002 */
 	V4L2_MBUS_FMT_JPEG_1X8 = 0x4001,
@@ -136,4 +138,5 @@ struct v4l2_mbus_framefmt {
 	__u32			reserved[7];
 };
 
+#endif
 #endif

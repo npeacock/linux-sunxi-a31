@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: ä¸»æœºæŽ§åˆ¶å™¨é©±åŠ¨
+* Description 	: Ö÷»ú¿ØÖÆÆ÷Çý¶¯
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -66,10 +66,10 @@ static const u8 sw_hcd_test_packet[53] = {
 
 #define STAGE0_MASK ((1 << USBC_BP_INTUSB_RESUME) \
                     | (1 << USBC_BP_INTUSB_SESSION_REQ) \
-			| (1 << USBC_BP_INTUSB_VBUS_ERROR) \
-			| (1 << USBC_BP_INTUSB_CONNECT) \
-			| (1 << USBC_BP_INTUSB_RESET) \
-			| (1 << USBC_BP_INTUSB_SOF))
+            		| (1 << USBC_BP_INTUSB_VBUS_ERROR) \
+            		| (1 << USBC_BP_INTUSB_CONNECT) \
+            		| (1 << USBC_BP_INTUSB_RESET) \
+            		| (1 << USBC_BP_INTUSB_SOF))
 
 /*
 *******************************************************************************
@@ -294,10 +294,6 @@ void sw_hcd_start(struct sw_hcd *sw_hcd)
 
 	/* assume ID pin is hard-wired to ground */
 	sw_hcd_platform_enable(sw_hcd);
-
-	/* port power on */
-	sw_hcd_set_vbus(sw_hcd, 1);
-
     return;
 }
 EXPORT_SYMBOL(sw_hcd_start);
@@ -752,20 +748,20 @@ static irqreturn_t sw_hcd_stage0_irq(struct sw_hcd *sw_hcd, u8 int_usb, u8 devct
 
         /* power down */
         devctl = USBC_Readb(USBC_REG_DEVCTL(usbc_base));
-	devctl &= ~(1 << USBC_BP_DEVCTL_SESSION);
-	USBC_Writeb(devctl, USBC_REG_DEVCTL(usbc_base));
+    	devctl &= ~(1 << USBC_BP_DEVCTL_SESSION);
+    	USBC_Writeb(devctl, USBC_REG_DEVCTL(usbc_base));
 
         USBC_ForceVbusValid(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_VBUS_TYPE_LOW);
 
         sw_hcd_set_vbus(sw_hcd, 0);
-
+	
         /* delay */
         mdelay(100);
 
         /* power on */
         devctl = USBC_Readb(USBC_REG_DEVCTL(usbc_base));
-	devctl |= (1 << USBC_BP_DEVCTL_SESSION);
-	USBC_Writeb(devctl, USBC_REG_DEVCTL(usbc_base));
+    	devctl |= (1 << USBC_BP_DEVCTL_SESSION);
+    	USBC_Writeb(devctl, USBC_REG_DEVCTL(usbc_base));
 
         USBC_ForceVbusValid(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_VBUS_TYPE_HIGH);
 
@@ -823,9 +819,9 @@ static irqreturn_t sw_hcd_stage0_irq(struct sw_hcd *sw_hcd, u8 int_usb, u8 devct
 		sw_hcd->ep0_stage = SW_HCD_EP0_START;
 
         sw_hcd->port1_status &= ~(USB_PORT_STAT_LOW_SPEED
-						|USB_PORT_STAT_HIGH_SPEED
-						|USB_PORT_STAT_ENABLE
-						);
+        					|USB_PORT_STAT_HIGH_SPEED
+        					|USB_PORT_STAT_ENABLE
+        					);
 		sw_hcd->port1_status |= USB_PORT_STAT_CONNECTION
 					        |(USB_PORT_STAT_C_CONNECTION << 16);
 
@@ -851,7 +847,7 @@ static irqreturn_t sw_hcd_stage0_irq(struct sw_hcd *sw_hcd, u8 int_usb, u8 devct
 
 		USBC_INT_ClearMiscPending(sw_hcd->sw_hcd_io->usb_bsp_hdle, (1 << USBC_BP_INTUSB_RESET));
 
-        //æŠŠbabbleå½“ä½œdisconnectå¤„ç†
+        //°Ñbabbleµ±×÷disconnect´¦Àí
 		USBC_Host_SetFunctionAddress_Deafult(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_EP_TYPE_TX, 0);
 		{
 		    u32 i = 1;
@@ -862,15 +858,15 @@ static irqreturn_t sw_hcd_stage0_irq(struct sw_hcd *sw_hcd, u8 int_usb, u8 devct
 			}
 		}
 
-		/* æ¸…é™¤å…³äºŽæ‹”å‡ºè®¾å¤‡çš„æ‰€æœ‰ä¸­æ–­, ç›®å‰æ²¡æœ‰hub, æ‰€ä»¥å¯ä»¥æ¸…é™¤æ‰€æœ‰ä¸­æ–­ */
+		/* Çå³ý¹ØÓÚ°Î³öÉè±¸µÄËùÓÐÖÐ¶Ï, Ä¿Ç°Ã»ÓÐhub, ËùÒÔ¿ÉÒÔÇå³ýËùÓÐÖÐ¶Ï */
 		USBC_INT_ClearMiscPendingAll(sw_hcd->sw_hcd_io->usb_bsp_hdle);
 		USBC_INT_ClearEpPendingAll(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_EP_TYPE_TX);
 		USBC_INT_ClearEpPendingAll(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_EP_TYPE_RX);
 
         /* power down */
         devctl = USBC_Readb(USBC_REG_DEVCTL(usbc_base));
-	devctl &= ~(1 << USBC_BP_DEVCTL_SESSION);
-	USBC_Writeb(devctl, USBC_REG_DEVCTL(usbc_base));
+    	devctl &= ~(1 << USBC_BP_DEVCTL_SESSION);
+    	USBC_Writeb(devctl, USBC_REG_DEVCTL(usbc_base));
 
         USBC_ForceVbusValid(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_VBUS_TYPE_LOW);
 
@@ -881,8 +877,8 @@ static irqreturn_t sw_hcd_stage0_irq(struct sw_hcd *sw_hcd, u8 int_usb, u8 devct
 
         /* power on */
         devctl = USBC_Readb(USBC_REG_DEVCTL(usbc_base));
-	devctl |= (1 << USBC_BP_DEVCTL_SESSION);
-	USBC_Writeb(devctl, USBC_REG_DEVCTL(usbc_base));
+    	devctl |= (1 << USBC_BP_DEVCTL_SESSION);
+    	USBC_Writeb(devctl, USBC_REG_DEVCTL(usbc_base));
 
         USBC_ForceVbusValid(sw_hcd->sw_hcd_io->usb_bsp_hdle, USBC_VBUS_TYPE_HIGH);
 
@@ -1049,8 +1045,8 @@ static irqreturn_t sw_hcd_interrupt(struct sw_hcd *sw_hcd)
 	while (reg) {
 		if (reg & 1) {
 			USBC_INT_ClearEpPending(sw_hcd->sw_hcd_io->usb_bsp_hdle,
-						USBC_EP_TYPE_TX,
-						ep_num);
+		                    		USBC_EP_TYPE_TX,
+		                    		ep_num);
 
 			/* sw_hcd_ep_select(sw_hcd->mregs, ep_num); */
 			/* REVISIT just retval |= ep->tx_irq(...) */
@@ -1163,3 +1159,31 @@ irqreturn_t generic_interrupt(int irq, void *__hci)
 	return IRQ_HANDLED;
 }
 EXPORT_SYMBOL(generic_interrupt);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

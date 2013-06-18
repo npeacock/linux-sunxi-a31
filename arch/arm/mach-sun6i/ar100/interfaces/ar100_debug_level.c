@@ -30,22 +30,22 @@
 int ar100_set_debug_level(unsigned int level)
 {
 	struct ar100_message *pmessage;
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(0);
 	if (pmessage == NULL) {
 		AR100_ERR("allocate message for power management request failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type     = AR100_SET_DEBUG_LEVEL;
 	pmessage->attr     = 0;
 	pmessage->paras[0] = level;
 	pmessage->state    = AR100_MESSAGE_INITIALIZED;
-
+	
 	/* send set debug level request to ar100 */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	return 0;
 }

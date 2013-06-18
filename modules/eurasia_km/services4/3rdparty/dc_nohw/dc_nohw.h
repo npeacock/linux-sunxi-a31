@@ -224,7 +224,7 @@ DC_ERROR Deinit(void);
 #if defined(USE_BASE_VIDEO_FRAMEBUFFER) || defined (ENABLE_DISPLAY_MODE_TRACKING)
 DC_ERROR OpenMiniport(void);
 DC_ERROR CloseMiniport(void);
-#endif /* #if defined(USE_BASE_VIDEO_FRAMEBUFFER) || defined (ENABLE_DISPLAY_MODE_TRACKING) */
+#endif /* #if defined(USE_BASE_VIDEO_FRAMEBUFFER) || defined (ENABLE_DISPLAY_MODE_TRACKING) */ 
 
 #if defined(USE_BASE_VIDEO_FRAMEBUFFER)
 PVRSRV_ERROR SetupDevInfo (DC_NOHW_DEVINFO *psDevInfo);
@@ -285,3 +285,4 @@ DC_ERROR GetLibFuncAddr (DC_HANDLE hExtDrv, char *szFunctionName, PFN_DC_GET_PVR
 /******************************************************************************
  End of file (dc_nohw.h)
 ******************************************************************************/
+

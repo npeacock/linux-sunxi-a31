@@ -6,3 +6,4 @@ config GPIO_TEST_DRIVER
 	default m
 	help
 	Nothing help.
+

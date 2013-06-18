@@ -46,7 +46,7 @@ extern "C" {
 #endif
 
 
-/*
+/* 
  * Some OSes (WinXP,CE) allocate the string on the stack, but some
  * (Linux,Symbian) use a global variable/lock instead.
  * Would be good to use the same across all OSes.
@@ -246,7 +246,6 @@ PVRSRV_ERROR PDumpOSBufprintf(IMG_HANDLE hBuf, IMG_UINT32 ui32ScriptSizeMax, IMG
 IMG_VOID PDumpOSDebugPrintf(IMG_CHAR* pszFormat, ...) IMG_FORMAT_PRINTF(1, 2);
 
 /*
- * FIXME: Is this function useful for Symbian?
  * Write into a IMG_CHAR* on all OSes. Can be allocated on the stack or heap.
  */
 /*!

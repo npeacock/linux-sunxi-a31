@@ -46,7 +46,7 @@ typedef struct __DRAM_PARA
     unsigned int		dram_tpr3;
     unsigned int		dram_tpr4;
     unsigned int		dram_tpr5;
-	unsigned int		dram_tpr6;
+   	unsigned int		dram_tpr6;
 
     //reserved for future use
     unsigned int		dram_tpr7;
@@ -73,7 +73,7 @@ int ar100_get_dram_cfg(void)
 	}
 	AR100_INF("dram_clk is %#x\n", val.val);
 	ar100_dram_paras.dram_clk = val.val;
-
+	
 	type = script_get_item("dram_para", "dram_type", &val);
 	if(SCIRPT_ITEM_VALUE_TYPE_INT != type)
 	{
@@ -257,7 +257,7 @@ int ar100_get_dram_cfg(void)
 	}
 	AR100_INF("dram_tpr13 is %#x\n", val.val);
 	ar100_dram_paras.dram_tpr13 = val.val;
-
+	
 	return 0;
 }
 
@@ -266,17 +266,17 @@ int ar100_config_dram_paras(void)
 	struct ar100_message *pmessage;
 	u32 *dram_para;
 	u32 index;
-
+	
 	/* parse dram config paras */
 	ar100_get_dram_cfg();
-
+	
 	/* update dram config paras to ar100 system */
 	pmessage = ar100_message_allocate(0);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-	dram_para = (u32 *)(&ar100_dram_paras);
+	dram_para = (u32 *)(&ar100_dram_paras); 
 	for (index = 0; index < (sizeof(ar100_dram_paras) / 4); index++) {
 		/* initialize message */
 		pmessage->type       = AR100_SET_DRAM_PARAS;
@@ -287,12 +287,12 @@ int ar100_config_dram_paras(void)
 		pmessage->state      = AR100_MESSAGE_INITIALIZED;
 		pmessage->cb.handler = NULL;
 		pmessage->cb.arg     = NULL;
-
+		
 		/* send message */
 		ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
 	}
 	/* free message */
 	ar100_message_free(pmessage);
-
+	
 	return 0;
 }

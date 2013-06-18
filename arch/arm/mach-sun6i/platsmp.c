@@ -70,14 +70,18 @@ void enable_aw_cpu(int cpu)
     pwr_reg = readl(IO_ADDRESS(AW_R_CPUCFG_BASE) + AW_CPUCFG_GENCTL);
     pwr_reg &= ~(1<<cpu);
     writel(pwr_reg, IO_ADDRESS(AW_R_CPUCFG_BASE) + AW_CPUCFG_GENCTL);
-    /* DBGPWRDUP hold low */
-    pwr_reg = readl(IO_ADDRESS(AW_R_CPUCFG_BASE) + AW_CPUCFG_DBGCTL1);
-    pwr_reg &= ~(1<<cpu);
-    writel(pwr_reg, IO_ADDRESS(AW_R_CPUCFG_BASE) + AW_CPUCFG_DBGCTL1);
 
     /* step2: release power clamp */
+    //write bit3, bit4 to 0
+    writel(0xe7, IO_ADDRESS(AW_R_PRCM_BASE) + AW_CPUX_PWR_CLAMP(cpu));
+    while((0xe7) != readl(IO_ADDRESS(AW_R_CPUCFG_BASE) + AW_CPUX_PWR_CLAMP_STATUS(cpu)))
+	    ;
+    //write 012567 bit to 0
     writel(0x00, IO_ADDRESS(AW_R_PRCM_BASE) + AW_CPUX_PWR_CLAMP(cpu));
-    mdelay(10);
+    while((0x00) != readl(IO_ADDRESS(AW_R_CPUCFG_BASE) + AW_CPUX_PWR_CLAMP_STATUS(cpu)))
+	    ;
+    mdelay(2);
+
 
     /* step3: clear power-off gating */
     pwr_reg = readl(IO_ADDRESS(AW_R_PRCM_BASE) + AW_CPU_PWROFF_REG);
@@ -88,10 +92,6 @@ void enable_aw_cpu(int cpu)
     /* step4: de-assert core reset */
     writel(3, IO_ADDRESS(AW_R_CPUCFG_BASE) + CPUX_RESET_CTL(cpu));
 
-    /* step5: assert DBGPWRDUP signal */
-    pwr_reg = readl(IO_ADDRESS(AW_R_CPUCFG_BASE) + AW_CPUCFG_DBGCTL1);
-    pwr_reg |= (1<<cpu);
-    writel(pwr_reg, IO_ADDRESS(AW_R_CPUCFG_BASE) + AW_CPUCFG_DBGCTL1);
 }
 
 void __init smp_init_cpus(void)
@@ -141,3 +141,5 @@ int __cpuinit boot_secondary(unsigned int cpu, struct task_struct *idle)
     spin_unlock(&boot_lock);
     return 0;
 }
+
+

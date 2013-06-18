@@ -69,7 +69,7 @@ unsigned long g2d_size = 0x1000000;
 #endif
 
 __s32 g2d_create_heap(__u32 pHeapHead, __u32 nHeapSize)
-{
+{    
 	if(pHeapHead <(__u32)__va(0x40000000))
 	{
 	    ERR("Invalid pHeapHead:%x\n", pHeapHead);
@@ -125,7 +125,7 @@ void *g2d_malloc(__u32 bytes_num, __u32 *phy_addr)
 
 	__u32 actual_bytes;
 	struct g2d_alloc_struct *ptr, *newptr;
-
+	
 	if(!bytes_num)return 0;
 	actual_bytes = G2D_BYTE_ALIGN(bytes_num);
 	ptr = &boot_heap_head;
@@ -151,7 +151,7 @@ void *g2d_malloc(__u32 bytes_num, __u32 *phy_addr)
         ERR(" create the node failed, can't manage the block\n");
         return 0;                               /* create the node failed, can't manage the block     */
     }
-
+    
     /* set the memory block chain, insert the node to the chain */
     newptr->address = ptr->address + ptr->size + 4*1024;
     newptr->size    = actual_bytes;
@@ -274,14 +274,14 @@ int g2d_mem_request(__u32 size)
 	__s32 sel;
 	__u32 ret = 0;
 	__u32 phy_addr;
-
+	
     sel = g2d_get_free_mem_index();
     if(sel < 0)
     {
         ERR("g2d_get_free_mem_index fail!\n");
         return -EINVAL;
     }
-
+    	
 	ret = (__u32)g2d_malloc(size,&phy_addr);
 	if(ret != 0)
 	{
@@ -300,7 +300,7 @@ int g2d_mem_request(__u32 size)
 	else
 	{
 		ERR("fail to alloc reserved memory!\n");
-		return -ENOMEM;
+		return -ENOMEM;		
 	}
 
 }
@@ -388,7 +388,7 @@ long g2d_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			goto err_noput;
 		}
 	    ret = g2d_blit(&blit_para);
-	break;
+    	break;
 	}
 	case G2D_CMD_FILLRECT:{
 		g2d_fillrect fill_para;
@@ -399,10 +399,10 @@ long g2d_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			goto err_noput;
 		}
 	    ret = g2d_fill(&fill_para);
-	break;
+    	break;
 	}
 	case G2D_CMD_STRETCHBLT:{
-		g2d_stretchblt stre_para;
+		g2d_stretchblt stre_para;	
 		if(copy_from_user(&stre_para, (g2d_stretchblt *)arg, sizeof(g2d_stretchblt)))
 		{
 			kfree(&stre_para);
@@ -410,10 +410,10 @@ long g2d_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			goto err_noput;
 		}
 	    ret = g2d_stretchblit(&stre_para);
-	break;
+    	break;
 	}
 	case G2D_CMD_PALETTE_TBL:{
-		g2d_palette pale_para;
+		g2d_palette pale_para;	
 		if(copy_from_user(&pale_para, (g2d_palette *)arg, sizeof(g2d_palette)))
 		{
 			kfree(&pale_para);
@@ -421,7 +421,7 @@ long g2d_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			goto err_noput;
 		}
 	    ret = g2d_set_palette_table(&pale_para);
-	break;
+    	break;
 	}
 	case G2D_CMD_QUEUE:{
 		unsigned int cmdq_addr;
@@ -467,7 +467,7 @@ long g2d_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
 err_noput:
 	mutex_unlock(&para.mutex);
-
+	
 	return ret;
 }
 
@@ -583,7 +583,7 @@ static int g2d_suspend(struct platform_device *pdev, pm_message_t state)
 }
 
 static int g2d_resume(struct platform_device *pdev)
-{
+{	
 	INFO("%s. \n", __func__);
 	g2d_clk_on();
 	INFO("g2d_resume succesfully.\n");
@@ -689,3 +689,4 @@ MODULE_AUTHOR("yupu_tang");
 MODULE_DESCRIPTION("g2d driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:g2d");
+

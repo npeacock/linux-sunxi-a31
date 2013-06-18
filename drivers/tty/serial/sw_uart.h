@@ -150,3 +150,4 @@ struct sw_uart_port {
 #define SW_UART_HALT_HTX       (BIT(0))
 
 #endif
+

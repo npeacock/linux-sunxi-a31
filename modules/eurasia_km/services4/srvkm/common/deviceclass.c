@@ -1,4 +1,5 @@
 /*************************************************************************/ /*!
+@File
 @Title          Device class services functions
 @Copyright      Copyright (c) Imagination Technologies Ltd. All Rights Reserved
 @Description    Kernel services functions for device class devices
@@ -108,7 +109,7 @@ typedef struct PVRSRV_DC_SWAPCHAIN_TAG
 typedef struct PVRSRV_DC_SWAPCHAIN_REF_TAG
 {
 	struct PVRSRV_DC_SWAPCHAIN_TAG		*psSwapChain;
-	IMG_HANDLE							hResItem;
+	IMG_HANDLE							hResItem;	
 } PVRSRV_DC_SWAPCHAIN_REF;
 
 
@@ -193,8 +194,8 @@ typedef struct PVRSRV_BUFFERCLASS_PERCONTEXT_INFO_TAG
  @Input hDeviceKM	- handle to display class device, returned from OpenDCDevice
 
  @Return
-	success: pointer to PVRSRV_DISPLAYCLASS_INFO
-	failure: IMG_NULL
+ 	success: pointer to PVRSRV_DISPLAYCLASS_INFO
+ 	failure: IMG_NULL
 ******************************************************************************/
 static PVRSRV_DISPLAYCLASS_INFO* DCDeviceHandleToDCInfo (IMG_HANDLE hDeviceKM)
 {
@@ -218,8 +219,8 @@ static PVRSRV_DISPLAYCLASS_INFO* DCDeviceHandleToDCInfo (IMG_HANDLE hDeviceKM)
  @Input hDeviceKM	- handle to buffer class device, returned from OpenBCDevice
 
  @Return
-	success: pointer to PVRSRV_BUFFERCLASS_INFO
-	failure: IMG_NULL
+ 	success: pointer to PVRSRV_BUFFERCLASS_INFO
+ 	failure: IMG_NULL
 ******************************************************************************/
 static PVRSRV_BUFFERCLASS_INFO* BCDeviceHandleToBCInfo (IMG_HANDLE hDeviceKM)
 {
@@ -239,7 +240,7 @@ static PVRSRV_BUFFERCLASS_INFO* BCDeviceHandleToBCInfo (IMG_HANDLE hDeviceKM)
  Enumerates the device node (if is of the same class as given).
 
  @Input psDeviceNode	- The device node to be enumerated
-		va				- variable arguments list, with:
+ 		va				- variable arguments list, with:
 							pui32DevCount	- The device count pointer (to be increased)
 							ppui32DevID		- The pointer to the device IDs pointer (to be updated and increased)
 							peDeviceClass	- The pointer to the device class of the psDeviceNode's to be enumerated.
@@ -284,8 +285,8 @@ static IMG_VOID PVRSRVEnumerateDCKM_ForEachVaCb(PVRSRV_DEVICE_NODE *psDeviceNode
  @Output pui32DevID		- list of device ids in the device class
 
  @Return
-	success: handle to matching display class device
-	failure: IMG_NULL
+ 	success: handle to matching display class device
+ 	failure: IMG_NULL
 
 ******************************************************************************/
 IMG_EXPORT
@@ -797,7 +798,7 @@ static PVRSRV_ERROR CloseDCDeviceCallBack(IMG_PVOID  pvParam,
  @Input	   psPerProc		: Per-process data
  @Input	   ui32DeviceID		: unique device index
  @Input	   hDevCookie		: devcookie used to derive the Device Memory
-								Context into BC surfaces will be mapped into
+ 								Context into BC surfaces will be mapped into
  @Outut	   phDeviceKM		: handle to the DC device
 
  @Return   PVRSRV_ERROR  :
@@ -872,7 +873,7 @@ PVRSRV_ERROR PVRSRVOpenDCDeviceKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 
 		/* open the external device */
 		eError = psDCInfo->psFuncTable->pfnOpenDCDevice(ui32DeviceID,
-								&psDCInfo->hExtDevice,
+                                                        	&psDCInfo->hExtDevice,
 								(PVRSRV_SYNC_DATA*)psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo->psSyncDataMemInfoKM->pvLinAddrKM);
 		if(eError != PVRSRV_OK)
 		{
@@ -1121,19 +1122,19 @@ static PVRSRV_ERROR DestroyDCSwapChain(PVRSRV_DC_SWAPCHAIN *psSwapChain)
 		{
 			psDCInfo->psDCSwapChainShared = psSwapChain->psNext;
 		}
-		else
+		else 
 		{
 			PVRSRV_DC_SWAPCHAIN *psCurrentSwapChain;
-			psCurrentSwapChain = psDCInfo->psDCSwapChainShared;
+			psCurrentSwapChain = psDCInfo->psDCSwapChainShared; 		
 			while( psCurrentSwapChain->psNext )
 			{
-				if( psCurrentSwapChain->psNext != psSwapChain )
+				if( psCurrentSwapChain->psNext != psSwapChain ) 
 				{
 					psCurrentSwapChain = psCurrentSwapChain->psNext;
 					continue;
 				}
 				psCurrentSwapChain->psNext = psSwapChain->psNext;
-				break;
+				break;				
 			}
 		}
 	}
@@ -1196,7 +1197,7 @@ static PVRSRV_ERROR DestroyDCSwapChainRefCallBack(IMG_PVOID pvParam,
 		}
 	}
 
-	if(--psSwapChainRef->psSwapChain->ui32RefCount == 0)
+	if(--psSwapChainRef->psSwapChain->ui32RefCount == 0) 
 	{
 		eError = DestroyDCSwapChain(psSwapChainRef->psSwapChain);
 	}
@@ -1210,9 +1211,9 @@ static PVRSRV_DC_SWAPCHAIN* PVRSRVFindSharedDCSwapChainKM(PVRSRV_DISPLAYCLASS_IN
 {
 	PVRSRV_DC_SWAPCHAIN *psCurrentSwapChain;
 
-	for(psCurrentSwapChain = psDCInfo->psDCSwapChainShared;
-		psCurrentSwapChain;
-		psCurrentSwapChain = psCurrentSwapChain->psNext)
+	for(psCurrentSwapChain = psDCInfo->psDCSwapChainShared; 
+		psCurrentSwapChain; 
+		psCurrentSwapChain = psCurrentSwapChain->psNext) 
 	{
 		if(psCurrentSwapChain->ui32SwapChainID == ui32SwapChainID)
 			return psCurrentSwapChain;
@@ -1221,7 +1222,7 @@ static PVRSRV_DC_SWAPCHAIN* PVRSRVFindSharedDCSwapChainKM(PVRSRV_DISPLAYCLASS_IN
 }
 
 static PVRSRV_ERROR PVRSRVCreateDCSwapChainRefKM(PVRSRV_PER_PROCESS_DATA	*psPerProc,
-												 PVRSRV_DC_SWAPCHAIN 		*psSwapChain,
+												 PVRSRV_DC_SWAPCHAIN 		*psSwapChain, 
 												 PVRSRV_DC_SWAPCHAIN_REF 	**ppsSwapChainRef)
 {
 	PVRSRV_DC_SWAPCHAIN_REF *psSwapChainRef = IMG_NULL;
@@ -1302,13 +1303,13 @@ PVRSRV_ERROR PVRSRVCreateDCSwapChainKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 	{
 		/* Query - use pui32SwapChainID as input */
 		psSwapChain = PVRSRVFindSharedDCSwapChainKM(psDCInfo, *pui32SwapChainID );
-		if( psSwapChain  )
-		{
-			/* Create new reference */
-			eError = PVRSRVCreateDCSwapChainRefKM(psPerProc,
-												  psSwapChain,
+		if( psSwapChain  ) 
+		{	
+			/* Create new reference */		   
+			eError = PVRSRVCreateDCSwapChainRefKM(psPerProc, 
+												  psSwapChain, 
 												  &psSwapChainRef);
-			if( eError != PVRSRV_OK )
+			if( eError != PVRSRV_OK ) 
 			{
 				PVR_DPF((PVR_DBG_ERROR,"PVRSRVCreateDCSwapChainKM: Couldn't create swap chain reference"));
 				return eError;
@@ -1318,7 +1319,7 @@ PVRSRV_ERROR PVRSRVCreateDCSwapChainKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 			return PVRSRV_OK;
 		}
 		PVR_DPF((PVR_DBG_ERROR,"PVRSRVCreateDCSwapChainKM: No shared SwapChain found for query"));
-		return PVRSRV_ERROR_FLIP_CHAIN_EXISTS;
+		return PVRSRV_ERROR_FLIP_CHAIN_EXISTS;		
 	}
 
 	/* Allocate swapchain control structure for srvkm */
@@ -1390,7 +1391,7 @@ PVRSRV_ERROR PVRSRVCreateDCSwapChainKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 		PVR_DPF((PVR_DBG_ERROR,"PVRSRVCreateDCSwapChainKM: Failed to get DC info"));
 		return eError;
 	}
-
+	
 	psSwapChain->ui32MinSwapInterval = sDisplayInfo.ui32MinSwapInterval;
 	psSwapChain->ui32MaxSwapInterval = sDisplayInfo.ui32MaxSwapInterval;
 
@@ -1411,11 +1412,11 @@ PVRSRV_ERROR PVRSRVCreateDCSwapChainKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 		goto ErrorExit;
 	}
 
-	/* Create new reference */
-	eError = PVRSRVCreateDCSwapChainRefKM(psPerProc,
-										  psSwapChain,
+	/* Create new reference */		   
+	eError = PVRSRVCreateDCSwapChainRefKM(psPerProc, 
+										  psSwapChain, 
 										  &psSwapChainRef);
-	if( eError != PVRSRV_OK )
+	if( eError != PVRSRV_OK ) 
 	{
 		PVR_DPF((PVR_DBG_ERROR,"PVRSRVCreateDCSwapChainKM: Couldn't create swap chain reference"));
 		PDUMPCOMMENT("Swapchain allocation failed.");
@@ -1425,15 +1426,15 @@ PVRSRV_ERROR PVRSRVCreateDCSwapChainKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 	psSwapChain->ui32RefCount = 1;
 	psSwapChain->ui32Flags = ui32Flags;
 
-	/* Save pointer in DC structure if ti's shared struct */
+	/* Save pointer in DC structure if it's shared struct */
 	if( ui32Flags & PVRSRV_CREATE_SWAPCHAIN_SHARED )
 	{
-		if(! psDCInfo->psDCSwapChainShared )
+   		if(! psDCInfo->psDCSwapChainShared ) 
 		{
 			psDCInfo->psDCSwapChainShared = psSwapChain;
-		}
-		else
-		{
+		} 
+		else 
+		{	
 			PVRSRV_DC_SWAPCHAIN *psOldHead = psDCInfo->psDCSwapChainShared;
 			psDCInfo->psDCSwapChainShared = psSwapChain;
 			psSwapChain->psNext = psOldHead;
@@ -1682,11 +1683,11 @@ PVRSRV_ERROR PVRSRVSwapToDCBufferKM(IMG_HANDLE	hDeviceKM,
 	{
 		psDCInfo->psFuncTable->pfnQuerySwapCommandID(psDCInfo->hExtDevice,
 													 psBuffer->psSwapChain->hExtSwapChain,
-													 psBuffer->sDeviceClassBuffer.hExtBuffer,
-													 hPrivateTag,
+													 psBuffer->sDeviceClassBuffer.hExtBuffer, 
+													 hPrivateTag, 
 													 &ui16SwapCommandID,
 													 &bAddReferenceToLast);
-
+		
 	}
 
 #endif
@@ -1926,7 +1927,7 @@ PVRSRV_ERROR PVRSRVSwapToDCBuffer2KM(IMG_HANDLE	hDeviceKM,
 			PVR_DPF((PVR_DBG_ERROR,"PVRSRVSwapToDCBuffer2KM: Failed to allocate space for meminfo list"));
 			goto Exit;
 		}
-
+				
 		OSMemCopy(ppsCompiledSyncInfos, ppsSyncInfos, sizeof(PVRSRV_KERNEL_SYNC_INFO *) * ui32NumMemSyncInfos);
 		for(j = 0, i = ui32NumMemSyncInfos; j < psSwapChain->ui32LastNumSyncInfos; j++)
 		{
@@ -2115,6 +2116,15 @@ PVRSRV_ERROR PVRSRVSwapToDCSystemKM(IMG_HANDLE	hDeviceKM,
 	psSwapChainRef = (PVRSRV_DC_SWAPCHAIN_REF*)hSwapChainRef;
 	psSwapChain = psSwapChainRef->psSwapChain;
 
+	/*
+		If more then 1 reference to the swapchain exist then
+		ignore any request to swap to the system buffer
+	*/
+	if (psSwapChain->ui32RefCount > 1)
+	{
+		return PVRSRV_OK;
+	}
+
 	/* get the queue from the buffer structure */
 	psQueue = psSwapChain->psQueue;
 
@@ -2124,11 +2134,11 @@ PVRSRV_ERROR PVRSRVSwapToDCSystemKM(IMG_HANDLE	hDeviceKM,
 	{
 		psDCInfo->psFuncTable->pfnQuerySwapCommandID(psDCInfo->hExtDevice,
 													 psSwapChain->hExtSwapChain,
-													 psDCInfo->sSystemBuffer.sDeviceClassBuffer.hExtBuffer,
-													 0,
+													 psDCInfo->sSystemBuffer.sDeviceClassBuffer.hExtBuffer, 
+													 0, 
 													 &ui16SwapCommandID,
 													 &bAddReferenceToLast);
-
+		
 	}
 
 #endif
@@ -2283,7 +2293,7 @@ PVRSRV_ERROR PVRSRVRegisterSystemISRHandler (PFN_ISR_HANDLER	pfnISRHandler,
  If the device node is a display, calls its set state function.
 
  @Input	psDeviceNode	- the device node
-		va				- variable argument list with:
+ 		va				- variable argument list with:
 				ui32State	- the state to be set.
 
 ******************************************************************************/
@@ -2500,7 +2510,7 @@ static PVRSRV_ERROR CloseBCDeviceCallBack(IMG_PVOID  pvParam,
  @Input	   psPerProc		: Per-process data
  @Input	   ui32DeviceID		: unique device index
  @Input	   hDevCookie		: devcookie used to derive the Device Memory
-								Context into BC surfaces will be mapped into
+ 								Context into BC surfaces will be mapped into
  @Outut	   phDeviceKM		: handle to the DC device
 
  @Return   PVRSRV_ERROR  :
@@ -2590,7 +2600,7 @@ FoundDevice:
 		eError = OSAllocMem(PVRSRV_OS_PAGEABLE_HEAP,
 							  sizeof(PVRSRV_BC_BUFFER) * sBufferInfo.ui32BufferCount,
 							  (IMG_VOID **)&psBCInfo->psBuffer,
-							  IMG_NULL,
+						 	  IMG_NULL,
 							  "Array of Buffer Class Buffer");
 		if(eError != PVRSRV_OK)
 		{
@@ -2612,7 +2622,7 @@ FoundDevice:
 				PVR_DPF((PVR_DBG_ERROR,"PVRSRVOpenBCDeviceKM: Failed sync info alloc"));
 				goto ErrorExit;
 			}
-
+			
 			/*
 				get the buffers from the buffer class
 				drivers by index, passing-in the syncdata objects

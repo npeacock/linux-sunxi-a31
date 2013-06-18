@@ -35,7 +35,7 @@
 #define MAX_PORTS	    6
 
 //static int sw_serial[MAX_PORTS];
-
+ 
 #define	BACK_REG	sunxi_serial_reg_back[port_num]
 
 /* Register base define */
@@ -189,7 +189,7 @@ static int sw_serial_put_resource(struct sw_serial_port *sport)
 	if(!cnt){
 		return 1;
 	}
-
+ 
 	for(i=0;i<cnt;i++)
 		gpio_free(list[i].gpio.gpio);
 
@@ -213,7 +213,7 @@ static int sw_serial_get_config(struct sw_serial_port *sport, u32 uart_id)
 	sport->port_no	= val.val;
 	if (sport->port_no != uart_id){
 		printk(KERN_WARNING "port_no%d uart_id %d  err!\n",sport->port_no,uart_id);
-		return -1;
+        	return -1;
 	}
 
 	type = script_get_item(uart_para, "uart_type", &val);
@@ -322,7 +322,7 @@ sw_serial_probe(struct platform_device *dev)
 		sdata->line = 0;
 	if(sdata->line<0){
 		ret = sdata->line;
-		goto free_dev;
+		goto free_dev;	
 	}
 
 	if(sdata->line){
@@ -330,7 +330,7 @@ sw_serial_probe(struct platform_device *dev)
 		clk_disable(sport->mod_clk);
 		clk_disable(sport->bus_clk);
 	}
-	return 0;
+   	return 0;
 free_dev:
     kfree(sport);
 	kfree(sdata);
@@ -448,7 +448,7 @@ static int sw_serial_resume(struct platform_device *dev)
 		if ((port->type != PORT_UNKNOWN) && (port->dev == &dev->dev)){
 			serial8250_resume_port(sdata->line);
 			sunxi_8250_comeback_reg(sdata->line,port);
-		}
+		}	
 
 	}
 	return 0;

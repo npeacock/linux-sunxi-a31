@@ -365,7 +365,7 @@ static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 	psSysSpecData->psGPTimer = omap_dm_timer_request_specific(GPTIMER_TO_USE);
 	if (psSysSpecData->psGPTimer == NULL)
 	{
-
+	
 		PVR_DPF((PVR_DBG_WARNING, "%s: omap_dm_timer_request_specific failed", __FUNCTION__));
 		return PVRSRV_ERROR_CLOCK_REQUEST_FAILED;
 	}
@@ -402,7 +402,7 @@ static void ReleaseGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 {
 	if (psSysSpecData->psGPTimer != NULL)
 	{
-		/* Always returns 0 */
+		/* Always returns 0 */	
 		(void) omap_dm_timer_stop(psSysSpecData->psGPTimer);
 
 		omap_dm_timer_disable(psSysSpecData->psGPTimer);

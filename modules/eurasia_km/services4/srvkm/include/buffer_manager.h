@@ -121,7 +121,7 @@ struct _BM_HEAP_
 	DEV_ARENA_DESCRIPTOR	sDevArena;
 	MMU_HEAP				*pMMUHeap;
 	PDUMP_MMU_ATTRIB 		*psMMUAttrib;
-
+	
 	struct _BM_HEAP_ 		*psNext;
 	struct _BM_HEAP_ 		**ppsThis;
 	/* BIF tile stride for this heap */
@@ -432,7 +432,7 @@ IMG_VOID BM_GetPhysPageAddr(PVRSRV_KERNEL_MEM_INFO *psMemInfo,
  @Function	 	BM_GetMMUContext
 
  @Description
-				utility function to return the MMU context
+ 				utility function to return the MMU context
 
  @inputs        hDevMemHeap - the Dev mem heap handle
 
@@ -445,7 +445,7 @@ MMU_CONTEXT* BM_GetMMUContext(IMG_HANDLE hDevMemHeap);
  @Function	 	BM_GetMMUContextFromMemContext
 
  @Description
-				utility function to return the MMU context
+ 				utility function to return the MMU context
 
  @inputs        hDevMemHeap - the Dev mem heap handle
 
@@ -458,7 +458,7 @@ MMU_CONTEXT* BM_GetMMUContextFromMemContext(IMG_HANDLE hDevMemContext);
  @Function	 	BM_GetMMUHeap
 
  @Description
-				utility function to return the MMU heap handle
+ 				utility function to return the MMU heap handle
 
  @inputs        hDevMemHeap - the Dev mem heap handle
 
@@ -565,7 +565,7 @@ IMG_BOOL BM_MapPageAtOffset(IMG_HANDLE hBMHandle, IMG_UINT32 ui32Offset);
  @Input     hBMHandle - Handle to BM mapping
 
  @Input     ui32VirtOffset - Virtual offset into allocation
-
+ 
  @Output    pui32PhysOffset - Physical offset
 
  @Return	IMG_TRUE if the virtual offset is physically backed
@@ -589,7 +589,7 @@ IMG_BOOL BM_VirtOffsetToPhysical(IMG_HANDLE hBMHandle,
    memory allocation to be refcounted, and shared iff the IDs chosen
    match */
 /* This API is difficult to use, but saves a lot of plumbing in other
-   APIs.  The next generation of this library should have this functionality
+   APIs.  The next generation of this library should have this functionality 
    plumbed in properly */
 PVRSRV_ERROR BM_XProcWorkaroundSetShareIndex(IMG_UINT32 ui32Index);
 PVRSRV_ERROR BM_XProcWorkaroundUnsetShareIndex(IMG_UINT32 ui32Index);

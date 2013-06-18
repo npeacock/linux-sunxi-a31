@@ -55,7 +55,7 @@ static inline int __axp_reads(struct i2c_client *client, int reg,
 	uint8_t addr[AXP_TRANS_BYTE_MAX];
 	uint8_t data[AXP_TRANS_BYTE_MAX];
 	uint8_t *cur_data = val;
-
+	
 	/* fetch first register address */
 	while (len > 0) {
 		rd_len = min(len, AXP_TRANS_BYTE_MAX);
@@ -71,7 +71,7 @@ static inline int __axp_reads(struct i2c_client *client, int reg,
 		/* copy data to user buffer */
 		memcpy(cur_data, data, rd_len);
 		cur_data = cur_data + rd_len;
-
+		
 		/* process next time read */
 		len -= rd_len;
 	}
@@ -95,7 +95,7 @@ static inline int __axp_write(struct i2c_client *client,
 #else
 	int ret;
 	uint8_t addr = (uint8_t)reg;
-
+	
 	ret = ar100_axp_write_reg(&addr, &val, 1);
 	if (ret != 0) {
 		printk("failed writing 0x%02x to 0x%02x\n", val, reg);
@@ -122,10 +122,10 @@ static inline int __axp_writes(struct i2c_client *client, int reg,
 	int     ret, i, first_flag, wr_len;
 	uint8_t addr[AXP_TRANS_BYTE_MAX];
 	uint8_t data[AXP_TRANS_BYTE_MAX];
-
+	
 	if ((reg == 0x48) && (len == 9)) {
 	}
-
+	
 	/* fetch first register address */
 	first_flag = 1;
 	addr[0] = (uint8_t)reg;
@@ -235,7 +235,7 @@ int axp_clr_bits(struct device *dev, int reg, uint8_t bit_mask)
 	uint8_t reg_val;
 	int ret = 0;
 	struct axp_mfd_chip *chip;
-
+	
 	chip = dev_get_drvdata(dev);
 
 	mutex_lock(&chip->lock);

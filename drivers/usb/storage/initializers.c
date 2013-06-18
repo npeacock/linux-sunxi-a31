@@ -114,7 +114,7 @@ int usb_stor_huawei_e220_init(struct us_data *us)
 //AC560--ZTE--	0x19d20026->0x19d20094	before convert to modem,don't report disk dev
 int usb_stor_ZTE_AC580_init(struct us_data *us) // PID = 0x0026
 {
-#if 0
+#if 0	
 	int result = 0;
 	int act_len = 0;
 
@@ -161,11 +161,11 @@ int usb_stor_Shichuangxing_init(struct us_data *us)
 
 int usb_stor_wangxun_init(struct us_data *us)
 {
-
+	
 	printk("====usb_stor_wangxun_init===>\n");
-	usb_stor_port_reset(us);
+	usb_stor_port_reset(us);	
 	return -ENODEV;
-
+	
 }
 int usb_stor_people_init(struct us_data *us)
 {

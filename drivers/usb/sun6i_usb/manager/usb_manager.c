@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USB ÁÆ°ÁêÜÁ®ãÂ∫è
+* Description 	: USB π‹¿Ì≥Ã–Ú
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -162,7 +162,7 @@ static int set_ctrl_gpio(struct usb_cfg *cfg, int is_on)
     if(ctrlio_status == is_on)
         return 0;
     if(cfg->port[0].restrict_gpio_set.valid){
-	DMSG_PANIC("set ctrl gpio %s\n", is_on ? "on" : "off");
+    	DMSG_INFO("set ctrl gpio %s\n", is_on ? "on" : "off");
 	    __gpio_set_value(cfg->port[0].restrict_gpio_set.gpio_set.gpio.gpio, is_on);
     }
 
@@ -182,10 +182,11 @@ static int pin_init(struct usb_cfg *cfg)
 			cfg->port[0].restrict_gpio_set.valid = 1;
 		}else{
 			/* set config, ouput */
-			sw_gpio_setcfg(cfg->port[0].restrict_gpio_set.gpio_set.gpio.gpio, 1);
+			//sw_gpio_setcfg(cfg->port[0].restrict_gpio_set.gpio_set.gpio.gpio, 1);
 
 			/* reserved is pull down */
-			sw_gpio_setpull(cfg->port[0].restrict_gpio_set.gpio_set.gpio.gpio, 2);
+			//sw_gpio_setpull(cfg->port[0].restrict_gpio_set.gpio_set.gpio.gpio, 2);
+			gpio_direction_output(cfg->port[0].restrict_gpio_set.gpio_set.gpio.gpio, 0);
 		}
 	}
 	return 0;
@@ -440,34 +441,34 @@ static __s32 check_usb_board_info(struct usb_cfg *cfg)
     // USB0
     //-------------------------------------
     if(cfg->port[0].enable){
-        /* Ê£ÄÊü•portÁöÑ‰ΩøÁî®Á±ªÂûãÊòØÂê¶ÂêàÊ≥ï */
+        /* ºÏ≤Èportµƒ π”√¿‡–Õ «∑Ò∫œ∑® */
         if(cfg->port[0].port_type != USB_PORT_TYPE_DEVICE
            && cfg->port[0].port_type != USB_PORT_TYPE_HOST
            && cfg->port[0].port_type != USB_PORT_TYPE_OTG){
             DMSG_PANIC("ERR: usbc0 port_type(%d) is unkown\n", cfg->port[0].port_type);
-	    goto err;
+    	    goto err;
         }
 
-        /* Ê£ÄÊü•USBÁöÑÊèíÊãîÊ£ÄÊµãÊñπÂºèÊòØÂê¶ÂêàÊ≥ï */
+        /* ºÏ≤ÈUSBµƒ≤Â∞ŒºÏ≤‚∑Ω Ω «∑Ò∫œ∑® */
         if(cfg->port[0].detect_type != USB_DETECT_TYPE_DP_DM
            && cfg->port[0].detect_type != USB_DETECT_TYPE_VBUS_ID){
             DMSG_PANIC("ERR: usbc0 detect_type(%d) is unkown\n", cfg->port[0].detect_type);
-	    goto err;
+    	    goto err;
         }
 
-        /* Â¶ÇÊûúÁî®VBUS/IDÊ£ÄÊµãÊñπÂºèÔºåÂ∞±ÂøÖÈ°ªÊ£ÄÊü•id/vbus pin ÁöÑÊúâÊïàÊÄß */
+        /* »Áπ˚”√VBUS/IDºÏ≤‚∑Ω Ω£¨æÕ±ÿ–ÎºÏ≤Èid/vbus pin µƒ”––ß–‘ */
         if(cfg->port[0].detect_type == USB_DETECT_TYPE_VBUS_ID){
             if(cfg->port[0].id.valid == 0){
                 DMSG_PANIC("ERR: id pin is invaild\n");
-		    goto err;
+    		    goto err;
             }
 
 			if(cfg->port[0].det_vbus_type == USB_DET_VBUS_TYPE_GIPO){
 	            if(cfg->port[0].det_vbus.valid == 0){
 	                DMSG_PANIC("ERR: det_vbus pin is invaild\n");
-			    goto err;
+	    		    goto err;
 	            }
-		}
+        	}
         }
     }
 
@@ -622,12 +623,12 @@ static __s32 check_usb_board_info(struct usb_cfg *cfg)
     // USB0
     //-------------------------------------
     if(cfg->port[0].enable){
-        /* Ê£ÄÊü•portÁöÑ‰ΩøÁî®Á±ªÂûãÊòØÂê¶ÂêàÊ≥ï */
+        /* ºÏ≤Èportµƒ π”√¿‡–Õ «∑Ò∫œ∑® */
         if(cfg->port[0].port_type != USB_PORT_TYPE_DEVICE
            && cfg->port[0].port_type != USB_PORT_TYPE_HOST
            && cfg->port[0].port_type != USB_PORT_TYPE_OTG){
             DMSG_PANIC("ERR: usbc0 port_type(%d) is unkown\n", cfg->port[0].port_type);
-	    goto err;
+    	    goto err;
         }
     }
     return 0;
@@ -765,17 +766,17 @@ static int __init usb_manager_init(void)
 #ifdef CONFIG_USB_SW_SUN6I_USB0_OTG
     if(g_usb_cfg.port[0].port_type == USB_PORT_TYPE_OTG
        && g_usb_cfg.port[0].detect_type == USB_DETECT_TYPE_VBUS_ID){
-	usb_hw_scan_init(&g_usb_cfg);
+    	usb_hw_scan_init(&g_usb_cfg);
 
-	thread_run_flag = 1;
-	thread_stopped_flag = 0;
-	th = kthread_create(usb_hardware_scan_thread, &g_usb_cfg, "usb-hardware-scan");
-	if(IS_ERR(th)){
-		DMSG_PANIC("ERR: kthread_create failed\n");
-		return -1;
-	}
+    	thread_run_flag = 1;
+    	thread_stopped_flag = 0;
+    	th = kthread_create(usb_hardware_scan_thread, &g_usb_cfg, "usb-hardware-scan");
+    	if(IS_ERR(th)){
+    		DMSG_PANIC("ERR: kthread_create failed\n");
+    		return -1;
+    	}
 
-	wake_up_process(th);
+    	wake_up_process(th);
 	}
 #endif
 
@@ -829,13 +830,13 @@ static void __exit usb_manager_exit(void)
 #ifdef CONFIG_USB_SW_SUN6I_USB0_OTG
     if(g_usb_cfg.port[0].port_type == USB_PORT_TYPE_OTG
        && g_usb_cfg.port[0].detect_type == USB_DETECT_TYPE_VBUS_ID){
-	thread_run_flag = 0;
-	while(!thread_stopped_flag){
-		DMSG_INFO("waitting for usb_hardware_scan_thread stop\n");
-		msleep(10);
-	}
+    	thread_run_flag = 0;
+    	while(!thread_stopped_flag){
+    		DMSG_INFO("waitting for usb_hardware_scan_thread stop\n");
+    		msleep(10);
+    	}
 		pin_exit(&g_usb_cfg);
-	usb_hw_scan_exit(&g_usb_cfg);
+    	usb_hw_scan_exit(&g_usb_cfg);
     }
 #endif
 
@@ -847,3 +848,4 @@ static void __exit usb_manager_exit(void)
 //module_init(usb_manager_init);
 fs_initcall(usb_manager_init);
 module_exit(usb_manager_exit);
+

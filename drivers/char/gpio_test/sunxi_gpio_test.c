@@ -201,7 +201,7 @@ static int set_cfg_standard_api(struct sunxi_gpio_test_class *sunxi_gpio_test)
 		gpio_result[0].result =1;
 		goto set_cfg_standard_api_err;
 	}
-set_cfg_standard_api_err:
+set_cfg_standard_api_err:	
 	gpio_free(upio_index);
 	return ret;
 }
@@ -363,7 +363,7 @@ static int set_pin_data_api(struct sunxi_gpio_test_class *sunxi_gpio_test)
 		printk("gpio_request fail in set_pin_data_api\n");
 		return -1;
 	}
-
+	
 	__gpio_set_value(upio_index, sunxi_gpio_test->data);
 	if(sunxi_gpio_test->data != __gpio_get_value(upio_index)){
 		printk("set data err! expect: %d true: %d\n",sunxi_gpio_test->data,__gpio_get_value(upio_index));
@@ -400,7 +400,7 @@ static int pin_eirq_request(struct sunxi_gpio_test_class *sunxi_gpio_test)
 	printk("test gpio is %s %d\n",name,upio_index);
 
 	handle_temp	= sw_gpio_irq_request(upio_index, sunxi_gpio_test->trigger,(peint_handle)gpio_irq_handle_demo, &flags);
-
+	
 	if(!handle_temp){
 		printk("request %s eint fail %d\n",name,__LINE__);
 		return -1;
@@ -491,7 +491,7 @@ static int pin_rqst_inexistent_irq(struct sunxi_gpio_test_class *sunxi_gpio_test
 
 	sprintf(name,"p%c%d",sunxi_gpio_test->group+48*2,sunxi_gpio_test->number);
 	upio_index = sw_gpio_port_to_index(sunxi_gpio_test->group,sunxi_gpio_test->number);
-
+	
 	printk("test gpio is %s %d\n",name,upio_index);
 
 	handle_temp	= sw_gpio_irq_request(upio_index, sunxi_gpio_test->trigger,(peint_handle)gpio_irq_handle_demo, &flags);

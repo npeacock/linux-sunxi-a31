@@ -832,3 +832,4 @@ void sw_gpio_irq_free(u32 handle)
 	return;
 }
 EXPORT_SYMBOL(sw_gpio_irq_free);
+

@@ -25,28 +25,28 @@ int ar100_message_loopback(void)
 {
 	int					  result;
 	struct ar100_message *pmessage;
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type       = AR100_MESSAGE_LOOPBACK;
 	pmessage->attr       = AR100_MESSAGE_ATTR_HARDSYN;
 	pmessage->state      = AR100_MESSAGE_INITIALIZED;
 	pmessage->cb.handler = NULL;
 	pmessage->cb.arg     = NULL;
-
+	
 	/* send message use hwmsgbox */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* free message */
 	result = pmessage->result;
 	ar100_message_free(pmessage);
-
+	
 	return result;
 }
 EXPORT_SYMBOL(ar100_message_loopback);
@@ -55,14 +55,14 @@ int ar100_set_uart_baudrate(u32 baudrate)
 {
 	int					  result;
 	struct ar100_message *pmessage;
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type       = AR100_SET_UART_BAUDRATE;
 	pmessage->attr       = AR100_MESSAGE_ATTR_HARDSYN;
@@ -70,13 +70,13 @@ int ar100_set_uart_baudrate(u32 baudrate)
 	pmessage->paras[0]   = baudrate;
 	pmessage->cb.handler = NULL;
 	pmessage->cb.arg     = NULL;
-
+	
 	/* send message use hwmsgbox */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* free message */
 	result = pmessage->result;
 	ar100_message_free(pmessage);
-
+	
 	return result;
 }

@@ -1,4 +1,4 @@
-/* Vibrator driver for sun6i platform
+/* Vibrator driver for sun6i platform 
  * ported from msm pmic vibrator driver
  *  by tom cubie <tangliang@reuuimllatech.com>
  *
@@ -38,7 +38,7 @@ static int vibe_state;
 static int vibe_off;
 static struct gpio_hdle {
 	script_item_u	val;
-	script_item_value_type_e  type;
+	script_item_value_type_e  type;		
 }vibe_gpio_hdle;
 
 enum {
@@ -111,7 +111,7 @@ static enum hrtimer_restart vibrator_timer_func(struct hrtimer *timer)
 }
 
 static struct timed_output_dev sun6i_vibrator = {
-	.name = "sun6i-vibrator",
+	.name = "vibrator",
 	.get_time = vibrator_get_time,
 	.enable = vibrator_enable,
 };
@@ -142,8 +142,8 @@ static int __init sun6i_vibrator_init(void)
 		printk(KERN_ERR "vibrator motor_shake type err!");
 		goto exit1;
 	}
-	dprintk(DEBUG_INIT, "value is: gpio %d, mul_sel %d, pull %d, drv_level %d, data %d\n",
-	    vibe_gpio_hdle.val.gpio.gpio, vibe_gpio_hdle.val.gpio.mul_sel, vibe_gpio_hdle.val.gpio.pull,
+	dprintk(DEBUG_INIT, "value is: gpio %d, mul_sel %d, pull %d, drv_level %d, data %d\n", 
+	    vibe_gpio_hdle.val.gpio.gpio, vibe_gpio_hdle.val.gpio.mul_sel, vibe_gpio_hdle.val.gpio.pull, 
 	    vibe_gpio_hdle.val.gpio.drv_level, vibe_gpio_hdle.val.gpio.data);
 
 	vibe_off = vibe_gpio_hdle.val.gpio.data;
@@ -152,7 +152,7 @@ static int __init sun6i_vibrator_init(void)
 	if(0 != gpio_request(vibe_gpio_hdle.val.gpio.gpio, NULL)) {
 		printk(KERN_ERR "ERROR: vibe Gpio_request is failed\n");
 	}
-
+	
 	if (0 != sw_gpio_setall_range(&vibe_gpio_hdle.val.gpio, 1)) {
 		printk(KERN_ERR "vibe gpio set err!");
 		goto exit;
@@ -174,7 +174,7 @@ static int __init sun6i_vibrator_init(void)
 	return 0;
 exit:
 	gpio_free(vibe_gpio_hdle.val.gpio.gpio);
-exit1:
+exit1:	
 	return -1;
 }
 
@@ -182,7 +182,7 @@ static void __exit sun6i_vibrator_exit(void)
 {
 	dprintk(DEBUG_INIT, "bye, sun6i_vibrator_exit\n");
 	timed_output_dev_unregister(&sun6i_vibrator);
-	gpio_free(vibe_gpio_hdle.val.gpio.gpio);
+	gpio_free(vibe_gpio_hdle.val.gpio.gpio);	
 }
 module_init(sun6i_vibrator_init);
 module_exit(sun6i_vibrator_exit);
@@ -190,3 +190,4 @@ module_exit(sun6i_vibrator_exit);
 /* Module information */
 MODULE_DESCRIPTION("timed output vibrator device for sun6i");
 MODULE_LICENSE("GPL");
+

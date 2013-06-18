@@ -83,3 +83,4 @@ module_exit(sunxi_hw_exit);
 MODULE_DESCRIPTION("a simple sunxi register driver");
 MODULE_AUTHOR("panlong");
 MODULE_LICENSE("GPL");
+

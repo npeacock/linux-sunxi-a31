@@ -516,7 +516,7 @@ static IMG_UINT32 DBGDIOCDrivGetFrame(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuf
 
 	pui32Current = (IMG_UINT32 *) pvOutBuffer;
 	psStream = SID2PStream(*(IMG_SID *)pvInBuffer);
-
+	
 	if (psStream != (PDBG_STREAM)IMG_NULL)
 	{
 		*pui32Current = ExtDBGDrivGetFrame(psStream);

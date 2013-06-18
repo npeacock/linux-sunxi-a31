@@ -64,3 +64,4 @@ extern __s32 mem_query_int(enum interrupt_source_e src);
 
 
 #endif  //__MEM_INT_H__
+

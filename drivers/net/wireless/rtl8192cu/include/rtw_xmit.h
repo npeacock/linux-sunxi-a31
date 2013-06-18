@@ -654,7 +654,7 @@ struct	xmit_priv	{
 	_mutex ack_tx_mutex;
 	struct submit_ctx ack_tx_ops;
 #endif
-
+	
 };
 
 extern struct xmit_buf *rtw_alloc_xmitbuf_ext(struct xmit_priv *pxmitpriv);
@@ -722,3 +722,4 @@ void rtw_ack_tx_done(struct xmit_priv *pxmitpriv, int status);
 #include <xmit_osdep.h>
 
 #endif	//_RTL871X_XMIT_H_
+

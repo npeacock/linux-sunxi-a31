@@ -14,20 +14,20 @@
  */
 
 #include "ar100_test.h"
-#include <asm/div64.h>
+#include <asm/div64.h> 
 
 u32 __ar100_counter_read(void)
 {
 	volatile u32 low;
-
+	
 	//latch 64bit counter and wait ready for read
     low = readl(0xF1F01E80);
     low |= (1<<1);
     writel(low, 0xF1F01E80);
     while(readl(0xF1F01E80) & (1<<1));
-
+	
 	low  = readl(0xF1F01E84);
-
+	
 	do_div(low, 24);
 	return low;
 }
@@ -46,7 +46,7 @@ void __ar100_dvfs_test(void)
 	u32 times;
 	u32 freq_table[] = {
 		120000,
-		240000,
+		240000, 
 		300000,
 		360000,
 		300000,
@@ -61,10 +61,10 @@ void __ar100_dvfs_test(void)
 		ar100_dvfs_set_cpufreq(freq_table[i], AR100_DVFS_SYN, NULL, __ar100_dvfs_cb);
 		total_time += (__ar100_counter_read() - begin_time);
 	}
-
+	
 	/* dump time information */
 	printk("dvfs times %d: total time: %dus, once: %dus\n", times, total_time, total_time / times);
-
+	
 	/* test succeeded */
 	printk("dvfs test succeeded\n");
 }
@@ -76,9 +76,9 @@ static void __axp_irq_work(struct work_struct *work)
 	u32 i;
 	u8 addr[5];
 	u8 data[5];
-
+	
 	printk("axp irq work running...\n");
-
+	
 	//read out irq status and dump irq status
 	printk("read axp irq status\n");
 	for (i = 0; i < 5; i++) {
@@ -89,22 +89,22 @@ static void __axp_irq_work(struct work_struct *work)
 	for (i = 0; i < 5; i++) {
 		printk("addr:0x%x, data:0x%x\n", addr[i], data[i]);
 	}
-
+	
 	printk("clear axp status\n");
 	ar100_axp_write_reg(addr, data, 5);
-
+	
 	printk("re-enable axp irq of ar100\n");
 	ar100_enable_axp_irq();
-
+	
 	printk("axp irq handle end\n");
 }
 
 static int __ar100_axp_cb(void *arg)
 {
 	printk("axp irq coming...\n");
-
+	
 	(void)schedule_work(&axp_work);
-
+	
 	printk("axp irq handle end\n");
 	return 0;
 }
@@ -115,7 +115,7 @@ static void __ar100_loopback_test(void)
 	u32 times;
 	u32 total_time;
 	u32 begin_time;
-
+	
 	total_time = 0;
 	times = 1000000;
 	for (i = 0; i < times; i++) {
@@ -123,10 +123,10 @@ static void __ar100_loopback_test(void)
 		ar100_message_loopback();
 		total_time += (__ar100_counter_read() - begin_time);
 	}
-
+	
 	/* dump time information */
 	printk("loopback times %d: total time: %dus, once: %dus\n", times, total_time, total_time / times);
-
+	
 	/* test succeeded */
 	printk("loopback test succeeded\n");
 }
@@ -140,7 +140,7 @@ static void __ar100_axp_test(void)
 	int           i;
 	u32 total_time;
 	u32 begin_time;
-
+	
 	/* test write regs */
 	printk("test axp write regs begin...\n");
 	len = AXP_TRANS_BYTE_MAX;
@@ -151,7 +151,7 @@ static void __ar100_axp_test(void)
 	for (len = 1; len <= AXP_TRANS_BYTE_MAX; len++) {
 		printk("write axp regs data:\n");
 		for (i = 0; i < len; i++) {
-			printk("addr%x : %x\n", (unsigned int)addr_table[i],
+			printk("addr%x : %x\n", (unsigned int)addr_table[i], 
 									(unsigned int)data_table[i]);
 		}
 		begin_time = __ar100_counter_read();
@@ -164,7 +164,7 @@ static void __ar100_axp_test(void)
 		printk("write axp regs time: %dus\n", total_time);
 	}
 	printk("test axp write regs succeeded\n");
-
+	
 	/* test read regs */
 	printk("test axp read regs begin...\n");
 	len = AXP_TRANS_BYTE_MAX;
@@ -180,14 +180,14 @@ static void __ar100_axp_test(void)
 		}
 		printk("read axp regs data:\n");
 		for (i = 0; i < len; i++) {
-			printk("addr%x : %x\n", (unsigned int)addr_table[i],
+			printk("addr%x : %x\n", (unsigned int)addr_table[i], 
 									(unsigned int)data_table[i]);
 		}
 		printk("read axp regs data [len = %d] succeeded\n", len);
 		printk("read axp regs time: %dus\n", total_time);
 	}
 	printk("test axp read regs succeeded\n");
-
+	
 	/* test axp interrupt call-back */
 	printk("test axp call-back begin...\n");
 	INIT_WORK(&axp_work, __axp_irq_work);
@@ -195,7 +195,7 @@ static void __ar100_axp_test(void)
 		printk("test axp reg cb failed\n");
 	}
 	printk("test axp call-back succeeded\n");
-
+	
 	printk("axp test succeeded\n");
 }
 
@@ -208,19 +208,19 @@ static void __ar100_axp_test(void)
 static int __ar100_test_thread(void * arg)
 {
 	printk("ar100 test thread...\n");
-
+	
 	printk("dvfs test begin....\n");
 	__ar100_dvfs_test();
 	printk("dvfs test end....\n");
-
+	
 	printk("axp test begin....\n");
 	__ar100_axp_test();
 	printk("axp test end....\n");
-
+	
 	printk("ar100 message loopback test begin....\n");
 	__ar100_loopback_test();
 	printk("ar100 message loopback test end....\n");
-
+	
 	return 0;
 }
 
@@ -230,12 +230,12 @@ static int __ar100_test_thread(void * arg)
 static int __init sw_ar100_test_init(void)
 {
 	printk(">>>>ar100 test driver init enter<<<<<\n");
-
+	
 	/*
 	 * create the test thread
 	 */
 	kernel_thread(__ar100_test_thread, NULL, CLONE_FS | CLONE_SIGHAND);
-
+	
 	printk("ar100 test driver test finished\n");
 	return 0;
 }
@@ -253,3 +253,4 @@ module_exit(sw_ar100_test_exit);
 MODULE_LICENSE     ("GPL");
 MODULE_AUTHOR      ("sunny");
 MODULE_DESCRIPTION ("sun6i ar100 test driver code");
+

@@ -131,10 +131,10 @@ IMG_VOID* MatchDeviceKM_AnyVaCb(PVRSRV_DEVICE_NODE* psDeviceNode, va_list va)
  @Function	MatchPowerDeviceIndex_AnyVaCb
 
  @Description
-			Matches a power device with its device index.
+ 			Matches a power device with its device index.
 
  @Input		va : variable argument list with:
-				ui32DeviceIndex : device index
+ 				ui32DeviceIndex : device index
 
  @Return	the pointer to the device it matched, IMG_NULL otherwise.
 

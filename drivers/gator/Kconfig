@@ -25,3 +25,4 @@ config GATOR_PERF
           Enable the High Resolution Timer Support option.
           Enable Use local timer interrupts if you are using
           a Symmetric MultiProcessing (SMP) target.
+          

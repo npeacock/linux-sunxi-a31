@@ -570,7 +570,7 @@ PVRSRVAllocDeviceMemBW(IMG_UINT32 ui32BridgeID,
 			psAllocDeviceMemOUT->eError = PVRSRV_ERROR_INVALID_PARAMS;
 			return 0;
 		}
-
+	
 		if (psAllocDeviceMemIN->pabMapChunk == IMG_NULL)
 		{
 			PVR_DPF((PVR_DBG_ERROR, "PVRSRVAllocDeviceMemBW: Called in sparse mapping mode but without MapChunk array"));
@@ -2609,7 +2609,7 @@ PVRSRVConnectBW(IMG_UINT32 ui32BridgeID,
 	 */
 	if ((psConnectServicesIN->ui32Flags & SRV_FLAGS_PERSIST) != 0)
 	{
-	psPerProc->bPDumpPersistent = IMG_TRUE;
+    	psPerProc->bPDumpPersistent = IMG_TRUE;
 	}
 
 #if defined(SUPPORT_PDUMP_MULTI_PROCESS)
@@ -2619,7 +2619,7 @@ PVRSRVConnectBW(IMG_UINT32 ui32BridgeID,
 	 */
 	if ((psConnectServicesIN->ui32Flags & SRV_FLAGS_PDUMP_ACTIVE) != 0)
 	{
-	psPerProc->bPDumpActive = IMG_TRUE;
+    	psPerProc->bPDumpActive = IMG_TRUE;
 	}
 #endif /* SUPPORT_PDUMP_MULTI_PROCESS */
 #else
@@ -5200,7 +5200,7 @@ IMG_INT BridgedDispatchKM(PVRSRV_PER_PROCESS_DATA * psPerProc,
 		psBridgeOut = (IMG_PVOID)((IMG_PBYTE)psBridgeIn + PVRSRV_MAX_BRIDGE_IN_SIZE);
 
 		/* check we are not using a bigger bridge than allocated */
-		if((psBridgePackageKM->ui32InBufferSize > PVRSRV_MAX_BRIDGE_IN_SIZE) ||
+		if((psBridgePackageKM->ui32InBufferSize > PVRSRV_MAX_BRIDGE_IN_SIZE) || 
 			(psBridgePackageKM->ui32OutBufferSize > PVRSRV_MAX_BRIDGE_OUT_SIZE))
 		{
 			goto return_fault;

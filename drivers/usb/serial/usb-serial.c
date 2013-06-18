@@ -1179,13 +1179,13 @@ static int serial_remote_wakeup(struct usb_device *udev, u32 suspend)
     }
 
     if(suspend){
-	if(g_remote_wakeup){
-	    return 0;
-	}
+    	if(g_remote_wakeup){
+    	    return 0;
+    	}
 
         printk("serial_suspend_resume: set remote wakeup\n");
 
-	g_remote_wakeup = 1;
+    	g_remote_wakeup = 1;
 
         /* set remote wakeup */
         status = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
@@ -1209,13 +1209,13 @@ static int serial_remote_wakeup(struct usb_device *udev, u32 suspend)
 		}
 		mdelay(1000);
     }else{
-	if(!g_remote_wakeup){
-	    return 0;
-	}
+    	if(!g_remote_wakeup){
+    	    return 0;
+    	}
 
         printk("serial_suspend_resume: clear remote wakeup\n");
 
-	g_remote_wakeup = 0;
+    	g_remote_wakeup = 0;
 
         /* resume */
         status = usb_control_msg(hdev, usb_sndctrlpipe(hdev, 0),

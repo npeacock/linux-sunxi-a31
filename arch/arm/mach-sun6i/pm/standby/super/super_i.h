@@ -33,3 +33,4 @@
 extern struct aw_pm_info  pm_info;
 
 #endif  //__SUPER_I_H__
+

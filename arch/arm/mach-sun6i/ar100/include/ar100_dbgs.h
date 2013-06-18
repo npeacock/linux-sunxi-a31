@@ -23,7 +23,7 @@
 #define	__AR100_DBGS_H
 
 extern unsigned int ar100_debug_level;
-/*
+/* 
  * debug level define,
  * level 0 : dump debug information--none;
  * level 1 : dump debug information--error;
@@ -35,8 +35,8 @@ extern unsigned int ar100_debug_level;
 #ifdef AR100_DEBUG_ON
 /* debug levels */
 #define DEBUG_LEVEL_INF    ((u32)1 << 0)
-#define DEBUG_LEVEL_WRN    ((u32)1 << 1)
-#define DEBUG_LEVEL_ERR    ((u32)1 << 2)
+#define DEBUG_LEVEL_WRN    ((u32)1 << 1) 
+#define DEBUG_LEVEL_ERR    ((u32)1 << 2) 
 #define DEBUG_LEVEL_LOG    ((u32)1 << 3)
 
 #define	AR100_INF(...)							\

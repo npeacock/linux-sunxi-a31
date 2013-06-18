@@ -47,10 +47,10 @@ u32 __cb_qd_single_mode(dm_hdl_t dma_hdl, void *parg, enum dma_cb_cause_e cause)
 			/* we have complete enqueueing, but not means it's the last qd irq */
 			//if(true == sw_dma_sgmd_buflist_empty(dma_hdl)) {
 			if(true) {
-				/* è¿™é‡Œä¹Ÿä¸èƒ½è®¤ä¸ºæ˜¯ä¼ å®Œ, æµ‹è¯•å‘ç°ä¸¤æ¬¡åˆ°è¿™é‡Œ,åŸå› , __dtc_single_modeä¸­enqueue
-				ä¹‹å‰åŠ äº†cnt, ä½†enqueueè¢«irqæ‰“æ–­, ä¸€ç›´æŒ‚ç€, åªç­‰irqçš„enqueueå’Œtransferç»“æŸ, æ­¤æ—¶
-				å½“ç„¶buflist_empty, è¿™æ—¶__dtc_single_modeæ‰æœ‰æœºä¼šç»§ç»­æœªå®Œæˆçš„å”¯ä¸€enqueue, å¯¼è‡´ä¸¤æ¬¡
-				åˆ°è¿™é‡Œ.	å› æ­¤æœ¬demo, è¿™é‡Œä¸èƒ½è®¤ä¸ºæ•°æ®å®Œå…¨ä¼ å®Œ, ä½†å¯¹äºå…¶ä»–åœºæ™¯, ä¸€èˆ¬å¯è®¤ä¸ºqdä¸­listç©ºäº†å°±ç»“æŸäº†.
+				/* ÕâÀïÒ²²»ÄÜÈÏÎªÊÇ´«Íê, ²âÊÔ·¢ÏÖÁ½´Îµ½ÕâÀï,Ô­Òò, __dtc_single_modeÖĞenqueue
+				Ö®Ç°¼ÓÁËcnt, µ«enqueue±»irq´ò¶Ï, Ò»Ö±¹Ò×Å, Ö»µÈirqµÄenqueueºÍtransfer½áÊø, ´ËÊ±
+				µ±È»buflist_empty, ÕâÊ±__dtc_single_mode²ÅÓĞ»ú»á¼ÌĞøÎ´Íê³ÉµÄÎ¨Ò»enqueue, µ¼ÖÂÁ½´Î
+				µ½ÕâÀï.	Òò´Ë±¾demo, ÕâÀï²»ÄÜÈÏÎªÊı¾İÍêÈ«´«Íê, µ«¶ÔÓÚÆäËû³¡¾°, Ò»°ã¿ÉÈÏÎªqdÖĞlist¿ÕÁË¾Í½áÊøÁË.
 				*/
 				/* maybe it's the last irq */
 				atomic_set(&g_adma_done, 1);
@@ -364,3 +364,4 @@ end:
 	pr_err("%s, end!\n", __func__);
 	return uret;
 }
+

@@ -40,3 +40,4 @@ void csp_dma_chan_clear_irqpend(struct dma_channel_t * pchan, u32 irq_type);
 u32  csp_dma_chan_get_irqpend(struct dma_channel_t * pchan);
 
 #endif  /* __DMA_CSP_H */
+

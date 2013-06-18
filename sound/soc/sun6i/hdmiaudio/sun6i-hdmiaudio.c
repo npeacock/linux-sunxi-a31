@@ -51,7 +51,7 @@ static int sun6i_hdmiaudio_hw_params(struct snd_pcm_substream *substream,
 {
 	struct snd_soc_pcm_runtime *rtd 	= NULL;
 	struct sun6i_dma_params *dma_data 	= NULL;
-
+	
 	if (!substream) {
 		printk("error:%s,line:%d\n", __func__, __LINE__);
 		return -EAGAIN;
@@ -62,16 +62,16 @@ static int sun6i_hdmiaudio_hw_params(struct snd_pcm_substream *substream,
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		dma_data = &sun6i_hdmiaudio_pcm_stereo_out;
 	} else {
-		printk("error:hdmiaudio can't support capture:%s,line:%d\n", __func__, __LINE__);
+		printk("error:hdmiaudio can't support capture:%s,line:%d\n", __func__, __LINE__);	
 	}
 
 	snd_soc_dai_set_dma_data(rtd->cpu_dai, substream, dma_data);
-
+	
 	return 0;
 }
 
 static int sun6i_hdmiaudio_dai_probe(struct snd_soc_dai *dai)
-{
+{			
 	return 0;
 }
 static int sun6i_hdmiaudio_dai_remove(struct snd_soc_dai *dai)
@@ -105,12 +105,12 @@ static struct snd_soc_dai_driver sun6i_hdmiaudio_dai = {
 			.rates 			= SUN6I_I2S_RATES,
 			.formats 		= SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE | SNDRV_PCM_FMTBIT_S24_LE,},
 	.ops 		= &sun6i_hdmiaudio_dai_ops,
-};
+};		
 
 static int __devinit sun6i_hdmiaudio_dev_probe(struct platform_device *pdev)
 {
 	int ret = 0;
-
+	
 	if (!pdev) {
 		printk("error:%s,line:%d\n", __func__, __LINE__);
 		return -EAGAIN;
@@ -141,7 +141,7 @@ static struct platform_driver sun6i_hdmiaudio_driver = {
 	.driver = {
 		.name 	= "sun6i-hdmiaudio",
 		.owner 	= THIS_MODULE,
-	},
+	},	
 };
 
 static int __init sun6i_hdmiaudio_init(void)
@@ -161,7 +161,7 @@ static int __init sun6i_hdmiaudio_init(void)
 module_init(sun6i_hdmiaudio_init);
 
 static void __exit sun6i_hdmiaudio_exit(void)
-{
+{	
 	platform_driver_unregister(&sun6i_hdmiaudio_driver);
 }
 module_exit(sun6i_hdmiaudio_exit);

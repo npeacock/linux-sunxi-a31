@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -176,7 +176,7 @@ _func_enter_;
 		  path, offset, value));
 
 	_irqlevel_changed_(&oldirql, LOWER);
-	write_rfreg(Adapter, path, offset, value);
+ 	write_rfreg(Adapter, path, offset, value);
 	_irqlevel_changed_(&oldirql, RAISE);
 
 _func_exit_;
@@ -1125,7 +1125,7 @@ _func_enter_;
 	TxCmd_Info=(TX_CMD_Desc*)poid_par_priv->information_buf;
 
 	RT_TRACE(_module_mp_, _drv_info_, ("WRITE_TXCMD:Addr=%.8X\n", TxCmd_Info->offset));
-	RT_TRACE(_module_mp_, _drv_info_, ("WRITE_TXCMD:1.)%.8X\n", (ULONG)TxCmd_Info->TxCMD.value[0]));
+  	RT_TRACE(_module_mp_, _drv_info_, ("WRITE_TXCMD:1.)%.8X\n", (ULONG)TxCmd_Info->TxCMD.value[0]));
 	RT_TRACE(_module_mp_, _drv_info_, ("WRITE_TXCMD:2.)%.8X\n", (ULONG)TxCmd_Info->TxCMD.value[1]));
 	RT_TRACE(_module_mp_, _drv_info_, (("WRITE_TXCMD:3.)%.8X\n", (ULONG)TxCmd_Info->TxCMD.value[2]));
 	RT_TRACE(_module_mp_, _drv_info_, ("WRITE_TXCMD:4.)%.8X\n", (ULONG)TxCmd_Info->TxCMD.value[3]));
@@ -2015,8 +2015,8 @@ static u32 mp_query_drv_var(_adapter *padapter, u8 offset, u32 var)
 	if (offset == 1) {
 		u16 tmp_blk_num;
 		tmp_blk_num = rtw_read16(padapter, SDIO_RX0_RDYBLK_NUM);
-		RT_TRACE(_module_mp_, _drv_err_, ("Query Information, mp_query_drv_var  SDIO_RX0_RDYBLK_NUM=0x%x   padapter->dvobjpriv.rxblknum=0x%x\n", tmp_blk_num, padapter->dvobjpriv.rxblknum));
-		if (padapter->dvobjpriv.rxblknum != tmp_blk_num) {
+		RT_TRACE(_module_mp_, _drv_err_, ("Query Information, mp_query_drv_var  SDIO_RX0_RDYBLK_NUM=0x%x   dvobj.rxblknum=0x%x\n", tmp_blk_num, adapter_to_dvobj(padapter)->rxblknum));
+		if (adapter_to_dvobj(padapter)->rxblknum != tmp_blk_num) {
 			RT_TRACE(_module_mp_,_drv_err_, ("Query Information, mp_query_drv_var  call recv rx\n"));
 		//	sd_recv_rxfifo(padapter);
 		}
@@ -2065,37 +2065,37 @@ static u32 mp_query_drv_var(_adapter *padapter, u8 offset, u32 var)
 	else if(offset >110 &&offset <116){
 		if(115==offset){
 			RT_TRACE(_module_mp_, _drv_emerg_, (" mp_query_drv_var(_drv_emerg_): offset(%d): query TRX access type: [tx_block_mode=%x,rx_block_mode=%x]\n",\
-															offset,padapter->dvobjpriv.tx_block_mode,padapter->dvobjpriv.rx_block_mode));
+															offset, adapter_to_dvobj(padapter)->tx_block_mode, adapter_to_dvobj(padapter)->rx_block_mode));
 		}
 		else {
 			switch(offset){
 				case 111:
-					padapter->dvobjpriv.tx_block_mode=1;
-					padapter->dvobjpriv.rx_block_mode=1;
+					adapter_to_dvobj(padapter)->tx_block_mode=1;
+					adapter_to_dvobj(padapter)->rx_block_mode=1;
 					RT_TRACE(_module_mp_, _drv_emerg_, \
 						(" mp_query_drv_var(_drv_emerg_): offset(%d): SET TRX access type:(TX block/RX block) [tx_block_mode=%x,rx_block_mode=%x]\n",\
-						offset,padapter->dvobjpriv.tx_block_mode,padapter->dvobjpriv.rx_block_mode));
+						offset, adapter_to_dvobj(padapter)->tx_block_mode, adapter_to_dvobj(padapter)->rx_block_mode));
 					break;
 				case 112:
-					padapter->dvobjpriv.tx_block_mode=1;
-					padapter->dvobjpriv.rx_block_mode=0;
+					adapter_to_dvobj(padapter)->tx_block_mode=1;
+					adapter_to_dvobj(padapter)->rx_block_mode=0;
 					RT_TRACE(_module_mp_, _drv_emerg_, \
 						(" mp_query_drv_var(_drv_emerg_): offset(%d): SET TRX access type:(TX block/RX byte) [tx_block_mode=%x,rx_block_mode=%x]\n",\
-						offset,padapter->dvobjpriv.tx_block_mode,padapter->dvobjpriv.rx_block_mode));
+						offset, adapter_to_dvobj(padapter)->tx_block_mode, adapter_to_dvobj(padapter)->rx_block_mode));
 					break;
 				case 113:
-					padapter->dvobjpriv.tx_block_mode=0;
-					padapter->dvobjpriv.rx_block_mode=1;
+					adapter_to_dvobj(padapter)->tx_block_mode=0;
+					adapter_to_dvobj(padapter)->rx_block_mode=1;
 					RT_TRACE(_module_mp_, _drv_emerg_, \
 						(" mp_query_drv_var(_drv_emerg_): offset(%d): SET TRX access type:(TX byte/RX block) [tx_block_mode=%x,rx_block_mode=%x]\n",\
-						offset,padapter->dvobjpriv.tx_block_mode,padapter->dvobjpriv.rx_block_mode));
+						offset, adapter_to_dvobj(padapter)->tx_block_mode, adapter_to_dvobj(padapter)->rx_block_mode));
 					break;
 				case 114:
-					padapter->dvobjpriv.tx_block_mode=0;
-					padapter->dvobjpriv.rx_block_mode=0;
+					adapter_to_dvobj(padapter)->tx_block_mode=0;
+					adapter_to_dvobj(padapter)->rx_block_mode=0;
 					RT_TRACE(_module_mp_, _drv_emerg_, \
 						(" mp_query_drv_var(_drv_emerg_): offset(%d): SET TRX access type:(TX byte/RX byte) [tx_block_mode=%x,rx_block_mode=%x]\n",\
-						offset,padapter->dvobjpriv.tx_block_mode,padapter->dvobjpriv.rx_block_mode));
+						offset, adapter_to_dvobj(padapter)->tx_block_mode, adapter_to_dvobj(padapter)->rx_block_mode));
 					break;
 				default :
 					break;
@@ -2882,7 +2882,7 @@ NDIS_STATUS oid_rt_set_power_down_hdl(struct oid_par_priv *poid_par_priv)
 	u8		bpwrup;
 	NDIS_STATUS	status = NDIS_STATUS_SUCCESS;
 #ifdef PLATFORM_LINUX
-#ifdef CONFIG_SDIO_HCI
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	PADAPTER	padapter = (PADAPTER)(poid_par_priv->adapter_context);
 #endif
 #endif
@@ -2903,7 +2903,7 @@ _func_enter_;
 	//CALL  the power_down function
 #ifdef PLATFORM_LINUX
 #if defined(CONFIG_RTL8712) //Linux MP insmod unknown symbol
-	dev_power_down(padapter,bpwrup);
+	dev_power_down(padapter,bpwrup); 
 #endif
 #endif
 	_irqlevel_changed_(&oldirql, RAISE);
@@ -2951,3 +2951,4 @@ _func_exit_;
 	return 0;
 #endif
 }
+

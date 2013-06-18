@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*!
  **************************************************************************
- @brief         map kernel memory into user memory.
+ @brief         map kernel memory into user memory. 
 
  @param			hModule - a handle to the device supplying the kernel memory
  @param			ppvLinAddr - pointer to where the user mode address should be placed
@@ -78,3 +78,4 @@ IMG_BOOL PVRUnMapKMem(IMG_HANDLE hModule, IMG_HANDLE hMappingInfo, IMG_HANDLE hM
 #endif
 
 #endif /* _PVRMMAP_H_ */
+

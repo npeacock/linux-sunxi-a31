@@ -52,7 +52,7 @@ static int sndpcm_startup(struct snd_pcm_substream *substream,
 static void sndpcm_shutdown(struct snd_pcm_substream *substream,
 	struct snd_soc_dai *dai)
 {
-
+	
 }
 
 static int sndpcm_hw_params(struct snd_pcm_substream *substream,
@@ -110,13 +110,13 @@ struct snd_soc_dai_driver sndpcm_dai = {
 	.ops = &sndpcm_dai_ops,
 };
 EXPORT_SYMBOL(sndpcm_dai);
-
+	
 static int sndpcm_soc_probe(struct snd_soc_codec *codec)
 {
 	struct sndpcm_priv *sndpcm;
 
 	sndpcm = kzalloc(sizeof(struct sndpcm_priv), GFP_KERNEL);
-	if(sndpcm == NULL){
+	if(sndpcm == NULL){		
 		return -ENOMEM;
 	}
 	snd_soc_codec_set_drvdata(codec, sndpcm);
@@ -141,7 +141,7 @@ static struct snd_soc_codec_driver soc_codec_dev_sndpcm = {
 
 static int __devinit sndpcm_codec_probe(struct platform_device *pdev)
 {
-	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_sndpcm, &sndpcm_dai, 1);
+	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_sndpcm, &sndpcm_dai, 1);	
 }
 
 static int __devexit sndpcm_codec_remove(struct platform_device *pdev)
@@ -165,8 +165,8 @@ static struct platform_driver sndpcm_codec_driver = {
 };
 
 static int __init sndpcm_codec_init(void)
-{
-	int err = 0;
+{	
+	int err = 0;	
 	script_item_u val;
 	script_item_value_type_e  type;
 
@@ -179,21 +179,21 @@ static int __init sndpcm_codec_init(void)
 	if (pcm_used) {
 		if((err = platform_device_register(&sndpcm_codec_device)) < 0)
 			return err;
-
+	
 		if ((err = platform_driver_register(&sndpcm_codec_driver)) < 0)
 			return err;
 	} else {
        printk("[PCM]sndpcm cannot find any using configuration for controllers, return directly!\n");
        return 0;
     }
-
+	
 	return 0;
 }
 module_init(sndpcm_codec_init);
 
 static void __exit sndpcm_codec_exit(void)
 {
-	if (pcm_used) {
+	if (pcm_used) {	
 		pcm_used = 0;
 		platform_driver_unregister(&sndpcm_codec_driver);
 	}

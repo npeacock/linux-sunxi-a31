@@ -176,7 +176,7 @@
 
 enum {
 	DEBUG_INIT = 1U << 0,
-	DEBUG_CONTROL_INFO = 1U << 1,
+	DEBUG_CONTROL_INFO = 1U << 1,	
 	DEBUG_DATA_INFO = 1U << 2,
 	DEBUG_SUSPEND = 1U << 3,
 };
@@ -271,7 +271,7 @@ static const unsigned short i2c_address[3] = {0x28,0x29,0x38};
 
 /**
  * gsensor_fetch_sysconfig_para - get config info from sysconfig.fex file.
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -280,37 +280,37 @@ static int gsensor_fetch_sysconfig_para(void)
 	int ret = -1;
 	int device_used = -1;
 	script_item_u	val;
-	script_item_value_type_e  type;
-
+	script_item_value_type_e  type;	
+			
 	dprintk(DEBUG_INIT, "========%s===================\n", __func__);
-
+		
 	type = script_get_item("gsensor_para", "gsensor_used", &val);
-
+	 
 	if (SCIRPT_ITEM_VALUE_TYPE_INT	!= type) {
 			pr_err("%s: type err  device_used = %d. \n", __func__, val.val);
 			goto script_get_err;
 	}
 	device_used = val.val;
-
+		
 	if (1 == device_used) {
-		type = script_get_item("gsensor_para", "gsensor_twi_id", &val);
+		type = script_get_item("gsensor_para", "gsensor_twi_id", &val); 
 		if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
 			pr_err("%s: type err twi_id = %d. \n", __func__, val.val);
 			goto script_get_err;
 		}
 		twi_id = val.val;
-
+			
 		dprintk(DEBUG_INIT, "%s: twi_id is %d. \n", __func__, twi_id);
-
+	
 		ret = 0;
-
+			
 	} else {
 		pr_err("%s: gsensor_unused. \n",  __func__);
 		ret = -1;
 	}
-
+	
 	return ret;
-
+	
 script_get_err:
 	pr_notice("=========script_get_err============\n");
 	return ret;
@@ -318,7 +318,7 @@ script_get_err:
 
 /**
  * gsensor_detect - Device detection callback for automatic device creation
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -328,7 +328,7 @@ static int gsensor_detect(struct i2c_client *client, struct i2c_board_info *info
 	int ret;
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
 		return -ENODEV;
-
+            
 	if (twi_id == adapter->nr) {
 		for(i2c_num = 0; i2c_num < (sizeof(i2c_address)/sizeof(i2c_address[0]));i2c_num++)
 		{
@@ -338,11 +338,11 @@ static int gsensor_detect(struct i2c_client *client, struct i2c_board_info *info
 			pr_info("Read ID value is :%d",ret);
 			if ((ret &0x00FF) == WHOAMI_LIS3DE_ACC) {
 				pr_info("lis3de_acc Device detected!\n" );
-				strlcpy(info->type, SENSOR_NAME, I2C_NAME_SIZE);
-				return 0;
-			}
+    				strlcpy(info->type, SENSOR_NAME, I2C_NAME_SIZE);
+				return 0; 
+			}                                                        
 		}
-
+        
 		pr_info("%s:lis3de_acc Device not found, \
 			maybe the other gsensor equipment! \n",__func__);
 		return -ENODEV;
@@ -678,16 +678,16 @@ static int lis3de_acc_update_fs_range(struct lis3de_acc_status *stat,
 	switch (new_fs_range) {
 	case LIS3DE_ACC_G_2G:
 		break;
-
+		
 	case LIS3DE_ACC_G_4G:
 		break;
-
+		
 	case LIS3DE_ACC_G_8G:
 		break;
-
+		
 	case LIS3DE_ACC_G_16G:
 		break;
-
+		
 	default:
 		dev_err(&stat->client->dev, "invalid fs range requested: %u\n",
 				new_fs_range);
@@ -1690,7 +1690,7 @@ static void lis3de_late_resume(struct early_suspend *h)
 static int lis3de_acc_resume(struct i2c_client *client)
 {
 	struct lis3de_acc_status *stat = i2c_get_clientdata(client);
-
+	
 	dprintk(DEBUG_SUSPEND, "lis3de_acc resume\n");
 	if (stat->on_before_suspend)
 		return lis3de_acc_enable(stat);
@@ -1742,7 +1742,7 @@ static int __init lis3de_acc_init(void)
 		printk("%s: err.\n", __func__);
 		return -1;
 	}
-
+	
 	lis3de_acc_driver.detect = gsensor_detect;
 	return i2c_add_driver(&lis3de_acc_driver);
 }
@@ -1761,3 +1761,4 @@ module_exit(lis3de_acc_exit);
 MODULE_DESCRIPTION("lis3de accelerometer sysfs driver");
 MODULE_AUTHOR("Matteo Dameno, Denis Ciocca, STMicroelectronics");
 MODULE_LICENSE("GPL");
+

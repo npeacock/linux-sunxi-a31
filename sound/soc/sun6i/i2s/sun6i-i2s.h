@@ -26,15 +26,15 @@
 	#define SUN6I_IISCTL_SDO3EN					(1<<11)
 	#define SUN6I_IISCTL_SDO2EN					(1<<10)
 	#define SUN6I_IISCTL_SDO1EN					(1<<9)
-	#define SUN6I_IISCTL_SDO0EN					(1<<8)
-	#define SUN6I_IISCTL_ASS					(1<<6)
+	#define SUN6I_IISCTL_SDO0EN					(1<<8) 
+	#define SUN6I_IISCTL_ASS					(1<<6) 
 	#define SUN6I_IISCTL_MS						(1<<5)
 	#define SUN6I_IISCTL_PCM					(1<<4)
 	#define SUN6I_IISCTL_LOOP					(1<<3)
 	#define SUN6I_IISCTL_TXEN					(1<<2)
 	#define SUN6I_IISCTL_RXEN					(1<<1)
 	#define SUN6I_IISCTL_GEN					(1<<0)
-
+	                                			
 #define SUN6I_IISFAT0 							(0x04)
 	#define SUN6I_IISFAT0_LRCP					(1<<7)
 	#define SUN6I_IISFAT0_BCP					(1<<6)
@@ -50,7 +50,7 @@
 	#define SUN6I_IISFAT0_FMT_LFT				(1<<0)
 	#define SUN6I_IISFAT0_FMT_RGT				(2<<0)
 	#define SUN6I_IISFAT0_FMT_RVD				(3<<0)
-
+	
 #define SUN6I_IISFAT1							(0x08)
 	#define SUN6I_IISFAT1_SYNCLEN_16BCLK		(0<<12)
 	#define SUN6I_IISFAT1_SYNCLEN_32BCLK		(1<<12)
@@ -75,7 +75,7 @@
 	#define SUN6I_IISFAT1_TXPDM_8PCM			(1<<0)
 	#define SUN6I_IISFAT1_TXPDM_8ULAW			(2<<0)
 	#define SUN6I_IISFAT1_TXPDM_8ALAW  			(3<<0)
-
+	
 #define SUN6I_IISTXFIFO 						(0x0C)
 
 #define SUN6I_IISRXFIFO 						(0x10)
@@ -92,13 +92,13 @@
 	#define SUN6I_IISFCTL_RXOM_MOD1				(1<<0)
 	#define SUN6I_IISFCTL_RXOM_MOD2				(2<<0)
 	#define SUN6I_IISFCTL_RXOM_MOD3				(3<<0)
-
+	
 #define SUN6I_IISFSTA   						(0x18)
 	#define SUN6I_IISFSTA_TXE					(1<<28)
 	#define SUN6I_IISFSTA_TXECNT(v)				((v)<<16)
 	#define SUN6I_IISFSTA_RXA					(1<<8)
 	#define SUN6I_IISFSTA_RXACNT(v)				((v)<<0)
-
+	
 #define SUN6I_IISINT    						(0x1C)
 	#define SUN6I_IISINT_TXDRQEN				(1<<7)
 	#define SUN6I_IISINT_TXUIEN					(1<<6)
@@ -108,14 +108,14 @@
 	#define SUN6I_IISINT_RXUIEN					(1<<2)
 	#define SUN6I_IISINT_RXOIEN					(1<<1)
 	#define SUN6I_IISINT_RXAIEN					(1<<0)
-
+	
 #define SUN6I_IISISTA   						(0x20)
 	#define SUN6I_IISISTA_TXUISTA				(1<<6)
 	#define SUN6I_IISISTA_TXOISTA				(1<<5)
 	#define SUN6I_IISISTA_TXEISTA				(1<<4)
 	#define SUN6I_IISISTA_RXOISTA				(1<<1)
 	#define SUN6I_IISISTA_RXAISTA				(1<<0)
-
+		
 #define SUN6I_IISCLKD   						(0x24)
 	#define SUN6I_IISCLKD_MCLKOEN				(1<<7)
 	#define SUN6I_IISCLKD_BCLKDIV_2				(0<<4)
@@ -137,11 +137,11 @@
 	#define SUN6I_IISCLKD_MCLKDIV_32			(8<<0)
 	#define SUN6I_IISCLKD_MCLKDIV_48			(9<<0)
 	#define SUN6I_IISCLKD_MCLKDIV_64			(10<<0)
-
+		
 #define SUN6I_IISTXCNT  						(0x28)
-
+                            					
 #define SUN6I_IISRXCNT  						(0x2C)
-
+                            					
 #define SUN6I_TXCHSEL							(0x30)
 	#define SUN6I_TXCHSEL_CHNUM(v)				(((v)-1)<<0)
 
@@ -162,7 +162,7 @@
 	#define SUN6I_RXCHMAP_CH3(v)				(((v)-1)<<12)
 	#define SUN6I_RXCHMAP_CH2(v)				(((v)-1)<<8)
 	#define SUN6I_RXCHMAP_CH1(v)				(((v)-1)<<4)
-	#define SUN6I_RXCHMAP_CH0(v)				(((v)-1)<<0)
+	#define SUN6I_RXCHMAP_CH0(v)				(((v)-1)<<0)	
 
 #define SUN6I_IISCLKD_MCLK_MASK   0x0f
 #define SUN6I_IISCLKD_MCLK_OFFS   0
@@ -186,7 +186,7 @@ struct sun6i_i2s_info {
 	u32 lrc_pol;
 	u32 bclk_pol;
 	u32 pcm_txtype;
-	u32 pcm_rxtype;
+	u32 pcm_rxtype;	
 	u32 pcm_sw;
 	u32 pcm_sync_period;
 	u32 pcm_sync_type;

@@ -14,7 +14,7 @@ void busy_waiting(void)
 #if 1
 	volatile __u32 loop_flag = 1;
 	while(1 == loop_flag);
-
+	
 #endif
 	return;
 }
@@ -24,13 +24,13 @@ void fake_busy_waiting(void)
 #if 1
 	volatile __u32 loop_flag = 2;
 	while(1 == loop_flag);
-
+	
 #endif
 	return;
 }
 
 /*
- * notice: when resume, boot0 need to clear the flag,
+ * notice: when resume, boot0 need to clear the flag, 
  * in case the data in dram be destoryed result in the system is re-resume in cycle.
 */
 void save_mem_flag(void)
@@ -45,9 +45,9 @@ void save_mem_flag(void)
 }
 
 /*
- * before enter suspend, need to clear mem flag,
- * in case the flag is failed to clear by resume code
- *
+ * before enter suspend, need to clear mem flag, 
+ * in case the flag is failed to clear by resume code 
+ * 
 */
 void clear_mem_flag(void)
 {
@@ -86,14 +86,14 @@ void io_init(void)
 {
 	//config port output
 	*(volatile unsigned int *)(PORT_CONFIG)  = 0x111111;
-
+	
 	return;
 }
 
 void io_init_high(void)
 {
 	__u32 data;
-
+	
 	//set port to high
 	data = *(volatile unsigned int *)(PORT_DATA);
 	data |= 0x3f;
@@ -115,7 +115,7 @@ void io_init_low(void)
 }
 
 /*
- * set pa port to high, num range is 0-7;
+ * set pa port to high, num range is 0-7;	
  */
 void io_high(int num)
 {

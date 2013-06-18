@@ -30,7 +30,7 @@
 #include <linux/io.h>
 #include <linux/irq.h>
 
-#define  DMSG_ERR(format,args...)   			pr_debug("[sw_hci_sun6i]: "format,##args)
+#define  DMSG_ERR(format,args...)   			pr_err("[sw_hci_sun6i]: "format,##args)
 #define  DMSG_PRINT(format,args...)   	  pr_debug("[sw_hci_sun6i]: "format,##args)
 
 
@@ -54,7 +54,7 @@
 
 
 //---------------------------------------------------------------
-//  å® å®šä¹‰
+//  ºê ¶¨Òå
 //---------------------------------------------------------------
 #define  USBC_Readb(reg)	                    (*(volatile unsigned char *)(reg))
 #define  USBC_Readw(reg)	                    (*(volatile unsigned short *)(reg))
@@ -147,14 +147,14 @@ struct sw_hci_hcd{
 	script_item_u restrict_gpio_set;
 	u32 drv_vbus_gpio_valid;
 	u32 usb_restrict_valid;
-	__u8 power_flag;                    /* flag. æ˜¯å¦ä¾›ç”µ       */
+	__u8 power_flag;                    /* flag. ÊÇ·ñ¹©µç       */
 
-    __u8 used;                          /* flag. æ§åˆ¶å™¨æ˜¯å¦è¢«ä½¿ç”¨ */
-	__u8 probe;                         /* æ§åˆ¶å™¨åˆå§‹åŒ– */
-	__u8 host_init_state;				/* usb æ§åˆ¶å™¨çš„åˆå§‹åŒ–çŠ¶æ€ã€‚0 : ä¸å·¥ä½œ. 1 : å·¥ä½œ */
+    __u8 used;                          /* flag. ¿ØÖÆÆ÷ÊÇ·ñ±»Ê¹ÓÃ */
+	__u8 probe;                         /* ¿ØÖÆÆ÷³õÊ¼»¯ */
+	__u8 host_init_state;				/* usb ¿ØÖÆÆ÷µÄ³õÊ¼»¯×´Ì¬¡£0 : ²»¹¤×÷. 1 : ¹¤×÷ */
 	__u8 usb_restrict_flag;
 	__u8 usbc_type;                     /* usb controller type  */
-	__u8 not_suspend;                   /* flag. ä¸ä¼‘çœ          */
+	__u8 not_suspend;                   /* flag. ²»ĞİÃß         */
 
 	int (* open_clock)(struct sw_hci_hcd *sw_hci, u32 ohci);
 	int (* close_clock)(struct sw_hci_hcd *sw_hci, u32 ohci);
@@ -164,3 +164,7 @@ struct sw_hci_hcd{
 };
 
 #endif   //__SW_HCI_SUN6I_H__
+
+
+
+

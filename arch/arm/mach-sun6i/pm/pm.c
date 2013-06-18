@@ -247,7 +247,7 @@ int aw_pm_begin(suspend_state_t state)
 #ifdef CONFIG_CPU_FREQ_USR_EVNT_NOTIFY
 	//cpufreq_user_event_notify();
 #endif
-
+	
 	if (cpufreq_get_policy(&policy, 0))
 		goto out;
 
@@ -315,7 +315,7 @@ int aw_pm_prepare_late(void)
 int aw_suspend_cpu_die(void)
 {
 	unsigned long actlr;
-
+	
     /* step1: disable cache */
     asm("mrc    p15, 0, %0, c1, c0, 0" : "=r" (actlr) );
     actlr &= ~(1<<2);
@@ -339,7 +339,7 @@ int aw_suspend_cpu_die(void)
 
     /* step7: execute a WFI instruction */
     asm("wfi" : : : "memory", "cc");
-
+    
     return 0;
 }
 
@@ -396,6 +396,8 @@ static int aw_early_suspend(void)
 	mem_clk_getdiv(&mem_para_info.clk_div);
 	/*backup pll ratio*/
 	mem_clk_get_pll_factor(&mem_para_info.pll_factor);
+	/*backup ccu misc*/
+	mem_clk_get_misc(&mem_para_info.clk_misc);
 #endif
 
 	//backup mmu
@@ -419,7 +421,7 @@ static int aw_early_suspend(void)
 
 	//create 0x0000,0000 mapping table: 0x0000,0000 -> 0x0000,0000
 	create_mapping();
-
+	
 #ifdef ENTER_SUPER_STANDBY
 	//print_call_info();
 	super_standby_para_info.event = mem_para_info.axp_event;
@@ -440,7 +442,7 @@ static int aw_early_suspend(void)
 	//disable int to make sure the cpu0 into wfi state.
 	mem_int_init();
 	ar100_standby_super((struct super_standby_para *)(&super_standby_para_info), NULL, NULL);
-
+	
 	aw_suspend_cpu_die();
 	pr_info("standby suspend failed\n");
 	//busy_waiting();
@@ -494,7 +496,7 @@ static void aw_late_resume(void)
 {
 	memcpy((void *)&mem_para_info, (void *)phys_to_virt(DRAM_BACKUP_BASE_ADDR1_PA), sizeof(mem_para_info));
 	mem_para_info.mem_flag = 0;
-
+	
 	//restore device state
 	mem_clk_restore(&(saved_clk_state));
 	mem_gpio_restore(&(saved_gpio_state));
@@ -586,7 +588,7 @@ resume:
 				IO_ADDRESS(AW_PIO_BASE) + i*0x04, *(volatile __u32 *)(IO_ADDRESS(AW_PIO_BASE) + i*0x04));
 		}
 	}
-
+	
 	aw_late_resume();
 
 	//have been disable dcache in resume1
@@ -697,7 +699,7 @@ static int aw_pm_enter(suspend_state_t state)
 
 		ar100_cpux_ready_notify();
 		ar100_query_wakeup_source((unsigned long *)(&(mem_para_info.axp_event)));
-		PM_DBG("platform wakeup, super standby wakesource is:0x%x\n", mem_para_info.axp_event);
+		PM_DBG("platform wakeup, super standby wakesource is:0x%x\n", mem_para_info.axp_event);	
 	}
 
 	return 0;
@@ -832,7 +834,7 @@ static int __init aw_pm_init(void)
 	int wakeup_src_cnt = 0;
 	unsigned gpio = 0;
 	int i = 0;
-
+	
 	PM_DBG("aw_pm_init!\n");
 
 	//get standby_mode.
@@ -876,7 +878,7 @@ static int __init aw_pm_init(void)
 			pr_info("notice: only support ns, standby_mode = %d.\n", standby_mode);
 		}
 	}
-
+	
 	//get wakeup_src_cnt
 	wakeup_src_cnt = script_get_pio_list("wakeup_src_para",&list);
 	pr_info("wakeup src cnt is : %d. \n", wakeup_src_cnt);
@@ -941,5 +943,7 @@ static void __exit aw_pm_exit(void)
 module_param_named(debug_mask, debug_mask, int, S_IRUGO | S_IWUSR | S_IWGRP);
 module_param_named(suspend_freq, suspend_freq, int, S_IRUGO | S_IWUSR | S_IWGRP);
 module_param_named(suspend_delay_ms, suspend_delay_ms, int, S_IRUGO | S_IWUSR | S_IWGRP);
+module_param_named(standby_mode, standby_mode, int, S_IRUGO | S_IWUSR | S_IWGRP);
 module_init(aw_pm_init);
 module_exit(aw_pm_exit);
+

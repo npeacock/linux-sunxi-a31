@@ -238,3 +238,4 @@ module_exit(sunxi_reg_exit);
 MODULE_DESCRIPTION("a simple sunxi register driver");
 MODULE_AUTHOR("Tom Cubie");
 MODULE_LICENSE("GPL");
+

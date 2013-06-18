@@ -74,7 +74,7 @@ int ar100_hwspin_lock_timeout(int hwid, unsigned int timeout)
 		 */
 		 ;
 	}
-
+	
 	return 0;
 }
 
@@ -93,6 +93,6 @@ int ar100_hwspin_unlock(int hwid)
 {
 	//untaken the spinlock
 	writel(0x0, IO_ADDRESS(AW_SPINLOCK_LOCK_REG(hwid)));
-
+		
 	return 0;
 }

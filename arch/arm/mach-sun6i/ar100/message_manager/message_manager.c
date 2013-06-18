@@ -45,27 +45,27 @@ static struct ar100_semaphore_cache sem_cache;
 int ar100_message_manager_init(void)
 {
 	int i;
-
+	
 	/* initialize message pool start and end */
 	message_start = (struct ar100_message *)(ar100_sram_a2_vbase + AR100_MESSAGE_POOL_START);
 	message_end   = (struct ar100_message *)(ar100_sram_a2_vbase + AR100_MESSAGE_POOL_END);
-
+	
 	/* initialize message_cache */
 	for (i = 0; i < AR100_MESSAGE_CACHED_MAX; i++) {
 		message_cache.cache[i] = NULL;
 	}
 	atomic_set(&(message_cache.number), 0);
-
+	
 	/* initialzie semaphore allocator */
 	for (i = 0; i < AR100_SEM_CACHE_MAX; i++) {
 		sem_cache.cache[i] = NULL;
 	}
 	atomic_set(&(sem_cache.number), 0);
-
+	
 	/* initialize message manager spinlock */
 	spin_lock_init(&(msg_mgr_lock));
 	msg_mgr_flag = 0;
-
+	
 	return 0;
 }
 
@@ -96,7 +96,7 @@ static int ar100_semaphore_invalid(struct semaphore *psemaphore)
 static struct semaphore *ar100_semaphore_allocate(void)
 {
 	struct semaphore *sem = NULL;
-
+	
 	/* try to allocate from cache first */
 	spin_lock_irqsave(&(msg_mgr_lock), msg_mgr_flag);
 	if (atomic_read(&(sem_cache.number))) {
@@ -108,7 +108,7 @@ static struct semaphore *ar100_semaphore_allocate(void)
 		}
 	}
 	spin_unlock_irqrestore(&(msg_mgr_lock), msg_mgr_flag);
-
+	
 	if (ar100_semaphore_invalid(sem)) {
 		/* cache allocate fail, allocate from kmem */
 		sem = kmalloc(sizeof(struct semaphore), GFP_KERNEL);
@@ -118,22 +118,22 @@ static struct semaphore *ar100_semaphore_allocate(void)
 		AR100_ERR("allocate semaphore [%x] invalid\n", (u32)sem);
 		return NULL;
 	}
-
+	
 	/* initialize allocated semaphore */
 	sema_init(sem, 0);
-
+	
 	return sem;
 }
 
 static int ar100_semaphore_free(struct semaphore *sem)
 {
 	struct semaphore *free_sem = sem;
-
+	
 	if (ar100_semaphore_invalid(free_sem)) {
 		AR100_ERR("free semaphore [%x] invalid\n", (u32)free_sem);
 		return -1;
 	}
-
+	
 	/* try to free semaphore to cache */
 	spin_lock_irqsave(&(msg_mgr_lock), msg_mgr_flag);
 	if (atomic_read(&(sem_cache.number)) < AR100_SEM_CACHE_MAX) {
@@ -142,7 +142,7 @@ static int ar100_semaphore_free(struct semaphore *sem)
 		free_sem = NULL;
 	}
 	spin_unlock_irqrestore(&(msg_mgr_lock), msg_mgr_flag);
-
+	
 	/* try to free semaphore to kmem if free to cache fail */
 	if (free_sem) {
 		/* free to kmem */
@@ -173,7 +173,7 @@ struct ar100_message *ar100_message_allocate(unsigned int msg_attr)
 {
 	struct ar100_message *pmessage = NULL;
 	struct ar100_message *palloc   = NULL;
-
+	
 	/* first find in message_cache */
 	spin_lock_irqsave(&(msg_mgr_lock), msg_mgr_flag);
 	if (atomic_read(&(message_cache.number))) {
@@ -188,11 +188,11 @@ struct ar100_message *ar100_message_allocate(unsigned int msg_attr)
 	spin_unlock_irqrestore(&(msg_mgr_lock), msg_mgr_flag);
 	if (ar100_message_invalid(palloc)) {
 		/*
-		 * cached message_cache finded fail,
+		 * cached message_cache finded fail, 
 		 * use spinlock 0 to exclusive with ar100.
 		 */
 		ar100_hwspin_lock_timeout(0, AR100_SPINLOCK_TIMEOUT);
-
+		
 		/* seach from the start of message pool every time. */
 		pmessage = message_start;
 		while (pmessage < message_end) {
@@ -226,7 +226,7 @@ struct ar100_message *ar100_message_allocate(unsigned int msg_attr)
 }
 
 /**
- * free one message frame. mainly use for process message finished,
+ * free one message frame. mainly use for process message finished, 
  * free it to messages pool or add to free message queue.
  * @pmessage:  the pointer of free message frame.
  *
@@ -235,7 +235,7 @@ struct ar100_message *ar100_message_allocate(unsigned int msg_attr)
 void ar100_message_free(struct ar100_message *pmessage)
 {
 	struct ar100_message *free_message = pmessage;
-
+	
 	/* check this message valid or not */
 	if (ar100_message_invalid(free_message)) {
 		AR100_ERR("free invalid ar100 message [%x]\n", (u32)free_message);
@@ -259,7 +259,7 @@ void ar100_message_free(struct ar100_message *pmessage)
 		free_message = NULL;
 	}
 	spin_unlock_irqrestore(&(msg_mgr_lock), msg_mgr_flag);
-
+	
 	/* 	try to free message to pool if free to cache fail */
 	if (free_message) {
 		/* free to message pool,set message state as FREED. */
@@ -279,7 +279,7 @@ void ar100_message_free(struct ar100_message *pmessage)
 int ar100_message_coming_notify(struct ar100_message *pmessage)
 {
 	int   ret;
-
+	
 	/* ac327 receive message to ar100 */
 	AR100_INF("-------------------------------------------------------------\n");
 	AR100_INF("                MESSAGE FROM AR100                           \n");
@@ -287,10 +287,10 @@ int ar100_message_coming_notify(struct ar100_message *pmessage)
 	AR100_INF("message type : %x\n", pmessage->type);
 	AR100_INF("message attr : %x\n", pmessage->attr);
 	AR100_INF("-------------------------------------------------------------\n");
-
+	
 	/* message per-process */
 	pmessage->state = AR100_MESSAGE_PROCESSING;
-
+	
 	/* process message */
 	switch (pmessage->type) {
 		case AR100_AXP_INT_COMING_NOTIFY: {
@@ -307,7 +307,7 @@ int ar100_message_coming_notify(struct ar100_message *pmessage)
 	}
 	/* message post process */
 	pmessage->state = AR100_MESSAGE_PROCESSED;
-	if ((pmessage->attr & AR100_MESSAGE_ATTR_SOFTSYN) ||
+	if ((pmessage->attr & AR100_MESSAGE_ATTR_SOFTSYN) || 
 		(pmessage->attr & AR100_MESSAGE_ATTR_HARDSYN)) {
 		/* synchronous message, should feedback process result */
 		ar100_hwmsgbox_feedback_message(pmessage, AR100_SEND_MSG_TIMEOUT);
@@ -316,8 +316,8 @@ int ar100_message_coming_notify(struct ar100_message *pmessage)
 		 * asyn message, no need feedback message result,
 		 * free message directly.
 		 */
-		ar100_message_free(pmessage);
+		ar100_message_free(pmessage);	
 	}
-
+	
 	return ret;
 }

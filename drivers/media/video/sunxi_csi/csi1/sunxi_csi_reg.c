@@ -30,21 +30,21 @@ void bsp_csi_close(void)
 /* configure */
 void bsp_csi_if_configure(__csi_if_conf_t *csi_if_cfg)
 {
-	W(CSI_VBASE+CSI_IF_CFG, csi_if_cfg->src_type << 21 |
-							  csi_if_cfg->field_pol<< 19 |
-							  csi_if_cfg->vref << 18 |
+	W(CSI_VBASE+CSI_IF_CFG, csi_if_cfg->src_type << 21 | 
+							  csi_if_cfg->field_pol<< 19 | 
+							  csi_if_cfg->vref << 18 | 
 							  csi_if_cfg->href << 17 |
 							  ((csi_if_cfg->clock==CSI_FALLING)?1:0)<< 16 |
-							  csi_if_cfg->data_width << 8  |
+							  csi_if_cfg->data_width << 8  | 
 							  csi_if_cfg->csi_if << 0
       );
 }
 
 void bsp_csi_fmt_configure(unsigned int ch, __csi_fmt_conf_t *csi_fmt_cfg)
 {
-	W(CSI_VBASE+CSI_CFG, csi_fmt_cfg->input_fmt << 20 |
-							  csi_fmt_cfg->output_fmt<< 16 |
-							  csi_fmt_cfg->field_sel << 10 |
+	W(CSI_VBASE+CSI_CFG, csi_fmt_cfg->input_fmt << 20 | 
+							  csi_fmt_cfg->output_fmt<< 16 | 
+							  csi_fmt_cfg->field_sel << 10 | 
 							  csi_fmt_cfg->seq       << 8
       );
 }
@@ -53,7 +53,7 @@ void bsp_csi_fmt_configure(unsigned int ch, __csi_fmt_conf_t *csi_fmt_cfg)
 void inline bsp_csi_set_buffer_address(unsigned int ch, __csi_buf_t buf, unsigned int addr)
 {
 	//bufer0a +4 = buffer0b, bufer0a +8 = buffer1a
-    W(CSI_VBASE+CSI_BUF0_A + (buf<<2), addr);
+    W(CSI_VBASE+CSI_BUF0_A + (buf<<2), addr); 
 }
 
 unsigned int inline bsp_csi_get_buffer_address(unsigned int ch, __csi_buf_t buf)
@@ -92,15 +92,15 @@ void bsp_csi_set_size(unsigned int ch, unsigned int length_h, unsigned int lengt
 {
 	/* make sure yuv422 input 2 byte(clock) output 1 pixel */
 		unsigned int t;
-
+		
 		t = R(CSI_VBASE+CSI_RESIZE_H);
 		t = (t&0x0000ffff)|(length_h<<16);
     W(CSI_VBASE+CSI_RESIZE_H, t);
-
+    
     t = R(CSI_VBASE+CSI_RESIZE_V);
     t = (t&0x0000ffff)|(length_v<<16);
     W(CSI_VBASE+CSI_RESIZE_V, t);
-
+    
     W(CSI_VBASE+CSI_BUF_LENGTH, buf_length_y + (buf_length_c<<16));
 }
 
@@ -109,11 +109,11 @@ void bsp_csi_set_size(unsigned int ch, unsigned int length_h, unsigned int lengt
 void bsp_csi_set_offset(unsigned int ch, unsigned int start_h, unsigned int start_v)
 {
     unsigned int t;
-
+    
     t = R(CSI_VBASE+CSI_RESIZE_H);
     t = (t&0xffff0000)|start_h;
     W(CSI_VBASE+CSI_RESIZE_H, t);
-
+    
     t = R(CSI_VBASE+CSI_RESIZE_V);
     t = (t&0xffff0000)|start_v;
     W(CSI_VBASE+CSI_RESIZE_V, t);

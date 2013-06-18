@@ -170,12 +170,12 @@ static struct snd_soc_codec_driver soc_codec_dev_sndhdmi = {
 };
 
 static int __devinit sndhdmi_codec_probe(struct platform_device *pdev)
-{
+{	
 	if (!pdev) {
 		printk("error:%s,line:%d\n", __func__, __LINE__);
 		return -EAGAIN;
 	}
-	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_sndhdmi, &sndhdmi_dai, 1);
+	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_sndhdmi, &sndhdmi_dai, 1);	
 }
 
 static int __devexit sndhdmi_codec_remove(struct platform_device *pdev)

@@ -82,7 +82,7 @@ IMG_UINT32	gPVRDebugLevel = (DBGPRIV_FATAL | DBGPRIV_ERROR | DBGPRIV_WARNING);
 ******************************************************************************
 
  @Function     PVRSRVDebugPrintf
-
+	
  @Description  To output a debug message to the user
 
  @Input uDebugLevel: The current debug level
@@ -175,12 +175,12 @@ void PVRSRVDebugPrintf	(
 		va_end (vaArgs);
 		szBufferEnd += strlen(szBufferEnd);
 
-		/*
-		 * Metrics and Traces don't need a location
-		 */
-		if (bTrace == IMG_FALSE)
+ 		/*
+ 		 * Metrics and Traces don't need a location
+ 		 */
+ 		if (bTrace == IMG_FALSE)
 		{
-			snprintf(szBufferEnd, szBufferLimit - szBufferEnd,
+			snprintf(szBufferEnd, szBufferLimit - szBufferEnd, 
 			         " [%d, %s]", (int)ui32Line, pszFileName);
 			szBufferEnd += strlen(szBufferEnd);
 		}

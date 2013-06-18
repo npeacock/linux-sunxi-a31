@@ -56,11 +56,11 @@ extern "C" {
 #endif
 
 
-/*
+/* 
  * Bridge Cmd Ids
  */
 
-/* *REMEMBER* to update PVRSRV_BRIDGE_LAST_SGX_CMD if you add/remove a command!
+/* *REMEMBER* to update PVRSRV_BRIDGE_LAST_SGX_CMD if you add/remove a command! 
  * Also you need to ensure all PVRSRV_BRIDGE_SGX_CMD_BASE+ offsets are sequential!
  */
 
@@ -112,19 +112,19 @@ extern "C" {
 
 
 
-/* *REMEMBER* to update PVRSRV_BRIDGE_LAST_SGX_CMD if you add/remove a command!
+/* *REMEMBER* to update PVRSRV_BRIDGE_LAST_SGX_CMD if you add/remove a command! 
  * You need to ensure all PVRSRV_BRIDGE_SGX_CMD_BASE+ offsets are sequential!
  */
 #define PVRSRV_BRIDGE_LAST_SGX_CMD (PVRSRV_BRIDGE_SGX_CMD_BASE+37)
 
 /*****************************************************************************
- * Input structures for IOCTL/DRVESC
+ * Input structures for IOCTL/DRVESC 
  *****************************************************************************/
 
 /*!
  *****************************************************************************
  *	`bridge in' SGX Get Phys Page Addr
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_GETPHYSPAGEADDR
 {
 	IMG_UINT32 ui32BridgeFlags; /* Must be first member of structure */
@@ -135,7 +135,7 @@ typedef struct PVRSRV_BRIDGE_IN_GETPHYSPAGEADDR
 /*!
  *****************************************************************************
  *	`bridge out' SGX Get Phys Page Addr
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_OUT_GETPHYSPAGEADDR
 {
 	PVRSRV_ERROR		eError;
@@ -146,15 +146,15 @@ typedef struct PVRSRV_BRIDGE_OUT_GETPHYSPAGEADDR
 /*!
  *****************************************************************************
  *	`bridge in' set transfer context priority
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_SGX_SET_TRANSFER_CONTEXT_PRIORITY_TAG
  {
-	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
+ 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
  #if defined (SUPPORT_SID_INTERFACE)
-	IMG_SID					hDevCookie;
+ 	IMG_SID					hDevCookie;
 	IMG_SID					hHWTransferContext;
  #else
-	IMG_HANDLE				hDevCookie;
+ 	IMG_HANDLE				hDevCookie;
 	IMG_HANDLE				hHWTransferContext;
  #endif
     IMG_UINT32              ui32Priority;
@@ -164,7 +164,7 @@ typedef struct PVRSRV_BRIDGE_IN_SGX_SET_TRANSFER_CONTEXT_PRIORITY_TAG
 /*!
  *****************************************************************************
  *	`bridge in' set render context priority
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_SGX_SET_RENDER_CONTEXT_PRIORITY_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -182,7 +182,7 @@ typedef struct PVRSRV_BRIDGE_IN_SGX_SET_RENDER_CONTEXT_PRIORITY_TAG
 /*!
  *****************************************************************************
  *	`bridge in' Get Client Info
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_GETCLIENTINFO_TAG
 {
 	IMG_UINT32					ui32BridgeFlags; /* Must be first member of structure */
@@ -196,7 +196,7 @@ typedef struct PVRSRV_BRIDGE_IN_GETCLIENTINFO_TAG
 /*!
  *****************************************************************************
  *	`bridge out' Get internal device info
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_OUT_GETINTERNALDEVINFO_TAG
 {
 	SGX_INTERNAL_DEVINFO	sSGXInternalDevInfo;
@@ -206,7 +206,7 @@ typedef struct PVRSRV_BRIDGE_OUT_GETINTERNALDEVINFO_TAG
 /*!
  *****************************************************************************
  *	`bridge in' Get internal device info
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_GETINTERNALDEVINFO_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -220,7 +220,7 @@ typedef struct PVRSRV_BRIDGE_IN_GETINTERNALDEVINFO_TAG
 /*!
  *****************************************************************************
  *	`bridge out' Get Client Info
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_OUT_GETCLIENTINFO_TAG
 {
 	SGX_CLIENT_INFO  	sClientInfo;
@@ -230,7 +230,7 @@ typedef struct PVRSRV_BRIDGE_OUT_GETCLIENTINFO_TAG
 /*!
  *****************************************************************************
  *	`bridge in' Release Client Info
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_RELEASECLIENTINFO_TAG
 {
 	IMG_UINT32			ui32BridgeFlags; /* Must be first member of structure */
@@ -245,7 +245,7 @@ typedef struct PVRSRV_BRIDGE_IN_RELEASECLIENTINFO_TAG
 /*!
  *****************************************************************************
  *	`bridge in' Pdump ISP mem Pol
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_ISPBREAKPOLL_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -259,7 +259,7 @@ typedef struct PVRSRV_BRIDGE_IN_ISPBREAKPOLL_TAG
 /*!
  *****************************************************************************
  *	`bridge in' KickTA
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_DOKICK_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -274,7 +274,7 @@ typedef struct PVRSRV_BRIDGE_IN_DOKICK_TAG
 /*!
  *****************************************************************************
  *	`bridge in' SGXScheduleProcessQueues
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_SGX_SCHEDULE_PROCESS_QUEUES_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -290,7 +290,7 @@ typedef struct PVRSRV_BRIDGE_IN_SGX_SCHEDULE_PROCESS_QUEUES_TAG
 /*!
  *****************************************************************************
  *	`bridge in' SubmitTransfer
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_SUBMITTRANSFER_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -306,7 +306,7 @@ typedef struct PVRSRV_BRIDGE_IN_SUBMITTRANSFER_TAG
 /*!
  *****************************************************************************
  *	`bridge in' Submit2D
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_SUBMIT2D_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -323,7 +323,7 @@ typedef struct PVRSRV_BRIDGE_IN_SUBMIT2D_TAG
 /*!
  *****************************************************************************
  *	`bridge in' ReadRegistryString
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_READREGDWORD_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -339,7 +339,7 @@ typedef struct PVRSRV_BRIDGE_IN_READREGDWORD_TAG
 /*!
  *****************************************************************************
  *	`bridge out' ReadRegistryString
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_OUT_READREGDWORD_TAG
 {
 	PVRSRV_ERROR	eError;
@@ -415,7 +415,7 @@ typedef struct PVRSRV_BRIDGE_OUT_SGXDEVINITPART2_TAG
 /*!
  *****************************************************************************
  *	`bridge in' 2D query blits complete
- *****************************************************************************/
+ *****************************************************************************/ 
 typedef struct PVRSRV_BRIDGE_IN_2DQUERYBLTSCOMPLETE_TAG
 {
 	IMG_UINT32				ui32BridgeFlags; /* Must be first member of structure */
@@ -699,7 +699,7 @@ typedef struct PVRSRV_BRIDGE_IN_SGX_FLUSH_HW_RENDER_TARGET_TAG
 /*!
  *****************************************************************************
  *	SGX 2D specific defines
- *****************************************************************************/
+ *****************************************************************************/ 
 #if defined(SGX_FEATURE_2D_HARDWARE)
 typedef struct PVRSRV_BRIDGE_IN_SGX_REGISTER_HW_2D_CONTEXT_TAG
 {
@@ -776,3 +776,4 @@ typedef struct PVRSRV_BRIDGE_OUT_SGX_READ_HWPERF_CB_TAG
 #endif
 
 #endif /* __SGX_BRIDGE_H__ */
+

@@ -375,7 +375,7 @@ end:
  * @old_str:	old sysf string, end up with '\n'
  * @new_str: 	store the new string converted.
  * @new_buf_size: length of new_str buffer.
- *
+ * 
  * return true if success, false if failed.
  */
 bool inline sysfs_to_str(const char *old_str, char *new_str, int new_buf_size)
@@ -490,3 +490,4 @@ static int __init ccu_sysfs_init(void)
 	return status;
 }
 postcore_initcall(ccu_sysfs_init);
+

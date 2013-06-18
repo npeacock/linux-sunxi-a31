@@ -109,7 +109,7 @@ IMG_VOID MonoOut(IMG_CHAR * pszString,IMG_BOOL bNewLine);
  Secure handle Function prototypes
 *****************************************************************************/
 IMG_SID PStream2SID(PDBG_STREAM psStream);
-PDBG_STREAM SID2PStream(IMG_SID hStream);
+PDBG_STREAM SID2PStream(IMG_SID hStream); 
 IMG_BOOL AddSIDEntry(PDBG_STREAM psStream);
 IMG_BOOL RemoveSIDEntry(PDBG_STREAM psStream);
 

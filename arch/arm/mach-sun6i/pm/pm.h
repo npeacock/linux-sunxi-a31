@@ -9,7 +9,7 @@
  * the Free Software Foundation.
  */
 
-//#include "pm_types.h"
+//#include "pm_types.h" 
 #include "pm_config.h"
 #include "pm_errcode.h"
 #include "pm_debug.h"
@@ -66,7 +66,7 @@ struct mmu_state {
 	__u32  ttb_0r;	/* Translation Table Base 0 */
 	__u32  ttb_1r;	/* Translation Table Base 1 */
 	__u32  ttbcr;	/* Translation Talbe Base Control */
-
+	
 	/* CR3 */
 	__u32 dacr;	/* Domain Access Control */
 
@@ -88,6 +88,7 @@ struct aw_mem_para{
 	__u32 suspend_delay_ms;
 	__u32 saved_runtime_context_svc[RUNTIME_CONTEXT_SIZE];
 	struct clk_div_t clk_div;
+	struct clk_misc_t clk_misc;	//miscellaneous para.
 	struct pll_factor_t pll_factor;
 	struct mmu_state saved_mmu_state;
 	struct saved_context saved_cpu_context;
@@ -133,3 +134,4 @@ void set_ttbr0(void);
 extern void invalidate_dcache(void);
 
 #endif /*_PM_H*/
+

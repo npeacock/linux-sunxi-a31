@@ -62,3 +62,4 @@ enum sw_ic_ver sw_get_ic_ver(void)
     else
         return MAGIC_VER_UNKNOWN;
 }
+

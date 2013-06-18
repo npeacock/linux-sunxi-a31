@@ -1146,7 +1146,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpMemPol(IMG_CONST PVRSRV_CONNECTION *psConne
 										  IMG_SID    hKernelMemInfo,
 #else
 										  PVRSRV_CLIENT_MEM_INFO *psMemInfo,
-#endif
+#endif										  
 										  IMG_UINT32 ui32Offset,
 										  IMG_UINT32 ui32Value,
 										  IMG_UINT32 ui32Mask,
@@ -1229,7 +1229,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpMemPages(IMG_CONST PVRSRV_DEV_DATA *psDevDa
 #endif
 														   IMG_DEV_PHYADDR		*pPages,
 														   IMG_UINT32			ui32NumPages,
-														   IMG_DEV_VIRTADDR		sDevVAddr,
+												   		   IMG_DEV_VIRTADDR		sDevVAddr,
 														   IMG_UINT32			ui32Start,
 														   IMG_UINT32			ui32Length,
 														   IMG_UINT32			ui32Flags);
@@ -1264,16 +1264,16 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpCommentWithFlagsf(IMG_CONST PVRSRV_CONNECTI
 
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpDriverInfo(IMG_CONST PVRSRV_CONNECTION *psConnection,
-												IMG_CHAR *pszString,
+								 				IMG_CHAR *pszString,
 												IMG_BOOL bContinuous);
 
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpIsCapturing(IMG_CONST PVRSRV_CONNECTION *psConnection,
-												IMG_BOOL *pbIsCapturing);
+								 				IMG_BOOL *pbIsCapturing);
 
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpBitmap(IMG_CONST PVRSRV_DEV_DATA *psDevData,
-											IMG_CHAR *pszFileName,
+								 			IMG_CHAR *pszFileName,
 											IMG_UINT32 ui32FileOffset,
 											IMG_UINT32 ui32Width,
 											IMG_UINT32 ui32Height,
@@ -1292,7 +1292,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpBitmap(IMG_CONST PVRSRV_DEV_DATA *psDevData
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpRegRead(IMG_CONST PVRSRV_DEV_DATA *psDevData,
 											IMG_CONST IMG_CHAR *pszRegRegion,
-											IMG_CONST IMG_CHAR *pszFileName,
+								 			IMG_CONST IMG_CHAR *pszFileName,
 											IMG_UINT32 ui32FileOffset,
 											IMG_UINT32 ui32Address,
 											IMG_UINT32 ui32Size,
@@ -1429,7 +1429,7 @@ struct _PVRSRV_SEMAPHORE_OPAQUE_STRUCT_;
 typedef	struct  _PVRSRV_SEMAPHORE_OPAQUE_STRUCT_ *PVRSRV_SEMAPHORE_HANDLE;
 
 
-	#define IMG_SEMAPHORE_WAIT_INFINITE       ((IMG_UINT64)0xFFFFFFFFFFFFFFFFull)
+  	#define IMG_SEMAPHORE_WAIT_INFINITE       ((IMG_UINT64)0xFFFFFFFFFFFFFFFFull)
 
 
 #if !defined(USE_CODE)
@@ -1483,9 +1483,9 @@ IMG_IMPORT IMG_PVOID IMG_CALLCONV PVRSRVCallocUserModeMemTracking(IMG_SIZE_T ui3
 
 IMG_IMPORT IMG_VOID  IMG_CALLCONV PVRSRVFreeUserModeMemTracking(IMG_VOID *pvMem);
 
-IMG_IMPORT IMG_PVOID IMG_CALLCONV PVRSRVReallocUserModeMemTracking(IMG_VOID *pvMem, IMG_SIZE_T ui32NewSize,
+IMG_IMPORT IMG_PVOID IMG_CALLCONV PVRSRVReallocUserModeMemTracking(IMG_VOID *pvMem, IMG_SIZE_T ui32NewSize, 
 													  IMG_CHAR *pszFileName, IMG_UINT32 ui32LineNumber);
-#endif /* defined(DEBUG) && (defined(__linux__) || defined(_UITRON_)) */
+#endif
 
 /******************************************************************************
  * PVR Event Object API(s)
@@ -1551,8 +1551,8 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVDestroySyncInfoModObj(const PVRSRV_CONNECTION *p
 
 				Note that this API has implied locking semantics, as follows:
 
-				PVRSRVModifyPendingSyncOps()
-				        -  announces an operation on the buffer is "pending", and
+				PVRSRVModifyPendingSyncOps() 
+				        -  announces an operation on the buffer is "pending", and 
 						   conceptually takes a ticket to represent your place in the queue.
 						-  NB: ** exclusive access to the resource is  _NOT_ granted at this time **
 				PVRSRVSyncOpsFlushToModObj()
@@ -1560,7 +1560,7 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVDestroySyncInfoModObj(const PVRSRV_CONNECTION *p
 						-  the previously "pending" operation can now be regarded as "in progress"
 				PVRSRVModifyCompleteSyncOps()
 				        -  declares that the previously "in progress" operation is now complete. (UNLOCK)
-
+				
 
  ******************************************************************************/
 IMG_IMPORT

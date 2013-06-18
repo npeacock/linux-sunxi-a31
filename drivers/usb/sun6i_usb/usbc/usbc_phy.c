@@ -13,7 +13,7 @@
 *
 * Date 			: 2009.10.21
 *
-* Description 	: é€‚ç”¨äºsuniiå¹³å°ï¼ŒUSBå…¬å…±æ“ä½œéƒ¨åˆ†
+* Description 	: ÊÊÓÃÓÚsuniiÆ½Ì¨£¬USB¹«¹²²Ù×÷²¿·Ö
 *
 * History 		:
 *
@@ -25,7 +25,7 @@
 /*
  ***************************************************************************
  *
- * å®šä¹‰USB PHYæ§åˆ¶å¯„å­˜å™¨ä½
+ * ¶¨ÒåUSB PHY¿ØÖÆ¼Ä´æÆ÷Î»
  *
  ***************************************************************************
  */
@@ -53,16 +53,16 @@
  */
 static __u32 __USBC_PHY_REG_READ(__u32 usbc_base_addr, __u32 usbc_phy_reg_addr)
 {
-	__u32 reg_val = 0;
-	__u32 i = 0;
+  	__u32 reg_val = 0;
+  	__u32 i = 0;
 
-	USBC_Writeb(usbc_phy_reg_addr, USBC_REG_PHYCTL(USBC0_REGS_BASE) + 1);
-	for(i=0; i<0x4; i++);
-	reg_val = USBC_Readb(USBC_REG_PHYCTL(USBC0_REGS_BASE) + 2);
-	if(usbc_base_addr == USBC0_REGS_BASE)
-		return (reg_val & 0x1);
-	else
-		return ((reg_val >> 1) & 0x1);
+  	USBC_Writeb(usbc_phy_reg_addr, USBC_REG_PHYCTL(USBC0_REGS_BASE) + 1);
+  	for(i=0; i<0x4; i++);
+  	reg_val = USBC_Readb(USBC_REG_PHYCTL(USBC0_REGS_BASE) + 2);
+  	if(usbc_base_addr == USBC0_REGS_BASE)
+  		return (reg_val & 0x1);
+  	else
+  		return ((reg_val >> 1) & 0x1);
 }
 
 /*
@@ -74,27 +74,27 @@ static __u32 __USBC_PHY_REG_READ(__u32 usbc_base_addr, __u32 usbc_phy_reg_addr)
  */
 static void __USBC_PHY_REG_WRITE(__u32 usbc_base_addr, __u32 usbc_phy_reg_addr, __u32 usbc_phy_reg_data)
 {
-	__u32 reg_val = 0;
+  	__u32 reg_val = 0;
 
-	USBC_Writeb(usbc_phy_reg_addr, USBC_REG_PHYCTL(USBC0_REGS_BASE) + 1);
-	reg_val = USBC_Readb(USBC_REG_PHYCTL(USBC0_REGS_BASE));
-	reg_val &= ~(0x1 << 7);
-	reg_val |= (usbc_phy_reg_data & 0x1) << 7;
-	if(usbc_base_addr == USBC0_REGS_BASE){
-		reg_val &= ~0x1;
-		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
-		reg_val |= 0x1;
-		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
-		reg_val &= ~0x1;
-		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
-	}else{
-		reg_val &= ~0x2;
-		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
-		reg_val |= 0x2;
-		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
-		reg_val &= ~0x2;
-		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
-	}
+  	USBC_Writeb(usbc_phy_reg_addr, USBC_REG_PHYCTL(USBC0_REGS_BASE) + 1);
+  	reg_val = USBC_Readb(USBC_REG_PHYCTL(USBC0_REGS_BASE));
+  	reg_val &= ~(0x1 << 7);
+  	reg_val |= (usbc_phy_reg_data & 0x1) << 7;
+  	if(usbc_base_addr == USBC0_REGS_BASE){
+  		reg_val &= ~0x1;
+  		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
+  		reg_val |= 0x1;
+  		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
+  		reg_val &= ~0x1;
+  		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
+  	}else{
+  		reg_val &= ~0x2;
+  		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
+  		reg_val |= 0x2;
+  		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
+  		reg_val &= ~0x2;
+  		USBC_Writeb(reg_val, USBC_REG_PHYCTL(USBC0_REGS_BASE));
+  	}
 }
 
 
@@ -116,7 +116,7 @@ static void __USBC_PHY_SET_PLL_BW(__u32 val)
 /*
  ***************************************************************************
  *
- * Enable/Disable USB res45 Calibration, val = 0--Disableï¼›1--Enable, default = 0
+ * Enable/Disable USB res45 Calibration, val = 0--Disable£»1--Enable, default = 0
  *
  ***************************************************************************
  */
@@ -170,7 +170,7 @@ static void __USBC_PHY_SET_VBUS_VALID_THRESHOLD(__u32 usbc_base_addr, __u32 val)
 /*
  ***************************************************************************
  *
- * Enable/Diasble USB OTG Function, val = 0--Disableï¼›1--Enable, default = 1
+ * Enable/Diasble USB OTG Function, val = 0--Disable£»1--Enable, default = 1
  *
  ***************************************************************************
  */
@@ -184,7 +184,7 @@ static void __USBC_PHY_OTG_FUNC_ENABLE(__u32 usbc_base_addr, __u32 val)
 /*
  ***************************************************************************
  *
- * Enable/Diasble USB VBUS Detect Function, val = 0--Disableï¼›1--Enable, default = 1
+ * Enable/Diasble USB VBUS Detect Function, val = 0--Disable£»1--Enable, default = 1
  *
  ***************************************************************************
  */
@@ -214,7 +214,7 @@ static void __USBC_PHY_SET_DISCON_DET_THRESHOLD(__u32 usbc_base_addr, __u32 val)
 *                     USBC_PHY_SetCommonConfig
 *
 * Description:
-*    Phyçš„å…¬å…±è®¾ç½®ï¼Œç”¨äºUSB PHYçš„å…¬å…±åˆå§‹åŒ–
+*    PhyµÄ¹«¹²ÉèÖÃ£¬ÓÃÓÚUSB PHYµÄ¹«¹²³õÊ¼»¯
 *
 * Arguments:
 *    NULL
@@ -223,7 +223,7 @@ static void __USBC_PHY_SET_DISCON_DET_THRESHOLD(__u32 usbc_base_addr, __u32 val)
 *    NULL
 *
 * note:
-*    æ— 
+*    ÎŞ
 *
 ***********************************************************************************
 */
@@ -237,16 +237,16 @@ void USBC_PHY_SetCommonConfig(void)
 *                     USBC_PHY_SetPrivateConfig
 *
 * Description:
-*    USB PHYçš„å„è‡ªè®¾ç½®
+*    USB PHYµÄ¸÷×ÔÉèÖÃ
 *
 * Arguments:
-*    hUSB       :  input.  USBC_open_otgè·å¾—çš„å¥æŸ„, è®°å½•äº†USBCæ‰€éœ€è¦çš„ä¸€äº›å…³é”®æ•°æ®
+*    hUSB       :  input.  USBC_open_otg»ñµÃµÄ¾ä±ú, ¼ÇÂ¼ÁËUSBCËùĞèÒªµÄÒ»Ğ©¹Ø¼üÊı¾İ
 *
 * Returns:
 *    NULL
 *
 * note:
-*    æ— 
+*    ÎŞ
 *
 ***********************************************************************************
 */
@@ -273,16 +273,16 @@ void USBC_PHY_SetPrivateConfig(__hdle hUSB)
 *                     USBC_PHY_GetCommonConfig
 *
 * Description:
-*    è¯»å–Phyçš„å…¬å…±è®¾ç½®ï¼Œä¸»è¦ç”¨äºDebugï¼Œçœ‹Phyçš„è®¾ç½®æ˜¯å¦æ­£ç¡®
+*    ¶ÁÈ¡PhyµÄ¹«¹²ÉèÖÃ£¬Ö÷ÒªÓÃÓÚDebug£¬¿´PhyµÄÉèÖÃÊÇ·ñÕıÈ·
 *
 * Arguments:
 *    NULL
 *
 * Returns:
-*    32bitsçš„USB PHYå…¬å…±è®¾ç½®å€¼
+*    32bitsµÄUSB PHY¹«¹²ÉèÖÃÖµ
 *
 * note:
-*    æ— 
+*    ÎŞ
 *
 ***********************************************************************************
 */
@@ -306,7 +306,7 @@ __u32 USBC_PHY_GetCommonConfig(void)
 ***********************************************************************************
 *                                usb_phy0_write
 *Description:
-*    å†™usb phy0çš„phyå¯„å­˜å™¨ï¼Œä¸»è¦ç”¨äºphy0 standbyæ—¶çš„å†™å…¥
+*    Ğ´usb phy0µÄphy¼Ä´æÆ÷£¬Ö÷ÒªÓÃÓÚphy0 standbyÊ±µÄĞ´Èë
 *
 *Arguments:
 *    address,  data,   dmask
@@ -606,19 +606,19 @@ void UsbPhyInit(__u32 usbc_no)
 {
 //	DMSG_INFO("csr1: usbc%d: 0x%x\n", usbc_no, (u32)USBC_Readl(USBC_Phy_GetCsr(usbc_no)));
 
-    /* è°ƒèŠ‚45æ¬§é˜»æŠ— */
+    /* µ÷½Ú45Å·×è¿¹ */
 	if(usbc_no == 0){
 	    USBC_Phy_Write(usbc_no, 0x0c, 0x01, 1);
 	}
 
 //	DMSG_INFO("csr2-0: usbc%d: 0x%x\n", usbc_no, (u32)USBC_Phy_Read(usbc_no, 0x0c, 1));
 
-    /* è°ƒæ•´ USB0 PHY çš„å¹…åº¦å’Œé€Ÿç‡ */
+    /* µ÷Õû USB0 PHY µÄ·ù¶ÈºÍËÙÂÊ */
 	USBC_Phy_Write(usbc_no, 0x20, 0x14, 5);
 
 //	DMSG_INFO("csr2-1: usbc%d: 0x%x\n", usbc_no, (u32)USBC_Phy_Read(usbc_no, 0x20, 5));
 
-    /* è°ƒèŠ‚ disconnect åŸŸå€¼ */
+    /* µ÷½Ú disconnect ÓòÖµ */
 	USBC_Phy_Write(usbc_no, 0x2a, 3, 2);   /*by wangjx*/
 
 //	DMSG_INFO("csr2: usbc%d: 0x%x\n", usbc_no, (u32)USBC_Phy_Read(usbc_no, 0x2a, 2));
@@ -658,3 +658,4 @@ void UsbPhyEndReset(__u32 usbc_no)
 
 	return;
 }
+

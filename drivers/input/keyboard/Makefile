@@ -54,3 +54,4 @@ obj-$(CONFIG_KEYBOARD_XTKBD)		+= xtkbd.o
 obj-$(CONFIG_KEYBOARD_W90P910)		+= w90p910_keypad.o
 obj-$(CONFIG_KEYBOARD_SW_KEYBOARD)	+= sw-keyboard.o
 obj-$(CONFIG_IR_SUN6I)                  += sun6i-ir.o
+

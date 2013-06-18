@@ -171,6 +171,12 @@ AllocMemory (BM_CONTEXT			*pBMContext,
 									   ui32PrivDataLength,
 									   IMG_NULL);	/* We allocate VM space */
 
+			if (!bSuccess)
+			{
+				PVR_DPF((PVR_DBG_ERROR, "AllocMemory: BM_ImportMemory failed"));
+				return IMG_FALSE;
+			}
+
 			if (puiActualSize != ui32ChunkSize * ui32NumPhysChunks)
 			{
 				/*
@@ -203,7 +209,7 @@ AllocMemory (BM_CONTEXT			*pBMContext,
 				BM_FreeMemory(pArena, IMG_NULL, pMapping);
 				return IMG_FALSE;
 			}
-
+		
 			/* uDevVAddrAlignment is currently set to zero so QAC generates warning which we override */
 			/* PRQA S 3356,3358 1 */
 			PVR_ASSERT (uDevVAddrAlignment>1?(pMapping->DevVAddr.uiAddr%uDevVAddrAlignment)==0:1);
@@ -691,7 +697,7 @@ ZeroBuf(BM_BUF *pBuf, BM_MAPPING *pMapping, IMG_SIZE_T ui32Bytes, IMG_UINT32 ui3
 				returned at allocation. Note the double indirection when
 				passing the buffer.
 
-
+	
 	@Input      pBuf - buffer descriptor to free.
 	@Input      ui32Flags - flags
 	@Input      bFromAllocator - Is this being called by the
@@ -764,7 +770,7 @@ FreeBuf (BM_BUF *pBuf, IMG_UINT32 ui32Flags, IMG_BOOL bFromAllocator)
 				{
 					IMG_UINT32 ui32FreeSize = sizeof(IMG_BOOL) * pBuf->pMapping->ui32NumVirtChunks;
 					IMG_PVOID pvFreePtr = pBuf->pMapping->pabMapChunk;
-
+					
 					/* With sparse allocations we don't go through the sub-alloc RA */
 					BM_FreeMemory(pBuf->pMapping->pBMHeap, pBuf->DevVAddr.uiAddr, pBuf->pMapping);
 					OSFreeMem(PVRSRV_OS_PAGEABLE_HEAP,
@@ -1265,7 +1271,7 @@ static IMG_VOID *BM_CreateHeap_AnyVaCb(BM_HEAP *psBMHeap, va_list va)
 
 	@Description	Creates and initialises a BM heap for a given BM context.
 
-	@Return
+	@Return 
 		valid heap handle - success
 		IMG_NULL - failure
 
@@ -1291,7 +1297,7 @@ BM_CreateHeap (IMG_HANDLE hBMContext,
 
 	/*
 	 * Ensure that the heap size is a multiple of the data page size.
-	 */
+	 */ 
 	PVR_ASSERT((psDevMemHeapInfo->ui32HeapSize & (psDevMemHeapInfo->ui32DataPageSize - 1)) == 0);
 	PVR_ASSERT(psDevMemHeapInfo->ui32HeapSize > 0);
 
@@ -1408,7 +1414,7 @@ ErrorExit:
 
 	@Description	Destroys a BM heap
 
-	@Return
+	@Return 
 		valid heap handle - success
 		IMG_NULL - failure
 
@@ -1619,7 +1625,7 @@ BM_Alloc (  IMG_HANDLE			hDevMemHeap,
 	@Input      psDeviceNode
     @Input      psSysPAddr - system address array
     @Input      ui32PageSize - size of address array
-
+    
 	@Return     IMG_BOOL
 
  *****************************************************************************/
@@ -1800,10 +1806,10 @@ BM_Wrap (	IMG_HANDLE hDevMemHeap,
 		}
 		else
 		{
-		  /* Otherwise removed that item from the hash table
+		  /* Otherwise removed that item from the hash table 
 			 (a workaround for buffer device class) */
 			HASH_Remove(psBMContext->pBufferHash, (IMG_UINTPTR_T)sHashAddress.uiAddr);
-		}
+		}	
 	}
 
 	/*
@@ -2277,7 +2283,7 @@ DevMemoryFree (BM_MAPPING *pMapping)
 		{
 			ui32PSize = (IMG_UINT32)pMapping->uSize;
 		}
-
+	
 		PDUMPFREEPAGES(pMapping->pBMHeap,
 	                    pMapping->DevVAddr,
 	                    ui32PSize,
@@ -2774,7 +2780,7 @@ BM_ImportMemory (IMG_VOID *pH,
 		   it as shareable, as we use the actual hOSMemHandle
 		   and only divert to our wrapper layer based on Attribs */
 		pMapping->eCpuMemoryOrigin = hm_env;
-		bBadBackingStoreType = IMG_FALSE;
+        	bBadBackingStoreType = IMG_FALSE;
         }
 
         if ((ui32Attribs & PVRSRV_BACKINGSTORE_LOCALMEM_CONTIG) != 0)
@@ -2850,13 +2856,13 @@ BM_ImportMemory (IMG_VOID *pH,
 			ui32Attribs &= ~PVRSRV_HAP_CACHETYPE_MASK;
 			ui32Attribs |= (pMapping->ui32Flags & PVRSRV_HAP_CACHETYPE_MASK);
 		}
-
+		
 		if (pMapping->ui32Flags & PVRSRV_MEM_ALLOCATENONCACHEDMEM)
 		{
 			ui32Attribs &= ~PVRSRV_MEM_ALLOCATENONCACHEDMEM;
 			ui32Attribs |= (pMapping->ui32Flags & PVRSRV_MEM_ALLOCATENONCACHEDMEM);
-		}
-
+		}		
+		
 		/* allocate pages from the OS RAM */
 		if (OSAllocPages(ui32Attribs,
 						 uPSize,
@@ -2954,7 +2960,7 @@ BM_ImportMemory (IMG_VOID *pH,
 					pMapping->uSize));
 			goto fail_dev_mem_alloc;
 		}
-
+	
 		/* uDevVAddrAlignment is currently set to zero so QAC generates warning which we override */
 		/* PRQA S 3356,3358 1 */
 		PVR_ASSERT (uDevVAddrAlignment>1?(pMapping->DevVAddr.uiAddr%uDevVAddrAlignment)==0:1);
@@ -3320,7 +3326,7 @@ IMG_BOOL BM_MapPageAtOffset(IMG_HANDLE hBMHandle, IMG_UINT32 ui32Offset)
  @Input     hBMHandle - Handle to BM mapping
 
  @Input     ui32VirtOffset - Virtual offset into allocation
-
+ 
  @Output    pui32PhysOffset - Physical offset
 
  @Return	IMG_TRUE if the virtual offset is physically backed

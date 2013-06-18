@@ -60,8 +60,8 @@ typedef void (pvr_show_proc_seq_t)(struct seq_file *,void*);
 typedef void (pvr_startstop_proc_seq_t)(struct seq_file *, IMG_BOOL start);
 
 typedef struct _PVR_PROC_SEQ_HANDLERS_ {
-	pvr_next_proc_seq_t *next;
-	pvr_show_proc_seq_t *show;
+	pvr_next_proc_seq_t *next;	
+	pvr_show_proc_seq_t *show;	
 	pvr_off2element_proc_seq_t *off2element;
 	pvr_startstop_proc_seq_t *startstop;
 	IMG_VOID *data;
@@ -92,18 +92,18 @@ IMG_VOID RemovePerProcessProcEntry(const IMG_CHAR * name);
 IMG_VOID RemoveProcEntries(IMG_VOID);
 
 struct proc_dir_entry* CreateProcReadEntrySeq (
-								const IMG_CHAR* name,
+								const IMG_CHAR* name, 
 								IMG_VOID* data,
-								pvr_next_proc_seq_t next_handler,
+								pvr_next_proc_seq_t next_handler, 
 								pvr_show_proc_seq_t show_handler,
 								pvr_off2element_proc_seq_t off2element_handler,
 								pvr_startstop_proc_seq_t startstop_handler
 							   );
 
 struct proc_dir_entry* CreateProcEntrySeq (
-								const IMG_CHAR* name,
+								const IMG_CHAR* name, 
 								IMG_VOID* data,
-								pvr_next_proc_seq_t next_handler,
+								pvr_next_proc_seq_t next_handler, 
 								pvr_show_proc_seq_t show_handler,
 								pvr_off2element_proc_seq_t off2element_handler,
 								pvr_startstop_proc_seq_t startstop_handler,
@@ -111,9 +111,9 @@ struct proc_dir_entry* CreateProcEntrySeq (
 							   );
 
 struct proc_dir_entry* CreatePerProcessProcEntrySeq (
-								const IMG_CHAR* name,
+								const IMG_CHAR* name, 
 								IMG_VOID* data,
-								pvr_next_proc_seq_t next_handler,
+								pvr_next_proc_seq_t next_handler, 
 								pvr_show_proc_seq_t show_handler,
 								pvr_off2element_proc_seq_t off2element_handler,
 								pvr_startstop_proc_seq_t startstop_handler,

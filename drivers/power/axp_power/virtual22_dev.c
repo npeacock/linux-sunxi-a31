@@ -17,19 +17,19 @@ static struct platform_device virt[]={
 			.dev		= {
 				.platform_data = "axp22_rtc",
 			}
-	},{
+ 	},{
 			.name = "reg-22-cs-aldo1",
 			.id = -1,
 			.dev		= {
 				.platform_data = "axp22_aldo1",
 			}
-	},{
+ 	},{
 			.name = "reg-22-cs-aldo2",
 			.id = -1,
 			.dev		= {
 				.platform_data = "axp22_aldo2",
 			}
-	},{
+ 	},{
 			.name = "reg-22-cs-aldo3",
 			.id = -1,
 			.dev		= {
@@ -41,13 +41,13 @@ static struct platform_device virt[]={
 			.dev		= {
 				.platform_data = "axp22_dldo1",
 			}
-	},{
+ 	},{
 			.name = "reg-22-cs-dldo2",
 			.id = -1,
 			.dev		= {
 				.platform_data = "axp22_dldo2",
 			}
-	},{
+ 	},{
 			.name = "reg-22-cs-dldo3",
 			.id = -1,
 			.dev		= {
@@ -101,7 +101,7 @@ static struct platform_device virt[]={
 			.dev		= {
 				.platform_data = "axp22_dcdc4",
 			}
-	},{
+ 	},{
 			.name = "reg-22-cs-dcdc5",
 			.id = -1,
 			.dev		= {
@@ -113,7 +113,7 @@ static struct platform_device virt[]={
 			.dev		= {
 				.platform_data = "axp22_ldoio0",
 			}
-	},{
+ 	},{
 			.name = "reg-22-cs-gpio1ldo",
 			.id = -1,
 			.dev		= {
@@ -128,8 +128,8 @@ static struct platform_device virt[]={
 {
 	int j,ret;
 	for (j = 0; j < ARRAY_SIZE(virt); j++){
-		ret =  platform_device_register(&virt[j]);
-		if (ret)
+ 		ret =  platform_device_register(&virt[j]);
+  		if (ret)
 				goto creat_devices_failed;
 	}
 	return ret;

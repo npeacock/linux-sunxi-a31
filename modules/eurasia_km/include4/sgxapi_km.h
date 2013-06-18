@@ -95,7 +95,7 @@ extern "C" {
  * their ISP controll stream to.
  */
 #if (defined(SUPPORT_PERCONTEXT_PB) || defined(SUPPORT_HYBRID_PB))
-#define SGX_3DPARAMETERS_HEAP_ID			SGX_PERCONTEXT_3DPARAMETERS_HEAP_ID
+#define SGX_3DPARAMETERS_HEAP_ID			SGX_PERCONTEXT_3DPARAMETERS_HEAP_ID	
 #else
 #define SGX_3DPARAMETERS_HEAP_ID			SGX_SHARED_3DPARAMETERS_HEAP_ID
 #endif
@@ -203,7 +203,7 @@ extern "C" {
 
 /*!
  *****************************************************************************
- * One entry in the HWPerf Circular Buffer.
+ * One entry in the HWPerf Circular Buffer. 
  *****************************************************************************/
 typedef struct _PVRSRV_SGX_HWPERF_CB_ENTRY_
 {
@@ -214,7 +214,7 @@ typedef struct _PVRSRV_SGX_HWPERF_CB_ENTRY_
 	IMG_UINT32	ui32Ordinal;
 	IMG_UINT32	ui32Info;
 	IMG_UINT32	ui32Clocksx16;
-	/* NOTE: There should always be at least as many 3D cores as TA cores. */
+	/* NOTE: There should always be at least as many 3D cores as TA cores. */	
 	IMG_UINT32	ui32Counters[SGX_FEATURE_MP_CORE_COUNT_3D][PVRSRV_SGX_HWPERF_NUM_COUNTERS];
 	IMG_UINT32	ui32MiscCounters[SGX_FEATURE_MP_CORE_COUNT_3D][PVRSRV_SGX_HWPERF_NUM_MISC_COUNTERS];
 } PVRSRV_SGX_HWPERF_CB_ENTRY;
@@ -354,7 +354,7 @@ typedef struct _PVRSRV_SGX_MISCINFO_SET_HWPERF_STATUS
 {
 	/* See PVRSRV_SGX_HWPERF_STATUS_* */
 	IMG_UINT32	ui32NewHWPerfStatus;
-
+	
 	#if defined(SGX_FEATURE_EXTENDED_PERF_COUNTERS)
 	/* Specifies the HW's active group selectors */
 	IMG_UINT32	aui32PerfGroup[PVRSRV_SGX_HWPERF_NUM_COUNTERS];
@@ -467,7 +467,7 @@ typedef struct _SGX_KICKTA_DUMP_BUFFER_
 #if defined(SUPPORT_SGX_NEW_STATUS_VALS)
 	IMG_HANDLE			hCtrlKernelMemInfo;					/*< MemInfo handle for the control structure of the
 																circular buffer */
-	IMG_DEV_VIRTADDR	sCtrlDevVAddr;						/*< Device virtual address of the memory in the
+	IMG_DEV_VIRTADDR	sCtrlDevVAddr;						/*< Device virtual address of the memory in the 
 																control structure to be checked */
 #endif
 	IMG_PCHAR			pszName;							/*< Name of buffer */

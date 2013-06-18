@@ -668,3 +668,4 @@ static void  __exit alarm_exit(void)
 late_initcall(alarm_late_init);
 module_init(alarm_driver_init);
 module_exit(alarm_exit);
+

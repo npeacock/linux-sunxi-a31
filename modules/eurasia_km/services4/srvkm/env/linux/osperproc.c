@@ -90,7 +90,7 @@ PVRSRV_ERROR OSPerProcessPrivateDataInit(IMG_HANDLE *phOsPrivateData)
 						  1 << ION_HEAP_TYPE_SYSTEM_CONTIG |
 						  1 << ION_HEAP_TYPE_SYSTEM,
 						  psEnvPerProc->azIonClientName);
-
+ 
 	if (IS_ERR_OR_NULL(psEnvPerProc->psIONClient))
 	{
 		PVR_DPF((PVR_DBG_ERROR, "OSPerProcessPrivateDataInit: Couldn't create "

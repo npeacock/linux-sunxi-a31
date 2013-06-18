@@ -18,14 +18,14 @@
 
 #undef PCM_DBG
 #if (0)
-    #define PCM_DBG(format,args...)  printk("[SWITCH] "format,##args)
+    #define PCM_DBG(format,args...)  printk("[SWITCH] "format,##args)    
 #else
-    #define PCM_DBG(...)
+    #define PCM_DBG(...)    
 #endif
 
 struct sun6i_dma_params {
-	char *name;
-	dma_addr_t dma_addr;
+	char *name;		
+	dma_addr_t dma_addr;	
 };
 
 #endif

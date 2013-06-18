@@ -514,7 +514,7 @@ static int gator_events_scorpion_create_files(struct super_block *sb, struct den
 			return -1;
 		}
 		gatorfs_create_ulong(sb, dir, "enabled", &pmnc_enabled[i]);
-		gatorfs_create_ro_ulong(sb, dir, "key", &pmnc_key[i]);
+		gatorfs_create_ro_ulong(sb, dir, "key", &pmnc_key[i]);		
 		if (i > 0) {
 			gatorfs_create_ulong(sb, dir, "event", &pmnc_event[i]);
 		}

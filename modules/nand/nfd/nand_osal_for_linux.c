@@ -32,8 +32,8 @@
 #include <linux/clk.h>
 #include <linux/mutex.h>
 #include <mach/clock.h>
-#include <mach/platform.h>
-#include <mach/hardware.h>
+#include <mach/platform.h> 
+#include <mach/hardware.h> 
 #include <mach/sys_config.h>
 #include <linux/dma-mapping.h>
 #include <mach/dma.h>
@@ -122,30 +122,30 @@ int NAND_ClkRequest(__u32 nand_index)
 	if(nand_index == 0) {
 		nand0_clk = clk_get(NULL, "mod_nand0");
 		ahb_nand0 = clk_get(NULL, "ahb_nand0");
-
-		/* Ê£ÄÊü•clockÂè•ÊüÑÊúâÊïàÊÄß */
+	
+		/* ºÏ≤Èclockæ‰±˙”––ß–‘ */
 		if(NULL == nand0_clk || IS_ERR(nand0_clk)
 			|| NULL == ahb_nand0 || IS_ERR(ahb_nand0)){
 			printk("%s: clock handle invalid!\n", __func__);
 			return -1;
 		}
 
-		/* ËÆæÁΩÆ NAND0 ÊéßÂà∂Âô®ÁöÑÁà∂Êó∂Èíü‰∏∫PLL6 */
+		/* …Ë÷√ NAND0 øÿ÷∆∆˜µƒ∏∏ ±÷”Œ™PLL6 */
 		if(clk_set_parent(nand0_clk, pll6))
 			printk("%s: set nand0_clk parent to pll6 failed!\n", __func__);
 
-		/* ËÆæÁΩÆNAND0 ÊéßÂà∂Âô®ÁöÑÈ¢ëÁéá‰∏∫50Mhz */
+		/* …Ë÷√NAND0 øÿ÷∆∆˜µƒ∆µ¬ Œ™50Mhz */
 		rate = clk_round_rate(nand0_clk, 20000000);
 		if(clk_set_rate(nand0_clk, rate))
 			printk("%s: set nand0_clk rate to %dHZ failed!\n", __func__, (__u32)rate);
 
-		/* ÊâìÂºÄNAND0 ÁöÑAHB GATING */
+		/* ¥Úø™NAND0 µƒAHB GATING */
 		if(clk_enable(ahb_nand0))
 			printk("%s: enable ahb_nand0 failed!\n", __func__);
-		/* ÊâìÂºÄNAND0 ÁöÑÊ®°Âùó GATING */
+		/* ¥Úø™NAND0 µƒƒ£øÈ GATING */
 		if(clk_enable(nand0_clk))
 			printk("%s: enable nand0_clk failed!\n", __func__);
-		/* ÊîæÂºÄNAND0 ÁöÑÂ§ç‰Ωç */
+		/* ∑≈ø™NAND0 µƒ∏¥Œª */
 		if(clk_reset(nand0_clk, AW_CCU_CLK_RESET))
 			printk("%s: RESET nand0_clk failed!\n", __func__);
 		if(clk_reset(nand0_clk, AW_CCU_CLK_NRESET))
@@ -153,30 +153,30 @@ int NAND_ClkRequest(__u32 nand_index)
 	} else if(nand_index == 1) {
 		nand1_clk = clk_get(NULL, "mod_nand1");
 		ahb_nand1 = clk_get(NULL, "ahb_nand1");
-
-		/* Ê£ÄÊü•clockÂè•ÊüÑÊúâÊïàÊÄß */
+	
+		/* ºÏ≤Èclockæ‰±˙”––ß–‘ */
 		if(NULL == nand1_clk || IS_ERR(nand1_clk)
 		|| NULL == ahb_nand1 || IS_ERR(ahb_nand1)){
 			printk("%s: clock handle invalid!\n", __func__);
 			return -1;
-		}
+		}	
 
-		/* ËÆæÁΩÆ NAND1 ÊéßÂà∂Âô®ÁöÑÁà∂Êó∂Èíü‰∏∫PLL6 */
+		/* …Ë÷√ NAND1 øÿ÷∆∆˜µƒ∏∏ ±÷”Œ™PLL6 */
 		if(clk_set_parent(nand1_clk, pll6))
 			printk("%s: set nand1_clk parent to pll6 failed!\n", __func__);
 
-		/* ËÆæÁΩÆNAND1 ÊéßÂà∂Âô®ÁöÑÈ¢ëÁéá‰∏∫50Mhz */
+		/* …Ë÷√NAND1 øÿ÷∆∆˜µƒ∆µ¬ Œ™50Mhz */
 		rate = clk_round_rate(nand1_clk, 20000000);
 		if(clk_set_rate(nand1_clk, rate))
 			printk("%s: set nand1_clk rate to %dHZ failed!\n", __func__, (__u32)rate);
 
-		/* ÊâìÂºÄNAND1 ÁöÑAHB GATING */
+		/* ¥Úø™NAND1 µƒAHB GATING */
 		if(clk_enable(ahb_nand1))
 			printk("%s: enable ahb_nand1 failed!\n", __func__);
-		/* ÊâìÂºÄNAND1 ÁöÑÊ®°Âùó GATING */
+		/* ¥Úø™NAND1 µƒƒ£øÈ GATING */
 		if(clk_enable(nand1_clk))
 			printk("%s: enable nand1_clk failed!\n", __func__);
-		/* ÊîæÂºÄNAND1 ÁöÑÂ§ç‰Ωç */
+		/* ∑≈ø™NAND1 µƒ∏¥Œª */
 		if(clk_reset(nand1_clk, AW_CCU_CLK_RESET))
 			printk("%s: RESET nand1_clk failed!\n", __func__);
 		if(clk_reset(nand1_clk, AW_CCU_CLK_NRESET))
@@ -187,7 +187,7 @@ int NAND_ClkRequest(__u32 nand_index)
 	}
 
 	return 0;
-
+	
 }
 
 void NAND_ClkRelease(__u32 nand_index)
@@ -197,19 +197,19 @@ void NAND_ClkRelease(__u32 nand_index)
 	if(nand_index == 0)
 	{
 		if(NULL != nand0_clk && !IS_ERR(nand0_clk)) {
-			/* ‰ΩøNAND0ÊéßÂà∂Âô®ËøõÂÖ•Â§ç‰ΩçÁä∂ÊÄÅ */
+			/*  πNAND0øÿ÷∆∆˜Ω¯»Î∏¥Œª◊¥Ã¨ */
 			if(clk_reset( nand0_clk, AW_CCU_CLK_RESET))
 				printk("%s: RESET nand0_clk failed!\n", __func__);
-			/* ÂÖ≥Èó≠NAND0ÁöÑÊ®°ÂùóÊó∂Èíü */
+			/* πÿ±’NAND0µƒƒ£øÈ ±÷” */
 			clk_disable(nand0_clk);
-			/* ÈáäÊîænand0_clkÂè•ÊüÑ */
+			/*  Õ∑≈nand0_clkæ‰±˙ */
 			clk_put(nand0_clk);
 			nand0_clk = NULL;
 		}
 		if(NULL != ahb_nand0 && !IS_ERR(ahb_nand0)) {
-			/* ÂÖ≥Èó≠NAND00ÁöÑAHB GATING */
+			/* πÿ±’NAND00µƒAHB GATING */
 			clk_disable(ahb_nand0);
-			/* ÈáäÊîæahb_sdc0Âè•ÊüÑ */
+			/*  Õ∑≈ahb_sdc0æ‰±˙ */
 			clk_put(ahb_nand0);
 			ahb_nand0 = NULL;
 		}
@@ -217,19 +217,19 @@ void NAND_ClkRelease(__u32 nand_index)
 	else if(nand_index == 1)
 	{
 		if(NULL != nand1_clk && !IS_ERR(nand0_clk)) {
-			/* ‰ΩøNAND0ÊéßÂà∂Âô®ËøõÂÖ•Â§ç‰ΩçÁä∂ÊÄÅ */
+			/*  πNAND0øÿ÷∆∆˜Ω¯»Î∏¥Œª◊¥Ã¨ */
 			if(clk_reset( nand1_clk, AW_CCU_CLK_RESET))
 				printk("%s: RESET nand0_clk failed!\n", __func__);
-			/* ÂÖ≥Èó≠NAND0ÁöÑÊ®°ÂùóÊó∂Èíü */
+			/* πÿ±’NAND0µƒƒ£øÈ ±÷” */
 			clk_disable(nand1_clk);
-			/* ÈáäÊîænand0_clkÂè•ÊüÑ */
+			/*  Õ∑≈nand0_clkæ‰±˙ */
 			clk_put(nand1_clk);
 			nand0_clk = NULL;
 		}
 		if(NULL != ahb_nand1 && !IS_ERR(ahb_nand1)) {
-			/* ÂÖ≥Èó≠NAND00ÁöÑAHB GATING */
+			/* πÿ±’NAND00µƒAHB GATING */
 			clk_disable(ahb_nand1);
-			/* ÈáäÊîæahb_sdc0Âè•ÊüÑ */
+			/*  Õ∑≈ahb_sdc0æ‰±˙ */
 			clk_put(ahb_nand1);
 			ahb_nand1 = NULL;
 		}
@@ -240,7 +240,7 @@ void NAND_ClkRelease(__u32 nand_index)
 	}
 
 	if(NULL != pll6 && !IS_ERR(pll6)) {
-		/* ÈáäÊîæpll6Âè•ÊüÑ */
+		/*  Õ∑≈pll6æ‰±˙ */
 		clk_put(pll6);
 		pll6 = NULL;
 	}
@@ -251,25 +251,25 @@ int NAND_SetClk(__u32 nand_index, __u32 nand_clk)
 	long    rate;
 
 	if(nand_index == 0) {
-		/* Ê£ÄÊü•clockÂè•ÊüÑÊúâÊïàÊÄß */
+		/* ºÏ≤Èclockæ‰±˙”––ß–‘ */
 		if(NULL == nand0_clk || IS_ERR(nand0_clk)){
 			printk("%s: clock handle invalid!\n", __func__);
 			return -1;
 		}
 
-		/* ËÆæÁΩÆNAND0 ÊéßÂà∂Âô®ÁöÑÈ¢ëÁéá‰∏∫50Mhz */
+		/* …Ë÷√NAND0 øÿ÷∆∆˜µƒ∆µ¬ Œ™50Mhz */
 		rate = clk_round_rate(nand0_clk, nand_clk*2000000);
 		if(clk_set_rate(nand0_clk, rate))
 			printk("%s: set nand0_clk rate to %dHZ failed! nand_clk: 0x%x\n", __func__, (__u32)rate, nand_clk);
 
 	} else if(nand_index == 1) {
-		/* Ê£ÄÊü•clockÂè•ÊüÑÊúâÊïàÊÄß */
+		/* ºÏ≤Èclockæ‰±˙”––ß–‘ */
 		if(NULL == nand1_clk || IS_ERR(nand1_clk)) {
 			printk("%s: clock handle invalid!\n", __func__);
 			return -1;
-		}
+		}	
 
-		/* ËÆæÁΩÆNAND1 ÊéßÂà∂Âô®ÁöÑÈ¢ëÁéá‰∏∫50Mhz */
+		/* …Ë÷√NAND1 øÿ÷∆∆˜µƒ∆µ¬ Œ™50Mhz */
 		rate = clk_round_rate(nand1_clk, nand_clk*2000000);
 		if(clk_set_rate(nand1_clk, rate))
 			printk("%s: set nand1_clk rate to %dHZ failed! nand_clk: 0x%x\n", __func__, (__u32)rate, nand_clk);
@@ -286,22 +286,22 @@ int NAND_GetClk(__u32 nand_index)
 	long    rate;
 
 	if(nand_index == 0) {
-		/* Ê£ÄÊü•clockÂè•ÊüÑÊúâÊïàÊÄß */
+		/* ºÏ≤Èclockæ‰±˙”––ß–‘ */
 		if(NULL == nand0_clk || IS_ERR(nand0_clk)){
 			printk("%s: clock handle invalid!\n", __func__);
 			return -1;
 		}
 
-		/* ËÆæÁΩÆNAND0 ÊéßÂà∂Âô®ÁöÑÈ¢ëÁéá‰∏∫50Mhz */
+		/* …Ë÷√NAND0 øÿ÷∆∆˜µƒ∆µ¬ Œ™50Mhz */
 		rate = clk_get_rate(nand0_clk);
 	} else if(nand_index == 1) {
-		/* Ê£ÄÊü•clockÂè•ÊüÑÊúâÊïàÊÄß */
+		/* ºÏ≤Èclockæ‰±˙”––ß–‘ */
 		if(NULL == nand1_clk || IS_ERR(nand1_clk)){
 			printk("%s: clock handle invalid!\n", __func__);
 			return -1;
-		}
+		}	
 
-		/* ËÆæÁΩÆNAND1 ÊéßÂà∂Âô®ÁöÑÈ¢ëÁéá‰∏∫50Mhz */
+		/* …Ë÷√NAND1 øÿ÷∆∆˜µƒ∆µ¬ Œ™50Mhz */
 		rate = clk_get_rate(nand1_clk);
 	} else {
 		printk("NAND_GetClk, nand_index error: 0x%x\n", nand_index);
@@ -331,30 +331,30 @@ __u32 NAND_DMASingleMap(__u32 rw, __u32 buff_addr, __u32 len)
 {
     __u32 mem_addr;
     __u32 nand_index = NAND_GetCurrentCH();
-
-    if (rw == 1)
+    
+    if (rw == 1) 
     {
 	    mem_addr = (__u32)dma_map_single(NULL, (void *)buff_addr, len, DMA_TO_DEVICE);
-	}
-	else
+	} 
+	else 
     {
 	    mem_addr = (__u32)dma_map_single(NULL, (void *)buff_addr, len, DMA_FROM_DEVICE);
 	}
 
 	tmp_dma_phy_addr[nand_index] = mem_addr;
 	tmp_dma_len[nand_index] = len;
-
+	
 	return mem_addr;
 }
 
 __u32 NAND_DMASingleUnmap(__u32 rw, __u32 buff_addr, __u32 len)
 {
 	__u32 mem_addr = buff_addr;
-	__u32 nand_index = NAND_GetCurrentCH();
+	__u32 nand_index = NAND_GetCurrentCH();	
 
     if(tmp_dma_phy_addr[nand_index]!=mem_addr)
     {
-	printk("NAND_DMASingleUnmap, dma addr not match! nand_index: 0x%x, tmp_dma_phy_addr:0x%x, mem_addr: 0x%x\n", nand_index,tmp_dma_phy_addr[nand_index], mem_addr);
+    	printk("NAND_DMASingleUnmap, dma addr not match! nand_index: 0x%x, tmp_dma_phy_addr:0x%x, mem_addr: 0x%x\n", nand_index,tmp_dma_phy_addr[nand_index], mem_addr);
 	mem_addr = tmp_dma_phy_addr[nand_index];
     }
 
@@ -363,17 +363,17 @@ __u32 NAND_DMASingleUnmap(__u32 rw, __u32 buff_addr, __u32 len)
 	    printk("NAND_DMASingleUnmap, dma len not match! nand_index: 0x%x, tmp_dma_len:0x%x, len: 0x%x\n", nand_index,tmp_dma_len[nand_index], len);
 	    len = tmp_dma_len[nand_index];
 	}
+    	
 
-
-	if (rw == 1)
+	if (rw == 1) 
 	{
 	    dma_unmap_single(NULL, (dma_addr_t)mem_addr, len, DMA_TO_DEVICE);
-	}
-	else
+	} 
+	else 
 	{
 	    dma_unmap_single(NULL, (dma_addr_t)mem_addr, len, DMA_FROM_DEVICE);
 	}
-
+	
 	return mem_addr;
 }
 
@@ -387,7 +387,7 @@ void NAND_EnDMAInt(void)
 	nand_index = NAND_GetCurrentCH();
 	if(nand_index >1)
 		printk("NAND_ClearDMAInt, nand_index error: 0x%x\n", nand_index);
-
+	
 	//clear interrupt
 	#if 0
 	NFC_DmaIntClearStatus();
@@ -412,7 +412,7 @@ void NAND_ClearDMAInt(void)
 	nand_index = NAND_GetCurrentCH();
 	if(nand_index >1)
 		printk("NAND_ClearDMAInt, nand_index error: 0x%x\n", nand_index);
-
+    
 	//disable interrupt
 	NFC_DmaIntDisable();
 	dbg_dmaint("ch %d dma int clear\n", nand_index);
@@ -424,7 +424,7 @@ void NAND_ClearDMAInt(void)
 	//	dbg_dmaint_wrn("nand clear dma int status error in int clear \n");
 	//	dbg_dmaint_wrn("dma status: 0x%x\n", NFC_DmaIntGetStatus());
 	//}
-
+	
 	nanddma_ready_flag[nand_index] = 0;
 }
 
@@ -435,22 +435,22 @@ void NAND_DMAInterrupt(void)
 	nand_index = NAND_GetCurrentCH();
 	if(nand_index >1)
 		printk("NAND_ClearDMAInt, nand_index error: 0x%x\n", nand_index);
-
+	
 	dbg_dmaint("ch %d dma int occor! \n", nand_index);
 	if(!NFC_DmaIntGetStatus())
 	{
 		dbg_dmaint_wrn("nand dma int late \n");
 	}
-
+    
     NAND_ClearDMAInt();
-
+    
     nanddma_ready_flag[nand_index] = 1;
     if(nand_index == 0)
 	wake_up( &NAND_DMA_WAIT_CH0 );
     else if(nand_index == 1)
 	wake_up( &NAND_DMA_WAIT_CH1 );
 
-
+    
 }
 
 __s32 NAND_WaitDmaFinish(void)
@@ -462,7 +462,7 @@ __s32 NAND_WaitDmaFinish(void)
 		printk("NAND_ClearDMAInt, nand_index error: 0x%x\n", nand_index);
 
 	NAND_EnDMAInt();
-
+	
 	//wait_event(NAND_RB_WAIT, nandrb_ready_flag);
 	dbg_dmaint("ch %d dma wait\n", nand_index);
 
@@ -480,9 +480,9 @@ __s32 NAND_WaitDmaFinish(void)
 		return 0;
 	}
 
-	if(nand_index == 0)
-	{
-		if(wait_event_timeout(NAND_DMA_WAIT_CH0, nanddma_ready_flag[nand_index], 1*HZ)==0)
+    	if(nand_index == 0)
+    	{
+    		if(wait_event_timeout(NAND_DMA_WAIT_CH0, nanddma_ready_flag[nand_index], 1*HZ)==0)
 		{
 			dbg_dmaint_wrn("nand wait dma int time out, ch: 0x%d, dma_status: %x, dma_ready_flag: 0x%x\n", nand_index, NFC_DmaIntGetStatus(),nanddma_ready_flag[nand_index]);
 			while(!NFC_DmaIntGetStatus());
@@ -493,13 +493,13 @@ __s32 NAND_WaitDmaFinish(void)
 			dbg_dmaint("nand wait dma ready ok\n");
 			NAND_ClearDMAInt();
 		}
-	}
+    	}
 	else if(nand_index ==1)
 	{
 		if(wait_event_timeout(NAND_DMA_WAIT_CH1, nanddma_ready_flag[nand_index], 1*HZ)==0)
 		{
 			dbg_dmaint_wrn("nand wait dma int time out, ch: 0x%d, dma_status: %x, dma_ready_flag: 0x%x\n", nand_index, NFC_DmaIntGetStatus(),nanddma_ready_flag[nand_index]);
-			while(!NFC_DmaIntGetStatus());
+			while(!NFC_DmaIntGetStatus());	
 			NAND_ClearDMAInt();
 		}
 		else
@@ -513,7 +513,7 @@ __s32 NAND_WaitDmaFinish(void)
 		NAND_ClearDMAInt();
 		printk("NAND_WaitDmaFinish, error nand_index: 0x%x\n", nand_index);
 	}
-
+    	
     return 0;
 }
 
@@ -534,10 +534,10 @@ void NAND_EnRbInt(void)
 	nand_index = NAND_GetCurrentCH();
 	if(nand_index >1)
 		printk("NAND_ClearDMAInt, nand_index error: 0x%x\n", nand_index);
-
+	
 	//clear interrupt
 	NFC_RbIntClearStatus();
-
+	
 	nandrb_ready_flag[nand_index] = 0;
 
 	//enable interrupt
@@ -549,12 +549,12 @@ void NAND_EnRbInt(void)
 
 void NAND_ClearRbInt(void)
 {
-	__u32 nand_index;
+    	__u32 nand_index;
 
 	nand_index = NAND_GetCurrentCH();
 	if(nand_index >1)
 		printk("NAND_ClearDMAInt, nand_index error: 0x%x\n", nand_index);
-
+	
 	//disable interrupt
 	NFC_RbIntDisable();;
 
@@ -562,13 +562,13 @@ void NAND_ClearRbInt(void)
 
 	//clear interrupt
 	NFC_RbIntClearStatus();
-
+	
 	//check rb int status
 	if(NFC_RbIntGetStatus())
 	{
 		dbg_rbint_wrn("nand %d clear rb int status error in int clear \n", nand_index);
 	}
-
+	
 	nandrb_ready_flag[nand_index] = 0;
 }
 
@@ -586,14 +586,14 @@ void NAND_RbInterrupt(void)
 	{
 		dbg_rbint_wrn("nand rb int late \n");
 	}
-
+    
     NAND_ClearRbInt();
-
+    
     nandrb_ready_flag[nand_index] = 1;
     if(nand_index == 0)
 	wake_up( &NAND_RB_WAIT_CH0 );
     else if(nand_index ==1)
-	wake_up( &NAND_RB_WAIT_CH1 );
+    	wake_up( &NAND_RB_WAIT_CH1 );
 
 }
 
@@ -601,14 +601,14 @@ __s32 NAND_WaitRbReady(void)
 {
 	__u32 rb;
 	__u32 nand_index;
-
+	
 	nand_index = NAND_GetCurrentCH();
 	if(nand_index >1)
 		printk("NAND_ClearDMAInt, nand_index error: 0x%x\n", nand_index);
 
-
+	
 	NAND_EnRbInt();
-
+	
 	//wait_event(NAND_RB_WAIT, nandrb_ready_flag);
 	dbg_rbint("rb wait \n");
 
@@ -657,7 +657,7 @@ __s32 NAND_WaitRbReady(void)
 	{
 		NAND_ClearRbInt();
 	}
-
+		
     return 0;
 }
 #else
@@ -680,10 +680,10 @@ void NAND_Interrupt(__u32 nand_index)
 {
 	if(nand_index >1)
 		printk("NAND_Interrupt, nand_index error: 0x%x\n", nand_index);
-#ifdef __LINUX_NAND_SUPPORT_INT__
+#ifdef __LINUX_NAND_SUPPORT_INT__   
 
     //printk("nand interrupt!\n");
-#ifdef __LINUX_SUPPORT_RB_INT__
+#ifdef __LINUX_SUPPORT_RB_INT__    
 #if 0
 
     if(NFC_RbIntOccur())
@@ -694,36 +694,36 @@ void NAND_Interrupt(__u32 nand_index)
 #else
     if(nand_index == 0)
     {
-	if((__NAND_REG(NAND_CH0_INT_EN_REG)&NAND_RB_INT_BITMAP)&&(__NAND_REG(NAND_CH0_INT_ST_REG)&NAND_RB_INT_BITMAP))
-		NAND_RbInterrupt();
+    	if((__NAND_REG(NAND_CH0_INT_EN_REG)&NAND_RB_INT_BITMAP)&&(__NAND_REG(NAND_CH0_INT_ST_REG)&NAND_RB_INT_BITMAP))
+		NAND_RbInterrupt();	
     }
     else if(nand_index == 1)
     {
-	if((__NAND_REG(NAND_CH1_INT_EN_REG)&NAND_RB_INT_BITMAP)&&(__NAND_REG(NAND_CH1_INT_ST_REG)&NAND_RB_INT_BITMAP))
-		NAND_RbInterrupt();
-    }
+    	if((__NAND_REG(NAND_CH1_INT_EN_REG)&NAND_RB_INT_BITMAP)&&(__NAND_REG(NAND_CH1_INT_ST_REG)&NAND_RB_INT_BITMAP))
+		NAND_RbInterrupt();	
+    }	
 #endif
-#endif
+#endif    
 
-#ifdef __LINUX_SUPPORT_DMA_INT__
+#ifdef __LINUX_SUPPORT_DMA_INT__  
 #if 0
     if(NFC_DmaIntOccur())
     {
         dbg_dmaint("nand dma int\n");
-        NAND_DMAInterrupt();
+        NAND_DMAInterrupt();    
     }
 #else
     if(nand_index == 0)
     {
-	if((__NAND_REG(NAND_CH0_INT_EN_REG)&NAND_DMA_INT_BITMAP)&&(__NAND_REG(NAND_CH0_INT_ST_REG)&NAND_DMA_INT_BITMAP))
-		NAND_DMAInterrupt();
+    	if((__NAND_REG(NAND_CH0_INT_EN_REG)&NAND_DMA_INT_BITMAP)&&(__NAND_REG(NAND_CH0_INT_ST_REG)&NAND_DMA_INT_BITMAP))
+		NAND_DMAInterrupt();	
     }
     else if(nand_index == 1)
     {
-	if((__NAND_REG(NAND_CH1_INT_EN_REG)&NAND_DMA_INT_BITMAP)&&(__NAND_REG(NAND_CH1_INT_ST_REG)&NAND_DMA_INT_BITMAP))
-		NAND_DMAInterrupt();
+    	if((__NAND_REG(NAND_CH1_INT_EN_REG)&NAND_DMA_INT_BITMAP)&&(__NAND_REG(NAND_CH1_INT_ST_REG)&NAND_DMA_INT_BITMAP))
+		NAND_DMAInterrupt();	
     }
-
+	
 #endif
 
 #endif
@@ -745,35 +745,35 @@ void NAND_PIORequest(__u32 nand_index)
 	if(nand_index == 0)
 	{
 		//printk("[NAND] nand0 gpio_request\n");
-
-		/* Ëé∑Âèñgpio list */
+	
+		/* ªÒ»°gpio list */
 		cnt = script_get_pio_list("nand0_para", &list);
 		if(0 == cnt) {
 			printk("get nand0_para gpio list failed\n");
 			return;
 		}
-		/* Áî≥ËØ∑gpio */
+		/* …Í«Îgpio */
 		for(i = 0; i < cnt; i++)
 			if(0 != gpio_request(list[i].gpio.gpio, NULL))
 				printk("request nand0_para gpio list failed\n");
-		/* ÈÖçÁΩÆgpio list */
+		/* ≈‰÷√gpio list */
 		if(0 != sw_gpio_setall_range(&list[0].gpio, cnt))
 			printk("sw_gpio_setall_range failed\n");
 	}
 	else if(nand_index ==1)
 	{
 		//printk("[NAND] nand1 gpio_request\n");
-
+		
 		cnt = script_get_pio_list("nand1_para", &list);
 		if(0 == cnt) {
 			printk("get nand1_para gpio list failed\n");
 			return;
 		}
-		/* Áî≥ËØ∑gpio */
+		/* …Í«Îgpio */
 		for(i = 0; i < cnt; i++)
 			if(0 != gpio_request(list[i].gpio.gpio, NULL))
 				printk("request nand1_para gpio list failed\n");
-		/* ÈÖçÁΩÆgpio list */
+		/* ≈‰÷√gpio list */
 		if(0 != sw_gpio_setall_range(&list[0].gpio, cnt))
 			printk("sw_gpio_setall_range failed\n");
 	}
@@ -794,15 +794,15 @@ void NAND_PIORelease(__u32 nand_index)
 	if(nand_index == 0)
 	{
 		//printk("[NAND] nand gpio_release\n");
-
-		/* Ëé∑Âèñgpio list */
+	
+		/* ªÒ»°gpio list */
 		cnt = script_get_pio_list("nand0_para", &list);
 		if(0 == cnt) {
 			printk("get nand0_para gpio list failed\n");
 			return;
 		}
 
-		/* ÈáäÊîægpio */
+		/*  Õ∑≈gpio */
 		while(cnt--)
 			gpio_free(list[cnt].gpio.gpio);
 	}
@@ -814,7 +814,7 @@ void NAND_PIORelease(__u32 nand_index)
 			return;
 		}
 
-		/* ÈáäÊîægpio */
+		/*  Õ∑≈gpio */
 		while(cnt--)
 			gpio_free(list[cnt].gpio.gpio);
 	}
@@ -822,23 +822,23 @@ void NAND_PIORelease(__u32 nand_index)
 	{
 		printk("NAND_PIORelease, nand_index error: 0x%x\n", nand_index);
 	}
-
+	
 }
 
 
 void NAND_Memset(void* pAddr, unsigned char value, unsigned int len)
 {
-    memset(pAddr, value, len);
+    memset(pAddr, value, len);   
 }
 
 void NAND_Memcpy(void* pAddr_dst, void* pAddr_src, unsigned int len)
 {
-    memcpy(pAddr_dst, pAddr_src, len);
+    memcpy(pAddr_dst, pAddr_src, len);    
 }
 
 void* NAND_Malloc(unsigned int Size)
 {
-	return kmalloc(Size, GFP_KERNEL);
+     	return kmalloc(Size, GFP_KERNEL);
 }
 
 void NAND_Free(void *pAddr, unsigned int Size)
@@ -854,7 +854,7 @@ int NAND_Print(const char *fmt, ...)
 	va_start(args, fmt);
 	r = vprintk(fmt, args);
 	va_end(args);
-
+	
 	return r;
 }
 
@@ -867,8 +867,11 @@ __u32 NAND_GetIOBaseAddrCH0(void)
 {
 	return 0xf1c03000;
 }
-
+	
 __u32 NAND_GetIOBaseAddrCH1(void)
 {
 	return 0xf1c05000;
 }
+
+
+

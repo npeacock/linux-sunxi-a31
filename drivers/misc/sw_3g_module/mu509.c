@@ -99,20 +99,20 @@ static void mu509_rf_disable(struct sw_modem *modem, u32 disable)
 
 /*
 *******************************************************************************
-* æ¨¡ç»„å†…éƒ¨é»˜è®¤:
-* vbat  : ä½
-* power : é«˜
-* reset : é«˜
-* sleep : é«˜
+* Ä£×éÄÚ²¿Ä¬ÈÏ:
+* vbat  : µÍ
+* power : ¸ß
+* reset : ¸ß
+* sleep : ¸ß
 *
-* å¼€æœºè¿‡ç¨‹:
-* (1)ã€é»˜è®¤piné…ç½®ï¼Œpoweræ‹‰é«˜ã€resetæ‹‰é«˜ã€sleepæ‹‰é«˜
-* (1)ã€vbatæ‹‰é«˜
-* (2)ã€power, æ‹‰ä½æŒç»­0.7sï¼Œåæ‹‰é«˜
+* ¿ª»ú¹ı³Ì:
+* (1)¡¢Ä¬ÈÏpinÅäÖÃ£¬powerÀ­¸ß¡¢resetÀ­¸ß¡¢sleepÀ­¸ß
+* (1)¡¢vbatÀ­¸ß
+* (2)¡¢power, À­µÍ³ÖĞø0.7s£¬ºóÀ­¸ß
 *
-* å…³æœºè¿‡ç¨‹:
-* (1)ã€power, æ‹‰ä½æŒç»­2.5sï¼Œåæ‹‰é«˜
-* (2)ã€vbatæ‹‰ä½
+* ¹Ø»ú¹ı³Ì:
+* (1)¡¢power, À­µÍ³ÖĞø2.5s£¬ºóÀ­¸ß
+* (2)¡¢vbatÀ­µÍ
 *
 *******************************************************************************
 */
@@ -122,11 +122,14 @@ void mu509_power(struct sw_modem *modem, u32 on)
 
     if(on){
         /* default */
-	modem_reset(modem, 1);
-	modem_power_on_off(modem, 1);
-	modem_sleep(modem, 1);
+    	modem_reset(modem, 1);
+    	modem_power_on_off(modem, 1);
+    	modem_sleep(modem, 1);
 
-	/* power on */
+        /* power off, Prevent abnormalities restart of the PAD. */
+        //Èç¹ûµç³ØºÍÄ£×éÊÇÖ±Á¬£¬ÒªÖ´ĞĞÒ»´Î¹Ø»ú¶¯×÷£¬È»ºóÔÙÖ´ĞĞ¿ª»úÁ÷³Ì
+
+    	/* power on */
 		modem_vbat(modem, 1);
 		msleep(100);
 
@@ -229,7 +232,7 @@ static int __init mu509_init(void)
        goto pin_init_failed;
     }
 
-    /* é˜²æ­¢è„šæœ¬çš„æ¨¡ç»„åç§°bb_nameå’Œé©±åŠ¨åç§°ä¸ä¸€è‡´ï¼Œå› æ­¤åªä½¿ç”¨é©±åŠ¨åç§° */
+    /* ·ÀÖ¹½Å±¾µÄÄ£×éÃû³Æbb_nameºÍÇı¶¯Ãû³Æ²»Ò»ÖÂ£¬Òò´ËÖ»Ê¹ÓÃÇı¶¯Ãû³Æ */
 //    if(g_mu509.name[0] == 0){
         strcpy(g_mu509.name, g_mu509_name);
 //    }
@@ -262,3 +265,4 @@ MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(MODEM_NAME);
 MODULE_VERSION(DRIVER_VERSION);
 MODULE_LICENSE("GPL");
+

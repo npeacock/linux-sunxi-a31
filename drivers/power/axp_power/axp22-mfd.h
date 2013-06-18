@@ -10,7 +10,7 @@ static int __devinit axp22_init_chip(struct axp_mfd_chip *chip)
 						  AXP22_INTSTS3,0xff,AXP22_INTSTS4, 0xff,
 						  AXP22_INTSTS5,0xff};
 	int err;
-
+	
 	/*read chip id*/	//???which int should enable must check with SD4
 	err =  __axp_read(chip->client, AXP22_IC_TYPE, &chip_id);
 	if (err) {

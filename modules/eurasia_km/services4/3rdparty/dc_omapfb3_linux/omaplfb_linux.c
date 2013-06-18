@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  with an API abstraction of the system's underlying display hardware, allowing
  the client drivers to indirectly control the display hardware and access its
  associated memory.
-
+ 
  Functions of the API include
  - query primary surface attributes (width, height, stride, pixel format, CPU
      physical and virtual address)
@@ -555,7 +555,7 @@ void OMAPLFBPrintInfo(OMAPLFB_DEVINFO *psDevInfo)
 }
 #endif	/* defined(DEBUG) */
 
-/*
+/* 
  * Get display update mode.
  * If the mode is AUTO, we can wait for VSync, if desired.
  */
@@ -1030,7 +1030,7 @@ int PVR_DRM_MAKENAME(DISPLAY_CONTROLLER, _Ioctl)(struct drm_device unref__ *dev,
 				bLeaveVT ? "Leave VT" : "Enter VT"));
 
 			OMAPLFBCreateSwapChainLock(psDevInfo);
-
+			
 			OMAPLFBAtomicBoolSet(&psDevInfo->sLeaveVT, bLeaveVT);
 			if (psDevInfo->psSwapChain != NULL)
 			{
@@ -1146,7 +1146,7 @@ void PVR_DRM_MAKENAME(DISPLAY_CONTROLLER, _Cleanup)(struct drm_device unref__ *d
 #else
 static void __exit OMAPLFB_Cleanup(void)
 #endif
-{
+{    
 	if(OMAPLFBDeInit() != OMAPLFB_OK)
 	{
 		printk(KERN_ERR DRIVER_PREFIX ": %s: OMAPLFBDeInit failed\n", __FUNCTION__);

@@ -57,7 +57,7 @@
 #define   ARMV7_C1_Z_BIT         ( 1 << 11 )
 #define   ARMV7_C1_I_BIT         ( 1 << 12 )
 
-	.extern resume1_c_part
+    	.extern resume1_c_part
 	.text
 	.arm
 /*********************************the begin of initializing system********************************/
@@ -70,7 +70,9 @@ _start:
 	bic r0, r0, #ARMV7_CC_E_BIT                         ;// set little-endian
 	msr cpsr_c, r0
 
-// configure memory system : disable MMU,cache and write buffer; set little_endian;
+	//config smp
+	
+	// configure memory system : disable MMU,cache and write buffer; set little_endian;
 	mrc p15, 0, r0, c1, c0
 	bic r0, r0, #( ARMV7_C1_M_BIT | ARMV7_C1_C_BIT )  ;// disable MMU, data cache
 	bic r0, r0, #( ARMV7_C1_I_BIT | ARMV7_C1_Z_BIT )  ;// disable instruction cache, disable flow prediction
@@ -89,6 +91,6 @@ _start:
 	bl set_pll
 	bl  resume1_c_part
 
-	b .                                 ;// infinite loop
+ 	b .                                 ;// infinite loop
 
 	.end

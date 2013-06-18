@@ -19,3 +19,4 @@
 u32 __dtc_sgct_mode(void);
 
 #endif /* __TEST_CASE_SINGLE_CONTI_MODE_H */
+

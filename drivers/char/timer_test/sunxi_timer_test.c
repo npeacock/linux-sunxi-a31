@@ -299,3 +299,4 @@ module_exit(sunxi_timer_test_exit);
 MODULE_LICENSE ("GPL");
 MODULE_AUTHOR ("liugang");
 MODULE_DESCRIPTION ("sun6i timer test driver code");
+

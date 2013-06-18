@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: DMA æ“ä½œé›†
+* Description 	: DMA ²Ù×÷¼¯
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
@@ -49,7 +49,7 @@ extern void sw_udc_dma_completion(struct sw_udc *dev, struct sw_udc_ep *ep, stru
 *                     sw_udc_switch_bus_to_dma
 *
 * Description:
-*    åˆ‡æ¢ USB æ€»çº¿ç»™ DMA
+*    ÇĞ»» USB ×ÜÏß¸ø DMA
 *
 * Parameters:
 *    void
@@ -85,7 +85,7 @@ void sw_udc_switch_bus_to_dma(struct sw_udc_ep *ep, u32 is_tx)
 *                     sw_udc_switch_bus_to_pio
 *
 * Description:
-*    åˆ‡æ¢ USB æ€»çº¿ç»™ PIO
+*    ÇĞ»» USB ×ÜÏß¸ø PIO
 *
 * Parameters:
 *    void
@@ -110,7 +110,7 @@ void sw_udc_switch_bus_to_pio(struct sw_udc_ep *ep, __u32 is_tx)
 *                     sw_udc_enable_dma_channel_irq
 *
 * Description:
-*    ä½¿èƒ½ DMA channel ä¸­æ–­
+*    Ê¹ÄÜ DMA channel ÖĞ¶Ï
 *
 * Parameters:
 *    void
@@ -135,7 +135,7 @@ void sw_udc_enable_dma_channel_irq(struct sw_udc_ep *ep)
 *                     sw_udc_disable_dma_channel_irq
 *
 * Description:
-*    ç¦æ­¢ DMA channel ä¸­æ–­
+*    ½ûÖ¹ DMA channel ÖĞ¶Ï
 *
 * Parameters:
 *    void
@@ -176,7 +176,7 @@ void printk_dma(struct dma_config_t *pcfg){
 *                     sw_udc_dma_set_config
 *
 * Description:
-*    é…ç½® DMA
+*    ÅäÖÃ DMA
 *
 * Parameters:
 *    void
@@ -198,7 +198,7 @@ void sw_udc_dma_set_config(struct sw_udc_ep *ep, struct sw_udc_request *req, __u
 	int ret 				= 0;
 	enum drqsrc_type_e usbc_no = 0;
 
-	struct dma_config_t DmaConfig;
+ 	struct dma_config_t DmaConfig;
 
 	memset(&DmaConfig, 0, sizeof(DmaConfig));
 
@@ -293,7 +293,7 @@ void sw_udc_dma_set_config(struct sw_udc_ep *ep, struct sw_udc_request *req, __u
 *                     sw_udc_dma_start
 *
 * Description:
-*    å¼€å§‹ DMA ä¼ è¾“
+*    ¿ªÊ¼ DMA ´«Êä
 *
 * Parameters:
 *    void
@@ -308,7 +308,7 @@ void sw_udc_dma_set_config(struct sw_udc_ep *ep, struct sw_udc_request *req, __u
 */
 void sw_udc_dma_start(struct sw_udc_ep *ep, __u32 fifo, __u32 buffer, __u32 len)
 {
-	int ret = 0;
+ 	int ret = 0;
 
 	if(!ep->dev->sw_udc_dma[ep->num].is_start){
 		ep->dev->sw_udc_dma[ep->num].is_start = 1;
@@ -327,7 +327,7 @@ void sw_udc_dma_start(struct sw_udc_ep *ep, __u32 fifo, __u32 buffer, __u32 len)
 *                     sw_udc_dma_stop
 *
 * Description:
-*    ç»ˆæ­¢ DMA ä¼ è¾“
+*    ÖÕÖ¹ DMA ´«Êä
 *
 * Parameters:
 *    void
@@ -342,7 +342,7 @@ void sw_udc_dma_start(struct sw_udc_ep *ep, __u32 fifo, __u32 buffer, __u32 len)
 */
 void sw_udc_dma_stop(struct sw_udc_ep *ep)
 {
-	int ret = 0;
+ 	int ret = 0;
 	DMSG_DBG_DMA("line:%d, %s\n", __LINE__, __func__);
 
 	ret = sw_dma_ctl((dm_hdl_t)ep->dev->sw_udc_dma[ep->num].dma_hdle, DMA_OP_STOP, NULL);
@@ -359,7 +359,7 @@ void sw_udc_dma_stop(struct sw_udc_ep *ep)
 *                     sw_udc_dma_transmit_length
 *
 * Description:
-*    æŸ¥è¯¢ DMA å·²ç»ä¼ è¾“çš„é•¿åº¦
+*    ²éÑ¯ DMA ÒÑ¾­´«ÊäµÄ³¤¶È
 *
 * Parameters:
 *    void
@@ -418,7 +418,7 @@ __u32 sw_udc_dma_transmit_length(struct sw_udc_ep *ep, __u32 is_in, __u32 buffer
 *                     sw_udc_dma_probe
 *
 * Description:
-*    DMA åˆå§‹åŒ–
+*    DMA ³õÊ¼»¯
 *
 * Parameters:
 *    void
@@ -441,7 +441,7 @@ __u32 sw_udc_dma_is_busy(struct sw_udc_ep *ep)
 *                     sw_udc_dma_probe
 *
 * Description:
-*    DMA åˆå§‹åŒ–
+*    DMA ³õÊ¼»¯
 *
 * Parameters:
 *    void
@@ -461,7 +461,7 @@ static u32 sw_udc_dma_callback(dm_hdl_t dma_hdl, void *parg, enum dma_cb_cause_e
 	struct sw_udc_ep *ep = NULL;
 	int i = 1;
 
-    /* DMAå¼‚å¸¸å°±ç›´æ¥é€€å‡º */
+    /* DMAÒì³£¾ÍÖ±½ÓÍË³ö */
 	if(cause == DMA_CB_ABORT){
 		DMSG_PANIC("ERR: sw_udc_dma_callback, dma callback abort\n");
 		return 0;
@@ -505,7 +505,7 @@ static u32 sw_udc_dma_callback(dm_hdl_t dma_hdl, void *parg, enum dma_cb_cause_e
 *                     sw_udc_dma_probe
 *
 * Description:
-*    DMA åˆå§‹åŒ–
+*    DMA ³õÊ¼»¯
 *
 * Parameters:
 *    void
@@ -560,7 +560,7 @@ __s32 sw_udc_dma_probe(struct sw_udc *dev)
 *                     sw_udc_dma_remove
 *
 * Description:
-*    DMA ç§»é™¤
+*    DMA ÒÆ³ı
 *
 * Parameters:
 *    void
@@ -575,7 +575,7 @@ __s32 sw_udc_dma_probe(struct sw_udc *dev)
 */
 __s32 sw_udc_dma_remove(struct sw_udc *dev)
 {
-	int ret = 0;
+ 	int ret = 0;
 	int i = 0;
 #if 0
 	__u32 channel = 0;
@@ -617,3 +617,4 @@ __s32 sw_udc_dma_remove(struct sw_udc *dev)
 
 	return 0;
 }
+

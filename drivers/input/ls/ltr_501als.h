@@ -2,7 +2,7 @@
 /* Lite-On LTR-558ALS Linux Driver
  *
  * Copyright (C) 2011 Lite-On Technology Corp (Singapore)
- *
+ * 
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -69,7 +69,7 @@
 #define ALS_RANGE1_320	1
 #define ALS_RANGE2_64K 	2
 
-/*
+/* 
  * Magic Number
  * ============
  * Refer to file ioctl-number.txt for allocation
@@ -116,3 +116,4 @@ int ltr558_als_read(void);
 int ltr558_ps_read(void);
 
 #endif
+

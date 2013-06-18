@@ -32,7 +32,7 @@ static int sun6i_sndhdmi_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_pcm_runtime *rtd = NULL;
 	struct snd_soc_dai *codec_dai 	= NULL;
 	struct snd_soc_dai *cpu_dai 	= NULL;
-
+	
 	if (!substream) {
 		printk("error:%s,line:%d\n", __func__, __LINE__);
 		return -EAGAIN;
@@ -40,7 +40,7 @@ static int sun6i_sndhdmi_hw_params(struct snd_pcm_substream *substream,
 	rtd 		= substream->private_data;
 	codec_dai 	= rtd->codec_dai;
 	cpu_dai 	= rtd->cpu_dai;
-
+	
 	ret = snd_soc_dai_set_fmt(codec_dai, 0);
 	if (ret < 0)
 		return ret;
@@ -80,15 +80,15 @@ static int __init sun6i_sndhdmi_init(void)
 	int ret = 0;
 
 	sun6i_sndhdmi_device = platform_device_alloc("soc-audio", 0);
-
+		
 	if (!sun6i_sndhdmi_device) {
 		return -ENOMEM;
 	}
 
 	platform_set_drvdata(sun6i_sndhdmi_device, &snd_soc_sun6i_sndhdmi);
-	ret = platform_device_add(sun6i_sndhdmi_device);
+	ret = platform_device_add(sun6i_sndhdmi_device);		
 
-	if (ret) {
+	if (ret) {			
 		platform_device_put(sun6i_sndhdmi_device);
 	}
 

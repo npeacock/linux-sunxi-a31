@@ -58,3 +58,4 @@ enum gpio_test_case_e {
 #define PIO_CHECK_RST(x, ret, pos)	if(!(x)) {ret = __LINE__; goto pos;}
 
 #endif /* __SUN6I_GPIO_TEST_H */
+

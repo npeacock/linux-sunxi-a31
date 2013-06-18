@@ -23,7 +23,7 @@
 #ifndef CONFIG_AW_ASIC_EVB_PLATFORM
 #define SUN6I_FPGA_SIM
 #else
-#if 0 == CONFIG_AW_ASIC_EVB_PLATFORM
+#if 0 == CONFIG_AW_ASIC_EVB_PLATFORM 
 #define SUN6I_FPGA_SIM
 #endif
 #endif

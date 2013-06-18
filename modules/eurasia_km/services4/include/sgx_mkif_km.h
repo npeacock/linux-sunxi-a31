@@ -144,6 +144,7 @@ typedef struct _SGXMKIF_HOST_CTL_
 #endif
 
 	IMG_UINT32				ui32OpenCLDelayCount;			/* Counter to keep track OpenCL task completion time in units of regular task time out events */
+	IMG_UINT32				ui32InterruptCount;
 } SGXMKIF_HOST_CTL;
 
 /*
@@ -161,7 +162,7 @@ typedef struct _SGXMKIF_HOST_CTL_
 typedef struct _SGXMKIF_CMDTA_SHARED_
 {
 	IMG_UINT32			ui32CtrlFlags;
-
+	
 	IMG_UINT32			ui32NumTAStatusVals;
 	IMG_UINT32			ui32Num3DStatusVals;
 
@@ -231,12 +232,12 @@ typedef struct _SGXMKIF_TRANSFERCMD_SHARED_
 {
 	/* need to be able to check read and write ops on src, and update reads */
 
-	IMG_UINT32			ui32NumSrcSyncs;
-	PVRSRV_DEVICE_SYNC_OBJECT	asSrcSyncs[SGX_MAX_SRC_SYNCS_TQ];
+ 	IMG_UINT32			ui32NumSrcSyncs;
+ 	PVRSRV_DEVICE_SYNC_OBJECT	asSrcSyncs[SGX_MAX_SRC_SYNCS_TQ];
 	/* need to be able to check reads and writes on dest, and update writes */
 
-	IMG_UINT32			ui32NumDstSyncs;
-	PVRSRV_DEVICE_SYNC_OBJECT	asDstSyncs[SGX_MAX_DST_SYNCS_TQ];
+ 	IMG_UINT32			ui32NumDstSyncs;
+ 	PVRSRV_DEVICE_SYNC_OBJECT	asDstSyncs[SGX_MAX_DST_SYNCS_TQ];	
 	/* KEEP THESE 4 VARIABLES TOGETHER FOR UKERNEL BLOCK LOAD */
 	IMG_UINT32		ui32TASyncWriteOpsPendingVal;
 	IMG_DEV_VIRTADDR	sTASyncWriteOpsCompleteDevVAddr;
@@ -471,3 +472,5 @@ typedef struct _SGXMKIF_HWPERF_CB_
 /******************************************************************************
  End of file (sgx_mkif_km.h)
 ******************************************************************************/
+
+

@@ -381,3 +381,4 @@ int clk_reset(struct clk *clk, __aw_ccu_clk_reset_e reset)
     return 0;
 }
 EXPORT_SYMBOL(clk_reset);
+

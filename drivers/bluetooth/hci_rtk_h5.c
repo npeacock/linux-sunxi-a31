@@ -135,7 +135,7 @@ static void h5_slip_one_byte(struct sk_buff *skb, u8 c)
 	const char esc_db[2] = { 0xdb, 0xdd };
 	const char esc_11[2] = { 0xdb, 0xde };
 	const char esc_13[2] = { 0xdb, 0xdf };
-
+	
 	switch (c) {
 	case 0xc0:
 		memcpy(skb_put(skb, 2), &esc_c0, 2);
@@ -158,7 +158,7 @@ static int h5_enqueue(struct hci_uart *hu, struct sk_buff *skb)
 {
 	struct h5_struct *h5 = hu->priv;
 
-	if (skb->len > 0xFFF) { //Pkt length must be less than 4095 bytes
+	if (skb->len > 0xFFF) { //Pkt length must be less than 4095 bytes    
 		BT_ERR("Packet too long");
 		kfree_skb(skb);
 		return 0;
@@ -178,7 +178,7 @@ static int h5_enqueue(struct hci_uart *hu, struct sk_buff *skb)
 	case H5_VDRSPEC_PKT:
 	    skb_queue_tail(&h5->unrel, skb);	/* 3-wire LinkEstablishment*/
 	    break;
-
+		
 	default:
 	    BT_ERR("Unknown packet type");
 	    kfree_skb(skb);
@@ -211,7 +211,7 @@ static struct sk_buff *h5_prepare_pkt(struct h5_struct *h5, u8 *data,
 	    break;
 	case HCI_SCODATA_PKT:
 	    chan = 3;	/* 3-wire SCO channel */
-	    rel = 0;	/* unreliable channel */
+	    rel = 0;	/* unreliable channel */   
             break;
 	case H5_LE_PKT:
 	    chan = 15;	/* 3-wire LinkEstablishment channel */
@@ -294,7 +294,7 @@ static struct sk_buff *h5_dequeue(struct hci_uart *hu)
 	struct h5_struct *h5 = hu->priv;
 	unsigned long flags;
 	struct sk_buff *skb;
-
+	
 	/* First of all, check for unreliable messages in the queue,
 	   since they have priority */
 
@@ -489,7 +489,7 @@ static inline void h5_unslip_one_byte(struct h5_struct *h5, unsigned char byte)
 			break;
 		default:
 			memcpy(skb_put(h5->rx_skb, 1), &byte, 1);
-			if ((h5->rx_skb-> data[0] & 0x40) != 0 &&
+			if ((h5->rx_skb-> data[0] & 0x40) != 0 && 
 					h5->rx_state != H5_W4_CRC)
 				h5_crc_update(&h5->message_crc, byte);
 			h5->rx_count--;
@@ -500,7 +500,7 @@ static inline void h5_unslip_one_byte(struct h5_struct *h5, unsigned char byte)
 		switch (byte) {
 		case 0xdc:
 			memcpy(skb_put(h5->rx_skb, 1), &c0, 1);
-			if ((h5->rx_skb-> data[0] & 0x40) != 0 &&
+			if ((h5->rx_skb-> data[0] & 0x40) != 0 && 
 					h5->rx_state != H5_W4_CRC)
 				h5_crc_update(&h5-> message_crc, 0xc0);
 			h5->rx_esc_state = H5_ESCSTATE_NOESC;
@@ -509,13 +509,13 @@ static inline void h5_unslip_one_byte(struct h5_struct *h5, unsigned char byte)
 
 		case 0xdd:
 			memcpy(skb_put(h5->rx_skb, 1), &db, 1);
-			if ((h5->rx_skb-> data[0] & 0x40) != 0 &&
-					h5->rx_state != H5_W4_CRC)
+			if ((h5->rx_skb-> data[0] & 0x40) != 0 && 
+					h5->rx_state != H5_W4_CRC) 
 				h5_crc_update(&h5-> message_crc, 0xdb);
 			h5->rx_esc_state = H5_ESCSTATE_NOESC;
 			h5->rx_count--;
 			break;
-
+			
 		case 0xde:
 			memcpy(skb_put(h5->rx_skb, 1), &oof1, 1);
 			if ((h5->rx_skb-> data[0] & 0x40) != 0 && h5->rx_state != H5_W4_CRC)
@@ -526,7 +526,7 @@ static inline void h5_unslip_one_byte(struct h5_struct *h5, unsigned char byte)
 
 		case 0xdf:
 			memcpy(skb_put(h5->rx_skb, 1), &oof2, 1);
-			if ((h5->rx_skb-> data[0] & 0x40) != 0 && h5->rx_state != H5_W4_CRC)
+			if ((h5->rx_skb-> data[0] & 0x40) != 0 && h5->rx_state != H5_W4_CRC) 
 				h5_crc_update(&h5-> message_crc, oof2);
 			h5->rx_esc_state = H5_ESCSTATE_NOESC;
 			h5->rx_count--;
@@ -562,22 +562,22 @@ static void h5_complete_rx_pkt(struct hci_uart *hu)
 
 	h5_pkt_cull(h5);
 
-	if ((h5->rx_skb->data[1] & 0x0f) == 2 &&
+	if ((h5->rx_skb->data[1] & 0x0f) == 2 && 
 			h5->rx_skb->data[0] & 0x80) {
 		bt_cb(h5->rx_skb)->pkt_type = HCI_ACLDATA_PKT;
 		pass_up = 1;
-	} else if ((h5->rx_skb->data[1] & 0x0f) == 4 &&
+	} else if ((h5->rx_skb->data[1] & 0x0f) == 4 && 
 			h5->rx_skb->data[0] & 0x80) {
 		bt_cb(h5->rx_skb)->pkt_type = HCI_EVENT_PKT;
 		pass_up = 1;
 	} else if ((h5->rx_skb->data[1] & 0x0f) == 3) {
 		bt_cb(h5->rx_skb)->pkt_type = HCI_SCODATA_PKT;
 		pass_up = 1;
-	} else if ((h5->rx_skb->data[1] & 0x0f) == 15 &&
+	} else if ((h5->rx_skb->data[1] & 0x0f) == 15 && 
 			!(h5->rx_skb->data[0] & 0x80)) {
 		//h5_handle_le_pkt(hu);//Link Establishment Pkt
 		pass_up = 0;
-	} else if ((h5->rx_skb->data[1] & 0x0f) == 1 &&
+	} else if ((h5->rx_skb->data[1] & 0x0f) == 1 && 
 			h5->rx_skb->data[0] & 0x80) {
 		bt_cb(h5->rx_skb)->pkt_type = HCI_COMMAND_PKT;
 		pass_up = 1;
@@ -587,12 +587,12 @@ static void h5_complete_rx_pkt(struct hci_uart *hu)
 	} else
 		pass_up = 0;
 
-	if (!pass_up) {
+	if (!pass_up) {		
 		struct hci_event_hdr hdr;
 		u8 desc = (h5->rx_skb->data[1] & 0x0f);
 
 		if (desc != H5_ACK_PKT && desc != H5_LE_PKT) {
-#if 0
+#if 0			
 			if (hciextn) {
 				desc |= 0xc0;
 				skb_pull(h5->rx_skb, 4);
@@ -605,10 +605,10 @@ static void h5_complete_rx_pkt(struct hci_uart *hu)
 
 				hci_recv_frame(h5->rx_skb);
 			} else {
-#endif
+#endif				
 				BT_ERR ("Packet for unknown channel (%u %s)",
 					h5->rx_skb->data[1] & 0x0f,
-					h5->rx_skb->data[0] & 0x80 ?
+					h5->rx_skb->data[0] & 0x80 ? 
 					"reliable" : "unreliable");
 				kfree_skb(h5->rx_skb);
 //			}
@@ -636,7 +636,7 @@ static int h5_recv(struct hci_uart *hu, void *data, int count)
 	struct h5_struct *h5 = hu->priv;
 	register unsigned char *ptr;
 
-	BT_DBG("hu %p count %d rx_state %d rx_count %ld",
+	BT_DBG("hu %p count %d rx_state %d rx_count %ld", 
 		hu, count, h5->rx_state, h5->rx_count);
 
 	ptr = data;
@@ -665,19 +665,19 @@ static int h5_recv(struct hci_uart *hu, void *data, int count)
 				continue;
 			}
 			if (h5->rx_skb->data[0] & 0x80	/* reliable pkt */
-					&& (h5->rx_skb->data[0] & 0x07) != h5->rxseq_txack) {
+			    		&& (h5->rx_skb->data[0] & 0x07) != h5->rxseq_txack) {
 				BT_ERR ("Out-of-order packet arrived, got %u expected %u",
 					h5->rx_skb->data[0] & 0x07, h5->rxseq_txack);
 
 				h5->txack_req = 1;
-				hci_uart_tx_wakeup(hu);
+				hci_uart_tx_wakeup(hu);			
 				kfree_skb(h5->rx_skb);
 				h5->rx_state = H5_W4_PKT_DELIMITER;
 				h5->rx_count = 0;
 				continue;
 			}
 			h5->rx_state = H5_W4_DATA;
-			h5->rx_count = (h5->rx_skb->data[1] >> 4) +
+			h5->rx_count = (h5->rx_skb->data[1] >> 4) + 
 					(h5->rx_skb->data[2] << 4);	/* May be 0 */
 			continue;
 
@@ -729,7 +729,7 @@ static int h5_recv(struct hci_uart *hu, void *data, int count)
 				H5_CRC_INIT(h5->message_crc);
 
 				/* Do not increment ptr or decrement count
-				 * Allocate packet. Max len of a H5 pkt=
+				 * Allocate packet. Max len of a H5 pkt= 
 				 * 0xFFF (payload) +4 (header) +2 (crc) */
 
 				h5->rx_skb = bt_skb_alloc(0x1005, GFP_ATOMIC);

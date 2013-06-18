@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2012 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -52,11 +52,13 @@ void bss_cap_update_on_sta_join(_adapter *padapter, struct sta_info *psta);
 u8 bss_cap_update_on_sta_leave(_adapter *padapter, struct sta_info *psta);
 void sta_info_update(_adapter *padapter, struct sta_info *psta);
 void ap_sta_info_defer_update(_adapter *padapter, struct sta_info *psta);
-u8 ap_free_sta(_adapter *padapter, struct sta_info *psta);
+u8 ap_free_sta(_adapter *padapter, struct sta_info *psta, bool active, u16 reason);
 int rtw_sta_flush(_adapter *padapter);
+int rtw_ap_inform_ch_switch(_adapter *padapter, u8 new_ch, u8 ch_offset);
 void start_ap_mode(_adapter *padapter);
 void stop_ap_mode(_adapter *padapter);
 #endif
 #endif //end of CONFIG_AP_MODE
 
 #endif
+

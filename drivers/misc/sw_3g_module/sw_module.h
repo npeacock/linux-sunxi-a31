@@ -18,8 +18,8 @@
 //-----------------------------------------------------------------------------
 //
 //-----------------------------------------------------------------------------
-#define  modem_dbg(format,args...)      pr_debug("[sw_module]: "format,##args)
-#define  modem_err(format,args...)      pr_debug("[sw_module]: "format,##args)
+#define  modem_dbg(format,args...)      printk("[sw_module]: "format,##args)
+#define  modem_err(format,args...)      printk("[sw_module]: "format,##args)
 
 //-----------------------------------------------------------------------------
 //
@@ -64,13 +64,13 @@ struct sw_modem{
     u8 start;
 
     struct work_struct irq_work;
-    u32 irq_hd;                         /* ä¸­æ–­å¥æŸ„     */
-    enum gpio_eint_trigtype trig_type;  /* ä¸­æ–­è§¦å‘æ–¹å¼ */
+    u32 irq_hd;                         /* ÖĞ¶Ï¾ä±ú     */
+    enum gpio_eint_trigtype trig_type;  /* ÖĞ¶Ï´¥·¢·½Ê½ */
     struct input_dev *key;
 
     u32 used;
-    u32 usbc_no;                        /* æŒ‚è½½çš„USBæ§åˆ¶å™¨ç¼–å· */
-    u32 uart_no;                        /* æŒ‚è½½çš„uartæ§åˆ¶å™¨ */
+    u32 usbc_no;                        /* ¹ÒÔØµÄUSB¿ØÖÆÆ÷±àºÅ */
+    u32 uart_no;                        /* ¹ÒÔØµÄuart¿ØÖÆÆ÷ */
 
     struct sw_module_pio bb_vbat;
     struct sw_module_pio bb_pwr_on;
@@ -78,6 +78,10 @@ struct sw_modem{
     struct sw_module_pio bb_rf_dis;
     struct sw_module_pio bb_wake;
     struct sw_module_pio bb_wake_ap;
+
+	char dldo_name[SW_3G_NAME_LEN];
+	u32 dldo_min_uV;
+    u32 dldo_max_uV;
 
     struct sw_modem_ops *ops;
     void *prv;                          /* private data, eg. struct sw_module_dev */
@@ -100,3 +104,5 @@ int modem_irq_init(struct sw_modem *modem, enum gpio_eint_trigtype trig_type);
 int modem_irq_exit(struct sw_modem *modem);
 void modem_early_suspend(struct sw_modem *modem);
 void modem_early_resume(struct sw_modem *modem);
+void modem_dldo_on_off(struct sw_modem *modem, u32 on);
+

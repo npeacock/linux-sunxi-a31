@@ -285,7 +285,7 @@ static int regulator_virtual_consumer_probe(struct platform_device *pdev)
 		ret = PTR_ERR(drvdata->regulator);
 		goto err;
 	}
-
+	
 	for (i = 0; i < ARRAY_SIZE(attributes_virtual); i++) {
 		ret = device_create_file(&pdev->dev, attributes_virtual[i]);
 		if (ret != 0)
@@ -432,20 +432,20 @@ static struct platform_driver regulator_virtual_consumer_driver[] = {
 			.name		= "reg-22-cs-gpio1ldo",
 		},
 	},
-
+	
 };
 
 
 static int __init regulator_virtual_consumer_init(void)
 {
 	int j,ret;
-	for (j = 0; j < ARRAY_SIZE(regulator_virtual_consumer_driver); j++){
+	for (j = 0; j < ARRAY_SIZE(regulator_virtual_consumer_driver); j++){ 
 		ret =  platform_driver_register(&regulator_virtual_consumer_driver[j]);
 		if (ret)
 			goto creat_drivers_failed;
 	}
 	return ret;
-
+		
 creat_drivers_failed:
 	while (j--)
 		platform_driver_unregister(&regulator_virtual_consumer_driver[j]);
@@ -456,7 +456,7 @@ module_init(regulator_virtual_consumer_init);
 static void __exit regulator_virtual_consumer_exit(void)
 {
 	int j;
-	for (j = ARRAY_SIZE(regulator_virtual_consumer_driver) - 1; j >= 0; j--){
+	for (j = ARRAY_SIZE(regulator_virtual_consumer_driver) - 1; j >= 0; j--){ 
 			platform_driver_unregister(&regulator_virtual_consumer_driver[j]);
 	}
 }

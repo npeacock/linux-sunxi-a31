@@ -57,7 +57,7 @@ typedef struct _PVRSRV_ENV_PER_PROCESS_DATA_
 	struct list_head sDRMAuthListHead;
 #endif
 #if defined (SUPPORT_ION)
-	struct ion_client *psIONClient;
+ 	struct ion_client *psIONClient;
 	IMG_CHAR azIonClientName[ION_CLIENT_NAME_SIZE];
 #endif
 } PVRSRV_ENV_PER_PROCESS_DATA;
@@ -67,7 +67,7 @@ IMG_VOID RemovePerProcessProcDir(PVRSRV_ENV_PER_PROCESS_DATA *psEnvPerProc);
 PVRSRV_ERROR LinuxMMapPerProcessConnect(PVRSRV_ENV_PER_PROCESS_DATA *psEnvPerProc);
 
 IMG_VOID LinuxMMapPerProcessDisconnect(PVRSRV_ENV_PER_PROCESS_DATA *psEnvPerProc);
-
+ 
 PVRSRV_ERROR LinuxMMapPerProcessHandleOptions(PVRSRV_HANDLE_BASE *psHandleBase);
 
 IMG_HANDLE LinuxTerminatingProcessPrivateData(IMG_VOID);

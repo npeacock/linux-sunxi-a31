@@ -74,7 +74,7 @@ typedef struct ar100_message
 //dvfs commands
 #define	AR100_CPUX_DVFS_REQ		 	(AR100_MESSAGE_BASE + 0x20)  //request dvfs    (ac327 to ar100)
 
-//pmu commands
+//pmu commands                                      
 #define	AR100_AXP_POWEROFF_REQ	 	(AR100_MESSAGE_BASE + 0x40)  //request power-off(ac327 to ar100)
 #define	AR100_AXP_READ_REGS		 	(AR100_MESSAGE_BASE + 0x41)  //read registers	(ac327 to ar100)
 #define	AR100_AXP_WRITE_REGS		(AR100_MESSAGE_BASE + 0x42)  //write registers  (ac327 to ar100)

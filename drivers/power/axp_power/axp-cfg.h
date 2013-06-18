@@ -131,11 +131,11 @@
 #define OCVREGB				0x07								//3.63V
 #define OCVREGC				0x0a								//3.64V
 #define OCVREGD				0x0d								//3.66V
-#define OCVREGE				0x1a								//3.7V
+#define OCVREGE				0x1a								//3.7V 
 #define OCVREGF				0x24								//3.73V
 #define OCVREG10		 	0x29                //3.77V
 #define OCVREG11		 	0x2e                //3.78V
-#define OCVREG12		 	0x32                //3.8V
+#define OCVREG12		 	0x32                //3.8V 
 #define OCVREG13		 	0x35                //3.84V
 #define OCVREG14		 	0x39                //3.85V
 #define OCVREG15		 	0x3d                //3.87V
@@ -145,7 +145,7 @@
 #define OCVREG19		 	0x54                //4.01V
 #define OCVREG1A		 	0x58                //4.05V
 #define OCVREG1B		 	0x5c                //4.08V
-#define OCVREG1C		 	0x5e                //4.1V
+#define OCVREG1C		 	0x5e                //4.1V 
 #define OCVREG1D		 	0x60                //4.12V
 #define OCVREG1E		 	0x62                //4.14V
 #define OCVREG1F		 	0x64                //4.15V
@@ -225,26 +225,26 @@ extern int dcdc5_vol;
 extern int aldo2_vol;
 extern int aldo3_vol;
 
-extern  int pmu_pekoff_time;
-extern  int pmu_pekoff_func;
-extern  int pmu_pekoff_en;
-extern  int pmu_peklong_time;
-extern  int pmu_pekon_time;
+extern  int pmu_pekoff_time;           
+extern  int pmu_pekoff_func;          
+extern  int pmu_pekoff_en;			    
+extern  int pmu_peklong_time;          
+extern  int pmu_pekon_time;         
 extern  int pmu_pwrok_time;
 
 extern  int pmu_battery_warning_level1;
 extern  int pmu_battery_warning_level2;
-
-extern  int pmu_restvol_time;
-extern  int pmu_ocv_cou_adjust_time;
-extern  int pmu_chgled_func;
-extern  int pmu_chgled_type;
-extern  int pmu_vbusen_func;
-extern  int pmu_reset;
+        
+extern  int pmu_restvol_time;          
+extern  int pmu_ocv_cou_adjust_time;   
+extern  int pmu_chgled_func;           
+extern  int pmu_chgled_type;           
+extern  int pmu_vbusen_func;			    
+extern  int pmu_reset;           
 extern  int pmu_IRQ_wakeup;
-extern  int pmu_hot_shutdowm;
+extern  int pmu_hot_shutdowm;           
 extern  int pmu_inshort;
-
+        
 extern int axp_script_parser_fetch(char *main, char *sub, u32 *val, u32 size);
 
 #endif

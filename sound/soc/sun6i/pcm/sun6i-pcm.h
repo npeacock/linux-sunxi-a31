@@ -23,7 +23,7 @@
 #define SUN6I_PCMBASE 							(0x01C22400)
 
 #define SUN6I_PCMCTL 	  						(0x00)
-	#define SUN6I_PCMCTL_SDO0EN					(1<<8)
+	#define SUN6I_PCMCTL_SDO0EN					(1<<8) 
 	#define SUN6I_PCMCTL_ASS					(1<<6)
 	#define SUN6I_PCMCTL_MS						(1<<5)
 	#define SUN6I_PCMCTL_PCM					(1<<4)
@@ -31,7 +31,7 @@
 	#define SUN6I_PCMCTL_TXEN					(1<<2)
 	#define SUN6I_PCMCTL_RXEN					(1<<1)
 	#define SUN6I_PCMCTL_GEN					(1<<0)
-
+	                                    		
 #define SUN6I_PCMFAT0 							(0x04)
 	#define SUN6I_PCMFAT0_LRCP					(1<<7)
 	#define SUN6I_PCMFAT0_BCP					(1<<6)
@@ -47,7 +47,7 @@
 	#define SUN6I_PCMFAT0_FMT_LFT				(1<<0)
 	#define SUN6I_PCMFAT0_FMT_RGT				(2<<0)
 	#define SUN6I_PCMFAT0_FMT_RVD				(3<<0)
-
+	
 #define SUN6I_PCMFAT1							(0x08)
 	#define SUN6I_PCMFAT1_SYNCLEN_16BCLK		(0<<12)
 	#define SUN6I_PCMFAT1_SYNCLEN_32BCLK		(1<<12)
@@ -72,7 +72,7 @@
 	#define SUN6I_PCMFAT1_TXPDM_8PCM			(1<<0)
 	#define SUN6I_PCMFAT1_TXPDM_8ULAW			(2<<0)
 	#define SUN6I_PCMFAT1_TXPDM_8ALAW  			(3<<0)
-
+	
 #define SUN6I_PCMTXFIFO 						(0x0C)
 
 #define SUN6I_PCMRXFIFO 						(0x10)
@@ -89,13 +89,13 @@
 	#define SUN6I_PCMFCTL_RXOM_MOD1				(1<<0)
 	#define SUN6I_PCMFCTL_RXOM_MOD2				(2<<0)
 	#define SUN6I_PCMFCTL_RXOM_MOD3				(3<<0)
-
+	                                    		
 #define SUN6I_PCMFSTA   						(0x18)
 	#define SUN6I_PCMFSTA_TXE					(1<<28)
 	#define SUN6I_PCMFSTA_TXECNT(v)				((v)<<16)
 	#define SUN6I_PCMFSTA_RXA					(1<<8)
 	#define SUN6I_PCMFSTA_RXACNT(v)				((v)<<0)
-
+	
 #define SUN6I_PCMINT    						(0x1C)
 	#define SUN6I_PCMINT_TXDRQEN				(1<<7)
 	#define SUN6I_PCMINT_TXUIEN					(1<<6)
@@ -105,14 +105,14 @@
 	#define SUN6I_PCMINT_RXUIEN					(1<<2)
 	#define SUN6I_PCMINT_RXOIEN					(1<<1)
 	#define SUN6I_PCMINT_RXAIEN					(1<<0)
-
+	                                        	
 #define SUN6I_PCMISTA   						(0x20)
 	#define SUN6I_PCMISTA_TXUISTA				(1<<6)
 	#define SUN6I_PCMISTA_TXOISTA				(1<<5)
 	#define SUN6I_PCMISTA_TXEISTA				(1<<4)
 	#define SUN6I_PCMISTA_RXOISTA				(1<<1)
 	#define SUN6I_PCMISTA_RXAISTA				(1<<0)
-
+		                                    	
 #define SUN6I_PCMCLKD   						(0x24)
 	#define SUN6I_PCMCLKD_MCLKOEN				(1<<7)
 	#define SUN6I_PCMCLKD_BCLKDIV_2				(0<<4)
@@ -134,7 +134,7 @@
 	#define SUN6I_PCMCLKD_MCLKDIV_32			(8<<0)
 	#define SUN6I_PCMCLKD_MCLKDIV_48			(9<<0)
 	#define SUN6I_PCMCLKD_MCLKDIV_64			(10<<0)
-
+		
 #define SUN6I_PCMTXCNT  						(0x28)
 
 #define SUN6I_PCMRXCNT  						(0x2C)
@@ -155,7 +155,7 @@
 	#define SUN6I_PCMRXCHMAP_CH3(v)				(((v)-1)<<12)
 	#define SUN6I_PCMRXCHMAP_CH2(v)				(((v)-1)<<8)
 	#define SUN6I_PCMRXCHMAP_CH1(v)				(((v)-1)<<4)
-	#define SUN6I_PCMRXCHMAP_CH0(v)				(((v)-1)<<0)
+	#define SUN6I_PCMRXCHMAP_CH0(v)				(((v)-1)<<0)	
 
 
 /* Clock dividers */
@@ -181,7 +181,7 @@ struct sun6i_pcm_info {
 	u32 lrc_pol;
 	u32 bclk_pol;
 	u32 pcm_txtype;
-	u32 pcm_rxtype;
+	u32 pcm_rxtype;	
 	u32 pcm_sw;
 	u32 pcm_sync_period;
 	u32 pcm_sync_type;

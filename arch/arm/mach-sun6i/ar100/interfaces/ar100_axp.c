@@ -36,7 +36,7 @@ axp_isr_t axp_isr_node;
  * @data:    point of registers data;
  * @len :    number of read registers, max len:8;
  *
- * return: result, 0 - read register successed,
+ * return: result, 0 - read register successed, 
  *                !0 - read register failed or the len more then max len;
  */
 int ar100_axp_read_reg(unsigned char *addr, unsigned char *data, unsigned long len)
@@ -44,19 +44,19 @@ int ar100_axp_read_reg(unsigned char *addr, unsigned char *data, unsigned long l
 	int                   i;
 	int					  result;
 	struct ar100_message *pmessage;
-
+	
 	if ((addr == NULL) || (data == NULL) || (len > AXP_TRANS_BYTE_MAX)) {
 		AR100_WRN("pmu read reg para error\n");
 		return -EINVAL;
 	}
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_SOFTSYN);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type       = AR100_AXP_READ_REGS;
 	pmessage->attr       = AR100_MESSAGE_ATTR_SOFTSYN;
@@ -66,7 +66,7 @@ int ar100_axp_read_reg(unsigned char *addr, unsigned char *data, unsigned long l
 
 	/*
 	 * package address and data to message->paras,
-	 * message->paras data layout:
+	 * message->paras data layout: 
 	 * |para[0]|para[1]|para[2]|para[3]|para[4]|
 	 * |addr0~3|addr4~7|data0~3|data4~7|  len  |
 	 */
@@ -86,10 +86,10 @@ int ar100_axp_read_reg(unsigned char *addr, unsigned char *data, unsigned long l
 			pmessage->paras[1] |= (addr[i] << ((i - 4) * 8));
 		}
 	}
-
+	
 	/* send message use hwmsgbox */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* copy message readout data to user data buffer */
 	for (i = 0; i < len; i++) {
 		if (i < 4) {
@@ -98,11 +98,11 @@ int ar100_axp_read_reg(unsigned char *addr, unsigned char *data, unsigned long l
 			data[i] = ((pmessage->paras[3]) >> ((i - 4) * 8)) & 0xff;
 		}
 	}
-
+	
 	/* free message */
 	result = pmessage->result;
 	ar100_message_free(pmessage);
-
+	
 	return result;
 }
 EXPORT_SYMBOL(ar100_axp_read_reg);
@@ -114,7 +114,7 @@ EXPORT_SYMBOL(ar100_axp_read_reg);
  * data:     point of registers data;
  * len :     number of write registers, max len:8;
  *
- * return: result, 0 - write register successed,
+ * return: result, 0 - write register successed, 
  *                !0 - write register failedor the len more then max len;
  */
 int ar100_axp_write_reg(unsigned char *addr, unsigned char *data, unsigned long len)
@@ -122,12 +122,12 @@ int ar100_axp_write_reg(unsigned char *addr, unsigned char *data, unsigned long 
 	int                   i;
 	int					  result;
 	struct ar100_message *pmessage;
-
+	
 	if ((addr == NULL) || (data == NULL) || (len > AXP_TRANS_BYTE_MAX)) {
 		AR100_WRN("pmu write reg para error\n");
 		return -EINVAL;
 	}
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_SOFTSYN);
 	if (pmessage == NULL) {
@@ -140,10 +140,10 @@ int ar100_axp_write_reg(unsigned char *addr, unsigned char *data, unsigned long 
 	pmessage->state      = AR100_MESSAGE_INITIALIZED;
 	pmessage->cb.handler = NULL;
 	pmessage->cb.arg     = NULL;
-
+	
 	/*
 	 * package address and data to message->paras,
-	 * message->paras data layout:
+	 * message->paras data layout: 
 	 * |para[0]|para[1]|para[2]|para[3]|para[4]|
 	 * |addr0~3|addr4~7|data0~3|data4~7|  len  |
 	 */
@@ -158,24 +158,24 @@ int ar100_axp_write_reg(unsigned char *addr, unsigned char *data, unsigned long 
 		if (i < 4) {
 			/* pack 8bit addr0~addr3 into 32bit paras[0] */
 			pmessage->paras[0] |= (addr[i] << (i * 8));
-
+			
 			/* pack 8bit data0~data3 into 32bit paras[2] */
 			pmessage->paras[2] |= (data[i] << (i * 8));
 		} else {
 			/* pack 8bit addr4~addr7 into 32bit paras[1] */
 			pmessage->paras[1] |= (addr[i] << ((i - 4) * 8));
-
+			
 			/* pack 8bit data4~data7 into 32bit paras[3] */
 			pmessage->paras[3] |= (data[i] << ((i - 4) * 8));
 		}
 	}
 	/* send message use hwmsgbox */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* free message */
 	result = pmessage->result;
 	ar100_message_free(pmessage);
-
+	
 	return result;
 }
 EXPORT_SYMBOL(ar100_axp_write_reg);
@@ -204,7 +204,7 @@ int ar100_axp_cb_register(ar100_cb_t func, void *para)
 	}
 	axp_isr_node.handler = func;
 	axp_isr_node.arg     = para;
-
+	
 	return 0;
 }
 EXPORT_SYMBOL(ar100_axp_cb_register);
@@ -230,28 +230,28 @@ int ar100_disable_axp_irq(void)
 {
 	int					  result;
 	struct ar100_message *pmessage;
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type       = AR100_AXP_DISABLE_IRQ;
 	pmessage->attr       = AR100_MESSAGE_ATTR_HARDSYN;
 	pmessage->state      = AR100_MESSAGE_INITIALIZED;
 	pmessage->cb.handler = NULL;
 	pmessage->cb.arg     = NULL;
-
+	
 	/* send message use hwmsgbox */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* free message */
 	result = pmessage->result;
 	ar100_message_free(pmessage);
-
+	
 	return result;
 }
 EXPORT_SYMBOL(ar100_disable_axp_irq);
@@ -260,28 +260,28 @@ int ar100_enable_axp_irq(void)
 {
 	int					  result;
 	struct ar100_message *pmessage;
-
+	
 	/* allocate a message frame */
 	pmessage = ar100_message_allocate(AR100_MESSAGE_ATTR_HARDSYN);
 	if (pmessage == NULL) {
 		AR100_WRN("allocate message failed\n");
 		return -ENOMEM;
 	}
-
+	
 	/* initialize message */
 	pmessage->type       = AR100_AXP_ENABLE_IRQ;
 	pmessage->attr       = AR100_MESSAGE_ATTR_HARDSYN;
 	pmessage->state      = AR100_MESSAGE_INITIALIZED;
 	pmessage->cb.handler = NULL;
 	pmessage->cb.arg     = NULL;
-
+	
 	/* send message use hwmsgbox */
 	ar100_hwmsgbox_send_message(pmessage, AR100_SEND_MSG_TIMEOUT);
-
+	
 	/* free message */
 	result = pmessage->result;
 	ar100_message_free(pmessage);
-
+	
 	return result;
 }
 EXPORT_SYMBOL(ar100_enable_axp_irq);

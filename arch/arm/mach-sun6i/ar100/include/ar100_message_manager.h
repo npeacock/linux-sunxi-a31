@@ -48,7 +48,7 @@ int ar100_message_manager_exit(void);
 struct ar100_message *ar100_message_allocate(unsigned int msg_attr);
 
 /**
- * free one message frame. mainly use for process message finished,
+ * free one message frame. mainly use for process message finished, 
  * free it to messages pool or add to free message queue.
  * @pmessage:  the pointer of free message frame.
  *

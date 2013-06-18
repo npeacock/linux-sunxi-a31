@@ -21,3 +21,4 @@ EXTRA_CFLAGS += -I$(DDK_DIR) \
                 -I$(KBASE_DIR)/osk/src/linux/include \
                 -I$(KBASE_DIR)/platform_dummy \
                 -I$(KBASE_DIR)/src
+

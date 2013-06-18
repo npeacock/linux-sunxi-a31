@@ -272,9 +272,9 @@ static struct file_system_type gatorfs_type = {
 	.owner		= THIS_MODULE,
 	.name		= "gatorfs",
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 39)
-		.get_sb		= gatorfs_get_sb,
+	 	.get_sb		= gatorfs_get_sb,
 #else
-		.mount		= gatorfs_mount,
+	 	.mount		= gatorfs_mount,
 #endif
 
 	.kill_sb	= kill_litter_super,

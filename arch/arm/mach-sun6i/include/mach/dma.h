@@ -328,3 +328,4 @@ int sw_dma_getposition(dm_hdl_t dma_hdl, u32 *pSrc, u32 *pDst);
 void sw_dma_dump_chan(dm_hdl_t dma_hdl);
 
 #endif /* __SW_DMA_H */
+

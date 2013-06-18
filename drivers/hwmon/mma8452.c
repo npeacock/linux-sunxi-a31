@@ -1,6 +1,6 @@
 /*
  *  mma8452.c - Linux kernel modules for 3-Axis Orientation/Motion
- *  Detection Sensor
+ *  Detection Sensor 
  *
  *  Copyright (C) 2009-2010 Freescale Semiconductor Ltd.
  *
@@ -85,7 +85,7 @@ static const unsigned short i2c_address[2] = {MMA8452_I2C_ADDR0,MMA8452_I2C_ADDR
 static __u32 twi_id = 0;
 static int i2c_num = 0;
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND	
 struct mma8452_data {
 	struct i2c_client *client;
 	struct early_suspend early_suspend;
@@ -102,19 +102,19 @@ enum {
 	MMA8452_OUT_Y_LSB,
 	MMA8452_OUT_Z_MSB,
 	MMA8452_OUT_Z_LSB,
-
+	
 	MMA8452_SYSMOD = 0x0B,
 	MMA8452_INT_SOURCE,
 	MMA8452_WHO_AM_I,
 	MMA8452_XYZ_DATA_CFG,
 	MMA8452_HP_FILTER_CUTOFF,
-
+	
 	MMA8452_PL_STATUS,
 	MMA8452_PL_CFG,
 	MMA8452_PL_COUNT,
 	MMA8452_PL_BF_ZCOMP,
 	MMA8452_PL_P_L_THS_REG,
-
+	
 	MMA8452_FF_MT_CFG,
 	MMA8452_FF_MT_SRC,
 	MMA8452_FF_MT_THS,
@@ -124,7 +124,7 @@ enum {
 	MMA8452_TRANSIENT_SRC,
 	MMA8452_TRANSIENT_THS,
 	MMA8452_TRANSIENT_COUNT,
-
+	
 	MMA8452_PULSE_CFG,
 	MMA8452_PULSE_SRC,
 	MMA8452_PULSE_THSX,
@@ -133,18 +133,18 @@ enum {
 	MMA8452_PULSE_TMLT,
 	MMA8452_PULSE_LTCY,
 	MMA8452_PULSE_WIND,
-
+	
 	MMA8452_ASLP_COUNT,
 	MMA8452_CTRL_REG1,
 	MMA8452_CTRL_REG2,
 	MMA8452_CTRL_REG3,
 	MMA8452_CTRL_REG4,
 	MMA8452_CTRL_REG5,
-
+	
 	MMA8452_OFF_X,
 	MMA8452_OFF_Y,
 	MMA8452_OFF_Z,
-
+	
 	MMA8452_REG_END,
 };
 
@@ -187,29 +187,29 @@ static int gsensor_fetch_sysconfig_para(void)
 	int device_used = -1;
 	script_item_u	val;
 	script_item_value_type_e  type;
-
+		
 	dprintk(DEBUG_INIT, "========%s===================\n", __func__);
-
+	
 	type = script_get_item("gsensor_para", "gsensor_used", &val);
-
+ 
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
 		pr_err("%s: type err  device_used = %d. \n", __func__, val.val);
 		goto script_get_err;
 	}
 	device_used = val.val;
-
+	
 	if (1 == device_used) {
-		type = script_get_item("gsensor_para", "gsensor_twi_id", &val);
+		type = script_get_item("gsensor_para", "gsensor_twi_id", &val);	
 		if(SCIRPT_ITEM_VALUE_TYPE_INT != type){
 			pr_err("%s: type err twi_id = %d. \n", __func__, val.val);
 			goto script_get_err;
 		}
 		twi_id = val.val;
-
+		
 		dprintk(DEBUG_INIT, "%s: twi_id is %d. \n", __func__, twi_id);
 
 		ret = 0;
-
+		
 	} else {
 		pr_err("%s: gsensor_unused. \n",  __func__);
 		ret = -1;
@@ -225,7 +225,7 @@ script_get_err:
 
 /**
  * gsensor_detect - Device detection callback for automatic device creation
- * return value:
+ * return value:  
  *                    = 0; success;
  *                    < 0; err
  */
@@ -235,7 +235,7 @@ static int gsensor_detect(struct i2c_client *client, struct i2c_board_info *info
 	int ret ;
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
 		return -ENODEV;
-
+    
 	if(twi_id == adapter->nr){
 		while (i2c_num < 2) {
 			client->addr = i2c_address[i2c_num++];
@@ -248,7 +248,7 @@ static int gsensor_detect(struct i2c_client *client, struct i2c_board_info *info
 			}
 		}
 		pr_info("%s: mma8452  equipment is not found!\n",__func__);
-		return  -ENODEV;
+		return  -ENODEV;    
 	} else {
 		return -ENODEV;
 	}
@@ -262,7 +262,7 @@ static ssize_t mma8452_enable_store(struct device *dev,
 	int error;
 
 	error = strict_strtoul(buf, 10, &data);
-
+	
 	if(error) {
 		pr_err("%s strict_strtoul error\n", __FUNCTION__);
 		goto exit;
@@ -318,7 +318,7 @@ static ssize_t mma8452_delay_store(struct device *dev,struct device_attribute *a
 
 static DEVICE_ATTR(enable, 0664,
 		NULL, mma8452_enable_store);
-
+		
 static DEVICE_ATTR(delay, 0664,
 		NULL, mma8452_delay_store);
 
@@ -345,16 +345,16 @@ static int mma8452_init_client(struct i2c_client *client)
 	mma_status.ctl_reg1 = 0x20;
 	result = i2c_smbus_write_byte_data(client, MMA8452_CTRL_REG1, mma_status.ctl_reg1);
 	assert(result==0);
-
+		
 	mma_status.mode	= MODE_2G;
 	result = i2c_smbus_write_byte_data(client, MMA8452_XYZ_DATA_CFG, mma_status.mode);
 	assert(result==0);
-
+		
 	mma_status.ctl_reg1 |= 0x01;
 	result = i2c_smbus_write_byte_data(client, MMA8452_CTRL_REG1, mma_status.ctl_reg1);
 	assert(result==0);
 	mutex_unlock(&init_mutex);
-
+	
 	mdelay(MODE_CHANGE_DELAY_MS);
 
 	dprintk(DEBUG_INIT, "mma8452 device init end\n");
@@ -366,7 +366,7 @@ static int mma8452_init_client(struct i2c_client *client)
 *
 * read sensor data from mma8452
 *
-***************************************************************/
+***************************************************************/ 				
 static int mma8452_read_data(short *x, short *y, short *z) {
 	u8	tmp_data[7];
 
@@ -426,7 +426,7 @@ static void report_abs(void)
 static void mma8452_dev_poll(struct input_polled_dev *dev)
 {
 	report_abs();
-}
+} 
 
 static void mma8452_resume_events (struct work_struct *work)
 {
@@ -437,7 +437,7 @@ static void mma8452_resume_events (struct work_struct *work)
 	mutex_unlock(&enable_mutex);
 }
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND	
 static void mma8452_early_suspend(struct early_suspend *h)
 {
 	int result;
@@ -445,7 +445,7 @@ static void mma8452_early_suspend(struct early_suspend *h)
 	dprintk(DEBUG_SUSPEND, "mma8452 early suspend");
 
 	flush_workqueue(mma8452_resume_wq);
-
+	
 	mutex_lock(&enable_mutex);
 	atomic_set(&mma8452_suspend_id, 1);
 	mma8452_idev->input->close(mma8452_idev->input);
@@ -493,7 +493,7 @@ static int mma8452_resume(struct i2c_client *client)
 	int result;
 
 	dprintk(DEBUG_SUSPEND, "mma8452 resume");
-
+	
 	if (NORMAL_STANDBY == standby_type) {
 		mutex_lock(&init_mutex);
 		mma_status.ctl_reg1 = i2c_smbus_read_byte_data(mma8452_i2c_client, MMA8452_CTRL_REG1);
@@ -521,7 +521,7 @@ static int mma8452_suspend(struct i2c_client *client, pm_message_t mesg)
 	dprintk(DEBUG_SUSPEND, "mma8452 suspend");
 
 	flush_workqueue(mma8452_resume_wq);
-
+	
 	mutex_lock(&enable_mutex);
 	atomic_set(&mma8452_suspend_id, 1);
 	mma8452_idev->input->close(mma8452_idev->input);
@@ -553,18 +553,18 @@ static int __devinit mma8452_probe(struct i2c_client *client,
 
 	dprintk(DEBUG_INIT, "mma8452 probe i2c address is %d \n",i2c_address[i2c_num-1]);
 	client->addr =i2c_address[i2c_num-1];
-
+ 
 	mma8452_i2c_client = client;
 	adapter = to_i2c_adapter(client->dev.parent);
 	result = i2c_check_functionality(adapter,
 					 I2C_FUNC_SMBUS_BYTE |
 					 I2C_FUNC_SMBUS_BYTE_DATA);
 	assert(result);
-
+	
 	dprintk(DEBUG_INIT, "check mma8452 chip ID\n");
 	result = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
 
-	if (MMA8452_ID != (result)) {	//compare the address value
+	if (MMA8452_ID != (result)) {	//compare the address value 
 		dev_err(&client->dev,"read chip ID 0x%x is not equal to 0x%x!\n", result,MMA8452_ID);
 		printk(KERN_INFO "read chip ID failed\n");
 		result = -EINVAL;
@@ -587,7 +587,7 @@ static int __devinit mma8452_probe(struct i2c_client *client,
 	assert(!(IS_ERR(hwmon_dev)));
 
 	dev_info(&client->dev, "build time %s %s\n", __DATE__, __TIME__);
-
+  
 
 	/*input poll device register */
 	mma8452_idev = input_allocate_polled_device();
@@ -621,7 +621,7 @@ static int __devinit mma8452_probe(struct i2c_client *client,
 		return -ENOMEM;
 	}
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND	
 	dprintk(DEBUG_INIT, "==register_early_suspend =\n");
 	mma8452_data = kzalloc(sizeof(*mma8452_data), GFP_KERNEL);
 	if (mma8452_data == NULL) {
@@ -629,7 +629,7 @@ static int __devinit mma8452_probe(struct i2c_client *client,
 		goto err_alloc_data_failed;
 	}
 
-	mma8452_data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 3;
+	mma8452_data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 3;	
 	mma8452_data->early_suspend.suspend = mma8452_early_suspend;
 	mma8452_data->early_suspend.resume	= mma8452_late_resume;
 	register_early_suspend(&mma8452_data->early_suspend);
@@ -653,8 +653,8 @@ static int __devexit mma8452_remove(struct i2c_client *client)
 	assert(result==0);
 	mutex_unlock(&init_mutex);
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
-	unregister_early_suspend(&mma8452_data->early_suspend);
+#ifdef CONFIG_HAS_EARLYSUSPEND	
+	unregister_early_suspend(&mma8452_data->early_suspend);	
 #endif
 	cancel_work_sync(&mma8452_resume_work);
 	destroy_workqueue(mma8452_resume_wq);
@@ -683,7 +683,7 @@ static struct i2c_driver mma8452_driver = {
 	.name	= MMA8452_DRV_NAME,
 	.owner	= THIS_MODULE,
 	},
-
+	
 	.probe	= mma8452_probe,
 	.remove	= __devexit_p(mma8452_remove),
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -731,3 +731,4 @@ MODULE_VERSION("1.1");
 
 module_init(mma8452_init);
 module_exit(mma8452_exit);
+

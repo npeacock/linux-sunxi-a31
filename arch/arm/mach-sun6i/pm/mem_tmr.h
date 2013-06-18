@@ -70,7 +70,7 @@ typedef struct __MEM_TMR_REG
 	// offset:0xb0
 	volatile __u32   WDog1_Ctrl_Reg;
 	volatile __u32   WDog1_Cfg_Reg;
-	volatile __u32   WDog1_Mode_Reg;
+	volatile __u32   WDog1_Mode_Reg;	
 
 } __mem_tmr_reg_t;
 
@@ -84,3 +84,4 @@ void mem_tmr_enable_watchdog(void);
 void mem_tmr_disable_watchdog(void);
 
 #endif  //__MEM_TMR_H__
+

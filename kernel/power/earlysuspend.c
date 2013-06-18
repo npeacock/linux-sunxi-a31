@@ -106,9 +106,9 @@ static void early_suspend(struct work_struct *work)
 			if (debug_mask & DEBUG_VERBOSE){
 				pr_info("early_suspend: calling %pf\n", pos->suspend);
 				starttime = ktime_get();
-
+				
 			}
-
+			
 			pos->suspend(pos);
 
 			if (debug_mask & DEBUG_VERBOSE){
@@ -146,7 +146,7 @@ static void late_resume(struct work_struct *work)
 	u64 usecs64;
 	int usecs;
 	ktime_t starttime;
-
+	
 	mutex_lock(&early_suspend_lock);
 	spin_lock_irqsave(&state_lock, irqflags);
 	if (state == SUSPENDED)
@@ -181,7 +181,7 @@ static void late_resume(struct work_struct *work)
 				pr_info("late_resume: %pf complete after %ld.%03ld msecs\n",
 					pos->resume, usecs / USEC_PER_MSEC, usecs % USEC_PER_MSEC);
 			}
-
+	
 		}
 	}
 	if (debug_mask & DEBUG_SUSPEND)

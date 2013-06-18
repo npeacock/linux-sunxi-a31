@@ -28,7 +28,7 @@
 #include <linux/ioport.h>
 #include <asm/irq.h>
 #include <asm/io.h>
-#include <linux/timer.h>
+#include <linux/timer.h> 
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #include <linux/earlysuspend.h>
@@ -48,7 +48,7 @@
 #define INPUT_DEV_NAME          ("sw-keyboard")
 
 #define KEY_MAX_CNT             (13)
-
+ 
 #define KEY_BASSADDRESS         (0xf1c22800)
 #define LRADC_CTRL              (0x00)
 #define LRADC_INTC              (0x04)
@@ -97,9 +97,9 @@
 //#define MODE_0V15
 //#define TWO_CHANNEL
 #ifdef MODE_0V2
-/* standard of key maping
+/* standard of key maping 
  * 0.2V mode
- */
+ */					
 #define REPORT_START_NUM            (2)
 #define REPORT_KEY_LOW_LIMIT_COUNT  (1)
 #define MAX_CYCLE_COUNTER           (100)
@@ -108,17 +108,17 @@
 #define INITIAL_VALUE               (0Xff)
 
 static unsigned char keypad_mapindex[64] = {
-	0,0,0,0,0,0,0,0,               	/* key 1, 8涓紝 0-7 */
-	1,1,1,1,1,1,1,                 	/* key 2, 7涓紝 8-14 */
-	2,2,2,2,2,2,2,                 	/* key 3, 7涓紝 15-21 */
-	3,3,3,3,3,3,                   	/* key 4, 6涓紝 22-27 */
-	4,4,4,4,4,4,                   	/* key 5, 6涓紝 28-33 */
-	5,5,5,5,5,5,                   	/* key 6, 6涓紝 34-39 */
-	6,6,6,6,6,6,6,6,6,6,           	/* key 7, 10涓紝40-49 */
-	7,7,7,7,7,7,7,7,7,7,7,7,7,7    	/* key 8, 17涓紝50-63 */
+	0,0,0,0,0,0,0,0,               	/* key 1, 8个， 0-7 */
+	1,1,1,1,1,1,1,                 	/* key 2, 7个， 8-14 */
+	2,2,2,2,2,2,2,                 	/* key 3, 7个， 15-21 */
+	3,3,3,3,3,3,                   	/* key 4, 6个， 22-27 */
+	4,4,4,4,4,4,                   	/* key 5, 6个， 28-33 */
+	5,5,5,5,5,5,                   	/* key 6, 6个， 34-39 */
+	6,6,6,6,6,6,6,6,6,6,           	/* key 7, 10个，40-49 */
+	7,7,7,7,7,7,7,7,7,7,7,7,7,7    	/* key 8, 17个，50-63 */
 };
 #endif
-
+                        
 #ifdef MODE_0V15
 /* 0.15V mode */
 static unsigned char keypad_mapindex[64] = {
@@ -140,13 +140,13 @@ static unsigned char keypad_mapindex[64] = {
 
 #ifdef EVB
 static unsigned int sun6i_scankeycodes[KEY_MAX_CNT] = {
-	[0 ] = KEY_VOLUMEUP,
-	[1 ] = KEY_VOLUMEDOWN,
-	[2 ] = KEY_MENU,
-	[3 ] = KEY_ENTER,
-	[4 ] = KEY_HOME,
-	[5 ] = KEY_RESERVED,
-	[6 ] = KEY_RESERVED,
+	[0 ] = KEY_VOLUMEUP,       
+	[1 ] = KEY_VOLUMEDOWN,      
+	[2 ] = KEY_MENU,         
+	[3 ] = KEY_ENTER,       
+	[4 ] = KEY_HOME,   
+	[5 ] = KEY_RESERVED, 
+	[6 ] = KEY_RESERVED,        
 	[7 ] = KEY_RESERVED,
 	[8 ] = KEY_RESERVED,
 	[9 ] = KEY_RESERVED,
@@ -156,7 +156,7 @@ static unsigned int sun6i_scankeycodes[KEY_MAX_CNT] = {
 };
 #endif
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND	
 struct sun6i_keyboard_data {
 	struct early_suspend early_suspend;
 };
@@ -192,46 +192,46 @@ static struct sun6i_keyboard_data *keyboard_data;
 #endif
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-/* 鍋滅敤璁惧 */
+/* 停用设备 */
 static void sun6i_keyboard_early_suspend(struct early_suspend *h)
 {
 	//int ret;
 	//struct sun6i_keyboard_data *ts = container_of(h, struct sun6i_keyboard_data, early_suspend);
 
 	dprintk(DEBUG_SUSPEND, "[%s] enter standby state: %d. \n", __FUNCTION__, (int)standby_type);
-
+    
 	if (NORMAL_STANDBY == standby_type) {
 		writel(0,KEY_BASSADDRESS + LRADC_CTRL);
-	/* process for super standby */
+	/* process for super standby */	
 	} else if (SUPER_STANDBY == standby_type)
 		;
-
+	
 	return ;
 }
 
-/* 閲嶆柊鍞ら啋 */
+/* 重新唤醒 */
 static void sun6i_keyboard_late_resume(struct early_suspend *h)
 {
 	//int ret;
 	//struct sun6i_keyboard_data *ts = container_of(h, struct sun6i_keyboard_data, early_suspend);
-
-	dprintk(DEBUG_SUSPEND, "[%s] return from standby state: %d. \n", __FUNCTION__, (int)standby_type);
+	
+	dprintk(DEBUG_SUSPEND, "[%s] return from standby state: %d. \n", __FUNCTION__, (int)standby_type); 
 
 	/* process for normal standby */
 	if (NORMAL_STANDBY == standby_type) {
 		writel(FIRST_CONCERT_DLY|LEVELB_VOL|KEY_MODE_SELECT|LRADC_HOLD_EN|ADC_CHAN_SELECT \
 			|LRADC_SAMPLE_250HZ|LRADC_EN,KEY_BASSADDRESS + LRADC_CTRL);
-	/* process for super standby */
+	/* process for super standby */	
 	} else if (SUPER_STANDBY == standby_type) {
 #ifdef ONE_CHANNEL
-		writel(LRADC_ADC0_DOWN_EN|LRADC_ADC0_UP_EN|LRADC_ADC0_DATA_EN,KEY_BASSADDRESS + LRADC_INTC);
+		writel(LRADC_ADC0_DOWN_EN|LRADC_ADC0_UP_EN|LRADC_ADC0_DATA_EN,KEY_BASSADDRESS + LRADC_INTC);	
 		writel(FIRST_CONCERT_DLY|LEVELB_VOL|KEY_MODE_SELECT|LRADC_HOLD_EN|ADC_CHAN_SELECT \
 			|LRADC_SAMPLE_250HZ|LRADC_EN,KEY_BASSADDRESS + LRADC_CTRL);
 #else
 #endif
 	}
-
-	return ;
+	
+	return ; 
 }
 #else
 #ifdef CONFIG_PM
@@ -242,40 +242,40 @@ static int sun6i_keyboard_suspend(struct device *dev)
 	//struct sun6i_keyboard_data *ts = container_of(h, struct sun6i_keyboard_data, early_suspend);
 
 	dprintk(DEBUG_SUSPEND, "[%s] enter standby state: %d. \n", __FUNCTION__, (int)standby_type);
-
+    
 	if (NORMAL_STANDBY == standby_type) {
 		writel(0,KEY_BASSADDRESS + LRADC_CTRL);
-	/* process for super standby */
+	/* process for super standby */	
 	} else if (SUPER_STANDBY == standby_type)
 		;
-
+	
 	return 0;
 }
 
-/* 閲嶆柊鍞ら啋 */
+/* 重新唤醒 */
 static int sun6i_keyboard_resume(struct device *dev)
 {
 
 	//int ret;
 	//struct sun6i_keyboard_data *ts = container_of(h, struct sun6i_keyboard_data, early_suspend);
-
-	dprintk(DEBUG_SUSPEND, "[%s] return from standby state: %d. \n", __FUNCTION__, (int)standby_type);
+	
+	dprintk(DEBUG_SUSPEND, "[%s] return from standby state: %d. \n", __FUNCTION__, (int)standby_type); 
 
 	/* process for normal standby */
 	if (NORMAL_STANDBY == standby_type) {
 		writel(FIRST_CONCERT_DLY|LEVELB_VOL|KEY_MODE_SELECT|LRADC_HOLD_EN|ADC_CHAN_SELECT \
 			|LRADC_SAMPLE_250HZ|LRADC_EN,KEY_BASSADDRESS + LRADC_CTRL);
-	/* process for super standby */
+	/* process for super standby */	
 	} else if (SUPER_STANDBY == standby_type) {
 #ifdef ONE_CHANNEL
-		writel(LRADC_ADC0_DOWN_EN|LRADC_ADC0_UP_EN|LRADC_ADC0_DATA_EN,KEY_BASSADDRESS + LRADC_INTC);
+		writel(LRADC_ADC0_DOWN_EN|LRADC_ADC0_UP_EN|LRADC_ADC0_DATA_EN,KEY_BASSADDRESS + LRADC_INTC);	
 		writel(FIRST_CONCERT_DLY|LEVELB_VOL|KEY_MODE_SELECT|LRADC_HOLD_EN|ADC_CHAN_SELECT \
 			|LRADC_SAMPLE_250HZ|LRADC_EN,KEY_BASSADDRESS + LRADC_CTRL);
 #else
 #endif
 	}
-
-	return 0;
+	
+	return 0; 
 }
 #endif
 #endif
@@ -285,20 +285,20 @@ static irqreturn_t sun6i_isr_key(int irq, void *dummy)
 {
 	unsigned int  reg_val;
 	int judge_flag = 0;
-
+	 
 	dprintk(DEBUG_INT, "Key Interrupt\n");
-
+	
 	reg_val  = readl(KEY_BASSADDRESS + LRADC_INT_STA);
 	//writel(reg_val,KEY_BASSADDRESS + LRADC_INT_STA);
 
-	if (reg_val & LRADC_ADC0_DOWNPEND) {
+	if (reg_val & LRADC_ADC0_DOWNPEND) {	
 		dprintk(DEBUG_INT, "key down\n");
 	}
-
+	
 	if (reg_val & LRADC_ADC0_DATAPEND) {
 		key_val = readl(KEY_BASSADDRESS+LRADC_DATA0);
 
-
+		
 		if (key_val < 0x3f) {
 
 			compare_buffer[key_cnt] = key_val&0x3f;
@@ -334,7 +334,7 @@ static irqreturn_t sun6i_isr_key(int irq, void *dummy)
 #else
 					/* do not report key value */
 #endif
-				} else if (INITIAL_VALUE != transfer_code) {
+				} else if (INITIAL_VALUE != transfer_code) {                               
 					/* report previous key value up signal + report current key value down */
 					input_report_key(sun6ikbd_dev, sun6i_scankeycodes[transfer_code], 0);
 					input_sync(sun6ikbd_dev);
@@ -351,13 +351,13 @@ static irqreturn_t sun6i_isr_key(int irq, void *dummy)
 			}
 		}
 	}
-
+       
 	if (reg_val & LRADC_ADC0_UPPEND) {
-
+		
 		if(INITIAL_VALUE != transfer_code) {
-
+				
 			dprintk(DEBUG_INT, "report data: key_val :%8d transfer_code: %8d \n",key_val, transfer_code);
-
+					
 			input_report_key(sun6ikbd_dev, sun6i_scankeycodes[transfer_code], 0);
 			input_sync(sun6ikbd_dev);
 		}
@@ -368,7 +368,7 @@ static irqreturn_t sun6i_isr_key(int irq, void *dummy)
 		judge_flag = 0;
 		transfer_code = INITIAL_VALUE;
 	}
-
+	
 	writel(reg_val,KEY_BASSADDRESS + LRADC_INT_STA);
 	return IRQ_HANDLED;
 }
@@ -378,8 +378,8 @@ static int __init sun6ikbd_init(void)
 	int i;
 	int err =0;
 
-	dprintk(DEBUG_INIT, "sun6ikbd_init \n");
-
+ 	dprintk(DEBUG_INIT, "sun6ikbd_init \n");
+	
 	sun6ikbd_dev = input_allocate_device();
 	if (!sun6ikbd_dev) {
 		printk(KERN_DEBUG "sun6ikbd: not enough memory for input device\n");
@@ -387,9 +387,9 @@ static int __init sun6ikbd_init(void)
 		goto fail1;
 	}
 
-	sun6ikbd_dev->name = INPUT_DEV_NAME;
-	sun6ikbd_dev->phys = "sun6ikbd/input0";
-	sun6ikbd_dev->id.bustype = BUS_HOST;
+	sun6ikbd_dev->name = INPUT_DEV_NAME;  
+	sun6ikbd_dev->phys = "sun6ikbd/input0"; 
+	sun6ikbd_dev->id.bustype = BUS_HOST;      
 	sun6ikbd_dev->id.vendor = 0x0001;
 	sun6ikbd_dev->id.product = 0x0001;
 	sun6ikbd_dev->id.version = 0x0100;
@@ -403,9 +403,9 @@ static int __init sun6ikbd_init(void)
 
 	for (i = 0; i < KEY_MAX_CNT; i++)
 		set_bit(sun6i_scankeycodes[i], sun6ikbd_dev->keybit);
-
+	
 #ifdef ONE_CHANNEL
-	writel(LRADC_ADC0_DOWN_EN|LRADC_ADC0_UP_EN|LRADC_ADC0_DATA_EN,KEY_BASSADDRESS + LRADC_INTC);
+	writel(LRADC_ADC0_DOWN_EN|LRADC_ADC0_UP_EN|LRADC_ADC0_DATA_EN,KEY_BASSADDRESS + LRADC_INTC);	
 	writel(FIRST_CONCERT_DLY|LEVELB_VOL|KEY_MODE_SELECT|LRADC_HOLD_EN|ADC_CHAN_SELECT \
 		|LRADC_SAMPLE_250HZ|LRADC_EN,KEY_BASSADDRESS + LRADC_CTRL);
 #else
@@ -418,13 +418,13 @@ static int __init sun6ikbd_init(void)
 		goto fail2;
 	}
 
-
+	
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #else
 #ifdef CONFIG_PM
 	keyboard_pm_domain.ops.suspend = sun6i_keyboard_suspend;
 	keyboard_pm_domain.ops.resume = sun6i_keyboard_resume;
-	sun6ikbd_dev->dev.pm_domain = &keyboard_pm_domain;
+	sun6ikbd_dev->dev.pm_domain = &keyboard_pm_domain;	
 #endif
 #endif
 
@@ -432,7 +432,7 @@ static int __init sun6ikbd_init(void)
 	if (err)
 		goto fail3;
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND 
 	dprintk(DEBUG_INIT, "==register_early_suspend =\n");
 	keyboard_data = kzalloc(sizeof(*keyboard_data), GFP_KERNEL);
 	if (keyboard_data == NULL) {
@@ -440,7 +440,7 @@ static int __init sun6ikbd_init(void)
 		goto err_alloc_data_failed;
 	}
 
-	keyboard_data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 3;
+	keyboard_data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 3;	
 	keyboard_data->early_suspend.suspend = sun6i_keyboard_early_suspend;
 	keyboard_data->early_suspend.resume	= sun6i_keyboard_late_resume;
 	register_early_suspend(&keyboard_data->early_suspend);
@@ -451,9 +451,9 @@ static int __init sun6ikbd_init(void)
 #ifdef CONFIG_HAS_EARLYSUSPEND
 err_alloc_data_failed:
 #endif
-fail3:
+fail3:	
 	free_irq(SW_INT_IRQNO_LRADC, NULL);
-fail2:
+fail2:	
 	input_free_device(sun6ikbd_dev);
 fail1:
 	printk(KERN_DEBUG "sun6ikbd_init failed. \n");
@@ -462,9 +462,9 @@ fail1:
 }
 
 static void __exit sun6ikbd_exit(void)
-{
-#ifdef CONFIG_HAS_EARLYSUSPEND
-	unregister_early_suspend(&keyboard_data->early_suspend);
+{	
+#ifdef CONFIG_HAS_EARLYSUSPEND	
+	unregister_early_suspend(&keyboard_data->early_suspend);	
 #endif
 	free_irq(SW_INT_IRQNO_LRADC, NULL);
 	input_unregister_device(sun6ikbd_dev);
@@ -477,3 +477,6 @@ module_exit(sun6ikbd_exit);
 MODULE_AUTHOR(" <@>");
 MODULE_DESCRIPTION("sun6i-keyboard driver");
 MODULE_LICENSE("GPL");
+
+
+

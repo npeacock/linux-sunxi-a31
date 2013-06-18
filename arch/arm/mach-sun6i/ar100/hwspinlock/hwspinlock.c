@@ -32,10 +32,10 @@ struct ar100_hwspinlock ar100_hwspinlocks[AR100_HW_SPINLOCK_NUM];
 int ar100_hwspinlock_init(void)
 {
 	int index;
-
+	
 	for (index = 0; index < AR100_HW_SPINLOCK_NUM; index++)
 		spin_lock_init(&(ar100_hwspinlocks[index].lock));
-
+	
 	return 0;
 }
 
@@ -60,15 +60,15 @@ int ar100_hwspin_lock_timeout(int hwid, unsigned int timeout)
 {
 	ar100_hwspinlock_t *spinlock;
 	unsigned long       expire;
-
+	
 	expire = msecs_to_jiffies(timeout) + jiffies;
-
+	
 	if (hwid >= AR100_HW_SPINLOCK_NUM) {
 		AR100_ERR("invalid hwspinlock id [%d] for trylock\n", hwid);
 		return -EINVAL;
 	}
 	spinlock = &(ar100_hwspinlocks[hwid]);
-
+	
 	/* is lock already taken by another context on the local cpu ? */
 	while (!(spin_trylock_irqsave(&(spinlock->lock), spinlock->flags))) {
 		if (time_is_before_eq_jiffies(expire)) {
@@ -76,7 +76,7 @@ int ar100_hwspin_lock_timeout(int hwid, unsigned int timeout)
 			return -EBUSY;
 		}
 	}
-
+	
 	/* try to take spinlock */
 	while (readl(IO_ADDRESS(AW_SPINLOCK_LOCK_REG(hwid))) == AW_SPINLOCK_TAKEN) {
 		/*
@@ -88,7 +88,7 @@ int ar100_hwspin_lock_timeout(int hwid, unsigned int timeout)
 			return -ETIMEDOUT;
 		}
 	}
-
+	
 	return 0;
 }
 
@@ -101,18 +101,18 @@ int ar100_hwspin_lock_timeout(int hwid, unsigned int timeout)
 int ar100_hwspin_unlock(int hwid)
 {
 	ar100_hwspinlock_t *spinlock;
-
+	
 	if (hwid >= AR100_HW_SPINLOCK_NUM) {
 		AR100_ERR("invalid hwspinlock id [%d] for unlock\n", hwid);
 		return -EINVAL;
 	}
 	spinlock = &(ar100_hwspinlocks[hwid]);
-
+	
 	/* untaken the spinlock */
 	writel(0x0, IO_ADDRESS(AW_SPINLOCK_LOCK_REG(hwid)));
-
+	
 	spin_unlock_irqrestore(&(spinlock->lock), spinlock->flags);
-
+	
 	return 0;
 }
 

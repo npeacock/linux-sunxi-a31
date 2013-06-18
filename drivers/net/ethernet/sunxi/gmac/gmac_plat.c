@@ -402,7 +402,7 @@ static struct gmac_mdio_bus_data gmac_mdio_data = {
 static struct gmac_plat_data gmac_platdata ={
 	.bus_id = 0,
 	.phy_addr = 1,
-	.phy_interface = PHY_INTERFACE_MODE_RGMII,
+	.phy_interface = PHY_INTERFACE_MODE_RGMII, //PHY_INTERFACE_MODE_RGMII, hanbiao changed
 	.clk_csr = 4,
 
 	.tx_coe = 1,
@@ -426,3 +426,4 @@ struct platform_device gmac_device = {
 		.platform_data = &gmac_platdata,
 	},
 };
+

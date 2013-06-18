@@ -61,7 +61,7 @@ static struct clk *i2s_pllx8 		= NULL;
 static struct clk *i2s_moduleclk	= NULL;
 
 static struct sun6i_dma_params sun6i_i2s_pcm_stereo_out = {
-	.name		= "i2s_play",
+	.name		= "i2s_play",	
 	.dma_addr	= SUN6I_IISBASE + SUN6I_IISTXFIFO,/*send data address	*/
 };
 
@@ -91,7 +91,7 @@ void sun6i_snd_txctrl_i2s(struct snd_pcm_substream *substream, int on)
 	reg_val = readl(sun6i_iis.regs + SUN6I_IISCTL);
 	reg_val &= ~SUN6I_IISCTL_SDO3EN;
 	reg_val &= ~SUN6I_IISCTL_SDO2EN;
-	reg_val &= ~SUN6I_IISCTL_SDO1EN;
+	reg_val &= ~SUN6I_IISCTL_SDO1EN;	
 	reg_val &= ~SUN6I_IISCTL_SDO0EN;
 	switch(substream->runtime->channels) {
 		case 1:
@@ -118,7 +118,7 @@ void sun6i_snd_txctrl_i2s(struct snd_pcm_substream *substream, int on)
 
 	/*flush TX FIFO*/
 	reg_val = readl(sun6i_iis.regs + SUN6I_IISFCTL);
-	reg_val |= SUN6I_IISFCTL_FTX;
+	reg_val |= SUN6I_IISFCTL_FTX;	
 	writel(reg_val, sun6i_iis.regs + SUN6I_IISFCTL);
 
 	/*clear TX counter*/
@@ -129,7 +129,7 @@ void sun6i_snd_txctrl_i2s(struct snd_pcm_substream *substream, int on)
 		reg_val = readl(sun6i_iis.regs + SUN6I_IISCTL);
 		reg_val |= SUN6I_IISCTL_TXEN;
 		writel(reg_val, sun6i_iis.regs + SUN6I_IISCTL);
-
+		
 		/* enable DMA DRQ mode for play */
 		reg_val = readl(sun6i_iis.regs + SUN6I_IISINT);
 		reg_val |= SUN6I_IISINT_TXDRQEN;
@@ -149,7 +149,7 @@ void sun6i_snd_txctrl_i2s(struct snd_pcm_substream *substream, int on)
 
 void sun6i_snd_rxctrl_i2s(struct snd_pcm_substream *substream, int on)
 {
-	u32 reg_val;
+	u32 reg_val;	
 
 	reg_val = readl(sun6i_iis.regs + SUN6I_RXCHSEL);
 	reg_val &= ~0x7;
@@ -167,7 +167,7 @@ void sun6i_snd_rxctrl_i2s(struct snd_pcm_substream *substream, int on)
 
 	/*flush RX FIFO*/
 	reg_val = readl(sun6i_iis.regs + SUN6I_IISFCTL);
-	reg_val |= SUN6I_IISFCTL_FRX;
+	reg_val |= SUN6I_IISFCTL_FRX;	
 	writel(reg_val, sun6i_iis.regs + SUN6I_IISFCTL);
 
 	/*clear RX counter*/
@@ -204,6 +204,7 @@ static int sun6i_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 	/*SDO ON*/
 	reg_val = readl(sun6i_iis.regs + SUN6I_IISCTL);
 	reg_val |= (SUN6I_IISCTL_SDO0EN | SUN6I_IISCTL_SDO1EN | SUN6I_IISCTL_SDO2EN | SUN6I_IISCTL_SDO3EN);
+
 	if (i2s_select) {
 		/*config as i2s, the default register is i2s.*/
 		reg_val &= ~SUN6I_IISCTL_PCM;
@@ -258,7 +259,7 @@ static int sun6i_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 	}
 	writel(reg_val, sun6i_iis.regs + SUN6I_IISCTL);
 	writel(reg_val1, sun6i_iis.regs + SUN6I_IISFAT0);
-
+	
 	/* DAI signal inversions */
 	reg_val1 = readl(sun6i_iis.regs + SUN6I_IISFAT0);
 	switch(fmt & SND_SOC_DAIFMT_INV_MASK){
@@ -280,7 +281,7 @@ static int sun6i_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 			break;
 	}
 	writel(reg_val1, sun6i_iis.regs + SUN6I_IISFAT0);
-
+	
 	/* set FIFO control register */
 	reg_val = 1 & 0x3;
 	reg_val |= (1 & 0x1)<<2;
@@ -296,7 +297,7 @@ static int sun6i_i2s_hw_params(struct snd_pcm_substream *substream,
 {
 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
 	struct sun6i_dma_params *dma_data;
-
+	
 	/* play or record */
 	if(substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
 		dma_data = &sun6i_i2s_pcm_stereo_out;
@@ -349,29 +350,29 @@ static int sun6i_i2s_trigger(struct snd_pcm_substream *substream,
 	return ret;
 }
 
-static int sun6i_i2s_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
-                                 unsigned int freq, int dir)
+static int sun6i_i2s_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id, 
+                                 unsigned int freq, int i2s_pcm_select)
 {
 	if (clk_set_rate(i2s_pll2clk, freq)) {
 		printk("try to set the i2s_pll2clk failed!\n");
 	}
+	i2s_select = i2s_pcm_select;
 
 	return 0;
 }
 
-static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div)
+static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int sample_rate)
 {
 	u32 reg_val;
-	u32 fs;
 	u32 mclk;
 	u32 mclk_div = 0;
 	u32 bclk_div = 0;
 
-	fs = div;
 	mclk = over_sample_rate;
+
 	if (i2s_select) {
-		/*mclk div caculate*/
-		switch(fs)
+		/*mclk div calculate*/
+		switch(sample_rate)
 		{
 			case 8000:
 			{
@@ -392,7 +393,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				}
 				break;
 			}
-
+			
 			case 16000:
 			{
 				switch(mclk)
@@ -410,7 +411,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				}
 				break;
 			}
-
+			
 			case 32000:
 			{
 				switch(mclk)
@@ -426,7 +427,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				}
 				break;
 			}
-
+	
 			case 64000:
 			{
 				switch(mclk)
@@ -438,7 +439,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				}
 				break;
 			}
-
+			
 			case 128000:
 			{
 				switch(mclk)
@@ -448,7 +449,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				}
 				break;
 			}
-
+		
 			case 11025:
 			case 12000:
 			{
@@ -463,7 +464,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				}
 				break;
 			}
-
+		
 			case 22050:
 			case 24000:
 			{
@@ -478,7 +479,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				}
 				break;
 			}
-
+		
 			case 44100:
 			case 48000:
 			{
@@ -506,14 +507,14 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				}
 				break;
 			}
-
+				
 			case 176400:
 			case 192000:
 			{
 				mclk_div = 1;
 				break;
 			}
-
+		
 		}
 
 		/*bclk div caculate*/
@@ -571,7 +572,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 				 break;
 	}
 	bclk_div &= 0x7;
-
+	
 	/*set mclk and bclk dividor register*/
 	reg_val = mclk_div;
 	reg_val |= (bclk_div<<4);
@@ -584,18 +585,18 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 	reg_val &= ~SUN6I_IISFAT0_WSS_32BCLK;
 	if(sun6i_iis.ws_size == 16)
 		reg_val |= SUN6I_IISFAT0_WSS_16BCLK;
-	else if(sun6i_iis.ws_size == 20)
+	else if(sun6i_iis.ws_size == 20) 
 		reg_val |= SUN6I_IISFAT0_WSS_20BCLK;
 	else if(sun6i_iis.ws_size == 24)
 		reg_val |= SUN6I_IISFAT0_WSS_24BCLK;
 	else
 		reg_val |= SUN6I_IISFAT0_WSS_32BCLK;
-
+	
 	sun6i_iis.samp_res = sample_resolution;
 	reg_val &= ~SUN6I_IISFAT0_SR_RVD;
 	if(sun6i_iis.samp_res == 16)
 		reg_val |= SUN6I_IISFAT0_SR_16BIT;
-	else if(sun6i_iis.samp_res == 20)
+	else if(sun6i_iis.samp_res == 20) 
 		reg_val |= SUN6I_IISFAT0_SR_20BIT;
 	else
 		reg_val |= SUN6I_IISFAT0_SR_24BIT;
@@ -609,7 +610,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 
 	sun6i_iis.pcm_sync_type = frame_width;
 	if(sun6i_iis.pcm_sync_type)
-		reg_val |= SUN6I_IISFAT1_SSYNC;
+		reg_val |= SUN6I_IISFAT1_SSYNC;	
 
 	sun6i_iis.pcm_sw = slot_width;
 	if(sun6i_iis.pcm_sw == 16)
@@ -619,7 +620,7 @@ static int sun6i_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div
 	reg_val |=(sun6i_iis.pcm_start_slot & 0x3)<<6;
 
 	sun6i_iis.pcm_lsb_first = msb_lsb_first;
-	reg_val |= sun6i_iis.pcm_lsb_first<<9;
+	reg_val |= sun6i_iis.pcm_lsb_first<<9;			
 
 	sun6i_iis.pcm_sync_period = pcm_sync_period;
 	if(sun6i_iis.pcm_sync_period == 256)
@@ -725,12 +726,12 @@ static int sun6i_i2s_resume(struct snd_soc_dai *cpu_dai)
 	}
 
 	iisregrestore();
-
+	
 	/*Global Enable Digital Audio Interface*/
 	reg_val = readl(sun6i_iis.regs + SUN6I_IISCTL);
 	reg_val |= SUN6I_IISCTL_GEN;
 	writel(reg_val, sun6i_iis.regs + SUN6I_IISCTL);
-
+	
 	return 0;
 }
 
@@ -740,10 +741,10 @@ static struct snd_soc_dai_ops sun6i_iis_dai_ops = {
 	.hw_params 	= sun6i_i2s_hw_params,
 	.set_fmt 	= sun6i_i2s_set_fmt,
 	.set_clkdiv = sun6i_i2s_set_clkdiv,
-	.set_sysclk = sun6i_i2s_set_sysclk,
+	.set_sysclk = sun6i_i2s_set_sysclk, 
 };
 
-static struct snd_soc_dai_driver sun6i_iis_dai = {
+static struct snd_soc_dai_driver sun6i_iis_dai = {	
 	.probe 		= sun6i_i2s_dai_probe,
 	.suspend 	= sun6i_i2s_suspend,
 	.resume 	= sun6i_i2s_resume,
@@ -760,7 +761,7 @@ static struct snd_soc_dai_driver sun6i_iis_dai = {
 		.rates = SUN6I_I2S_RATES,
 		.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE | SNDRV_PCM_FMTBIT_S24_LE,
 	},
-	.ops 		= &sun6i_iis_dai_ops,
+	.ops 		= &sun6i_iis_dai_ops,	
 };
 
 static int __devinit sun6i_i2s_dev_probe(struct platform_device *pdev)
@@ -783,7 +784,7 @@ static int __devinit sun6i_i2s_dev_probe(struct platform_device *pdev)
 	if (clk_enable(i2s_apbclk)) {
 		printk("i2s_apbclk failed! line = %d\n", __LINE__);
 	}
-
+	
 	i2s_pllx8 = clk_get(NULL, CLK_SYS_PLL2X8);
 	if ((!i2s_pllx8)||(IS_ERR(i2s_pllx8))) {
 		printk("try to get i2s_pllx8 failed\n");
@@ -806,19 +807,19 @@ static int __devinit sun6i_i2s_dev_probe(struct platform_device *pdev)
 	if ((!i2s_moduleclk)||(IS_ERR(i2s_moduleclk))) {
 		printk("try to get i2s_moduleclk failed\n");
 	}
-
+	
 	if (clk_set_parent(i2s_moduleclk, i2s_pll2clk)) {
 		printk("try to set parent of i2s_moduleclk to i2s_pll2ck failed! line = %d\n",__LINE__);
 	}
-
+	
 	if (clk_set_rate(i2s_moduleclk, 24576000/8)) {
 		printk("set i2s_moduleclk clock freq to 24576000 failed! line = %d\n", __LINE__);
 	}
-
+	
 	if (clk_enable(i2s_moduleclk)) {
 		printk("open i2s_moduleclk failed! line = %d\n", __LINE__);
 	}
-
+	
 	if (clk_reset(i2s_moduleclk, AW_CCU_CLK_NRESET)) {
 		printk("try to NRESET i2s module clk failed!\n");
 	}
@@ -881,14 +882,14 @@ static int __devinit sun6i_i2s_dev_probe(struct platform_device *pdev)
         printk("[I2S] tx_data_mode type err!\n");
     }
 	tx_data_mode = val.val;
-
+			
 	type = script_get_item("i2s_para", "rx_data_mode", &val);
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
         printk("[I2S] rx_data_mode type err!\n");
     }
 	rx_data_mode = val.val;
 
-	ret = snd_soc_register_dai(&pdev->dev, &sun6i_iis_dai);
+	ret = snd_soc_register_dai(&pdev->dev, &sun6i_iis_dai);	
 	if (ret) {
 		dev_err(&pdev->dev, "Failed to register DAI\n");
 	}
@@ -925,7 +926,7 @@ static int __devexit sun6i_i2s_dev_remove(struct platform_device *pdev)
 		if ((NULL == i2s_apbclk) ||(IS_ERR(i2s_apbclk))) {
 			printk("i2s_apbclk handle is invalid, just return\n");
 			return -EFAULT;
-		} else {
+		} else {		
 			/*release apbclk*/
 			clk_put(i2s_apbclk);
 		}
@@ -951,7 +952,7 @@ static struct platform_driver sun6i_i2s_driver = {
 };
 
 static int __init sun6i_i2s_init(void)
-{
+{	
 	int err = 0;
 	int cnt = 0;
 	int i 	= 0;
@@ -972,7 +973,7 @@ static int __init sun6i_i2s_init(void)
     }
 	i2s_select = val.val;
 
-	if (i2s_used) {
+ 	if (i2s_used) {
 		/* get gpio list */
 		cnt = script_get_pio_list("i2s_para", &list);
 		if (0 == cnt) {
@@ -995,7 +996,7 @@ static int __init sun6i_i2s_init(void)
 		return err;
 
 	if ((err = platform_driver_register(&sun6i_i2s_driver)) < 0)
-			return err;
+			return err;	
 	} else {
         printk("[I2S]sun6i-i2s cannot find any using configuration for controllers, return directly!\n");
         return 0;
@@ -1011,7 +1012,7 @@ end:
 module_init(sun6i_i2s_init);
 
 static void __exit sun6i_i2s_exit(void)
-{
+{	
 	platform_driver_unregister(&sun6i_i2s_driver);
 }
 module_exit(sun6i_i2s_exit);
@@ -1021,3 +1022,4 @@ MODULE_AUTHOR("REUUIMLLA");
 MODULE_DESCRIPTION("sun6i I2S SoC Interface");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:sun6i-i2s");
+

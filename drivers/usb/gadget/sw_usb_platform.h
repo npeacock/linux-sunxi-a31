@@ -10,7 +10,7 @@
 *
 * Author 		: javen
 *
-* Description 	: USB äº§å“ä¿¡æ¯
+* Description 	: USB ²úÆ·ÐÅÏ¢
 *
 * Notes         :
 *
@@ -24,9 +24,9 @@
 #define  __SW_USB_PLATFORM_H__
 
 //---------------------------------------------------------------
-//  USBæŽ¥å£
+//  USB½Ó¿Ú
 //---------------------------------------------------------------
-/* åŽ‚å•†ID, äº§å“ID, äº§å“ç‰ˆæœ¬å· */
+/* ³§ÉÌID, ²úÆ·ID, ²úÆ·°æ±¾ºÅ */
 #if 0
 #define  SW_USB_VENDOR_ID               0x1F3A
 
@@ -51,7 +51,7 @@
 //  Android USB device descriptor
 //---------------------------------------------------------------
 
-/* åŽ‚å•†å, äº§å“å, äº§å“åºåˆ—å· */
+/* ³§ÉÌÃû, ²úÆ·Ãû, ²úÆ·ÐòÁÐºÅ */
 #define  SW_USB_MANUFACTURER_NAME           "USB Developer"
 #define  SW_USB_PRODUCT_NAME                "Android"
 #define  SW_USB_SERIAL_NUMBER               "20080411"
@@ -59,12 +59,12 @@
 //---------------------------------------------------------------
 //  usb_mass_storage
 //---------------------------------------------------------------
-/* åŽ‚å•†å, äº§å“å, äº§å“å‘å¸ƒç‰ˆæœ¬å· */
+/* ³§ÉÌÃû, ²úÆ·Ãû, ²úÆ··¢²¼°æ±¾ºÅ */
 #define  SW_USB_MASS_STORAGE_VENDOR_NAME    "USB 2.0"
 #define  SW_USB_MASS_STORAGE_PRODUCT_NAME   "USB Flash Driver"
 #define  SW_USB_MASS_STORAGE_RELEASE        100
 
-/* é€»è¾‘å•å…ƒä¸ªæ•°ï¼Œ å³PCä¸Šèƒ½å¤Ÿçœ‹è§çš„Uç›˜ç›˜ç¬¦çš„ä¸ªæ•° */
+/* Âß¼­µ¥Ôª¸öÊý£¬ ¼´PCÉÏÄÜ¹»¿´¼ûµÄUÅÌÅÌ·ûµÄ¸öÊý */
 #define  SW_USB_NLUNS               3
 
 //---------------------------------------------------------------
@@ -78,3 +78,4 @@
 #define  SW_USB_ACM_NUM_INST        1
 
 #endif   //__SW_USB_PLATFORM_H__
+

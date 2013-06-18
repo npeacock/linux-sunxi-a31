@@ -66,7 +66,7 @@ IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVAcquireDeviceDataKM(IMG_UINT32			uiDevIndex,
 													PVRSRV_DEVICE_TYPE	eDeviceType,
 													IMG_HANDLE			*phDevCookie);
-
+							
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVCreateCommandQueueKM(IMG_SIZE_T ui32QueueSize,
 													 PVRSRV_QUEUE_INFO **ppsQueueInfo);
@@ -191,7 +191,7 @@ IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVWrapExtMemoryKM(IMG_HANDLE				hDevCookie,
 												PVRSRV_PER_PROCESS_DATA	*psPerProc,
 												IMG_HANDLE				hDevMemContext,
-												IMG_SIZE_T 				ui32ByteSize,
+												IMG_SIZE_T 				ui32ByteSize, 
 												IMG_SIZE_T				ui32PageOffset,
 												IMG_BOOL				bPhysContig,
 												IMG_SYS_PHYADDR	 		*psSysAddr,

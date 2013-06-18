@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
+ *                                        
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
  * published by the Free Software Foundation.
@@ -22,7 +22,7 @@
 
 
 enum cmd_msg_element_id
-{
+{	
 	NONE_CMDMSG_EID,
 	AP_OFFLOAD_EID=0,
 	SET_PWRMODE_EID=1,
@@ -90,7 +90,7 @@ void	rtl8192c_set_FwPwrMode_cmd(_adapter*padapter, u8 Mode);
 void	rtl8192c_set_FwJoinBssReport_cmd(_adapter* padapter, u8 mstatus);
 u8	rtl8192c_set_rssi_cmd(_adapter*padapter, u8 *param);
 u8	rtl8192c_set_raid_cmd(_adapter*padapter, u32 mask, u8 arg);
-void	rtl8192c_Add_RateATid(PADAPTER pAdapter, u32 bitmap, u8 arg);
+void	rtl8192c_Add_RateATid(PADAPTER pAdapter, u32 bitmap, u8 arg, u8 rssi_level);
 u8	rtl8192c_set_FwSelectSuspend_cmd(_adapter*padapter,u8 bfwpoll, u16 period);
 #ifdef CONFIG_P2P
 void	rtl8192c_set_p2p_ps_offload_cmd(_adapter* padapter, u8 p2p_ps_state);
@@ -100,7 +100,7 @@ void	rtl8192c_set_p2p_ps_offload_cmd(_adapter* padapter, u8 p2p_ps_state);
 typedef struct _IO_OFFLOAD_LOC{
 	u8 	LocCmd;
 }IO_OFFLOAD_LOC, *PIO_OFFLOAD_LOC;
-int rtl8192c_IOL_exec_cmds_sync(ADAPTER *adapter, struct xmit_frame *xmit_frame, u32 max_wating_ms);
+int rtl8192c_IOL_exec_cmds_sync(ADAPTER *adapter, struct xmit_frame *xmit_frame, u32 max_wating_ms, u32 bndy_cnt);
 #endif //CONFIG_IOL
 
 #ifdef CONFIG_BEACON_DISABLE_OFFLOAD
@@ -113,3 +113,4 @@ u8 rtl8192c_reset_tsf(_adapter *padapter, u8 reset_port);
 #endif	// CONFIG_TSF_RESET_OFFLOAD
 
 #endif	// __RTL8192C_CMD_H_
+

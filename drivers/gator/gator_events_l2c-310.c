@@ -108,7 +108,7 @@ static int gator_events_l2c310_read(int **buffer)
 					l2x0_event_cntx_val[i]);
 		}
 	}
-
+	
 	/* l2c310 counters are saturating, not wrapping in case of overflow */
 	gator_events_l2c310_reset_counters();
 

@@ -118,7 +118,7 @@ typedef IMG_PVOID       IMG_HANDLE;
 
 typedef void**          IMG_HVOID,	* IMG_PHVOID;
 
-#define IMG_NULL        0
+#define IMG_NULL        0 
 
 /* services/stream ID */
 typedef IMG_UINT32      IMG_SID;
@@ -136,7 +136,7 @@ typedef IMG_UINT32      IMG_EVENTSID;
  * and a memory block is only mapped by the MMU once.
  *
  * Different devices could have offset views of the physical address space.
- *
+ * 
  */
 
 
@@ -149,19 +149,19 @@ typedef IMG_UINT32      IMG_EVENTSID;
  *       | PVOID           |IMG_DEV_VIRTADDR   |IMG_DEV_VIRTADDR     |
  *       |                 \-------------------/                     |
  *       |                          |                                |
- * +------------+             +------------+                         |
+ * +------------+             +------------+                         |     
  * |    MMU     |             |    MMU     |                         |
- * +------------+             +------------+                         |
- *       |                          |                                |
+ * +------------+             +------------+                         | 
+ *       |                          |                                | 
  *       |                          |                                |
  *       |                          |                                |
  *   +--------+                +---------+                      +--------+
  *   | Offset |                | (Offset)|                      | Offset |
- *   +--------+                +---------+                      +--------+
- *       |                          |                IMG_DEV_PHYADDR |
+ *   +--------+                +---------+                      +--------+    
+ *       |                          |                IMG_DEV_PHYADDR | 
  *       |                          |                                |
  *       |                          | IMG_DEV_PHYADDR                |
- * +---------------------------------------------------------------------+
+ * +---------------------------------------------------------------------+ 
  * |                         System Address bus                          |
  * +---------------------------------------------------------------------+
  *
@@ -175,7 +175,7 @@ typedef struct _IMG_DEV_VIRTADDR
 	/* device virtual addresses are 32bit for now */
 	IMG_UINT32  uiAddr;
 #define IMG_CAST_TO_DEVVADDR_UINT(var)		(IMG_UINT32)(var)
-
+	
 } IMG_DEV_VIRTADDR;
 
 typedef IMG_UINT32 IMG_DEVMEM_SIZE_T;

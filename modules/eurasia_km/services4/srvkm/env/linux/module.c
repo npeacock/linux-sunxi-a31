@@ -178,7 +178,7 @@ EXPORT_SYMBOL(gpsIONClient);
 #endif /* defined(CONFIG_ION_OMAP) */
 
 /* PRQA S 3207 2 */ /* ignore 'not used' warning */
-EXPORT_SYMBOL_GPL(PVRGetDisplayClassJTable);
+EXPORT_SYMBOL(PVRGetDisplayClassJTable);
 EXPORT_SYMBOL(PVRGetBufferClassJTable);
 
 #if defined(PVR_LDM_DEVICE_CLASS) && !defined(SUPPORT_DRI_DRM)
@@ -235,7 +235,7 @@ static IMG_UINT32 gPVRPowerLevel;
 #define	LDM_DRV	struct pci_driver
 #endif /* PVR_LDM_PCI_MODULE */
 /*
- * This is the driver interface we support.
+ * This is the driver interface we support.  
  */
 #if defined(PVR_LDM_PLATFORM_MODULE)
 static int PVRSRVDriverRemove(LDM_DEV *device);
@@ -295,7 +295,7 @@ static LDM_DRV powervr_driver = {
 
 LDM_DEV *gpsPVRLDMDev;
 
-#if defined(PVR_LDM_PLATFORM_MODULE) && \
+#if defined(MODULE) && defined(PVR_LDM_PLATFORM_MODULE) && \
 	!defined(PVR_USE_PRE_REGISTERED_PLATFORM_DEV)
 static void PVRSRVDeviceRelease(struct device unref__ *pDevice)
 {
@@ -313,7 +313,7 @@ static struct platform_device powervr_device = {
 /*!
 ******************************************************************************
 
-  @Function		PVRSRVDriverProbe
+ @Function		PVRSRVDriverProbe
 
  @Description
 
@@ -345,12 +345,11 @@ static int __devinit PVRSRVDriverProbe(LDM_DEV *pDevice, const struct pci_device
 	 * Note: some systems use this to enable HW that SysAcquireData
 	 * will depend on, therefore it must be called first.
 	 */
-
 	if (PerDeviceSysInitialise((IMG_PVOID)pDevice) != PVRSRV_OK)
 	{
 		return -EINVAL;
 	}
-#endif
+#endif	
 	/* SysInitialise only designed to be called once.
 	 */
 	psSysData = SysAcquireDataNoCheck();
@@ -422,7 +421,7 @@ static void __devexit PVRSRVDriverRemove(LDM_DEV *pDevice)
 #endif
 
 	SysAcquireData(&psSysData);
-
+	
 #if defined(DEBUG) && defined(PVR_MANUAL_POWER_CONTROL)
 	if (gPVRPowerLevel != 0)
 	{
@@ -469,7 +468,7 @@ static IMG_BOOL bDriverIsShutdown;
  @Description
 
  Suspend device operation for system shutdown.  This is called as part of the
- system halt/reboot process.  The driver is put into a quiescent state by
+ system halt/reboot process.  The driver is put into a quiescent state by 
  setting the power state to D3.
 
  @input pDevice - the device for which shutdown is requested
@@ -495,7 +494,7 @@ PVR_MOD_STATIC void PVRSRVDriverShutdown(LDM_DEV *pDevice)
 		 * processes trying to use the driver after it has been
 		 * shutdown.
 		 */
-		LinuxLockMutex(&gPVRSRVLock);
+		LinuxLockMutexNested(&gPVRSRVLock, PVRSRV_LOCK_CLASS_BRIDGE);
 
 		(void) PVRSRVSetPowerStateKM(PVRSRV_SYS_POWER_STATE_D3);
 	}
@@ -556,7 +555,7 @@ PVR_MOD_STATIC int PVRSRVDriverSuspend(LDM_DEV *pDevice, pm_message_t state)
 
 	if (!bDriverIsSuspended && !bDriverIsShutdown)
 	{
-		LinuxLockMutex(&gPVRSRVLock);
+		LinuxLockMutexNested(&gPVRSRVLock, PVRSRV_LOCK_CLASS_BRIDGE);
 
 		if (PVRSRVSetPowerStateKM(PVRSRV_SYS_POWER_STATE_D3) == PVRSRV_OK)
 		{
@@ -659,7 +658,7 @@ PVR_MOD_STATIC int PVRSRVDriverResume(LDM_DEV *pDevice)
  * 	echo 2 > /proc/pvr/power_control
  * To resume the device, type:
  * 	echo 0 > /proc/pvr/power_control
- *
+ * 
  * The following example shows how to suspend/resume the device independently
  * of the rest of the system.
  * Suspend the device:
@@ -708,7 +707,7 @@ IMG_INT PVRProcSetPowerLevel(struct file *file, const IMG_CHAR *buffer, IMG_UINT
 	return (count);
 }
 
-void ProcSeqShowPowerLevel(struct seq_file *sfile,void* el)
+void ProcSeqShowPowerLevel(struct seq_file *sfile,void* el)	
 {
 	seq_printf(sfile, "%lu\n", gPVRPowerLevel);
 }
@@ -747,7 +746,7 @@ static int PVRSRVOpen(struct inode unref__ * pInode, struct file *pFile)
 	PVRSRV_ENV_PER_PROCESS_DATA *psEnvPerProc;
 #endif
 
-	LinuxLockMutex(&gPVRSRVLock);
+	LinuxLockMutexNested(&gPVRSRVLock, PVRSRV_LOCK_CLASS_BRIDGE);
 
 	ui32PID = OSGetCurrentProcessIDKM();
 
@@ -786,7 +785,7 @@ static int PVRSRVOpen(struct inode unref__ * pInode, struct file *pFile)
 	psPrivateData->hBlockAlloc = hBlockAlloc;
 	PRIVATE_DATA(pFile) = psPrivateData;
 	iRet = 0;
-err_unlock:
+err_unlock:	
 	LinuxUnLockMutex(&gPVRSRVLock);
 	return iRet;
 }
@@ -818,7 +817,7 @@ static int PVRSRVRelease(struct inode unref__ * pInode, struct file *pFile)
 	PVRSRV_FILE_PRIVATE_DATA *psPrivateData;
 	int err = 0;
 
-	LinuxLockMutex(&gPVRSRVLock);
+	LinuxLockMutexNested(&gPVRSRVLock, PVRSRV_LOCK_CLASS_BRIDGE);
 
 #if defined(SUPPORT_DRI_DRM)
 	psPrivateData = (PVRSRV_FILE_PRIVATE_DATA *)pvPrivData;
@@ -903,7 +902,7 @@ err_unlock:
  number often stays constant between loads this is not guaranteed.  The node
  is made as root on the shell with:
 
-		mknod /dev/pvrsrv c nnn 0
+ 		mknod /dev/pvrsrv c nnn 0
 
  where nnn is the major number found in /proc/devices for DEVNAME and also
  reported by the PVR_DPF() - look at the boot log using dmesg' to see this).
@@ -986,7 +985,7 @@ static int __init PVRCore_Init(void)
 		goto init_failed;
 	}
 
-#if !defined(PVR_USE_PRE_REGISTERED_PLATFORM_DEV)
+#if defined(MODULE) && !defined(PVR_USE_PRE_REGISTERED_PLATFORM_DEV)
 	if ((error = platform_device_register(&powervr_device)) != 0)
 	{
 		platform_driver_unregister(&powervr_driver);
@@ -1084,7 +1083,7 @@ sys_deinit:
 #endif
 
 #if defined (PVR_LDM_PLATFORM_MODULE)
-#if !defined(PVR_USE_PRE_REGISTERED_PLATFORM_DEV)
+#if defined(MODULE) && !defined(PVR_USE_PRE_REGISTERED_PLATFORM_DEV)
 	platform_device_unregister(&powervr_device);
 #endif
 	platform_driver_unregister(&powervr_driver);
@@ -1119,7 +1118,7 @@ init_failed:
 
  @Function		PVRCore_Cleanup
 
- @Description
+ @Description	
 
  Remove the driver from the kernel.
 
@@ -1182,7 +1181,7 @@ static void __exit PVRCore_Cleanup(void)
 #endif
 
 #if defined (PVR_LDM_PLATFORM_MODULE)
-#if !defined(PVR_USE_PRE_REGISTERED_PLATFORM_DEV)
+#if defined(MODULE) && !defined(PVR_USE_PRE_REGISTERED_PLATFORM_DEV)
 	platform_device_unregister(&powervr_device);
 #endif
 	platform_driver_unregister(&powervr_driver);

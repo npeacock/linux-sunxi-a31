@@ -35,7 +35,7 @@ enum cmd_msg_element_id
 	P2P_PS_OFFLOAD_EID = 8,
 	SELECTIVE_SUSPEND_ROF_CMD = 9,
 	P2P_PS_CTW_CMD_EID = 32,
-	MAX_CMDMSG_EID
+	MAX_CMDMSG_EID	 
 };
 #else
 typedef enum _RTL8188E_H2C_CMD_ID
@@ -43,8 +43,8 @@ typedef enum _RTL8188E_H2C_CMD_ID
 	//Class Common
 	H2C_COM_RSVD_PAGE			=0x00,
 	H2C_COM_MEDIA_STATUS_RPT	=0x01,
-	H2C_COM_SCAN					=0x02,
-	H2C_COM_KEEP_ALIVE			=0x03,
+	H2C_COM_SCAN					=0x02,	
+	H2C_COM_KEEP_ALIVE			=0x03,	
 	H2C_COM_DISCNT_DECISION		=0x04,
 #ifndef CONFIG_WOWLAN
 	H2C_COM_WWLAN				=0x05,
@@ -71,17 +71,18 @@ typedef enum _RTL8188E_H2C_CMD_ID
 	H2C_BT_COEX_GPIO_MODE		=0x61,
 	H2C_BT_DAC_SWING_VAL			=0x62,
 	H2C_BT_PSD_RST				=0x63,
-
+	
 	//Class Remote WakeUp
 #ifdef CONFIG_WOWLAN
 	H2C_COM_WWLAN				=0x80,
 	H2C_COM_REMOTE_WAKE_CTRL	=0x81,
+	H2C_COM_AOAC_GLOBAL_INFO	=0x82,
 #endif
 
-	//Class
+	//Class 
 	 H2C_RESET_TSF				=0xc0,
 }RTL8188E_H2C_CMD_ID;
-
+	
 #endif
 
 
@@ -151,8 +152,7 @@ void rtl8188e_Add_RateATid(PADAPTER padapter, u32 bitmap, u8 arg, u8 rssi_level)
 
 
 #ifdef CONFIG_P2P
-void rtl8192c_set_p2p_ps_offload_cmd(PADAPTER padapter, u8 p2p_ps_state);
-//void rtl8723a_set_p2p_ps_offload_cmd(PADAPTER padapter, u8 p2p_ps_state);
+void rtl8188e_set_p2p_ps_offload_cmd(PADAPTER padapter, u8 p2p_ps_state);
 #endif //CONFIG_P2P
 
 void CheckFwRsvdPageContent(PADAPTER padapter);
@@ -172,6 +172,11 @@ typedef struct _SETWOWLAN_PARM{
 	u8		reserve;
 }SETWOWLAN_PARM, *PSETWOWLAN_PARM;
 
+typedef struct _SETAOAC_GLOBAL_INFO{
+	u8		pairwiseEncAlg;
+	u8		groupEncAlg;
+}SETAOAC_GLOBAL_INFO, *PSETAOAC_GLOBAL_INFO;
+
 #define FW_WOWLAN_FUN_EN				BIT(0)
 #define FW_WOWLAN_PATTERN_MATCH			BIT(1)
 #define FW_WOWLAN_MAGIC_PKT				BIT(2)
@@ -190,3 +195,5 @@ void rtl8188es_set_wowlan_cmd(_adapter* padapter, u8 enable);
 void SetFwRelatedForWoWLAN8188ES(_adapter* padapter, u8 bHostIsGoingtoSleep);
 #endif//CONFIG_WOWLAN
 #endif//__RTL8188E_CMD_H__
+
+

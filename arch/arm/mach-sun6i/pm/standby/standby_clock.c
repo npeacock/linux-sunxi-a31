@@ -54,7 +54,7 @@ __s32 standby_clk_init(void)
 {
     r_prcm = (void *)IO_ADDRESS(AW_R_PRCM_BASE);
     CmuReg = (__ccmu_reg_list_t   *)IO_ADDRESS(AW_CCM_BASE);
-
+    
 
     return 0;
 }
@@ -91,7 +91,7 @@ __s32 standby_clk_exit(void)
 *********************************************************************************************************
 */
 void standby_clk_core2hosc(void)
-{
+{	
 	CmuReg->SysClkDiv.CpuClkSrc = 1;
 	return ;
 }
@@ -126,7 +126,7 @@ void standby_clk_ldoenable(void)
 	tmp = readl(r_prcm + PLL_CTRL_REG1_OFFSET );
 	tmp &= ~(0xff000000);
 	writel(tmp, r_prcm + PLL_CTRL_REG1_OFFSET);
-
+	
 	return ;
 }
 

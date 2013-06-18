@@ -49,7 +49,6 @@ extern "C" {
 
 #include "services.h"
 #include "sysinfo.h"
-#include "sysconfig.h"
 
 #define HWREC_DEFAULT_TIMEOUT	(500)
 
@@ -138,9 +137,7 @@ typedef struct _PVRSRV_KERNEL_MEM_INFO_
       To activate the "share mem workaround", add PVRSRV_MEM_XPROC to
       the flags for the allocation.  This will cause the "map" API to
       call use Alloc Device Mem but will share the underlying memory
-      block and sync data.  Note that this is a workaround for a bug
-      exposed by a specific use-case on a particular platform.  Do not
-      use this functionality generally.
+      block and sync data.
     */
 	struct {
         /* Record whether the workaround is active for this
@@ -240,14 +237,14 @@ typedef struct _PVRSRV_COMMAND
 	IMG_UINT32			ui32DstSyncCount;	/*!< number of dst sync objects */
 	IMG_UINT32			ui32SrcSyncCount;	/*!< number of src sync objects */
 	PVRSRV_SYNC_OBJECT	*psDstSync;			/*!< dst sync ptr list, allocated on
-							back of this structure, i.e. is resident in Q */
+                                       			back of this structure, i.e. is resident in Q */
 	PVRSRV_SYNC_OBJECT	*psSrcSync;			/*!< src sync ptr list, allocated on
-							back of this structure, i.e. is resident in Q */
+                                         		back of this structure, i.e. is resident in Q */
 	IMG_SIZE_T			uDataSize;		/*!< Size of Cmd Data Packet
-							- only required in terms of allocating Q space */
+                                      			- only required in terms of allocating Q space */
 	IMG_UINT32			ui32ProcessID;		/*!< Process ID for debugging */
 	IMG_VOID			*pvData;			/*!< data to be passed to Cmd Handler function,
-							allocated on back of this structure, i.e. is resident in Q */
+                                         		allocated on back of this structure, i.e. is resident in Q */
 	PFN_QUEUE_COMMAND_COMPLETE  pfnCommandComplete;	/*!< Command complete callback */
 	IMG_HANDLE					hCallbackData;		/*!< Command complete callback data */
 }PVRSRV_COMMAND, *PPVRSRV_COMMAND;

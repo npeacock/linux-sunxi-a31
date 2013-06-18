@@ -62,7 +62,7 @@ extern "C" {
 
 
 /* setup conditional pageable / non-pageable select */
-	/* Non-Vista OSs only need pageable */
+	/* Other OSs only need pageable */
 	#define PVRSRV_PAGEABLE_SELECT		PVRSRV_OS_PAGEABLE_HEAP
 
 /******************************************************************************
@@ -192,9 +192,9 @@ static INLINE IMG_BOOL OSInvalidateCPUCacheRangeKM(IMG_HANDLE hOSMemHandle,
 
 #if defined(__linux__) || defined(__QNXNTO__)
 PVRSRV_ERROR OSRegisterDiscontigMem(IMG_SYS_PHYADDR *pBasePAddr,
-									IMG_VOID *pvCpuVAddr,
+									IMG_VOID *pvCpuVAddr, 
 									IMG_SIZE_T ui32Bytes,
-									IMG_UINT32 ui32Flags,
+									IMG_UINT32 ui32Flags, 
 									IMG_HANDLE *phOSMemHandle);
 PVRSRV_ERROR OSUnRegisterDiscontigMem(IMG_VOID *pvCpuVAddr,
 									IMG_SIZE_T ui32Bytes,
@@ -243,9 +243,9 @@ static INLINE PVRSRV_ERROR OSUnRegisterDiscontigMem(IMG_VOID *pvCpuVAddr,
 #endif
 static INLINE PVRSRV_ERROR OSReserveDiscontigPhys(IMG_SYS_PHYADDR *pBasePAddr, IMG_SIZE_T ui32Bytes, IMG_UINT32 ui32Flags, IMG_VOID **ppvCpuVAddr, IMG_HANDLE *phOSMemHandle)
 {
-#if defined(__linux__) || defined(__QNXNTO__)
+#if defined(__linux__) || defined(__QNXNTO__) 
 	*ppvCpuVAddr = IMG_NULL;
-	return OSRegisterDiscontigMem(pBasePAddr, *ppvCpuVAddr, ui32Bytes, ui32Flags, phOSMemHandle);
+	return OSRegisterDiscontigMem(pBasePAddr, *ppvCpuVAddr, ui32Bytes, ui32Flags, phOSMemHandle);	
 #else
 	extern IMG_CPU_PHYADDR SysSysPAddrToCpuPAddr(IMG_SYS_PHYADDR SysPAddr);
 
@@ -259,12 +259,12 @@ static INLINE PVRSRV_ERROR OSReserveDiscontigPhys(IMG_SYS_PHYADDR *pBasePAddr, I
 	 */
 
 	return OSReservePhys(SysSysPAddrToCpuPAddr(pBasePAddr[0]), ui32Bytes, ui32Flags, IMG_NULL, ppvCpuVAddr, phOSMemHandle);
-#endif
+#endif	
 }
 
 static INLINE PVRSRV_ERROR OSUnReserveDiscontigPhys(IMG_VOID *pvCpuVAddr, IMG_SIZE_T ui32Bytes, IMG_UINT32 ui32Flags, IMG_HANDLE hOSMemHandle)
 {
-#if defined(__linux__) || defined(__QNXNTO__)
+#if defined(__linux__) || defined(__QNXNTO__) 
 	OSUnRegisterDiscontigMem(pvCpuVAddr, ui32Bytes, ui32Flags, hOSMemHandle);
 #endif
 	/* We don't need to unmap */
@@ -377,20 +377,20 @@ h(x) = ...
 	#define OSAllocPages(flags, size, pageSize, privdata, privdatalength, bmhandle, linAddr, pageAlloc) \
 		(PVR_TRACE(("OSAllocPages(" #flags ", " #size ", " #pageSize ", " #linAddr ", " #pageAlloc "): (size = 0x%lx)", size)), \
 			OSAllocPages_Impl(flags, size, pageSize, linAddr, privdata, privdatalength, bmhandle, pageAlloc))
-
+		
 	#define OSFreeMem(flags, size, linAddr, blockAlloc) \
 		(PVR_TRACE(("OSFreeMem(" #flags ", " #size ", " #linAddr ", " #blockAlloc "): (pointer = 0x%X)", linAddr)), \
 			OSFreeMem_Debug_Wrapper(flags, size, linAddr, blockAlloc, __FILE__, __LINE__))
 #else
 	#define OSAllocMem(flags, size, linAddr, blockAlloc, logString) \
 		OSAllocMem_Debug_Wrapper(flags, size, linAddr, blockAlloc, __FILE__, __LINE__)
-
+	
 	#define OSAllocPages OSAllocPages_Impl
-
+	
 	#define OSFreeMem(flags, size, linAddr, blockAlloc) \
 			OSFreeMem_Debug_Wrapper(flags, size, linAddr, blockAlloc, __FILE__, __LINE__)
 #endif
-
+ 
 /*If level 2 wrapper is enabled declare the function,
 else alias to level 1 wrapper, else the wrapper function will be used*/
 #ifdef PVRSRV_DEBUG_OS_MEMORY
@@ -401,7 +401,7 @@ else alias to level 1 wrapper, else the wrapper function will be used*/
 										IMG_HANDLE *phBlockAlloc,
 										IMG_CHAR *pszFilename,
 										IMG_UINT32 ui32Line);
-
+	
 	PVRSRV_ERROR OSFreeMem_Debug_Wrapper(IMG_UINT32 ui32Flags,
 									 IMG_UINT32 ui32Size,
 									 IMG_PVOID pvCpuVAddr,
@@ -411,7 +411,7 @@ else alias to level 1 wrapper, else the wrapper function will be used*/
 
 
 	typedef struct
-	{
+	{	
 		IMG_UINT8 sGuardRegionBefore[8];
 		IMG_CHAR sFileName[128];
 		IMG_UINT32 uLineNo;
@@ -422,7 +422,7 @@ else alias to level 1 wrapper, else the wrapper function will be used*/
 			isAllocated = 0x260511AA
 		} eValid;
 	} OSMEM_DEBUG_INFO;
-
+	
 	#define TEST_BUFFER_PADDING_STATUS (sizeof(OSMEM_DEBUG_INFO))
 	#define TEST_BUFFER_PADDING_AFTER  (8)
 	#define TEST_BUFFER_PADDING (TEST_BUFFER_PADDING_STATUS + TEST_BUFFER_PADDING_AFTER)
@@ -430,19 +430,19 @@ else alias to level 1 wrapper, else the wrapper function will be used*/
 	#define OSAllocMem_Debug_Wrapper OSAllocMem_Debug_Linux_Memory_Allocations
 	#define OSFreeMem_Debug_Wrapper OSFreeMem_Debug_Linux_Memory_Allocations
 #endif
-
+ 
 /*If level 1 wrapper is enabled declare the functions with extra parameters
 else alias to level 0 and declare the functions without the extra debugging parameters*/
 #if (defined(__linux__) || defined(__QNXNTO__)) && defined(DEBUG_LINUX_MEMORY_ALLOCATIONS)
 	PVRSRV_ERROR OSAllocMem_Impl(IMG_UINT32 ui32Flags, IMG_SIZE_T ui32Size, IMG_PVOID *ppvLinAddr, IMG_HANDLE *phBlockAlloc, IMG_CHAR *pszFilename, IMG_UINT32 ui32Line);
 	PVRSRV_ERROR OSFreeMem_Impl(IMG_UINT32 ui32Flags, IMG_SIZE_T ui32Size, IMG_PVOID pvLinAddr, IMG_HANDLE hBlockAlloc, IMG_CHAR *pszFilename, IMG_UINT32 ui32Line);
-
+	
 	#define OSAllocMem_Debug_Linux_Memory_Allocations OSAllocMem_Impl
 	#define OSFreeMem_Debug_Linux_Memory_Allocations OSFreeMem_Impl
 #else
 	PVRSRV_ERROR OSAllocMem_Impl(IMG_UINT32 ui32Flags, IMG_SIZE_T ui32Size, IMG_PVOID *ppvLinAddr, IMG_HANDLE *phBlockAlloc);
 	PVRSRV_ERROR OSFreeMem_Impl(IMG_UINT32 ui32Flags, IMG_SIZE_T ui32Size, IMG_PVOID pvLinAddr, IMG_HANDLE hBlockAlloc);
-
+	
 	#define OSAllocMem_Debug_Linux_Memory_Allocations(flags, size, addr, blockAlloc, file, line) \
 		OSAllocMem_Impl(flags, size, addr, blockAlloc)
 	#define OSFreeMem_Debug_Linux_Memory_Allocations(flags, size, addr, blockAlloc, file, line) \
@@ -565,32 +565,32 @@ IMG_VOID OSPowerLockUnwrap(IMG_VOID);
 ******************************************************************************
 
  @Function OSWaitus
-
- @Description
+ 
+ @Description 
     This function implements a busy wait of the specified microseconds
     This function does NOT release thread quanta
-
+ 
  @Input ui32Timeus - (us)
 
  @Return IMG_VOID
 
-******************************************************************************/
+******************************************************************************/ 
 IMG_VOID OSWaitus(IMG_UINT32 ui32Timeus);
 
 /*!
 ******************************************************************************
 
  @Function OSSleepms
-
- @Description
+ 
+ @Description 
     This function implements a sleep of the specified milliseconds
     This function may allow pre-emption if implemented
-
+ 
  @Input ui32Timems - (ms)
 
  @Return IMG_VOID
 
-******************************************************************************/
+******************************************************************************/ 
 IMG_VOID OSSleepms(IMG_UINT32 ui32Timems);
 
 IMG_HANDLE OSFuncHighResTimerCreate(IMG_VOID);
@@ -674,8 +674,8 @@ PVRSRV_ERROR OSCopyToUser(IMG_PVOID pvProcess, IMG_VOID *pvDest, IMG_VOID *pvSrc
 PVRSRV_ERROR OSCopyFromUser(IMG_PVOID pvProcess, IMG_VOID *pvDest, IMG_VOID *pvSrc, IMG_SIZE_T ui32Bytes);
 
 #if defined(__linux__) || defined(__QNXNTO__)
-PVRSRV_ERROR OSAcquirePhysPageAddr(IMG_VOID* pvCPUVAddr,
-									IMG_SIZE_T ui32Bytes,
+PVRSRV_ERROR OSAcquirePhysPageAddr(IMG_VOID* pvCPUVAddr, 
+									IMG_SIZE_T ui32Bytes, 
 									IMG_SYS_PHYADDR *psSysPAddr,
 									IMG_HANDLE *phOSWrapMem);
 PVRSRV_ERROR OSReleasePhysPageAddr(IMG_HANDLE hOSWrapMem);
@@ -683,8 +683,8 @@ PVRSRV_ERROR OSReleasePhysPageAddr(IMG_HANDLE hOSWrapMem);
 #ifdef INLINE_IS_PRAGMA
 #pragma inline(OSAcquirePhysPageAddr)
 #endif
-static INLINE PVRSRV_ERROR OSAcquirePhysPageAddr(IMG_VOID* pvCPUVAddr,
-												IMG_SIZE_T ui32Bytes,
+static INLINE PVRSRV_ERROR OSAcquirePhysPageAddr(IMG_VOID* pvCPUVAddr, 
+												IMG_SIZE_T ui32Bytes, 
 												IMG_SYS_PHYADDR *psSysPAddr,
 												IMG_HANDLE *phOSWrapMem)
 {
@@ -692,7 +692,7 @@ static INLINE PVRSRV_ERROR OSAcquirePhysPageAddr(IMG_VOID* pvCPUVAddr,
 	PVR_UNREFERENCED_PARAMETER(ui32Bytes);
 	PVR_UNREFERENCED_PARAMETER(psSysPAddr);
 	PVR_UNREFERENCED_PARAMETER(phOSWrapMem);
-	return PVRSRV_OK;
+	return PVRSRV_OK;	
 }
 #ifdef INLINE_IS_PRAGMA
 #pragma inline(OSReleasePhysPageAddr)
@@ -700,10 +700,10 @@ static INLINE PVRSRV_ERROR OSAcquirePhysPageAddr(IMG_VOID* pvCPUVAddr,
 static INLINE PVRSRV_ERROR OSReleasePhysPageAddr(IMG_HANDLE hOSWrapMem)
 {
 	PVR_UNREFERENCED_PARAMETER(hOSWrapMem);
-	return PVRSRV_OK;
+	return PVRSRV_OK;	
 }
 #endif
-
+									
 #if defined(__linux__) && defined(__KERNEL__)
 
 #define	OS_SUPPORTS_IN_LISR
@@ -790,3 +790,4 @@ static INLINE IMG_VOID OSGetCurrentProcessNameKM(IMG_CHAR *pszName, IMG_UINT32 u
 /******************************************************************************
  End of file (osfunc.h)
 ******************************************************************************/
+

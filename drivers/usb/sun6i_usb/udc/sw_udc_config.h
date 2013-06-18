@@ -30,16 +30,16 @@
 #include <linux/device.h>
 #include <linux/usb/ch9.h>
 
-#define  SW_UDC_DOUBLE_FIFO       /* åŒ FIFO          */
-#define  SW_UDC_DMA               /* DMA ä¼ è¾“         */
-#define  SW_UDC_HS_TO_FS          /* æ”¯æŒé«˜é€Ÿè·³è½¬å…¨é€Ÿ */
+#define  SW_UDC_DOUBLE_FIFO       /* Ë« FIFO          */
+#define  SW_UDC_DMA               /* DMA ´«Êä         */
+#define  SW_UDC_HS_TO_FS          /* Ö§³Ö¸ßËÙÌø×ªÈ«ËÙ */
 //#define  SW_UDC_DEBUG
 
 //---------------------------------------------------------------
-//  è°ƒè¯•
+//  µ÷ÊÔ
 //---------------------------------------------------------------
 
-/* sw udc è°ƒè¯•æ‰“å° */
+/* sw udc µ÷ÊÔ´òÓ¡ */
 #if	0
     #define DMSG_DBG_UDC     			DMSG_MSG
 #else
@@ -49,3 +49,4 @@
 #include  "../include/sw_usb_config.h"
 
 #endif   //__SW_UDC_CONFIG_H__
+

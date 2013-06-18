@@ -1440,7 +1440,7 @@ static struct recv_buf* sd_recv_rxfifo(PADAPTER padapter, u32 size)
 		RT_TRACE(_module_hci_ops_os_c_, _drv_err_, ("%s: read port FAIL!\n", __FUNCTION__));
 		return NULL;
 	}
-
+	
 
 	//3 4. init recvbuf
 	precvbuf->len = readsize;
@@ -1588,8 +1588,23 @@ void sd_int_dpc(PADAPTER padapter)
 
 	if (phal->sdio_hisr & SDIO_HISR_C2HCMD)
 	{
-		DBG_8192C("%s: C2H Command\n", __func__);
-		rtw_c2h_wk_cmd(padapter, NULL);
+		struct c2h_evt_hdr *c2h_evt;
+
+		if ((c2h_evt = (struct c2h_evt_hdr *)rtw_zmalloc(16)) != NULL) {
+			if (c2h_evt_read(padapter, (u8 *)c2h_evt) == _SUCCESS) {
+				if (c2h_id_filter_ccx_8723a(c2h_evt->id)) {
+					/* Handle CCX report here */
+					rtw_hal_c2h_handler(padapter, c2h_evt);
+				} else {
+					rtw_c2h_wk_cmd(padapter, (u8 *)c2h_evt);
+				}
+			}
+		} else {
+			/* Error handling for malloc fail */
+			if (rtw_cbuf_push(padapter->evtpriv.c2h_queue, (void*)NULL) != _SUCCESS)
+				DBG_871X("%s rtw_cbuf_push fail\n", __func__);
+			_set_workitem(&padapter->evtpriv.c2h_wk);
+		}
 	}
 
 	if (phal->sdio_hisr & SDIO_HISR_RX_REQUEST)
@@ -1696,3 +1711,4 @@ u8 HalQueryTxBufferStatus8723ASdio(PADAPTER padapter)
 
 	return _TRUE;
 }
+

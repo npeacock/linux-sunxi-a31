@@ -32,3 +32,5 @@ config SUNXI_POWER_SCENE
     depends on SUNXI_SYSFS
 	help
 	  Support /sys/class/sunxi/power/scene for kernel.
+
+

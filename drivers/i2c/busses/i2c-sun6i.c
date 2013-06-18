@@ -354,19 +354,19 @@ static void twi_set_gpio_sysconfig(struct sun6i_i2c *i2c)
 	}
 
 	if (1 == used.val) {
-		/* èŽ·å–gpio list */
+		/* »ñÈ¡gpio list */
 		cnt = script_get_pio_list(twi_para, &list);
 		if (0 == cnt) {
 			I2C_ERR("[i2c%d] get gpio list failed\n", i2c->bus_num);
 			return;
 		}
 
-		/* ç”³è¯·gpio */
+		/* ÉêÇëgpio */
 		for (i = 0; i < cnt; i++)
 			if (0 != gpio_request(list[i].gpio.gpio, NULL))
 				goto end;
 
-		/* é…ç½®gpio list */
+		/* ÅäÖÃgpio list */
 		if (0 != sw_gpio_setall_range(&list[0].gpio, cnt))
 			I2C_ERR("[i2c%d] sw_gpio_setall_range failed\n", i2c->bus_num);
 	}
@@ -374,7 +374,7 @@ static void twi_set_gpio_sysconfig(struct sun6i_i2c *i2c)
 	return;
 
 end:
-	/* é‡Šæ”¾gpio */
+	/* ÊÍ·Ågpio */
 	while (i--)
 		gpio_free(list[i].gpio.gpio);
 }
@@ -743,7 +743,7 @@ static int twi_send_clk_9pulse(void *base_addr, int bus_num)
 *  FunctionName:           sun6i_i2c_addr_byte
 *
 *  Description:
-*            å‘é€slaveåœ°å€ï¼Œ7bitçš„å…¨éƒ¨ä¿¡æ¯ï¼ŒåŠ10bitçš„ç¬¬ä¸€éƒ¨åˆ†åœ°å€ã€‚ä¾›å¤–éƒ¨æŽ¥å£è°ƒç”¨ï¼Œå†…éƒ¨å®žçŽ°ã€‚
+*            ·¢ËÍslaveµØÖ·£¬7bitµÄÈ«²¿ÐÅÏ¢£¬¼°10bitµÄµÚÒ»²¿·ÖµØÖ·¡£¹©Íâ²¿½Ó¿Úµ÷ÓÃ£¬ÄÚ²¿ÊµÏÖ¡£
 *         7bits addr: 7-1bits addr+0 bit r/w
 *         10bits addr: 1111_11xx_xxxx_xxxx-->1111_0xx_rw,xxxx_xxxx
 *         send the 7 bits addr,or the first part of 10 bits addr
@@ -751,7 +751,7 @@ static int twi_send_clk_9pulse(void *base_addr, int bus_num)
 *
 *
 *  Return value:
-*           æ— 
+*           ÎÞ
 *  Notes:
 *
 ****************************************************************************************************
@@ -1573,7 +1573,7 @@ static struct resource sun6i_twi1_resources[] = {
 static struct sun6i_i2c_platform_data sun6i_twi1_pdata[] = {
 	{
 		.bus_num   = 1,
-	.frequency = TWI1_TRANSFER_SPEED,
+    	.frequency = TWI1_TRANSFER_SPEED,
 	},
 };
 
@@ -1604,7 +1604,7 @@ static struct resource sun6i_twi2_resources[] = {
 static struct sun6i_i2c_platform_data sun6i_twi2_pdata[] = {
 	{
 		.bus_num   = 2,
-	.frequency = TWI2_TRANSFER_SPEED,
+    	.frequency = TWI2_TRANSFER_SPEED,
 	},
 };
 
@@ -1635,7 +1635,7 @@ static struct resource sun6i_twi3_resources[] = {
 static struct sun6i_i2c_platform_data sun6i_twi3_pdata[] = {
 	{
 		.bus_num   = 3,
-	.frequency = TWI3_TRANSFER_SPEED,
+    	.frequency = TWI3_TRANSFER_SPEED,
 	},
 };
 
@@ -1666,7 +1666,7 @@ static struct resource sun6i_rtwi_resources[] = {
 static struct sun6i_i2c_platform_data sun6i_rtwi_pdata[] = {
 	{
 		.bus_num   = 4,
-	.frequency = RTWI_TRANSFER_SPEED,
+    	.frequency = RTWI_TRANSFER_SPEED,
 	},
 };
 

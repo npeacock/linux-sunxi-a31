@@ -54,7 +54,7 @@ enum cmd_msg_element_id
 	SCAN_EN_EID = 59,
 	LOWPWR_LPS_EID = 71,
 	H2C_RESET_TSF = 75,
-	MAX_CMDMSG_EID
+	MAX_CMDMSG_EID	 
 };
 
 struct cmd_msg_parm {
@@ -207,7 +207,7 @@ u8 rtl8192c_set_rssi_cmd(PADAPTER padapter, u8 *param);
 //u8 rtl8723a_set_rssi_cmd(PADAPTER padapter, u8 *param);
 u8 rtl8192c_set_raid_cmd(PADAPTER padapter, u32 mask, u8 arg);
 //u8 rtl8723a_set_raid_cmd(PADAPTER padapter, u32 mask, u8 arg);
-void rtl8192c_Add_RateATid(PADAPTER padapter, u32 bitmap, u8 arg);
+void rtl8192c_Add_RateATid(PADAPTER padapter, u32 bitmap, u8 arg, u8 rssi_level);
 //void rtl8723a_Add_RateATid(PADAPTER padapter, u32 bitmap, u8 arg);
 u8 rtl8192c_set_FwSelectSuspend_cmd(PADAPTER padapter, u8 bfwpoll, u16 period);
 //u8 rtl8723a_set_FwSelectSuspend_cmd(PADAPTER padapter, u8 bfwpoll, u16 period);
@@ -224,3 +224,4 @@ void CheckFwRsvdPageContent(PADAPTER padapter);
 #ifdef CONFIG_TSF_RESET_OFFLOAD
 u8 rtl8723c_reset_tsf(_adapter *padapter, u8 reset_port);
 #endif	// CONFIG_TSF_RESET_OFFLOAD
+

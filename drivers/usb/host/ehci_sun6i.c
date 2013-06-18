@@ -18,7 +18,7 @@
 *      <author>    		<time>       	<version >    		<desc>
 *    yangnaitian      2011-5-24            1.0          create this file
 *    javen            2011-6-26            1.1          add suspend and resume
-*    javen            2011-7-18            1.2          æ—¶é’Ÿå¼€å…³å’Œä¾›ç”µå¼€å…³ä»Žé©±åŠ¨ç§»å‡ºæ¥
+*    javen            2011-7-18            1.2          Ê±ÖÓ¿ª¹ØºÍ¹©µç¿ª¹Ø´ÓÇý¶¯ÒÆ³öÀ´
 *
 *************************************************************************************
 */
@@ -36,7 +36,7 @@
 
 
 /*.......................................................................................*/
-//                               å…¨å±€ä¿¡æ¯å®šä¹‰
+//                               È«¾ÖÐÅÏ¢¶¨Òå
 /*.......................................................................................*/
 
 //#define  SW_USB_EHCI_DEBUG
@@ -48,7 +48,7 @@ static struct sw_hci_hcd *g_sw_ehci[3];
 static u32 ehci_first_probe[3] = {1, 1, 1};
 
 /*.......................................................................................*/
-//                                      å‡½æ•°åŒº
+//                                      º¯ÊýÇø
 /*.......................................................................................*/
 
 extern int usb_disabled(void);
@@ -217,7 +217,7 @@ static int sw_release_io_resource(struct platform_device *pdev, struct sw_hci_hc
 */
 static void sw_start_ehci(struct sw_hci_hcd *sw_ehci)
 {
-	open_ehci_clock(sw_ehci);
+  	open_ehci_clock(sw_ehci);
 	sw_ehci->usb_passby(sw_ehci, 1);
 	sw_ehci_port_configure(sw_ehci, 1);
 	sw_hcd_board_set_vbus(sw_ehci, 1);
@@ -392,7 +392,7 @@ static int sw_ehci_hcd_probe(struct platform_device *pdev)
 		goto ERR2;
 	}
 
-	hcd->rsrc_start = (u32)sw_ehci->ehci_base;
+  	hcd->rsrc_start = (u32)sw_ehci->ehci_base;
 	hcd->rsrc_len 	= sw_ehci->ehci_reg_length;
 	hcd->regs 		= sw_ehci->ehci_base;
 	sw_ehci->hcd    = hcd;
@@ -497,7 +497,7 @@ static int sw_ehci_hcd_remove(struct platform_device *pdev)
 	sw_ehci->hcd = NULL;
 
     if(sw_ehci->host_init_state){
-	g_sw_ehci[sw_ehci->usbc_no] = NULL;
+    	g_sw_ehci[sw_ehci->usbc_no] = NULL;
     }
 
 	platform_set_drvdata(pdev, NULL);
@@ -543,13 +543,13 @@ void sw_ehci_hcd_shutdown(struct platform_device* pdev)
 		return;
 	}
 
-	DMSG_INFO("[%s]: ehci shutdown start\n", sw_ehci->hci_name);
+ 	DMSG_INFO("[%s]: ehci shutdown start\n", sw_ehci->hci_name);
 
     usb_hcd_platform_shutdown(pdev);
 
     sw_stop_ehci(sw_ehci);
 
-	DMSG_INFO("[%s]: ehci shutdown end\n", sw_ehci->hci_name);
+ 	DMSG_INFO("[%s]: ehci shutdown end\n", sw_ehci->hci_name);
 
     return ;
 }
@@ -610,20 +610,20 @@ static int sw_ehci_hcd_suspend(struct device *dev)
 	}
 
     if(sw_ehci->not_suspend){
-	    DMSG_INFO("[%s]: not suspend\n", sw_ehci->hci_name);
+ 	    DMSG_INFO("[%s]: not suspend\n", sw_ehci->hci_name);
     }else{
-	DMSG_INFO("[%s]: sw_ehci_hcd_suspend\n", sw_ehci->hci_name);
+     	DMSG_INFO("[%s]: sw_ehci_hcd_suspend\n", sw_ehci->hci_name);
 
-	spin_lock_irqsave(&ehci->lock, flags);
-	ehci_prepare_ports_for_controller_suspend(ehci, device_may_wakeup(dev));
-	ehci_writel(ehci, 0, &ehci->regs->intr_enable);
-	(void)ehci_readl(ehci, &ehci->regs->intr_enable);
+    	spin_lock_irqsave(&ehci->lock, flags);
+    	ehci_prepare_ports_for_controller_suspend(ehci, device_may_wakeup(dev));
+    	ehci_writel(ehci, 0, &ehci->regs->intr_enable);
+    	(void)ehci_readl(ehci, &ehci->regs->intr_enable);
 
-	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
+    	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
 
-	spin_unlock_irqrestore(&ehci->lock, flags);
+    	spin_unlock_irqrestore(&ehci->lock, flags);
 
-	sw_stop_ehci(sw_ehci);
+    	sw_stop_ehci(sw_ehci);
     }
 
 	return 0;
@@ -682,55 +682,55 @@ static int sw_ehci_hcd_resume(struct device *dev)
 	}
 
     if(sw_ehci->not_suspend){
-	    DMSG_INFO("[%s]: controller not suspend, need not resume\n", sw_ehci->hci_name);
+ 	    DMSG_INFO("[%s]: controller not suspend, need not resume\n", sw_ehci->hci_name);
     }else{
-	DMSG_INFO("[%s]: sw_ehci_hcd_resume\n", sw_ehci->hci_name);
+     	DMSG_INFO("[%s]: sw_ehci_hcd_resume\n", sw_ehci->hci_name);
 
-	sw_start_ehci(sw_ehci);
+    	sw_start_ehci(sw_ehci);
 
-	/* Mark hardware accessible again as we are out of D3 state by now */
-	set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
+    	/* Mark hardware accessible again as we are out of D3 state by now */
+    	set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
 
-	if (ehci_readl(ehci, &ehci->regs->configured_flag) == FLAG_CF) {
-		int	mask = INTR_MASK;
+    	if (ehci_readl(ehci, &ehci->regs->configured_flag) == FLAG_CF) {
+    		int	mask = INTR_MASK;
 
-		ehci_prepare_ports_for_controller_resume(ehci);
+    		ehci_prepare_ports_for_controller_resume(ehci);
 
-		if (!hcd->self.root_hub->do_remote_wakeup){
-			mask &= ~STS_PCD;
-		}
+    		if (!hcd->self.root_hub->do_remote_wakeup){
+    			mask &= ~STS_PCD;
+    		}
 
-		ehci_writel(ehci, mask, &ehci->regs->intr_enable);
-		ehci_readl(ehci, &ehci->regs->intr_enable);
+    		ehci_writel(ehci, mask, &ehci->regs->intr_enable);
+    		ehci_readl(ehci, &ehci->regs->intr_enable);
 
-		return 0;
-	}
+    		return 0;
+    	}
 
-	DMSG_INFO("[%s]: lost power, restarting\n", sw_ehci->hci_name);
+     	DMSG_INFO("[%s]: lost power, restarting\n", sw_ehci->hci_name);
 
-	usb_root_hub_lost_power(hcd->self.root_hub);
+    	usb_root_hub_lost_power(hcd->self.root_hub);
 
-	/* Else reset, to cope with power loss or flush-to-storage
-	 * style "resume" having let BIOS kick in during reboot.
-	 */
-	(void) ehci_halt(ehci);
-	(void) ehci_reset(ehci);
+    	/* Else reset, to cope with power loss or flush-to-storage
+    	 * style "resume" having let BIOS kick in during reboot.
+    	 */
+    	(void) ehci_halt(ehci);
+    	(void) ehci_reset(ehci);
 
-	/* emptying the schedule aborts any urbs */
-	spin_lock_irq(&ehci->lock);
-	if (ehci->reclaim)
-		end_unlink_async(ehci);
-	ehci_work(ehci);
-	spin_unlock_irq(&ehci->lock);
+    	/* emptying the schedule aborts any urbs */
+    	spin_lock_irq(&ehci->lock);
+    	if (ehci->reclaim)
+    		end_unlink_async(ehci);
+    	ehci_work(ehci);
+    	spin_unlock_irq(&ehci->lock);
 
-	ehci_writel(ehci, ehci->command, &ehci->regs->command);
-	ehci_writel(ehci, FLAG_CF, &ehci->regs->configured_flag);
-	ehci_readl(ehci, &ehci->regs->command);	/* unblock posted writes */
+    	ehci_writel(ehci, ehci->command, &ehci->regs->command);
+    	ehci_writel(ehci, FLAG_CF, &ehci->regs->configured_flag);
+    	ehci_readl(ehci, &ehci->regs->command);	/* unblock posted writes */
 
-	/* here we "know" root ports should always stay powered */
-	ehci_port_power(ehci, 1);
+    	/* here we "know" root ports should always stay powered */
+    	ehci_port_power(ehci, 1);
 
-	hcd->state = HC_STATE_SUSPENDED;
+    	hcd->state = HC_STATE_SUSPENDED;
     }
 
 	return 0;
@@ -758,7 +758,7 @@ static struct platform_driver sw_ehci_hcd_driver ={
 		.name	= ehci_name,
 		.owner	= THIS_MODULE,
 		.pm		= SW_EHCI_PMOPS,
-	}
+  	}
 };
 
 /*
@@ -866,3 +866,5 @@ int sw_usb_enable_ehci(__u32 usbc_no)
 	return 0;
 }
 EXPORT_SYMBOL(sw_usb_enable_ehci);
+
+

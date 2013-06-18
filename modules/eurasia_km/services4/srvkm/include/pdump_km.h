@@ -115,13 +115,13 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 
 	PVRSRV_ERROR PDumpMemPDEntriesKM(PDUMP_MMU_ATTRIB *psMMUAttrib,
 									 IMG_HANDLE hOSMemHandle,
-									 IMG_CPU_VIRTADDR pvLinAddr,
-									 IMG_UINT32 ui32Bytes,
-									 IMG_UINT32 ui32Flags,
-									 IMG_BOOL bInitialisePages,
-									 IMG_HANDLE hUniqueTag1,
-									 IMG_HANDLE hUniqueTag2);
-
+							 		 IMG_CPU_VIRTADDR pvLinAddr,
+							 		 IMG_UINT32 ui32Bytes,
+							 		 IMG_UINT32 ui32Flags,
+							 		 IMG_BOOL bInitialisePages,
+							 		 IMG_HANDLE hUniqueTag1,
+							 		 IMG_HANDLE hUniqueTag2);
+							 
 	PVRSRV_ERROR PDumpMemPTEntriesKM(PDUMP_MMU_ATTRIB *psMMUAttrib,
 									 IMG_HANDLE         hOSMemHandle,
 									 IMG_CPU_VIRTADDR	pvLinAddr,
@@ -224,7 +224,7 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 	IMG_BOOL PDumpTestNextFrame(IMG_UINT32 ui32CurrentFrame);
 
 	PVRSRV_ERROR PDumpSaveMemKM (PVRSRV_DEVICE_IDENTIFIER *psDevId,
-								 IMG_CHAR			*pszFileName,
+							 	 IMG_CHAR			*pszFileName,
 								 IMG_UINT32			ui32FileOffset,
 								 IMG_DEV_VIRTADDR	sDevBaseAddr,
 								 IMG_UINT32 		ui32Size,
@@ -323,9 +323,9 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 								  IMG_UINT32	ui32Flags);
 
 	IMG_VOID PDumpVGXMemToFile(IMG_CHAR *pszFileName,
-							   IMG_UINT32 ui32FileOffset,
+							   IMG_UINT32 ui32FileOffset, 
 							   PVRSRV_KERNEL_MEM_INFO *psMemInfo,
-							   IMG_UINT32 uiAddr,
+							   IMG_UINT32 uiAddr, 
 							   IMG_UINT32 ui32Size,
 							   IMG_UINT32 ui32PDumpFlags,
 							   IMG_HANDLE hUniqueTag);
@@ -336,9 +336,9 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 	/* New pdump common functions */
 	PVRSRV_ERROR PDumpStoreMemToFile(PDUMP_MMU_ATTRIB *psMMUAttrib,
 							         IMG_CHAR *pszFileName,
-									 IMG_UINT32 ui32FileOffset,
+									 IMG_UINT32 ui32FileOffset, 
 									 PVRSRV_KERNEL_MEM_INFO *psMemInfo,
-									 IMG_UINT32 uiAddr,
+									 IMG_UINT32 uiAddr, 
 									 IMG_UINT32 ui32Size,
 									 IMG_UINT32 ui32PDumpFlags,
 									 IMG_HANDLE hUniqueTag);

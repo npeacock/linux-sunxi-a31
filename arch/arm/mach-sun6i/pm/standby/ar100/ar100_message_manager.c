@@ -42,7 +42,7 @@ int ar100_message_manager_init(void)
 	//initialize message pool start and end
 	message_start = (struct ar100_message *)(ar100_sram_a2_vbase + AR100_MESSAGE_POOL_START);
 	message_end   = (struct ar100_message *)(ar100_sram_a2_vbase + AR100_MESSAGE_POOL_END);
-
+	
 	return 0;
 }
 
@@ -78,10 +78,10 @@ struct ar100_message *ar100_message_allocate(unsigned int msg_attr)
 {
 	struct ar100_message *pmessage = NULL;
 	struct ar100_message *palloc   = NULL;
-
+	
 	//use spinlock 0 to exclusive with ar100.
 	ar100_hwspin_lock_timeout(0, AR100_SPINLOCK_TIMEOUT);
-
+	
 	//seach from the start of message pool every time.
 	//maybe have other more good choice.
 	//by sunny at 2012-5-13 10:36:50.
@@ -98,14 +98,14 @@ struct ar100_message *ar100_message_allocate(unsigned int msg_attr)
 		//next message frame
 		pmessage++;
 	}
-
+	
 	//unlock hwspinlock 0
 	ar100_hwspin_unlock(0);
-
+	
 	if (palloc == NULL) {
 		AR100_ERR("allocate message frame fail\n");
 	}
-
+	
 	return palloc;
 }
 
@@ -113,7 +113,7 @@ struct ar100_message *ar100_message_allocate(unsigned int msg_attr)
 *********************************************************************************************************
 *                                       FREE MESSAGE FRAME
 *
-* Description: 	free one message frame. mainly use for process message finished,
+* Description: 	free one message frame. mainly use for process message finished, 
 *			   	free it to messages pool or add to free message queue.
 *
 * Arguments  : 	pmessage : the pointer of free message frame.

@@ -652,9 +652,9 @@ PVRSRV_ERROR HandleListIterate(PVRSRV_HANDLE_BASE *psBase, struct sHandleList *p
 	PVR_ASSERT(psHead->hParent != IMG_NULL);
 
 	/*
-	 * Follow the next chain from the list head until we reach
-	 * the list head again, which signifies the end of the list.
-	 */
+ 	 * Follow the next chain from the list head until we reach
+ 	 * the list head again, which signifies the end of the list.
+ 	 */
 	for(ui32Index = psHead->ui32Next; ui32Index != ui32Parent; )
 	{
 		struct sHandle *psHandle = INDEX_TO_HANDLE_STRUCT_PTR(psBase, ui32Index);
@@ -1486,7 +1486,7 @@ static PVRSRV_ERROR AllocHandle(PVRSRV_HANDLE_BASE *psBase, IMG_HANDLE *phHandle
 
 	if (psBase->ui32FreeHandCount == 0 && HANDLES_BATCHED(psBase))
 	{
-		 PVR_DPF((PVR_DBG_WARNING, "AllocHandle: Handle batch size (%u) was too small, allocating additional space", psBase->ui32HandBatchSize));
+		 PVR_DPF((PVR_DBG_WARNING, "AllocHandle: Handle batch size (%u) was too small, allocating additional space", psBase->ui32HandBatchSize)); 
 	}
 
 	/* Ensure there is a free handle */
@@ -1723,7 +1723,7 @@ PVRSRV_ERROR PVRSRVAllocHandle(PVRSRV_HANDLE_BASE *psBase, IMG_HANDLE *phHandle,
 				eError = PVRSRV_OK;
 				goto exit_ok;
 			}
-
+			
 #if defined (SUPPORT_SID_INTERFACE)
 			PVR_DBG_BREAK
 #endif
@@ -1732,7 +1732,7 @@ PVRSRV_ERROR PVRSRVAllocHandle(PVRSRV_HANDLE_BASE *psBase, IMG_HANDLE *phHandle,
 	}
 
 	eError = AllocHandle(psBase, phHandle, pvData, eType, eFlag, IMG_NULL);
-
+	
 exit_ok:
 	if (HANDLES_BATCHED(psBase) && (eError == PVRSRV_OK))
 	{

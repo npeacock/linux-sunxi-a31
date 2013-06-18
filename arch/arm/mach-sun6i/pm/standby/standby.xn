@@ -11,10 +11,11 @@ SECTIONS
 		*(.text)
 		*(.rodata)
 	}
-
+	
 	.data   : { *(.data) }
 	__bss_start = . ;
 	.bss : { *(.sbss) *(.scommon) *(.bss) *(COMMON) }
 	__bss_end = .;
 	__standby_end = . ;
 }
+

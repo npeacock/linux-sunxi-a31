@@ -291,16 +291,16 @@ static struct axp_supply_init_data axp_sply_init_data = {
 };
 
 static struct axp_funcdev_info axp_splydev[]={
-	{
-		.name = "axp20-supplyer",
+   	{
+   		.name = "axp20-supplyer",
 			.id = AXP20_ID_SUPPLY,
       .platform_data = &axp_sply_init_data,
     },
 };
 
 static struct axp_funcdev_info axp_gpiodev[]={
-	{   .name = "axp20-gpio",
-		.id = AXP20_ID_GPIO,
+   	{   .name = "axp20-gpio",
+   		.id = AXP20_ID_GPIO,
     },
 };
 
@@ -636,13 +636,13 @@ static int __init axp_board_init(void)
         {
 //            printk("axp driver uning configuration failed(%d)\n", __LINE__);
             pmu_intotp_en = 1;
-        }
+        }   
         ret = script_parser_fetch("pmu_para", "pmu_pekon_time", &pmu_pekon_time, sizeof(int));
         if (ret)
         {
 //            printk("axp driver uning configuration failed(%d)\n", __LINE__);
             pmu_pekon_time = 1000;
-        }
+        }           
 
         axp_regl_init_data[1].constraints.state_standby.uV = ldo2_vol * 1000;
         axp_regl_init_data[2].constraints.state_standby.uV = ldo3_vol * 1000;
@@ -674,3 +674,4 @@ fs_initcall(axp_board_init);
 MODULE_DESCRIPTION("X-POWERS axp board");
 MODULE_AUTHOR("Weijin Zhong X-POWERS");
 MODULE_LICENSE("GPL");
+

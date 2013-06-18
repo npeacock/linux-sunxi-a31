@@ -150,7 +150,7 @@ static IMG_BOOL _IsSystemStatePowered(PVRSRV_SYS_POWER_STATE eSystemPowerState)
 
  @Input		ui32CallerID : KERNEL_ID or ISR_ID
  @Input		bSystemPowerEvent : Only pass IMG_TRUE if the lock is for a
-								system power state change
+ 								system power state change
 
  @Return	PVRSRV_ERROR IMG_CALLCONV
 
@@ -243,8 +243,8 @@ IMG_VOID PVRSRVPowerUnlock(IMG_UINT32	ui32CallerID)
 
  @Input		psPowerDevice : the device
  @Input		va : variable argument list with:
-				bAllDevices : IMG_TRUE - All devices
-							  IMG_FALSE - Use ui32DeviceIndex
+ 				bAllDevices : IMG_TRUE - All devices
+ 						  	  IMG_FALSE - Use ui32DeviceIndex
 				ui32DeviceIndex : device index
 				eNewPowerState : New power state
 
@@ -309,7 +309,7 @@ static PVRSRV_ERROR PVRSRVDevicePrePowerStateKM_AnyVaCb(PVRSRV_POWER_DEV *psPowe
  Perform device-specific processing required before a power transition
 
  @Input		bAllDevices : IMG_TRUE - All devices
-						  IMG_FALSE - Use ui32DeviceIndex
+ 						  IMG_FALSE - Use ui32DeviceIndex
  @Input		ui32DeviceIndex : device index
  @Input		eNewPowerState : New power state
 
@@ -347,8 +347,8 @@ PVRSRV_ERROR PVRSRVDevicePrePowerStateKM(IMG_BOOL				bAllDevices,
 
  @Input		psPowerDevice : the device
  @Input		va : variable argument list with:
-				bAllDevices : IMG_TRUE - All devices
-							  IMG_FALSE - Use ui32DeviceIndex
+ 				bAllDevices : IMG_TRUE - All devices
+ 						  	  IMG_FALSE - Use ui32DeviceIndex
 				ui32DeviceIndex : device index
 				eNewPowerState : New power state
 
@@ -414,7 +414,7 @@ static PVRSRV_ERROR PVRSRVDevicePostPowerStateKM_AnyVaCb(PVRSRV_POWER_DEV *psPow
  Perform device-specific processing required after a power transition
 
  @Input		bAllDevices : IMG_TRUE - All devices
-						  IMG_FALSE - Use ui32DeviceIndex
+ 						  IMG_FALSE - Use ui32DeviceIndex
  @Input		ui32DeviceIndex : device index
  @Input		eNewPowerState : New power state
 

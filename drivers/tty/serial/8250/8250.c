@@ -2485,8 +2485,8 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
 	 *Because our platform hardware so much ugly which likes my English
 	 *I must check line status to ensure it no busy when set LCR value,
 	 *if miserable the line status is busy,it must set UART_FORCE_CFG bit
-	 *first before set LCR without DLAB,it also viable if  you only want
-	 *to set DLAB to set baud. More informations can be get for sw spec
+	 *first before set LCR without DLAB,it also viable if  you only want 
+	 *to set DLAB to set baud. More informations can be get for sw spec 
 	 * */
 		if(serial_inp(up, UART_USR)&0x01)
 				serial_outp(up, UART_HALT, UART_FORCE_CFG);
@@ -2510,7 +2510,7 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
 	serial_outp(up, UART_LCR, cval);
 
 	/*
-	 *When baud and LCR be set finish, it must set UART_FORCE_UPDATE bit
+	 *When baud and LCR be set finish, it must set UART_FORCE_UPDATE bit 
 	 *to let operations take effect, the UART_FORCE_UPDATE will clear
 	 *by self when update successfully
 	 * */

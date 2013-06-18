@@ -21,7 +21,7 @@
 
 #define AW_CLOCK_SRC (24000000)
 
-#else
+#else 
 
 #define AW_CLOCK_SRC (32000)
 
@@ -38,3 +38,4 @@
 #define CLOCK_TICK_RATE   TIMER0_VALUE
 
 #endif  /* #ifndef __AW_CLOCKSRC_H__ */
+

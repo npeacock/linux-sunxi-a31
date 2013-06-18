@@ -668,7 +668,7 @@ static int sun6i_spi_xfer_setup(struct spi_device *spi, struct spi_transfer *t)
      *  set the default frequency	10MHz
      */
     spi_set_master(base_addr);
-	if(config->max_speed_hz > SPI_MAX_FREQUENCY) {
+   	if(config->max_speed_hz > SPI_MAX_FREQUENCY) {
 	    return -EINVAL;
 	}
 #ifdef CONFIG_AW_ASIC_EVB_PLATFORM
@@ -1193,19 +1193,19 @@ static void sun6i_spi_request_gpio(struct sun6i_spi *sspi)
 	}
 
 	if (1 == used.val) {
-		/* èŽ·å–gpio list */
+		/* »ñÈ¡gpio list */
 		cnt = script_get_pio_list(spi_para, &list);
 		if (0 == cnt) {
 			SPI_ERR("[spi-%d] get gpio list failed\n", sspi->master->bus_num);
 			return;
 		}
 
-		/* ç”³è¯·gpio */
+		/* ÉêÇëgpio */
 		for (i = 0; i < cnt; i++)
 			if (0 != gpio_request(list[i].gpio.gpio, NULL))
 				goto end;
 
-		/* é…ç½®gpio list */
+		/* ÅäÖÃgpio list */
 		if (0 != sw_gpio_setall_range(&list[0].gpio, cnt))
 			SPI_ERR("[spi-%d] sw_gpio_setall_range failed\n", sspi->master->bus_num);
 	}
@@ -1213,7 +1213,7 @@ static void sun6i_spi_request_gpio(struct sun6i_spi *sspi)
 	return;
 
 end:
-	/* é‡Šæ”¾gpio */
+	/* ÊÍ·Ågpio */
 	while (i--)
 		gpio_free(list[i].gpio.gpio);
 }

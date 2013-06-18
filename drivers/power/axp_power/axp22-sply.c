@@ -81,7 +81,7 @@ int axp_chip_id_get(uint8_t chip_id[16])
 	{
 		printk("[axp22x] axp22x write REG_ff fail!");
 	}
-#if 0
+#if 0	
 	for(i=0;i<16;i++)
 	{
 		printk("axp22x REG12%x=%x\n",i,chip_id[i]);
@@ -123,7 +123,7 @@ EXPORT_SYMBOL_GPL(axp_usbcur);
 
 int axp_usbvol_restore(void)
 {
-	axp_usbvolflag = 0;
+ 	axp_usbvolflag = 0;
     return 0;
 }
 EXPORT_SYMBOL_GPL(axp_usbvol_restore);
@@ -135,19 +135,19 @@ int axp_usbcur_restore(void)
 }
 EXPORT_SYMBOL_GPL(axp_usbcur_restore);
 
-static ssize_t axpdebug_store(struct class *class,
+static ssize_t axpdebug_store(struct class *class, 
 			struct class_attribute *attr,	const char *buf, size_t count)
 {
 	if(buf[0] == '1'){
-	   axp_debug = 1;
+	   axp_debug = 1; 
     }
     else{
-	   axp_debug = 0;
-    }
+	   axp_debug = 0;         
+    }        
 	return count;
 }
 
-static ssize_t axpdebug_show(struct class *class,
+static ssize_t axpdebug_show(struct class *class, 
 			struct class_attribute *attr,	char *buf)
 {
 	return sprintf(buf, "bat-debug value is %d\n", axp_debug);
@@ -306,7 +306,7 @@ static void axp_set_charge(struct axp_charger *charger)
       val &= ~(3 << 5);
 	  //val |= 1 << 5;
       }
-    else if (charger->chgvol<4220000)
+    else if (charger->chgvol<4220000)		
 		{
 			  val &= ~(3 << 5);
 			  val |= 1 << 6;
@@ -394,12 +394,12 @@ static void axp_battery_check_status(struct axp_charger *charger,
 {
   if (charger->bat_det) {
     if (charger->ext_valid){
-	if( charger->rest_vol == 100)
+    	if( charger->rest_vol == 100)
         val->intval = POWER_SUPPLY_STATUS_FULL;
-	else if(charger->charge_on)
-		val->intval = POWER_SUPPLY_STATUS_CHARGING;
-	else
-		val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
+    	else if(charger->charge_on)
+    		val->intval = POWER_SUPPLY_STATUS_CHARGING;
+    	else
+    		val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
     }
     else
       val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
@@ -482,10 +482,10 @@ static int axp_battery_get_property(struct power_supply *psy,
 */
   case POWER_SUPPLY_PROP_ONLINE:
   {
-	/* in order to get hardware state, we must update charger state now.
-	 * by sunny at 2012-12-23 11:06:15.
-	 */
-	axp_charger_update_state(charger);
+  	/* in order to get hardware state, we must update charger state now.
+  	 * by sunny at 2012-12-23 11:06:15.
+  	 */
+  	axp_charger_update_state(charger);
     val->intval = charger->bat_current_direction;
     printk("axp battery hardware current direction %d\n", charger->bat_current_direction);
     break;
@@ -575,7 +575,7 @@ static void axp_change(struct axp_charger *charger)
 	if(!charger->usb_valid){
 		printk("set usb vol-lim to %d mV, cur-lim to %d mA\n",pmu_usbvol,pmu_usbcur);
         //cancel_delayed_work_sync(&usbwork);
-		//reset usb-ac after usb removed
+		//reset usb-ac after usb removed 
 		if((pmu_usbcur) && (pmu_usbcur_limit)){
 			axp_clr_bits(charger->master, AXP22_CHARGE_VBUS, 0x01);
 			var = pmu_usbcur * 1000;
@@ -590,11 +590,11 @@ static void axp_change(struct axp_charger *charger)
 				axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x02);
 			}
 			else
-				printk("set usb limit current error,%d mA\n",pmu_usbcur);
+				printk("set usb limit current error,%d mA\n",pmu_usbcur);	
 		}
 		else
 			axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x03);
-
+			
 		if((pmu_usbvol) && (pmu_usbvol_limit)){
 			axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x40);
 			var = pmu_usbvol * 1000;
@@ -606,7 +606,7 @@ static void axp_change(struct axp_charger *charger)
 			    axp_write(charger->master, AXP22_CHARGE_VBUS,val);
 			}
 			else
-				printk("set usb limit voltage error,%d mV\n",pmu_usbvol);
+				printk("set usb limit voltage error,%d mV\n",pmu_usbvol);	
 		}
 		else
 			axp_clr_bits(charger->master, AXP22_CHARGE_VBUS, 0x40);
@@ -629,11 +629,11 @@ static void axp_presslong(struct axp_charger *charger)
 static void axp_pressshort(struct axp_charger *charger)
 {
 	DBG_PSY_MSG("press short\n");
-	input_report_key(powerkeydev, KEY_POWER, 1);
-	input_sync(powerkeydev);
-	msleep(100);
-	input_report_key(powerkeydev, KEY_POWER, 0);
-	input_sync(powerkeydev);
+  	input_report_key(powerkeydev, KEY_POWER, 1);
+ 	input_sync(powerkeydev);
+ 	msleep(100);
+ 	input_report_key(powerkeydev, KEY_POWER, 0);
+ 	input_sync(powerkeydev);
 }
 
 static void axp_keyup(struct axp_charger *charger)
@@ -663,7 +663,7 @@ static void axp_capchange(struct axp_charger *charger)
     charger->rest_vol = (int) (val & 0x7F);
 
     if((charger->bat_det == 0) || (charger->rest_vol == 127)){
-	charger->rest_vol = 100;
+  	charger->rest_vol = 100;
   }
 
   DBG_PSY_MSG("rest_vol = %d\n",charger->rest_vol);
@@ -687,37 +687,37 @@ static int axp_battery_event(struct notifier_block *nb, unsigned long event,
 	}
     if((bool)data==0){
 		if(axp_debug){
-		DBG_PSY_MSG("low 32bit status...\n");
+    		DBG_PSY_MSG("low 32bit status...\n");
 		}
 			if(event & (AXP22_IRQ_BATIN|AXP22_IRQ_BATRE)) {
 				axp_capchange(charger);
 			}
-
+	
 			if(event & (AXP22_IRQ_ACIN|AXP22_IRQ_USBIN|AXP22_IRQ_ACOV|AXP22_IRQ_USBOV|AXP22_IRQ_CHAOV
 						|AXP22_IRQ_CHAST|AXP22_IRQ_TEMOV|AXP22_IRQ_TEMLO)) {
 				axp_change(charger);
 			}
-
+	
 			if(event & (AXP22_IRQ_ACRE|AXP22_IRQ_USBRE)) {
 				axp_change(charger);
 			}
-
+	
 			if(event & AXP22_IRQ_POKLO) {
 				axp_presslong(charger);
 			}
-
+	
 			if(event & AXP22_IRQ_POKSH) {
 				axp_pressshort(charger);
 			}
 			w[0] = (uint8_t) ((event) & 0xFF);
-		w[1] = AXP22_INTSTS2;
-		w[2] = (uint8_t) ((event >> 8) & 0xFF);
-		w[3] = AXP22_INTSTS3;
-		w[4] = (uint8_t) ((event >> 16) & 0xFF);
-		w[5] = AXP22_INTSTS4;
-		w[6] = (uint8_t) ((event >> 24) & 0xFF);
-		w[7] = AXP22_INTSTS5;
-		w[8] = 0;
+    		w[1] = AXP22_INTSTS2;
+    		w[2] = (uint8_t) ((event >> 8) & 0xFF);
+    		w[3] = AXP22_INTSTS3;
+    		w[4] = (uint8_t) ((event >> 16) & 0xFF);
+    		w[5] = AXP22_INTSTS4;
+    		w[6] = (uint8_t) ((event >> 24) & 0xFF);
+    		w[7] = AXP22_INTSTS5;
+    		w[8] = 0;
 	} else {
 		if((event) & (AXP22_IRQ_PEKFE>>32)) {
 			axp_keydown(charger);
@@ -730,14 +730,14 @@ static int axp_battery_event(struct notifier_block *nb, unsigned long event,
 			DBG_PSY_MSG("high 32bit status...\n");
 		}
 		w[0] = 0;
-	w[1] = AXP22_INTSTS2;
-	w[2] = 0;
-	w[3] = AXP22_INTSTS3;
-	w[4] = 0;
-	w[5] = AXP22_INTSTS4;
-	w[6] = 0;
-	w[7] = AXP22_INTSTS5;
-	w[8] = (uint8_t) ((event) & 0xFF);;
+    	w[1] = AXP22_INTSTS2;
+    	w[2] = 0;
+    	w[3] = AXP22_INTSTS3;
+    	w[4] = 0;
+    	w[5] = AXP22_INTSTS4;
+    	w[6] = 0;
+    	w[7] = AXP22_INTSTS5;
+    	w[8] = (uint8_t) ((event) & 0xFF);;
 	}
     DBG_PSY_MSG("event = 0x%x\n",(int) event);
     axp_writes(charger->master,AXP22_INTSTS1,9,w);
@@ -822,7 +822,7 @@ static int axp_battery_adc_set(struct axp_charger *charger)
 
 static int axp_battery_first_init(struct axp_charger *charger)
 {
-   int ret;
+   int ret, ret2;
    uint8_t val;
    axp_set_charge(charger);
    ret = axp_battery_adc_set(charger);
@@ -837,6 +837,20 @@ static int axp_battery_first_init(struct axp_charger *charger)
   case 3: charger->sample_time = 800;break;
   default:break;
   }
+  
+    //printk("====hanbiao set GPIO1 =======");
+   
+    val = 3;
+    ret2 =axp_write(charger->master, AXP22_GPIO1_CTL, val);
+    if(ret2)
+    printk("====hanbiao set GPIO1 ctrl  failure!!!=============");
+    
+
+    val = 11;
+    ret2 = axp_write(charger->master, AXP22_GPIO1LDOOUT_VOL, val);
+    if(ret2)
+    printk("====hanbiao set GPIO1 value  failure!!!=============");
+   
   return ret;
 }
 
@@ -1183,15 +1197,15 @@ static void axp_earlysuspend(struct early_suspend *h)
 	DBG_PSY_MSG("======early suspend=======\n");
 
 #if defined (CONFIG_AXP_CHGCHANGE)
-	early_suspend_flag = 1;
-	if(pmu_earlysuspend_chgcur == 0)
-		axp_clr_bits(axp_charger->master,AXP22_CHARGE_CONTROL1,0x80);
-	else
-		axp_set_bits(axp_charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  	early_suspend_flag = 1;
+  	if(pmu_earlysuspend_chgcur == 0)
+  		axp_clr_bits(axp_charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  	else
+  		axp_set_bits(axp_charger->master,AXP22_CHARGE_CONTROL1,0x80);
 
     if(pmu_earlysuspend_chgcur >= 300000 && pmu_earlysuspend_chgcur <= 2550000){
-	tmp = (pmu_earlysuspend_chgcur -200001)/150000;
-	axp_update(axp_charger->master, AXP22_CHARGE_CONTROL1, tmp,0x0F);
+    	tmp = (pmu_earlysuspend_chgcur -200001)/150000;
+    	axp_update(axp_charger->master, AXP22_CHARGE_CONTROL1, tmp,0x0F);
     }
 #endif
 
@@ -1204,9 +1218,9 @@ static void axp_lateresume(struct early_suspend *h)
 #if defined (CONFIG_AXP_CHGCHANGE)
 	early_suspend_flag = 0;
 	if(pmu_runtime_chgcur == 0)
-		axp_clr_bits(axp_charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  		axp_clr_bits(axp_charger->master,AXP22_CHARGE_CONTROL1,0x80);
   else
-		axp_set_bits(axp_charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  		axp_set_bits(axp_charger->master,AXP22_CHARGE_CONTROL1,0x80);
 
     if(pmu_runtime_chgcur >= 300000 && pmu_runtime_chgcur <= 2550000){
         tmp = (pmu_runtime_chgcur -200001)/150000;
@@ -1250,20 +1264,20 @@ static void axp_charging_monitor(struct work_struct *work)
 
 	axp_read(charger->master, AXP22_CAP,&val);
 	charger->rest_vol	= (int)	(val & 0x7F);
-#if 0
-#if defined (CONFIG_AXP_CHGCHANGE)
+#if 0	
+#if defined (CONFIG_AXP_CHGCHANGE)	
 #if defined CONFIG_HAS_EARLYSUSPEND
-			if(early_suspend_flag){
-					if(pmu_earlysuspend_chgcur == 0){
-						axp_clr_bits(charger->master,AXP20_CHARGE_CONTROL1,0x80);
-					}
-					else if(pmu_earlysuspend_chgcur >= 300000 && pmu_runtime_chgcur <= 1800000){
-					  axp_set_bits(charger->master,AXP20_CHARGE_CONTROL1,0x80);
+		 	if(early_suspend_flag){
+		 			if(pmu_earlysuspend_chgcur == 0){
+		 				axp_clr_bits(charger->master,AXP20_CHARGE_CONTROL1,0x80);
+		 			}
+		 			else if(pmu_earlysuspend_chgcur >= 300000 && pmu_runtime_chgcur <= 1800000){
+		 			  axp_set_bits(charger->master,AXP20_CHARGE_CONTROL1,0x80);
 						tmp = (pmu_earlysuspend_chgcur -200001)/150000;
 						charger->chgcur = tmp *150000 + 300000;
 						axp_update(charger->master, AXP20_CHARGE_CONTROL1, tmp, 0x0F);
 					}
-			}else
+		 	}else
 #endif
 			{
 				if(pmu_runtime_chgcur == 0){
@@ -1271,11 +1285,11 @@ static void axp_charging_monitor(struct work_struct *work)
 				}
 				else if (pmu_runtime_chgcur >= 300000 && pmu_runtime_chgcur <= 1800000){
 					axp_set_bits(charger->master,AXP20_CHARGE_CONTROL1,0x80);
-			tmp = (pmu_runtime_chgcur -200001)/150000;
-			charger->chgcur = tmp *150000 + 300000;
+    			tmp = (pmu_runtime_chgcur -200001)/150000;
+    			charger->chgcur = tmp *150000 + 300000;
 					axp_update(charger->master, AXP20_CHARGE_CONTROL1, tmp, 0x0F);
-		}
-		}
+    		}
+  		}
 #endif
 #endif
 	if(axp_debug){
@@ -1316,10 +1330,10 @@ static void axp_charging_monitor(struct work_struct *work)
 		printk("axp22 usb or usb adapter can be used!!\n");
 	}
 	else
-	{
+	{ 
 		printk("axp22 no usb or usb adaper!\n");
 	}
-#endif
+#endif	
 	/* if battery volume changed, inform uevent */
 	if((charger->rest_vol - pre_rest_vol) || (charger->bat_current_direction != pre_bat_curr_dir)){
 		if(axp_debug)
@@ -1341,7 +1355,7 @@ static void axp_usb(struct work_struct *work)
 	int var;
 	uint8_t tmp,val;
 	struct axp_charger *charger;
-
+	
 	charger = axp_charger;
 	if(axp_debug)
 	{
@@ -1362,11 +1376,11 @@ static void axp_usb(struct work_struct *work)
 				axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x01);
 			}
 			else{
-				printk("set usb limit current error,%d mA\n",pmu_usbcur_pc);
-			}
+				printk("set usb limit current error,%d mA\n",pmu_usbcur_pc);	
+			} 				
 		}
 		else//not limit
-			axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x03);
+			axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x03);			
 	}else {
 		if(axp_debug)
 		{
@@ -1382,12 +1396,12 @@ static void axp_usb(struct work_struct *work)
 				axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x01);
 			}
 			else
-				printk("set usb limit current error,%d mA\n",pmu_usbcur);
+				printk("set usb limit current error,%d mA\n",pmu_usbcur);	
 		}
 		else //not limit
 			axp_set_bits(charger->master, AXP20_CHARGE_VBUS, 0x03);
 	}
-
+		
 	if(axp_usbvolflag){
 		if(axp_debug)
 		{
@@ -1395,16 +1409,16 @@ static void axp_usb(struct work_struct *work)
 		}
 		if(pmu_usbvol_pc){
 		    axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x40);
-			var = pmu_usbvol_pc * 1000;
-			if(var >= 4000000 && var <=4700000){
-			tmp = (var - 4000000)/100000;
-			axp_read(charger->master, AXP22_CHARGE_VBUS,&val);
-			val &= 0xC7;
-			val |= tmp << 3;
-			axp_write(charger->master, AXP22_CHARGE_VBUS,val);
-			}
-			else
-				printk("set usb limit voltage error,%d mV\n",pmu_usbvol_pc);
+		  	var = pmu_usbvol_pc * 1000;
+		  	if(var >= 4000000 && var <=4700000){
+		    	tmp = (var - 4000000)/100000;
+		    	axp_read(charger->master, AXP22_CHARGE_VBUS,&val);
+		    	val &= 0xC7;
+		    	val |= tmp << 3;
+		    	axp_write(charger->master, AXP22_CHARGE_VBUS,val);
+		  	}
+		  	else
+		  		printk("set usb limit voltage error,%d mV\n",pmu_usbvol_pc);	
 		}
 		else
 		    axp_clr_bits(charger->master, AXP22_CHARGE_VBUS, 0x40);
@@ -1415,16 +1429,16 @@ static void axp_usb(struct work_struct *work)
 		}
 		if((pmu_usbvol) && (pmu_usbvol_limit)){
 		    axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x40);
-			var = pmu_usbvol * 1000;
-			if(var >= 4000000 && var <=4700000){
-			tmp = (var - 4000000)/100000;
-			axp_read(charger->master, AXP22_CHARGE_VBUS,&val);
-			val &= 0xC7;
-			val |= tmp << 3;
-			axp_write(charger->master, AXP22_CHARGE_VBUS,val);
-			}
-			else
-				printk("set usb limit voltage error,%d mV\n",pmu_usbvol);
+		  	var = pmu_usbvol * 1000;
+		  	if(var >= 4000000 && var <=4700000){
+		    	tmp = (var - 4000000)/100000;
+		    	axp_read(charger->master, AXP22_CHARGE_VBUS,&val);
+		    	val &= 0xC7;
+		    	val |= tmp << 3;
+		    	axp_write(charger->master, AXP22_CHARGE_VBUS,val);
+		  	}
+		  	else
+		  		printk("set usb limit voltage error,%d mV\n",pmu_usbvol);	
 		}
 		else
 		    axp_clr_bits(charger->master, AXP22_CHARGE_VBUS, 0x40);
@@ -1440,7 +1454,7 @@ static int axp_battery_probe(struct platform_device *pdev)
   uint8_t val2,tmp,val;
   uint8_t ocv_cap[63];
   int Cur_CoulombCounter,rdc;
-
+  
   powerkeydev = input_allocate_device();
   if (!powerkeydev) {
     kfree(powerkeydev);
@@ -1518,11 +1532,11 @@ static int axp_battery_probe(struct platform_device *pdev)
 
 	axp_read(charger->master,AXP22_CHARGE_STATUS,&val);
 	if(!((val >> 1) & 0x01)){
-	ret = power_supply_register(&pdev->dev, &charger->ac);
-	if (ret){
-	power_supply_unregister(&charger->batt);
-	goto err_ps_register;
-	}
+  	ret = power_supply_register(&pdev->dev, &charger->ac);
+  	if (ret){
+    	power_supply_unregister(&charger->batt);
+    	goto err_ps_register;
+  	}
   }
 
   ret = power_supply_register(&pdev->dev, &charger->usb);
@@ -1534,40 +1548,40 @@ static int axp_battery_probe(struct platform_device *pdev)
 
   ret = axp_charger_create_attrs(&charger->batt);
   if(ret){
-	printk("cat notaxp_charger_create_attrs!!!===\n ");
+  	printk("cat notaxp_charger_create_attrs!!!===\n ");
     return ret;
   }
 
   platform_set_drvdata(pdev, charger);
-
+  
   /* usb voltage limit */
   if((pmu_usbvol) && (pmu_usbvol_limit)){
     axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x40);
-	var = pmu_usbvol * 1000;
-	if(var >= 4000000 && var <=4700000){
-	tmp = (var - 4000000)/100000;
-	axp_read(charger->master, AXP22_CHARGE_VBUS,&val);
-	val &= 0xC7;
-	val |= tmp << 3;
-	axp_write(charger->master, AXP22_CHARGE_VBUS,val);
-	}
+  	var = pmu_usbvol * 1000;
+  	if(var >= 4000000 && var <=4700000){
+    	tmp = (var - 4000000)/100000;
+    	axp_read(charger->master, AXP22_CHARGE_VBUS,&val);
+    	val &= 0xC7;
+    	val |= tmp << 3;
+    	axp_write(charger->master, AXP22_CHARGE_VBUS,val);
+  	}
   }
   else
     axp_clr_bits(charger->master, AXP22_CHARGE_VBUS, 0x40);
-
+    
 	/*usb current limit*/
   if((pmu_usbcur) && (pmu_usbcur_limit)){
     axp_clr_bits(charger->master, AXP22_CHARGE_VBUS, 0x02);
     var = pmu_usbcur * 1000;
-	if(var == 900000)
-	axp_clr_bits(charger->master, AXP22_CHARGE_VBUS, 0x03);
-	else if (var == 500000){
-	axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x01);
-	}
+  	if(var == 900000)
+    	axp_clr_bits(charger->master, AXP22_CHARGE_VBUS, 0x03);
+  	else if (var == 500000){
+    	axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x01);
+  	}
   }
   else
     axp_set_bits(charger->master, AXP22_CHARGE_VBUS, 0x03);
-
+      
 
   // set lowe power warning/shutdown level
   axp_write(charger->master, AXP22_WARNING_LEVEL,((pmu_battery_warning_level1-5) << 4)+pmu_battery_warning_level2);
@@ -1671,13 +1685,13 @@ static int axp_battery_probe(struct platform_device *pdev)
 		}
 	else
 		{
-			pmu_pekoff_en = 0;
+			pmu_pekoff_en = 0;			
 		}
 	axp_read(charger->master,AXP22_POK_SET,&val);
 	val &= 0xf7;
 	val |= (pmu_pekoff_en << 3);
 	axp_write(charger->master,AXP22_POK_SET,val);
-
+	
 	/*Init offlevel restart or not */
 	if(pmu_pekoff_func)
 		{
@@ -1713,7 +1727,7 @@ static int axp_battery_probe(struct platform_device *pdev)
 		{
 			axp_clr_bits(charger->master,0x8F,0x08); //disable
 		}
-
+		
 		/*Init IRQ wakeup en*/
 		if(pmu_IRQ_wakeup)
 		{
@@ -1723,7 +1737,7 @@ static int axp_battery_probe(struct platform_device *pdev)
 		{
 			axp_clr_bits(charger->master,0x8F,0x80); //disable
 		}
-
+		
 		/*Init N_VBUSEN status*/
 		if(pmu_vbusen_func)
 		{
@@ -1733,7 +1747,7 @@ static int axp_battery_probe(struct platform_device *pdev)
 		{
 			axp_clr_bits(charger->master,0x8F,0x10); //input
 		}
-
+		
 		/*Init InShort status*/
 		if(pmu_inshort)
 		{
@@ -1743,7 +1757,7 @@ static int axp_battery_probe(struct platform_device *pdev)
 		{
 			axp_clr_bits(charger->master,0x8F,0x60); //auto detect
 		}
-
+		
 		/*Init CHGLED function*/
 		if(pmu_chgled_func)
 		{
@@ -1753,7 +1767,7 @@ static int axp_battery_probe(struct platform_device *pdev)
 		{
 			axp_clr_bits(charger->master,0x32,0x08); //drive MOTO
 		}
-
+		
 		/*set CHGLED Indication Type*/
 		if(pmu_chgled_type)
 		{
@@ -1763,7 +1777,7 @@ static int axp_battery_probe(struct platform_device *pdev)
 		{
 			axp_clr_bits(charger->master,0x45,0x10); //Type B
 		}
-
+		
 		/*Init PMU Over Temperature protection*/
 		if(pmu_hot_shutdowm)
 		{
@@ -1792,36 +1806,36 @@ static int axp_battery_probe(struct platform_device *pdev)
 		{
 			axp_clr_bits(charger->master,0x34,0x20); //disable
 		}
-
+ 
   if(!pmu_batdeten)
-	axp_clr_bits(charger->master,AXP22_PDBC,0x40);
+  	axp_clr_bits(charger->master,AXP22_PDBC,0x40);
   else
-	axp_set_bits(charger->master,AXP22_PDBC,0x40);
-
+  	axp_set_bits(charger->master,AXP22_PDBC,0x40);
+  	
 
 /* RDC initial */
 	axp_read(charger->master, AXP22_RDC0,&val2);
-	if((pmu_battery_rdc) && (!(val2 & 0x40)))		//å¦‚æžœé…ç½®ç”µæ± å†…é˜»ï¼Œåˆ™æ‰‹åŠ¨é…ç½®
+	if((pmu_battery_rdc) && (!(val2 & 0x40)))		//Èç¹ûÅäÖÃµç³ØÄÚ×è£¬ÔòÊÖ¶¯ÅäÖÃ
 	{
 		rdc = (pmu_battery_rdc * 10000 + 5371) / 10742;
 		axp_write(charger->master, AXP22_RDC0, ((rdc >> 8) & 0x1F)|0x80);
 		axp_write(charger->master,AXP22_RDC1,rdc & 0x00FF);
 	}
 
-//probe æ—¶åˆå§‹åŒ–RDCï¼Œä½¿å…¶æå‰è®¡ç®—æ­£ç¡®çš„OCVï¼Œç„¶åŽåœ¨æ­¤å¤„å¯åŠ¨è®¡é‡ç³»ç»Ÿ
+//probe Ê±³õÊ¼»¯RDC£¬Ê¹ÆäÌáÇ°¼ÆËãÕýÈ·µÄOCV£¬È»ºóÔÚ´Ë´¦Æô¶¯¼ÆÁ¿ÏµÍ³
 	axp_read(charger->master,AXP22_BATCAP0,&val2);
 	if((pmu_battery_cap) && (!(val2 & 0x80)))
 	{
 		Cur_CoulombCounter = pmu_battery_cap * 1000 / 1456;
 		axp_write(charger->master, AXP22_BATCAP0, ((Cur_CoulombCounter >> 8) | 0x80));
-		axp_write(charger->master,AXP22_BATCAP1,Cur_CoulombCounter & 0x00FF);
+		axp_write(charger->master,AXP22_BATCAP1,Cur_CoulombCounter & 0x00FF);		
 	}
 	else if(!pmu_battery_cap)
 	{
 		axp_write(charger->master, AXP22_BATCAP0, 0x00);
 		axp_write(charger->master,AXP22_BATCAP1,0x00);
 	}
-
+  
   axp_charger_update_state((struct axp_charger *)charger);
 
   axp_read(charger->master, AXP22_CAP,&val2);
@@ -1835,16 +1849,16 @@ static int axp_battery_probe(struct platform_device *pdev)
   /* set usb cur-vol limit*/
 	INIT_DELAYED_WORK(&usbwork, axp_usb);
 	schedule_delayed_work(&usbwork, msecs_to_jiffies(7 * 1000));
-	/*ç»™å±€éƒ¨å˜é‡èµ‹å€¼*/
+	/*¸ø¾Ö²¿±äÁ¿¸³Öµ*/
 	axp_charger = charger;
 #ifdef CONFIG_HAS_EARLYSUSPEND
-
+	
     axp_early_suspend.suspend = axp_earlysuspend;
     axp_early_suspend.resume = axp_lateresume;
     axp_early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 2;
     register_early_suspend(&axp_early_suspend);
 #endif
-	/* è°ƒè¯•æŽ¥å£æ³¨å†Œ */
+	/* µ÷ÊÔ½Ó¿Ú×¢²á */
 	class_register(&axppower_class);
 
     return ret;
@@ -1913,11 +1927,11 @@ static int axp22_suspend(struct platform_device *dev, pm_message_t state)
 
 #if defined (CONFIG_AXP_CHGCHANGE)
 		if(pmu_suspend_chgcur == 0)
-		axp_clr_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
-	else
-		axp_set_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  		axp_clr_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  	else
+  		axp_set_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
 
-	printk("pmu_suspend_chgcur = %d\n", pmu_suspend_chgcur);
+  	printk("pmu_suspend_chgcur = %d\n", pmu_suspend_chgcur);
 
     if(pmu_suspend_chgcur >= 300000 && pmu_suspend_chgcur <= 2550000){
     tmp = (pmu_suspend_chgcur -200001)/150000;
@@ -1953,12 +1967,12 @@ static int axp22_resume(struct platform_device *dev)
 		}
 
 #if defined (CONFIG_AXP_CHGCHANGE)
-	if(pmu_runtime_chgcur == 0)
-		axp_clr_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
-	else
-		axp_set_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  	if(pmu_runtime_chgcur == 0)
+  		axp_clr_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  	else
+  		axp_set_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
 
-	printk("pmu_runtime_chgcur = %d\n", pmu_runtime_chgcur);
+  	printk("pmu_runtime_chgcur = %d\n", pmu_runtime_chgcur);
 
     if(pmu_runtime_chgcur >= 300000 && pmu_runtime_chgcur <= 2550000){
         tmp = (pmu_runtime_chgcur -200001)/150000;
@@ -1979,21 +1993,21 @@ static void axp22_shutdown(struct platform_device *dev)
 {
     uint8_t tmp;
     struct axp_charger *charger = platform_get_drvdata(dev);
-
+    
     cancel_delayed_work_sync(&charger->work);
 
 #if defined (CONFIG_AXP_CHGCHANGE)
-	if(pmu_shutdown_chgcur == 0)
-		axp_clr_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
-	else
-		axp_set_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  	if(pmu_shutdown_chgcur == 0)
+  		axp_clr_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
+  	else
+  		axp_set_bits(charger->master,AXP22_CHARGE_CONTROL1,0x80);
 
 		printk("pmu_shutdown_chgcur = %d\n", pmu_shutdown_chgcur);
 
     if(pmu_shutdown_chgcur >= 300000 && pmu_shutdown_chgcur <= 2550000){
-	tmp = (pmu_shutdown_chgcur -200001)/150000;
-	charger->chgcur = tmp *150000 + 300000;
-	axp_update(charger->master, AXP22_CHARGE_CONTROL1, tmp, 0x0F);
+    	tmp = (pmu_shutdown_chgcur -200001)/150000;
+    	charger->chgcur = tmp *150000 + 300000;
+    	axp_update(charger->master, AXP22_CHARGE_CONTROL1, tmp, 0x0F);
     }
 #endif
 }

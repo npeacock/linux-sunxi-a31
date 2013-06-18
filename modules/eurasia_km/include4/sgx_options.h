@@ -1,7 +1,7 @@
 /*************************************************************************/ /*!
-@Title
+@Title          
 @Copyright      Copyright (c) Imagination Technologies Ltd. All Rights Reserved
-@Description
+@Description    
 @License        Dual MIT/GPLv2
 
 The contents of this file are subject to the MIT license as set out below.
@@ -136,13 +136,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define OPTIONS_BIT11		0x0
 
-
-#if defined(SGX_FEATURE_OVERLAPPED_SPM) || defined (INTERNAL_TEST)
-#define SGX_FEATURE_OVERLAPPED_SPM_SET_OFFSET	OPTIONS_BIT12
-#define OPTIONS_BIT12		(0x1U << 12)
-#else
 #define OPTIONS_BIT12		0x0
-#endif /* SGX_FEATURE_RENDER_TARGET_ARRAYS */
 
 
 #if defined(SGX_FEATURE_SYSTEM_CACHE) || defined (INTERNAL_TEST)
@@ -261,3 +255,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	OPTIONS_BIT21 |\
 	OPTIONS_BIT22 |\
 	OPTIONS_HIGHBYTE
+

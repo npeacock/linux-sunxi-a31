@@ -101,18 +101,18 @@ static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
 {
 	struct rtc_device *rdev = id;
 	u32 val;
-
+	
 	RTC_DBG("hx-%s: line:%d\n", __func__, __LINE__);
 
     /*judge the irq is beyond to the alarm0*/
     val = readl(sun6i_rtc_base + SUN6I_ALARM_INT_STATUS_REG)&(RTC_ENABLE_CNT_IRQ);
     if (val) {
-	RTC_DBG("%s: line:%d\n", __func__, __LINE__);
+    	RTC_DBG("%s: line:%d\n", __func__, __LINE__);
 		/*Clear pending count alarm*/
 		val = readl(sun6i_rtc_base + SUN6I_ALARM_INT_STATUS_REG);//0x0030
 		val |= (RTC_ENABLE_CNT_IRQ);	//0x00000001
 		writel(val, sun6i_rtc_base + SUN6I_ALARM_INT_STATUS_REG);
-
+		
 		rtc_update_irq(rdev, 1, RTC_AF | RTC_IRQF);
 		return IRQ_HANDLED;
     } else {
@@ -123,12 +123,12 @@ static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
 /* Update control registers,asynchronous interrupt enable*/
 static void sun6i_rtc_setaie(int to)
 {
-	u32 alarm_irq_val;
-
+	u32 alarm_irq_val;  
+	
 	RTC_DBG("%s: aie=%d\n", __func__, to);
 
 	//alarm_irq_val = readl(sun6i_rtc_base + SUN6I_ALARM_EN_REG);//0x0028
-	switch(to){
+	switch(to){		
 		case 1:
 		alarm_irq_val = 0x00000001;		//0x00000100
 	    writel(0x00000001, sun6i_rtc_base + SUN6I_ALARM_EN_REG);//0x0028
@@ -145,7 +145,7 @@ static void sun6i_rtc_setaie(int to)
 	    /*Clear pending count alarm*/
 		writel(0x00000001, sun6i_rtc_base + SUN6I_ALARM_INT_STATUS_REG);//0x0030
 		break;
-	}
+	}	
 }
 #endif
 
@@ -162,7 +162,7 @@ static int sun6i_rtc_gettime(struct device *dev, struct rtc_time *rtc_tm)
 		rtc_tm->tm_sec  = 0;
 		rtc_tm->tm_min  = 0;
 		rtc_tm->tm_hour = 0;
-
+		
 		rtc_tm->tm_mday = 0;
 		rtc_tm->tm_mon  = 0;
 		rtc_tm->tm_year = 0;
@@ -177,8 +177,8 @@ retry_get_time:
 
 	rtc_tm->tm_sec  = TIME_GET_SEC_VALUE(time_tmp);
 	rtc_tm->tm_min  = TIME_GET_MIN_VALUE(time_tmp);
-	rtc_tm->tm_hour = TIME_GET_HOUR_VALUE(time_tmp);
-
+	rtc_tm->tm_hour = TIME_GET_HOUR_VALUE(time_tmp);	
+	
 	rtc_tm->tm_mday = DATE_GET_DAY_VALUE(date_tmp);
 	rtc_tm->tm_mon  = DATE_GET_MON_VALUE(date_tmp);
 	rtc_tm->tm_year = DATE_GET_YEAR_VALUE(date_tmp);
@@ -216,7 +216,7 @@ static int sun6i_rtc_settime(struct device *dev, struct rtc_time *tm)
     */
 	leap_year = tm->tm_year + 1900;
 	if(leap_year > 2033 || leap_year < 1970) {
-		dev_err(dev, "rtc only supports 63Ôºà1970ÔΩû2033Ôºâ years\n");
+		dev_err(dev, "rtc only supports 63£®1970°´2033£© years\n");
 		return -EINVAL;
 	}
 
@@ -229,18 +229,18 @@ static int sun6i_rtc_settime(struct device *dev, struct rtc_time *tm)
 	    /*check at most 3 times.*/
 	    int times = 3;
 	    while((crystal_data & 0x380) && (times--)){
-		RTC_DBG(KERN_INFO"[RTC]canot change rtc now!\n");
-		msleep(500);
-		crystal_data = readl(base + SUN6I_LOSC_CTRL_REG);
+	    	RTC_DBG(KERN_INFO"[RTC]canot change rtc now!\n");
+	    	msleep(500);
+	    	crystal_data = readl(base + SUN6I_LOSC_CTRL_REG);
 	    }
 	}
 
-	/*sun6i ONLY SYPPORTS 63 YEARS,hardware base time:1900.
+	/*sun6i ONLY SYPPORTS 63 YEARS,hardware base time:1900. 
 	*1970 as 0
 	*/
 	tm->tm_year -= 70;
 	tm->tm_mon  += 1;
-
+	
 	/*prevent the application seting the error time*/
 	if (tm->tm_mon > 12) {
 		RTC_DBG("set time month error:line:%d,%d-%d-%d %d:%d:%d\n", __LINE__,
@@ -257,12 +257,12 @@ static int sun6i_rtc_settime(struct device *dev, struct rtc_time *tm)
 				if (tm->tm_mday > 31) {
 					_dev_info(dev, "set time day error:line:%d,%d-%d-%d %d:%d:%d\n",__LINE__,
 				       tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
-				       tm->tm_hour, tm->tm_min, tm->tm_sec);
+				       tm->tm_hour, tm->tm_min, tm->tm_sec);					
 				}
 				if ((tm->tm_hour > 24)||(tm->tm_min > 59)||(tm->tm_sec > 59)) {
 						_dev_info(dev, "set time error:line:%d,%d-%d-%d %d:%d:%d\n",__LINE__,
 				       tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
-				       tm->tm_hour, tm->tm_min, tm->tm_sec);
+				       tm->tm_hour, tm->tm_min, tm->tm_sec);									
 				}
 				break;
 			case 4:
@@ -272,46 +272,46 @@ static int sun6i_rtc_settime(struct device *dev, struct rtc_time *tm)
 				if (tm->tm_mday > 30) {
 					_dev_info(dev, "set time day error:line:%d,%d-%d-%d %d:%d:%d\n",__LINE__,
 				       tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
-				       tm->tm_hour, tm->tm_min, tm->tm_sec);
+				       tm->tm_hour, tm->tm_min, tm->tm_sec);					
 				}
 				if ((tm->tm_hour > 24)||(tm->tm_min > 59)||(tm->tm_sec > 59)) {
 					_dev_info(dev, "set time error:line:%d,%d-%d-%d %d:%d:%d\n",__LINE__,
 				       tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
-				       tm->tm_hour, tm->tm_min, tm->tm_sec);
+				       tm->tm_hour, tm->tm_min, tm->tm_sec);									
 				}
-				break;
+				break;				
 			case 2:
 				if ((leap_year%400==0) || ((leap_year%100!=0) && (leap_year%4==0))) {
 					if (tm->tm_mday > 28) {
 						_dev_info(dev, "set time day error:line:%d,%d-%d-%d %d:%d:%d\n",__LINE__,
-						tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
-						tm->tm_hour, tm->tm_min, tm->tm_sec);
+				       		tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
+				       		tm->tm_hour, tm->tm_min, tm->tm_sec);					
 					}
 					if((tm->tm_hour > 24)||(tm->tm_min > 59)||(tm->tm_sec > 59)){
 						_dev_info(dev, "set time error:line:%d,%d-%d-%d %d:%d:%d\n",__LINE__,
 					       tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
-					       tm->tm_hour, tm->tm_min, tm->tm_sec);
+					       tm->tm_hour, tm->tm_min, tm->tm_sec);									
 					}
 				} else {
 					if (tm->tm_mday > 29) {
 						_dev_info(dev, "set time day error:line:%d,%d-%d-%d %d:%d:%d\n",__LINE__,
 					       tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
-					       tm->tm_hour, tm->tm_min, tm->tm_sec);
+					       tm->tm_hour, tm->tm_min, tm->tm_sec);					
 					}
 					if ((tm->tm_hour > 24)||(tm->tm_min > 59)||(tm->tm_sec > 59)) {
 						_dev_info(dev, "set time error:line:%d,%d-%d-%d %d:%d:%d\n",__LINE__,
 					       tm->tm_year + 2010, tm->tm_mon, tm->tm_mday,
-					       tm->tm_hour, tm->tm_min, tm->tm_sec);
+					       tm->tm_hour, tm->tm_min, tm->tm_sec);									
 					}
 
 				}
 				break;
-			default:
+			default:				
 				break;
 		}
 		tm->tm_sec  = 0;
 		tm->tm_min  = 0;
-		tm->tm_hour = 0;
+		tm->tm_hour = 0;		
 		tm->tm_mday = 0;
 		tm->tm_mon  = 0;
 		tm->tm_year = 0;
@@ -320,22 +320,22 @@ static int sun6i_rtc_settime(struct device *dev, struct rtc_time *tm)
 	_dev_info(dev, "set time %d-%d-%d %d:%d:%d\n",
 	       tm->tm_year + 1970, tm->tm_mon, tm->tm_mday,
 	       tm->tm_hour, tm->tm_min, tm->tm_sec);
-
+	
 	date_tmp = (DATE_SET_DAY_VALUE(tm->tm_mday)|DATE_SET_MON_VALUE(tm->tm_mon)
                     |DATE_SET_YEAR_VALUE(tm->tm_year));
 
 	time_tmp = (TIME_SET_SEC_VALUE(tm->tm_sec)|TIME_SET_MIN_VALUE(tm->tm_min)
                     |TIME_SET_HOUR_VALUE(tm->tm_hour));
-
+                    
 	writel(time_tmp,  base + SUN6I_RTC_TIME_REG);
 	timeout = 0xffff;
-
+	
 	while((readl(base + SUN6I_LOSC_CTRL_REG)&(RTC_HHMMSS_ACCESS))&&(--timeout))
 	if (timeout == 0) {
-        dev_err(dev, "fail to set rtc time.\n");
+        dev_err(dev, "fail to set rtc time.\n");        
         return -1;
     }
-
+    
 	if((leap_year%400==0) || ((leap_year%100!=0) && (leap_year%4==0))) {
 		/*Set Leap Year bit*/
 		date_tmp |= LEAP_SET_VALUE(1);
@@ -369,20 +369,20 @@ static int sun6i_rtc_getalarm(struct device *dev, struct rtc_wkalrm *alrm)
 
     alarm_count = readl(base + SUN6I_RTC_ALARM_COUNTER_REG);
     alarm_current = readl(base + SUN6I_RTC_ALARM_CURRENT_REG);
-
+    
 	date_tmp = readl(base + SUN6I_RTC_DATE_REG);
-
+	
 	alarm_gap = alarm_count - alarm_count;
-
+	
     alarm_gap_day = alarm_gap/(3600*24);//day
     alarm_gap_hour = (alarm_gap - alarm_gap_day*24*60*60)/3600;//hour
     alarm_gap_minute = (alarm_gap - alarm_gap_day*24*60*60 - alarm_gap_hour*60*60)/60;//minute
     alarm_gap_second = alarm_gap - alarm_gap_day*24*60*60 - alarm_gap_hour*60*60-alarm_gap_minute*60;//second
     if(alarm_gap_day > 31) {
-	dev_err(dev, "The alarm time is too long,we assume the alarm ranges from 0 to 31\n");
-	return -EINVAL;
+    	dev_err(dev, "The alarm time is too long,we assume the alarm ranges from 0 to 31\n");
+    	return -EINVAL;
     }
-
+    
 	alm_tm->tm_mday = DATE_GET_DAY_VALUE(date_tmp);
 	alm_tm->tm_mon  = DATE_GET_MON_VALUE(date_tmp);
 	alm_tm->tm_year = DATE_GET_YEAR_VALUE(date_tmp);
@@ -392,8 +392,8 @@ static int sun6i_rtc_getalarm(struct device *dev, struct rtc_wkalrm *alrm)
 
     alarm_en = readl(base + SUN6I_ALARM_INT_CTRL_REG);
     if(alarm_en&&RTC_ALARM_COUNT_INT_EN)
-	alrm->enabled = 1;
-
+    	alrm->enabled = 1;
+	
 	return 0;
 }
 
@@ -415,21 +415,21 @@ static int sun6i_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
     RTC_DBG("*****************************\n\n");
     RTC_DBG("line:%d,%s the alarm time: year:%d, month:%d, day:%d. hour:%d.minute:%d.second:%d\n",\
     __LINE__, __func__, tm->tm_year, tm->tm_mon,\
-	 tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
-	RTC_DBG("*****************************\n\n");
-
+    	 tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);	  
+   	RTC_DBG("*****************************\n\n");
+   	
     ret = sun6i_rtc_gettime(dev, &tm_now);
 
     RTC_DBG("line:%d,%s the current time: year:%d, month:%d, day:%d. hour:%d.minute:%d.second:%d\n",\
     __LINE__, __func__, tm_now.tm_year, tm_now.tm_mon,\
-	 tm_now.tm_mday, tm_now.tm_hour, tm_now.tm_min, tm_now.tm_sec);
-	RTC_DBG("*****************************\n\n");
+    	 tm_now.tm_mday, tm_now.tm_hour, tm_now.tm_min, tm_now.tm_sec);
+   	RTC_DBG("*****************************\n\n");	  
 
     ret = rtc_tm_to_time(tm, &time_set);
     ret = rtc_tm_to_time(&tm_now, &time_now);
     if(time_set <= time_now){
-	dev_err(dev, "The time or date can`t set, The day has pass!!!\n");
-	return -EINVAL;
+    	dev_err(dev, "The time or date can`t set, The day has pass!!!\n");
+    	return -EINVAL;
     }
     time_gap = time_set - time_now;
     time_gap_day = time_gap/(3600*24);//day
@@ -437,43 +437,43 @@ static int sun6i_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
     time_gap_minute = (time_gap - time_gap_day*24*60*60 - time_gap_hour*60*60)/60;//minute
     time_gap_second = time_gap - time_gap_day*24*60*60 - time_gap_hour*60*60-time_gap_minute*60;//second
     if(time_gap_day > 255) {
-	dev_err(dev, "The time or date can`t set, The day range of 0 to 255\n");
-	return -EINVAL;
+    	dev_err(dev, "The time or date can`t set, The day range of 0 to 255\n");
+    	return -EINVAL;
     }
 
-	RTC_DBG("%s,line:%d,time_gap:%ld,alrm->enabled:%d\n", __func__, __LINE__, time_gap, alrm->enabled);
-    RTC_DBG("*****************************\n\n");
-
+   	RTC_DBG("%s,line:%d,time_gap:%ld,alrm->enabled:%d\n", __func__, __LINE__, time_gap, alrm->enabled);
+    RTC_DBG("*****************************\n\n");	
+	
 	/*clear the alarm counter enable bit*/
     sun6i_rtc_setaie(0);
-
+	
     /*clear the alarm count value!!!*/
-    writel(0x00000000, base + SUN6I_RTC_ALARM_COUNTER_REG);
-
+    writel(0x00000000, base + SUN6I_RTC_ALARM_COUNTER_REG);   
+    
     /*rewrite the alarm count value!!!*/
     writel(time_gap, base + SUN6I_RTC_ALARM_COUNTER_REG);//0x0020
 
     /*clear the count enable alarm irq bit*/
     writel(0x00000000, base + SUN6I_ALARM_INT_CTRL_REG);
 	alarm_en = readl(base + SUN6I_ALARM_INT_CTRL_REG);//0x002c
-
+	
 	/*enable the counter alarm irq*/
 	alarm_en = readl(base + SUN6I_ALARM_INT_CTRL_REG);//0x002c
 	alarm_en |= RTC_ENABLE_CNT_IRQ;
     writel(alarm_en, base + SUN6I_ALARM_INT_CTRL_REG);//enable the counter irq!!!
 
 	if(alrm->enabled != 1){
-		RTC_DBG("warning:the rtc counter interrupt isnot enable!!!,%s,%d\n", __func__, __LINE__);
+		RTC_DBG("warning:the rtc counter interrupt isnot enable!!!,%s,%d\n", __func__, __LINE__);		
 	}
 
-	/*decided whether we should start the counter to down count*/
+	/*decided whether we should start the counter to down count*/	
 	sun6i_rtc_setaie(alrm->enabled);
-
+	
 	RTC_DBG("------------------------------------------\n\n");
 	RTC_DBG("%d,2c reg val:%x\n", __LINE__, *(volatile int *)(0xf1f00000+0x2c));
 	RTC_DBG("%d,30 reg val:%x\n", __LINE__, *(volatile int *)(0xf1f00000+0x30));
-	RTC_DBG("%d,28 reg val:%x\n", __LINE__, *(volatile int *)(0xf1f00000+0x28));
-	RTC_DBG("------------------------------------------\n\n");
+	RTC_DBG("%d,28 reg val:%x\n", __LINE__, *(volatile int *)(0xf1f00000+0x28));	
+	RTC_DBG("------------------------------------------\n\n");	
 
 	return 0;
 }
@@ -488,7 +488,7 @@ static int sun6i_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
 }
 #endif
 
-static const struct rtc_class_ops sun6i_rtcops = {
+static const struct rtc_class_ops sun6i_rtcops = {	
 	.read_time			= sun6i_rtc_gettime,
 	.set_time			= sun6i_rtc_settime,
 #ifdef A31_ALARM
@@ -518,27 +518,27 @@ static int __devexit sun6i_rtc_remove(struct platform_device *pdev)
 
 static int __devinit sun6i_rtc_probe(struct platform_device *pdev)
 {
-	struct rtc_device *rtc;
+	struct rtc_device *rtc;	
 	int ret;
 	unsigned int tmp_data;
-
+	
 	sun6i_rtc_base = (void __iomem *)(SW_VA_TIMERC_IO_BASE);
 	sun6i_rtc_alarmno = AW_IRQ_RALARM0;
 
 	/*
 	 *	step1: select RTC clock source
 	*/
-	tmp_data = readl(sun6i_rtc_base + SUN6I_LOSC_CTRL_REG);
+	tmp_data = readl(sun6i_rtc_base + SUN6I_LOSC_CTRL_REG); 
 	tmp_data &= (~REG_CLK32K_AUTO_SWT_EN);            		//disable auto switch,bit-14
 	tmp_data |= (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC); //external     32768hz osc
 	tmp_data |= (EXT_LOSC_GSM);                             //external 32768hz osc gsm
 	writel(tmp_data, sun6i_rtc_base + SUN6I_LOSC_CTRL_REG);
-
+	
 	_dev_info(&(pdev->dev),"sun6i_rtc_probe tmp_data = %d\n", tmp_data);
-
-	/*step2: check set result,Êü•ËØ¢ÊòØÂê¶ËÆæÁΩÆÊàêÂäü*/
+	
+	/*step2: check set result,≤È—Ø «∑Ò…Ë÷√≥…π¶*/
 	tmp_data = readl(sun6i_rtc_base + SUN6I_LOSC_CTRL_REG);
-	if(!(tmp_data & RTC_SOURCE_EXTERNAL)){
+	if(!(tmp_data & RTC_SOURCE_EXTERNAL)){		
 		RTC_ERR("[RTC] WARNING: Rtc time will be wrong!!\n");
 		losc_err_flag = 1;
 	}
@@ -574,11 +574,11 @@ static int __devinit sun6i_rtc_probe(struct platform_device *pdev)
     writel(0x00000000, sun6i_rtc_base + SUN6I_ALARM_INT_CTRL_REG);//0x002c
     /*Clear pending count alarm*/
 	writel(0x00000001, sun6i_rtc_base + SUN6I_ALARM_INT_STATUS_REG);//0x0030
-
+	
 	writel(0x00000000, sun6i_rtc_base + SUN6I_ALARM_CONFIG);
 
 	return 0;
-
+	
 	err_out:
 		return ret;
 }

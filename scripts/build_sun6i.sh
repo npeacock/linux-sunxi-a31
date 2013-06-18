@@ -103,10 +103,17 @@ build_kernel()
 	cd ${LICHEE_KDIR}
 	if [ ! -e .config ]; then
 		echo -e "\n\t\tUsing default config... ...!\n"
-		cp arch/arm/configs/sun6ismp_defconfig .config
+		#cp arch/arm/configs/sun6ismp_defconfig .config
+		cp arch/arm/configs/sun6ismp_fiber_defconfig .config
 	fi
 
 	cp rootfs/rootfs.cpio.gz .
+
+    #try to remove csi drivers
+    rm -rf ${LICHEE_KDIR}/drivers/media/video/sunxi_csi/device/*.ko
+    rm -rf ${LICHEE_KDIR}/drivers/media/video/sunxi_csi/device/*.o
+    rm -rf ${LICHEE_KDIR}/drivers/media/video/sunxi-vfe/device/*.ko
+    rm -rf ${LICHEE_KDIR}/drivers/media/video/sunxi-vfe/device/*.o
 
 	build_standby
 	build_mdfs
@@ -271,3 +278,4 @@ all)
 	show_help
 	;;
 esac
+

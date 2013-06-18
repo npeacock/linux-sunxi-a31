@@ -68,10 +68,10 @@ extern "C" {
 	/* <arg(s) to PVRSRVProcessQueues>;	*/	/*!< TBD */
 	IMG_UINT32			ui32DstSyncCount;	/*!< number of dst sync objects */
 	IMG_UINT32			ui32SrcSyncCount;	/*!< number of src sync objects */
-	PVRSRV_SYNC_OBJECT	*psDstSync;			/*!< dst sync ptr list,
-						allocated on back of this structure */
-	PVRSRV_SYNC_OBJECT	*psSrcSync;			/*!< src sync ptr list,
-						allocated on back of this structure */
+	PVRSRV_SYNC_OBJECT	*psDstSync;			/*!< dst sync ptr list, 
+                                        	allocated on back of this structure */
+	PVRSRV_SYNC_OBJECT	*psSrcSync;			/*!< src sync ptr list, 
+                                       		allocated on back of this structure */
 	IMG_UINT32			ui32AllocSize;		/*!< allocated size*/
 	PFN_QUEUE_COMMAND_COMPLETE	pfnCommandComplete;	/*!< Command complete callback */
 	IMG_HANDLE					hCallbackData;		/*!< Command complete callback data */
@@ -83,7 +83,7 @@ IMG_VOID QueueDumpDebugInfo(IMG_VOID);
 IMG_IMPORT
 PVRSRV_ERROR PVRSRVProcessQueues (IMG_BOOL		bFlush);
 
-#if defined(__linux__) && defined(__KERNEL__)
+#if defined(__linux__) && defined(__KERNEL__) 
 #include <linux/types.h>
 #include <linux/seq_file.h>
 void* ProcSeqOff2ElementQueue(struct seq_file * sfile, loff_t off);

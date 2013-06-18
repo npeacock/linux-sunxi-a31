@@ -26,10 +26,45 @@
 
 #include "sun6i-pcmdma.h"
 
+static bool i2s_pcm_select  = 0;
 static int pcm_used 		= 0;
 static int pcm_master 		= 0;
 static int audio_format 	= 0;
 static int signal_inversion = 0;
+
+/*
+*	i2s_pcm_select == 0:-->	pcm
+*	i2s_pcm_select == 1:-->	i2s
+*/
+static int sun6i_pcm_set_audio_mode(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	i2s_pcm_select = ucontrol->value.integer.value[0];
+	if (i2s_pcm_select) {
+		pcm_master 			= 4;
+		audio_format 		= 1;
+		signal_inversion 	= 1;
+	} else {
+		pcm_master 			= 4;
+		audio_format 		= 4;
+		signal_inversion 	= 3;
+	}
+
+	return 0;
+}
+
+static int sun6i_pcm_get_audio_mode(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	ucontrol->value.integer.value[0] = i2s_pcm_select;
+	return 0;
+}
+
+/* I2s Or Pcm Audio Mode Select */
+static const struct snd_kcontrol_new sun6i_pcm_controls[] = {
+	SOC_SINGLE_BOOL_EXT("I2s Or Pcm Audio Mode Select", 0,
+			sun6i_pcm_get_audio_mode, sun6i_pcm_set_audio_mode),
+};
 
 static int sun6i_sndpcm_hw_params(struct snd_pcm_substream *substream,
 					struct snd_pcm_hw_params *params)
@@ -40,7 +75,7 @@ static int sun6i_sndpcm_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_dai *codec_dai = rtd->codec_dai;
 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
 	unsigned long sample_rate = params_rate(params);
-
+	
 	switch (sample_rate) {
 		case 8000:
 		case 16000:
@@ -56,6 +91,12 @@ static int sun6i_sndpcm_hw_params(struct snd_pcm_substream *substream,
 			break;
 	}
 
+	/*set system clock source freq*/
+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0 , freq, i2s_pcm_select);
+	if (ret < 0) {
+		return ret;
+	}
+
 	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_DSP_A |
 		SND_SOC_DAIFMT_IB_NF | SND_SOC_DAIFMT_CBS_CFS);
 	if (ret < 0)
@@ -64,12 +105,6 @@ static int sun6i_sndpcm_hw_params(struct snd_pcm_substream *substream,
 	* codec clk & FRM master. AP as slave
 	*/
 	ret = snd_soc_dai_set_fmt(cpu_dai, (audio_format | (signal_inversion<<8) | (pcm_master<<12)));
-	if (ret < 0) {
-		return ret;
-	}
-
-	/*set system clock source freq*/
-	ret = snd_soc_dai_set_sysclk(cpu_dai, 0 , freq, 0);
 	if (ret < 0) {
 		return ret;
 	}
@@ -94,6 +129,26 @@ static int sun6i_sndpcm_hw_params(struct snd_pcm_substream *substream,
 	return 0;
 }
 
+/*
+ * Card initialization
+ */
+static int sun6i_pcm_init(struct snd_soc_pcm_runtime *rtd)
+{
+	struct snd_soc_codec *codec = rtd->codec;
+	struct snd_soc_card *card = rtd->card;
+	int ret;
+
+	/* Add virtual switch */
+	ret = snd_soc_add_controls(codec, sun6i_pcm_controls,
+					ARRAY_SIZE(sun6i_pcm_controls));
+	if (ret) {
+		dev_warn(card->dev,
+				"Failed to register audio mode control, "
+				"will continue without it.\n");
+	}
+	return 0;
+}
+
 static struct snd_soc_ops sun6i_sndpcm_ops = {
 	.hw_params 		= sun6i_sndpcm_hw_params,
 };
@@ -103,16 +158,17 @@ static struct snd_soc_dai_link sun6i_sndpcm_dai_link = {
 	.stream_name 	= "SUN6I-PCM",
 	.cpu_dai_name 	= "sun6i-pcm.0",
 	.codec_dai_name = "sndpcm",
-	.platform_name 	= "sun6i-pcm-pcm-audio.0",
+	.init 			= sun6i_pcm_init,
+	.platform_name 	= "sun6i-pcm-pcm-audio.0",	
 	.codec_name 	= "sun6i-pcm-codec.0",
 	.ops 			= &sun6i_sndpcm_ops,
 };
 
 static struct snd_soc_card snd_soc_sun6i_sndpcm = {
-	.name = "sndpcm",
+	.name 		= "sndpcm",
 	.owner 		= THIS_MODULE,
-	.dai_link = &sun6i_sndpcm_dai_link,
-	.num_links = 1,
+	.dai_link 	= &sun6i_sndpcm_dai_link,
+	.num_links 	= 1,
 };
 
 static struct platform_device *sun6i_sndpcm_device;
@@ -133,7 +189,7 @@ static int __init sun6i_sndpcm_init(void)
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
         printk("[PCM] pcm_master type err!\n");
     }
-	pcm_master = val.val;
+	pcm_master = val.val;	
 	type = script_get_item("pcm_para", "audio_format", &val);
 	if (SCIRPT_ITEM_VALUE_TYPE_INT != type) {
         printk("[PCM] audio_format type err!\n");
@@ -150,8 +206,8 @@ static int __init sun6i_sndpcm_init(void)
 		if(!sun6i_sndpcm_device)
 			return -ENOMEM;
 		platform_set_drvdata(sun6i_sndpcm_device, &snd_soc_sun6i_sndpcm);
-		ret = platform_device_add(sun6i_sndpcm_device);
-		if (ret) {
+		ret = platform_device_add(sun6i_sndpcm_device);		
+		if (ret) {			
 			platform_device_put(sun6i_sndpcm_device);
 		}
 	}else{

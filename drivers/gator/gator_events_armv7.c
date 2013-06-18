@@ -218,7 +218,7 @@ static int gator_events_armv7_offline(int** buffer)
 {
 	// disbale all counters, including PMCCNTR; overflow IRQs will not be signaled
 	armv7_pmnc_write(armv7_pmnc_read() & ~PMNC_E);
-
+	
 	return 0;
 }
 

@@ -34,7 +34,7 @@
 //#define DMA_TEST_CHANNEL 15
 #include <asm/cacheflush.h>
 
-static struct class *sunxi_dma_test_class;
+static struct class *sunxi_dma_test_class;	
 static struct	dma_config_t dma_tia[DMA_TEST_CHANNEL];
 struct test_result dma_test_result[DMA_TEST_NUMBER];
 static unsigned int testcase_number;
@@ -68,7 +68,7 @@ static 	unsigned multichannel_to_one_destination_hd(dm_hdl_t dma_hdl, void *parg
 	tmp_flag	= parg;
 	DMATEST_DEBUG("enter %s %s %d\n",dma_test_result[8].name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		DMATEST_DEBUG("before dipuse 0x%x %d\n",*tmp_flag,__LINE__);
 		*tmp_flag &= (~0x01);
@@ -98,7 +98,7 @@ static 	unsigned multichannel_to_one_destination_fd(dm_hdl_t dma_hdl, void *parg
 	tmp_flag	= parg;
 	DMATEST_DEBUG("enter %s %s %d\n",dma_test_result[8].name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		DMATEST_DEBUG("before dipuse 0x%x %d\n",*tmp_flag,__LINE__);
 		*tmp_flag &= (~0x02);
@@ -128,7 +128,7 @@ static 	unsigned multichannel_to_one_destination_qd(dm_hdl_t dma_hdl, void *parg
 	tmp_flag	= parg;
 	DMATEST_DEBUG("enter %s %s %d\n",dma_test_result[8].name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		DMATEST_DEBUG("before dipuse 0x%x %d\n",*tmp_flag,__LINE__);
 		*tmp_flag &= (~0x04);
@@ -159,7 +159,7 @@ static 	unsigned chain_all_channel_test_hd(dm_hdl_t dma_hdl, void *parg, enum dm
 	tmp_flag	= parg;
 	DMATEST_DEBUG("enter %s %s %d\n",dma_test_result[6].name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		DMATEST_DEBUG("before dipuse 0x%x %d\n",*tmp_flag,__LINE__);
 		*tmp_flag &= (~0x01);
@@ -191,7 +191,7 @@ static 	unsigned chain_all_channel_test_fd(dm_hdl_t dma_hdl, void *parg, enum dm
 	tmp_flag	= parg;
 	DMATEST_DEBUG("enter %s %s %d\n",dma_test_result[6].name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		DMATEST_DEBUG("before dipuse 0x%x %d\n",*tmp_flag,__LINE__);
 		*tmp_flag &= (~0x02);
@@ -223,7 +223,7 @@ static 	unsigned chain_all_channel_test_qd(dm_hdl_t dma_hdl, void *parg, enum dm
 	tmp_flag	= parg;
 	DMATEST_DEBUG("enter %s %s %d\n",dma_test_result[6].name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		DMATEST_DEBUG("before dipuse 0x%x %d\n",*tmp_flag,__LINE__);
 		*tmp_flag &= (~0x04);
@@ -256,7 +256,7 @@ static 	unsigned enqueue_cb_test_hd(dm_hdl_t dma_hdl, void *parg, enum dma_cb_ca
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s %s %d\n",struct_result->name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		pdstu	= virt_to_phys(struct_result->vdstp);
 		psrcu	= virt_to_phys(struct_result->vsrcp);
@@ -300,7 +300,7 @@ static 	unsigned enqueue_cb_test_fd(dm_hdl_t dma_hdl, void *parg, enum dma_cb_ca
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s %s %d\n",struct_result->name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		if(struct_result->end_flag >=3){
 			struct_result->end_flag++;
@@ -349,7 +349,7 @@ static 	unsigned enqueue_cb_test_qd(dm_hdl_t dma_hdl, void *parg, enum dma_cb_ca
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s %s %d\n",struct_result->name,__FUNCTION__,__LINE__);
 	DMATEST_DEBUG("struct_result->end_flag is %d %d\n",struct_result->end_flag,__LINE__);
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		pdstu	= virt_to_phys(struct_result->vdstp);
 		psrcu	= virt_to_phys(struct_result->vsrcp);
@@ -395,7 +395,7 @@ static	unsigned int single_mode_test_fd_cb(dm_hdl_t dma_hdl, void *parg, enum dm
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s %s %d\n",struct_result->name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		mdelay(10);
 		d_data	= struct_result->vdstp;
@@ -448,7 +448,7 @@ static	unsigned int single_continue_test_fd_cb(dm_hdl_t dma_hdl, void *parg, enu
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s %s %d\n",struct_result->name,__FUNCTION__,__LINE__);
 
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		d_data	= struct_result->vdstp;
 		s_data	= struct_result->vsrcp;
@@ -459,7 +459,7 @@ static	unsigned int single_continue_test_fd_cb(dm_hdl_t dma_hdl, void *parg, enu
 		}
 		DMATEST_DEBUG("before d_data 0x%x\ns_data 0x%x \n %d\n",readl(d_data),readl(s_data),__LINE__);
 		*s_data	= ++struct_result->end_flag;
-		DMATEST_DEBUG("after d_data 0x%x\ns_data 0x%x \n %d\n",readl(d_data),readl(s_data),__LINE__);
+		DMATEST_DEBUG("after d_data 0x%x\ns_data 0x%x \n %d\n",readl(d_data),readl(s_data),__LINE__);	
 		__cpuc_flush_dcache_area(struct_result->vsrcp, 1024 * 1024);
 		__cpuc_flush_dcache_area(struct_result->vdstp, 1024 * 1024);
 		DMATEST_DEBUG("dma_qd_fd_hd_flag 0x%x %d\n",struct_result->dma_qd_fd_hd_flag,__LINE__);
@@ -486,7 +486,7 @@ static	unsigned int simple_test_hd_cb(dm_hdl_t dma_hdl, void *parg, enum dma_cb_
 	struct test_result *struct_result;
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s simple_test_hd_cb %d\n",struct_result->name,__LINE__);
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		struct_result->dma_qd_fd_hd_flag &= (~0x01);
 		DMATEST_DEBUG("dma_qd_fd_hd_flag 0x%x %d\n",struct_result->dma_qd_fd_hd_flag,__LINE__);
@@ -513,7 +513,7 @@ static	unsigned int simple_test_fd_cb(dm_hdl_t dma_hdl, void *parg, enum dma_cb_
 	struct test_result *struct_result;
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s simple_test_fd_cb %d\n",struct_result->name,__LINE__);
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		struct_result->dma_qd_fd_hd_flag &= (~0x02);
 		DMATEST_DEBUG("dma_qd_fd_hd_flag 0x%x %d\n",struct_result->dma_qd_fd_hd_flag,__LINE__);
@@ -541,7 +541,7 @@ static unsigned int enqueue_after_done_test_fd(dm_hdl_t dma_hdl, void *parg, enu
 	struct test_result *struct_result;
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s %s %d\n",struct_result->name,__FUNCTION__,__LINE__);
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		struct_result->dma_qd_fd_hd_flag &= (~0x02);
 		struct_result->end_flag++;
@@ -570,7 +570,7 @@ static unsigned int enqueue_after_done_test_qd(dm_hdl_t dma_hdl, void *parg, enu
 	struct test_result *struct_result;
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s simple_test_qd_cb %d\n",struct_result->name,__LINE__);
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		struct_result->dma_qd_fd_hd_flag &= (~0x04);
 		DMATEST_DEBUG("dma_qd_fd_hd_flag 0x%x\n",struct_result->dma_qd_fd_hd_flag);
@@ -599,7 +599,7 @@ static unsigned	int	simple_test_qd_cb(dm_hdl_t dma_hdl, void *parg, enum dma_cb_
 	struct test_result *struct_result;
 	struct_result=parg;
 	DMATEST_DEBUG("enter %s simple_test_qd_cb %d\n",struct_result->name,__LINE__);
-	switch(cause){
+	switch(cause){ 
 	case DMA_CB_OK:
 		struct_result->dma_qd_fd_hd_flag &= (~0x04);
 		struct_result->end_flag	= 1;
@@ -701,7 +701,7 @@ static int simple_test_func(struct sunxi_dma_test_class *sunxi_dma_test)
 #ifdef DEBUG_DMA_TEST_PANLONG
 	unsigned int *test_value_s=NULL,*test_value_d=NULL;
 #endif
-
+	
 	printk("simple_test start!\n");
 	testcase_number=0;
 	dma_test_result[0].dma_qd_fd_hd_flag=0x06;
@@ -788,7 +788,7 @@ static int simple_test_func(struct sunxi_dma_test_class *sunxi_dma_test)
 	DMATEST_DEBUG("1simple_test_flag is %d\n",dma_test_result[0].end_flag);
 	__cpuc_flush_dcache_area(vsrcp, 1024 * 1024);
 	__cpuc_flush_dcache_area(vdstp, 1024 * 1024);
-
+	 
 	if(sw_dma_ctl(dma_hdl, DMA_OP_START, NULL)) {
 		printk("sw_dma_ctl DMA_OP_START err %d\n",__LINE__);
 		ret = -1;
@@ -803,7 +803,7 @@ static int simple_test_func(struct sunxi_dma_test_class *sunxi_dma_test)
 			break;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 	if(ret)
 		goto ending;
@@ -838,7 +838,7 @@ static int simple_test_func(struct sunxi_dma_test_class *sunxi_dma_test)
 		printk("%s chain mode fail %d\n",dma_test_result[0].name,__LINE__);
 		goto ending;
 	}
-
+	
 	dma_test_result[0].dma_qd_fd_hd_flag=0x07;
 	DMATEST_DEBUG("%d dma_qd_qd_hd_flag 0x%x\n",__LINE__,dma_test_result[0].dma_qd_fd_hd_flag);
 	dma_hdl = sw_dma_request(channel_name[0], DMA_WORK_MODE_SINGLE);
@@ -858,7 +858,7 @@ static int simple_test_func(struct sunxi_dma_test_class *sunxi_dma_test)
 	}
 
 	vdstp	= kmalloc(SIZE_1M, GFP_KERNEL);
-	pdstu	= virt_to_phys(vdstp);
+	pdstu	= virt_to_phys(vdstp);	
 	//vdstp = dma_alloc_coherent(NULL, SIZE_1M, (dma_addr_t *)&pdstu, GFP_KERNEL);
 	if(!vdstp || !pdstu ){
 		printk("vdstp: 0x%x pdstu: 0x%x\ndma_alloc_coherent err! %d\n",(unsigned int)vdstp,pdstu,__LINE__);
@@ -919,7 +919,7 @@ static int simple_test_func(struct sunxi_dma_test_class *sunxi_dma_test)
 		ret = -1;
 		goto ending;
 	}
-
+	
 	__cpuc_flush_dcache_area(vsrcp, 1024 * 1024);
 	__cpuc_flush_dcache_area(vdstp, 1024 * 1024);
 	DMATEST_DEBUG("1%s flag is %d\n",dma_test_result[0].name,dma_test_result[0].end_flag);
@@ -936,7 +936,7 @@ static int simple_test_func(struct sunxi_dma_test_class *sunxi_dma_test)
 			break;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 	if(ret)
 		goto ending;
@@ -961,7 +961,7 @@ static int simple_test_func(struct sunxi_dma_test_class *sunxi_dma_test)
 		goto ending;
 	}
 	dma_hdl = (dm_hdl_t)NULL;
-
+	
 
 ending:
 	if(ret || dma_test_result[0].dma_qd_fd_hd_flag){
@@ -1121,7 +1121,7 @@ static int signle_mode_test(struct sunxi_dma_test_class *sunxi_dma_test)
 			goto ending1;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 
 	dma_test_result[1].end_flag = 0;
@@ -1299,7 +1299,7 @@ static int single_continue_test(struct sunxi_dma_test_class *sunxi_dma_test)
 			goto ending2;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 
 	dma_test_result[2].end_flag = 0;
@@ -1474,7 +1474,7 @@ static int chain_enqueques_test(struct sunxi_dma_test_class *sunxi_dma_test)
 			goto ending1;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 
 	dma_test_result[3].end_flag = 0;
@@ -1529,7 +1529,7 @@ ending1:
 
 static int enqueue_cb_test(struct sunxi_dma_test_class *sunxi_dma_test)
 {
-
+	
 	int i,ret=0;
 	dm_hdl_t	dma_hdl = (dm_hdl_t)NULL;
 	void	*vsrcp=NULL,*vdstp=NULL;
@@ -1653,7 +1653,7 @@ static int enqueue_cb_test(struct sunxi_dma_test_class *sunxi_dma_test)
 			goto ending1;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 
 //	dma_test_result[4].end_flag = 0;
@@ -1840,13 +1840,13 @@ static int enqueue_after_done_test(struct sunxi_dma_test_class *sunxi_dma_test)
 			goto ending1;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 
 	sw_dma_enqueue(dma_hdl, psrcu+1024, pdstu+1024, 1024, ENQUE_PHASE_NORMAL);
-
+	
 	sw_dma_enqueue(dma_hdl, psrcu+1024*2, pdstu+1024*2, 1024, ENQUE_PHASE_NORMAL);
-
+	
 	sw_dma_enqueue(dma_hdl, psrcu+1024*3, pdstu+1024*3, 1024, ENQUE_PHASE_NORMAL);
 
 	__cpuc_flush_dcache_area(vsrcp, 1024 * 1024);
@@ -1860,7 +1860,7 @@ static int enqueue_after_done_test(struct sunxi_dma_test_class *sunxi_dma_test)
 			goto ending1;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 
 	dma_test_result[5].end_flag = 0;
@@ -1952,7 +1952,7 @@ static int chain_all_channel_test(struct sunxi_dma_test_class *sunxi_dma_test)
 #ifdef DEBUG_DMA_TEST_PANLONG
 	unsigned int *test_value_s=NULL,*test_value_d=NULL;
 #endif
-
+	
 	printk("%s start! %d\n",dma_test_result[6].name,__LINE__);
 	testcase_number=6;
 	for(i=0;i<DMA_TEST_CHANNEL;i++){
@@ -2008,7 +2008,7 @@ static int chain_all_channel_test(struct sunxi_dma_test_class *sunxi_dma_test)
 		dma_tia[i].bconti_mode = false;
 		dma_tia[i].src_drq_type = DRQSRC_SDRAM;
 		dma_tia[i].dst_drq_type = DRQDST_SDRAM;
-
+	
 		memset(&done_cb, 0, sizeof(done_cb));
 		memset(&op_cb, 0, sizeof(op_cb));
 
@@ -2062,7 +2062,7 @@ static int chain_all_channel_test(struct sunxi_dma_test_class *sunxi_dma_test)
 		}
 		DMATEST_DEBUG("dma_tress_flag[%d] is 0x%2x after start %d\n",i,dma_tress_flag[i],__LINE__);
 	}
-
+	
 	i=2000;
 	DMATEST_DEBUG("loop start ! %d\n",__LINE__);
 	while(i){
@@ -2073,7 +2073,7 @@ static int chain_all_channel_test(struct sunxi_dma_test_class *sunxi_dma_test)
 		if(!(tmp_flag & 0x0f))
 			goto transmit_over;
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 	printk("%s time out ! tmp_flag 0x%x %d\n",__FUNCTION__,tmp_flag,__LINE__);
 	dma_test_result[6].result	= -1;
@@ -2403,7 +2403,7 @@ static int multichannel_to_one_destination(struct sunxi_dma_test_class *sunxi_dm
 	DMATEST_DEBUG("dma set over! %d\n",__LINE__);
 	__cpuc_flush_dcache_area(vsrcp, SIZE_1M);
 	__cpuc_flush_dcache_area(vdstp, SIZE_1M);
-	DMATEST_DEBUG("dcache flash over! %d\n",__LINE__);
+	DMATEST_DEBUG("dcache flash over! %d\n",__LINE__);	
 	for(i=0;i<multichannel_channel_number;i++){
 		if(sw_dma_ctl(dma_hdl[i], DMA_OP_START, NULL)) {
 			printk("sw_dma_ctl DMA_OP_START err %d\n",__LINE__);
@@ -2439,7 +2439,7 @@ static int multichannel_to_one_destination(struct sunxi_dma_test_class *sunxi_dm
 			ret = -1;
 			goto ending1;
 		}
-
+	
 
 		if(sw_dma_release(dma_hdl[i])){
 			printk("sw_dma_release err! %d\n",__LINE__);
@@ -2598,7 +2598,7 @@ static int buffer_not_align(struct sunxi_dma_test_class *sunxi_dma_test)
 			goto ending1;
 		}
 		i--;
-		mdelay(1);
+		mdelay(1);	
 	}
 	DMATEST_DEBUG("2%s flag is %d\n",dma_test_result[9].name,dma_test_result[9].end_flag);
 	dma_test_result[9].end_flag = 0;
@@ -2701,10 +2701,10 @@ static ssize_t exec_store(struct device *dev,
 		case 0:
 			final = simple_test_func(sunxi_dma_test);
 		break;
-		case 1:
+		case 1:	
 			final = signle_mode_test(sunxi_dma_test);
 		break;
-		case 2:
+		case 2:		
 			final = single_continue_test(sunxi_dma_test);
 		break;
 		case 3:
@@ -2732,7 +2732,7 @@ static ssize_t exec_store(struct device *dev,
 			printk("you input number too large!\n");
 			final = 1;
 		break;
-		}
+		}	
 	}
 	if(final)
 		dma_test_result[exec_number].result=1;
@@ -3222,7 +3222,7 @@ static int __init sunxi_dma_test_init(void)
 	ret	= platform_driver_register(&sunxi_dma_test_driver);
 	if(ret < 0)
 		goto err_dma_platform_driver_register;
-
+		
 	sunxi_dma_test_class->dev_attrs 	= dma_class_attrs;
 	mutex_init(&sunxi_dma_test_mutex);
 
@@ -3236,7 +3236,7 @@ err_sunxi_dma_test_platform_device_register:
 	platform_driver_unregister(&sunxi_dma_test_driver);
 	mutex_destroy(&sunxi_dma_test_mutex);
 err_dma_platform_driver_register:
-	return ret;
+	return ret;	
 }
 
 static void __exit sunxi_dma_test_exit(void)

@@ -73,7 +73,7 @@ CopyFromUserWrapper(PVRSRV_PER_PROCESS_DATA *pProcData,
 					IMG_VOID *pvSrc,
 					IMG_UINT32 ui32Size);
 PVRSRV_ERROR
-CopyToUserWrapper(PVRSRV_PER_PROCESS_DATA *pProcData,
+CopyToUserWrapper(PVRSRV_PER_PROCESS_DATA *pProcData, 
 				  IMG_UINT32 ui32BridgeID,
 				  IMG_VOID *pvDest,
 				  IMG_VOID *pvSrc,

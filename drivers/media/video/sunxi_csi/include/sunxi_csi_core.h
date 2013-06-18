@@ -24,10 +24,10 @@
 #define DBG_LEVEL 	1
 
 //for internel driver debug
-#if(DBG_EN==1)
+#if(DBG_EN==1)		
 #define csi_dbg(l,x,arg...) if(l <= DBG_LEVEL) printk(KERN_DEBUG"[CSI_DEBUG]"x,##arg)
 #else
-#define csi_dbg(l,x,arg...)
+#define csi_dbg(l,x,arg...) 
 #endif
 
 //print when error happens
@@ -48,20 +48,20 @@ struct csi_subdev_info {
  */
 typedef enum tag_CSI_IF
 {
-    CSI_IF_INTLV								=0x00,     /* 1SEG DATA in one channel  */
+    CSI_IF_INTLV								=0x00,     /* 1SEG DATA in one channel  */ 
     CSI_IF_SPL									=0x01,     /* 2SEG: 1SEG Y in one channel , 1SEG UV in second channel */
     CSI_IF_PL										=0x02,     /* 3SEG YUV444 */
     CSI_IF_PL_SPL								=0x03,     /* 3SEG YUV444 to 2SEG YUV422  */
-
+	
     CSI_IF_CCIR656_1CH					=0x04,   /* 1SEG ccir656  1ch   */
     CSI_IF_CCIR656_1CH_SPL			=0x05,   /* 2SEG  ccir656 1ch   */
     CSI_IF_CCIR656_1CH_PL				=0x06,   /*3SEG ccir656  1ch   */
     CSI_IF_CCIR656_1CH_PL_SPL		=0x07,   /* 3SEG to 2SEG ccir656  1ch   */
-
+    
     CSI_IF_CCIR656_2CH					=0x0c,   /* D7~D0:ccir656  2ch   */
     CSI_IF_CCIR656_4CH					=0x0d,   /* D7~D0:ccir656  4ch   */
-
-    CSI_IF_MIPI									=0x80,	 /* MIPI CSI */
+    
+    CSI_IF_MIPI									=0x80,	 /* MIPI CSI */   
 }__csi_if_t;
 
 /*
@@ -69,9 +69,9 @@ typedef enum tag_CSI_IF
  */
 typedef enum tag_CSI_DATA_WIDTH
 {
-	CSI_8BIT			=0,
-	CSI_10BIT			=1,
-	CSI_12BIT			=2,
+	CSI_8BIT			=0, 
+ 	CSI_10BIT			=1,   
+	CSI_12BIT			=2,    
 }__csi_data_width_t;
 
 
@@ -82,7 +82,7 @@ typedef enum tag_CSI_INPUT_FMT
 {
 	CSI_RAW=0,     /* raw stream  */
 	//CSI_BAYER=1,
-	CSI_YUV422=3,    /* yuv422      */
+ 	CSI_YUV422=3,    /* yuv422      */
 	CSI_YUV420=4,    /* yuv420      */
 }__csi_input_fmt_t;
 
@@ -113,7 +113,7 @@ typedef enum tag_CSI_OUTPUT_FMT
     CSI_FIELD_PLANAR_YUV420 = 1,         /* parse a field(odd or even) into planar yuv420 */
     CSI_FRAME_PLANAR_YUV420 = 2,				 /* parse and reconstruct every 2 fields(odd and even) into a frame, format is planar yuv420 */
     CSI_FRAME_PLANAR_YUV422 = 3,
-    CSI_FIELD_UV_CB_YUV422  = 4,
+    CSI_FIELD_UV_CB_YUV422  = 4,         
     CSI_FIELD_UV_CB_YUV420  = 5,
     CSI_FRAME_UV_CB_YUV420  = 6,
     CSI_FRAME_UV_CB_YUV422  = 7,
@@ -227,7 +227,7 @@ typedef struct tag_CSI_FMT_CONF
 
 typedef enum tag_CSI_BUF
 {
-		CSI_BUF_0_A = 0,    /* FIFO for Y address A */
+		CSI_BUF_0_A = 0,    /* FIFO for Y address A */  
 		CSI_BUF_0_B,    /* FIFO for Y address B */
 		CSI_BUF_1_A,    /* FIFO for Cb address A */
 		CSI_BUF_1_B,    /* FIFO for Cb address B */
@@ -240,8 +240,8 @@ typedef enum tag_CSI_BUF
  */
 typedef struct tag_CSI_CAPTURE_STATUS
 {
-    _Bool picture_in_progress;
-    _Bool video_in_progress;
+    _Bool picture_in_progress;  
+    _Bool video_in_progress;    
 }__csi_capture_status;
 
 
@@ -284,8 +284,8 @@ typedef struct tag_CSI_SUBDEV_INFO
     __csi_ref_t        vref;        /* input vref signal polarity */
     __csi_ref_t        href;        /* input href signal polarity */
     __csi_clk_t        clock;       /* input data valid of the input clock edge type */
-    int								 iocfg;				/*0 for csi back , 1 for csi front*/
-    int 							 stby_mode;
+    int								 iocfg;				/*0 for csi back , 1 for csi front*/				
+    int 							 stby_mode;			
 }__csi_subdev_info_t;
 
 struct csi_buf_addr {
@@ -306,8 +306,8 @@ struct csi_fmt {
 	enum v4l2_mbus_pixelcode		ccm_fmt;//linux-3.0
 	u32   											fourcc;          /* v4l2 format id */
 	enum v4l2_field							field;
-	__csi_input_fmt_t						input_fmt;
-	__csi_output_fmt_t 					output_fmt;
+	__csi_input_fmt_t						input_fmt;	
+	__csi_output_fmt_t 					output_fmt;	
 	//enum pkt_fmt 								mipi_pkt_fmt;
 	__csi_field_sel_t						csi_field;
 	int   											depth;
@@ -336,7 +336,7 @@ struct csi_buffer {
 
 struct csi_dmaqueue {
 	struct list_head active;
-
+	
 	/* Counters to control fps rate */
 	int frame;
 	int ini_jiffies;
@@ -355,7 +355,7 @@ struct ccm_config {
 	int hflip;
 	int stby_mode;
 	int interface;
-	int flash_pol;
+	int flash_pol;		
 //	user_gpio_set_t reset_io;
 //	user_gpio_set_t standby_io;
 //	user_gpio_set_t power_io;
@@ -367,16 +367,16 @@ struct ccm_config {
 	struct gpio_config power_io;
 	struct gpio_config flash_io;
 	struct gpio_config af_power_io;
-
+	
 	struct regulator 	 *iovdd;		  /*interface voltage source of sensor module*/
 	struct regulator 	 *avdd;			/*anlog voltage source of sensor module*/
 	struct regulator 	 *dvdd;			/*core voltage source of sensor module*/
-
+	
 	uint vol_iovdd;
 	uint vol_avdd;
 	uint vol_dvdd;
-
-	__csi_subdev_info_t ccm_info;
+	
+	__csi_subdev_info_t ccm_info;  
 	struct v4l2_subdev			*sd;
 };
 
@@ -387,11 +387,11 @@ struct csi_dev {
 	struct platform_device	*pdev;
 
 	int						id;
-
+	
 	spinlock_t              slock;
 	struct mutex						standby_lock;
 	//up when suspend,down when resume. ensure open is being called after resume has been done
-	struct semaphore        standby_seq_sema;
+	struct semaphore        standby_seq_sema;   
 	/* various device info */
 	struct video_device     *vfd;
 
@@ -411,11 +411,11 @@ struct csi_dev {
 	unsigned int						frame_size;
 	struct videobuf_queue   vb_vidq;
 	unsigned int 						capture_mode;
-
+	
 	/*working state*/
 	unsigned long 		   	generating;
 	int								opened;
-
+	
 	/* suspend */
 #if defined(CONFIG_HAS_EARLYSUSPEND)
 	struct early_suspend early_suspend;
@@ -424,7 +424,7 @@ struct csi_dev {
 	/* work queue */
 	struct work_struct resume_work;
 	struct delayed_work probe_work;
-
+	
 	/*pin,clock,irq resource*/
 	//int								csi_pin_hd;
 	script_item_u     *csi_pin_list;
@@ -443,22 +443,22 @@ struct csi_dev {
 	void __iomem			*protocol_regs;
 	struct resource		*protocol_regs_res;
 	/*power issue*/
-
+	
 	int								 stby_mode;
 	struct regulator 	 *iovdd;		  /*interface voltage source of sensor module*/
   struct regulator 	 *avdd;			/*anlog voltage source of sensor module*/
   struct regulator 	 *dvdd;			/*core voltage source of sensor module*/
-
+	
 	uint vol_iovdd;
 	uint vol_avdd;
 	uint vol_dvdd;
-
+	
 	/* attribution */
 	unsigned int interface;
 	unsigned int vflip;
 	unsigned int hflip;
 	unsigned int flash_pol;
-
+	
 	/* csi io */
 //	user_gpio_set_t reset_io;
 //	user_gpio_set_t standby_io;
@@ -471,7 +471,7 @@ struct csi_dev {
 	struct gpio_config power_io;
 	struct gpio_config flash_io;
 	struct gpio_config af_power_io;
-
+	
 	/*parameters*/
 	unsigned int			cur_ch;
 	__csi_if_conf_t   csi_if_cfg;
@@ -479,13 +479,13 @@ struct csi_dev {
 	struct csi_buf_addr		csi_buf_addr;
 	struct csi_plane_size	csi_plane;
 	struct csi_size				csi_size;
-
+	
 	/* ccm config */
   int dev_qty;
 	int module_flag;
 	__csi_subdev_info_t *ccm_info;  /*current config*/
 	struct ccm_config *ccm_cfg[MAX_NUM_INPUTS];
-
+	
 	/* mipi config */
 	unsigned char lane_num;
 	unsigned char total_ch;
