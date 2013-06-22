@@ -1195,12 +1195,12 @@ choice
 		
 menuconfig VIDEO_CSI_SUNXI
 	tristate "old version of csi driver"
-	default m
+	default n
 	depends on VIDEO_DEV && VIDEO_V4L2
 	
 menuconfig VIDEO_SUNXI_VFE
 	tristate "new version of csi or mipi csi driver"
-	default m
+	default y
 endchoice
 	
 if VIDEO_CSI_SUNXI

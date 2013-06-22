@@ -264,6 +264,9 @@ comment "Frame buffer hardware drivers"
 config LYCHEE_FB_SUN6I
         tristate "DISP Driver Support(sun6i)"
         depends on FB
+        select FB_CFB_FILLRECT
+		select FB_CFB_COPYAREA
+		select FB_CFB_IMAGEBLIT
         ---help---
         default m
 

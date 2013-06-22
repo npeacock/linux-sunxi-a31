@@ -50,6 +50,9 @@ typedef struct
     __disp_fb_create_para_t fb_para[FB_MAX];
 	wait_queue_head_t       wait[2];
 	unsigned long           wait_count[2];
+
+	__u32 pseudo_palette [FB_MAX][16];
+
     struct timer_list      disp_timer[2];
     struct work_struct      vsync_work[2];
     struct work_struct      post2_cb_work;
