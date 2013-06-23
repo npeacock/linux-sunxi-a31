@@ -1497,7 +1497,6 @@ __s32 Display_Fb_Request(__u32 fb_id, __disp_fb_create_para_t *fb_para)
             layer_para.scn_win.y = 0;
             var_to_disp_fb(&(layer_para.fb), &(info->var), &(info->fix));
             layer_para.fb.addr[0] = (__u32)info->fix.smem_start;
-        fb_dealloc_cmap(&info->cmap);
             layer_para.fb.addr[1] = 0;
             layer_para.fb.addr[2] = 0;
             layer_para.fb.size.width = fb_para->width;
@@ -1544,7 +1543,9 @@ __s32 Display_Fb_Release(__u32 fb_id)
         memset(&g_fbi.fb_para[fb_id], 0, sizeof(__disp_fb_create_para_t));
         g_fbi.fb_enable[fb_id] = 0;
 
-	Fb_unmap_video_memory(info);
+
+    	fb_dealloc_cmap(&info->cmap);
+		Fb_unmap_video_memory(info);
 
 	    return DIS_SUCCESS;
 	}
@@ -1629,7 +1630,7 @@ __s32 Fb_Init(__u32 from)
 
 	if(from == 0)//call from lcd driver
 	{
-#if 0//#ifdef FB_RESERVED_MEM
+#if 0// #ifdef FB_RESERVED_MEM
 		__inf("fbmem: fb_start=0x%x, fb_size=0x%x\n", (unsigned int)FB_MEM_BASE, (unsigned int)FB_MEM_SIZE);
 		disp_create_heap((unsigned long)(ioremap_nocache(FB_MEM_BASE, FB_MEM_SIZE)),FB_MEM_BASE, FB_MEM_SIZE);
 #endif
@@ -1737,10 +1738,6 @@ __s32 Fb_Init(__u32 from)
 				}
 			}
 		}
-		for(i=0; i<8; i++) {
-			/* Register framebuffers after they are initialized */
-			register_framebuffer(g_fbi.fbinfo[i]);
-		}
 
 		fb_num = (g_fbi.disp_init.disp_mode==DISP_INIT_MODE_TWO_DIFF_SCREEN)?2:1;
 		for(i = 0; i<fb_num; i++)
@@ -1804,6 +1801,10 @@ __s32 Fb_Init(__u32 from)
 
 			//fb_draw_colorbar((__u32)g_fbi.fbinfo[i]->screen_base, fb_para.width, fb_para.height*fb_para.buffer_num, &(g_fbi.fbinfo[i]->var));
 
+		}
+		for(i=0; i<8; i++) {
+			/* Register framebuffers after they are initialized */
+			register_framebuffer(g_fbi.fbinfo[i]);
 		}
 
 		if(g_fbi.disp_init.scaler_mode[0])
