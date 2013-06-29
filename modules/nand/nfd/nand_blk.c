@@ -34,7 +34,7 @@ extern __u32 nand_current_dev_num;
 extern int part_secur[ND_MAX_PART_COUNT];
 extern __u32 RetryCount[2][4];
 
-struct nand_disk disk_array[ND_MAX_PART_COUNT];
+struct nand_disk disk_array[ND_MAX_PART_COUNT+1];
 
 #define BLK_ERR_MSG_ON
 #ifdef  BLK_ERR_MSG_ON
@@ -1327,8 +1327,11 @@ static int nand_add_dev(struct nand_blk_ops *nandr, struct nand_disk *part)
 	gd->first_minor = (dev->devnum) << nandr->minorbits;
 	gd->fops = &nand_blktrans_ops;
 
-	snprintf(gd->disk_name, sizeof(gd->disk_name),
-		 "%s%c", nandr->name, (nandr->minorbits?'a':'0') + dev->devnum);
+	if (dev->devnum)
+		snprintf(gd->disk_name, sizeof(gd->disk_name),
+		 "%s%c", nandr->name, (nandr->minorbits?'a':'0') + dev->devnum - 1);
+	else
+		snprintf(gd->disk_name, sizeof(gd->disk_name), "%s", nandr->name);
 	//snprintf(gd->devfs_name, sizeof(gd->devfs_name),
 	//	 "%s/%c", nandr->name, (nandr->minorbits?'a':'0') + dev->devnum);
 
@@ -1486,7 +1489,20 @@ int nand_blk_register(struct nand_blk_ops *nandr)
 	//devfs_mk_dir(nandr->name);
 	INIT_LIST_HEAD(&nandr->devs);
 
-	part_cnt = mbr2disks(disk_array);
+	disk_array[0].offset = 0;
+	disk_array[0].size = NAND_GetDiskSize();
+
+	dbg_inf("nand size %lu\n", disk_array[0].size);
+
+	part_cnt = mbr2disks(disk_array + 1);
+	if (disk_array[0].size != disk_array[part_cnt].size + disk_array[part_cnt].offset){
+		dbg_err("nand size reported %lu by nandlib but last partition is %lu at %lu offset giving %lu disk size\n",
+				disk_array[0].size, disk_array[part_cnt].size, disk_array[part_cnt].offset,
+				disk_array[part_cnt].size + disk_array[part_cnt].offset);
+	}
+
+	part_cnt ++;
+
 	for(i = 0 ; i < part_cnt ; i++){
 		nandr->add_dev(nandr,&(disk_array[i]));
 	}
@@ -1819,7 +1835,7 @@ static int __init init_blklayer(void)
 		
 #if 1
 
-	/* 获取card_line值 */
+	/* 锟斤拷取card_line值 */
 	type = script_get_item("nand0_para", "good_block_ratio", &good_block_ratio_flag);
 	
 	if(SCIRPT_ITEM_VALUE_TYPE_INT != type)
@@ -2183,7 +2199,7 @@ int __init nand_init(void)
     	script_item_u   nand0_used_flag;
 	script_item_value_type_e  type;
 
-	/* 获取card_line值 */
+	/* 锟斤拷取card_line值 */
 	type = script_get_item("nand0_para", "nand0_used", &nand0_used_flag);
 	if(SCIRPT_ITEM_VALUE_TYPE_INT != type)
 		printk("nand type err!");
@@ -2222,7 +2238,7 @@ void __exit nand_exit(void)
 	script_item_u	nand0_used_flag;
 	script_item_value_type_e  type;
 
-	/* 获取card_line值 */
+	/* 锟斤拷取card_line值 */
 	type = script_get_item("nand0_para", "nand0_used", &nand0_used_flag);
 	if(SCIRPT_ITEM_VALUE_TYPE_INT != type)
 		printk("nand type err!");
