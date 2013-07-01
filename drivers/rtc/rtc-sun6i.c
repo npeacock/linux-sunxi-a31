@@ -170,7 +170,7 @@ static int sun6i_rtc_gettime(struct device *dev, struct rtc_time *rtc_tm)
     }
 
 retry_get_time:
-	_dev_info(dev,"sun6i_rtc_gettime\n");
+	/* _dev_info(dev,"sun6i_rtc_gettime\n"); */
     /*first to get the date, then time, because the sec turn to 0 will effect the date;*/
 	date_tmp = readl(base + SUN6I_RTC_DATE_REG);
 	time_tmp = readl(base + SUN6I_RTC_TIME_REG);
@@ -194,9 +194,9 @@ retry_get_time:
 
 	rtc_tm->tm_year += 70;
 	rtc_tm->tm_mon  -= 1;
-	_dev_info(dev,"read time %d-%d-%d %d:%d:%d\n",
+	/*_dev_info(dev,"read time %d-%d-%d %d:%d:%d\n",
 	       rtc_tm->tm_year + 1900, rtc_tm->tm_mon + 1, rtc_tm->tm_mday,
-	       rtc_tm->tm_hour, rtc_tm->tm_min, rtc_tm->tm_sec);
+	       rtc_tm->tm_hour, rtc_tm->tm_min, rtc_tm->tm_sec);*/
 
 	return 0;
 }
@@ -216,7 +216,7 @@ static int sun6i_rtc_settime(struct device *dev, struct rtc_time *tm)
     */
 	leap_year = tm->tm_year + 1900;
 	if(leap_year > 2033 || leap_year < 1970) {
-		dev_err(dev, "rtc only supports 63£¨1970¡«2033£© years\n");
+		dev_err(dev, "rtc only supports 63ï¿½ï¿½1970ï¿½ï¿½2033ï¿½ï¿½ years\n");
 		return -EINVAL;
 	}
 
@@ -536,7 +536,7 @@ static int __devinit sun6i_rtc_probe(struct platform_device *pdev)
 	
 	_dev_info(&(pdev->dev),"sun6i_rtc_probe tmp_data = %d\n", tmp_data);
 	
-	/*step2: check set result,²éÑ¯ÊÇ·ñÉèÖÃ³É¹¦*/
+	/*step2: check set result,ï¿½ï¿½Ñ¯ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ã³É¹ï¿½*/
 	tmp_data = readl(sun6i_rtc_base + SUN6I_LOSC_CTRL_REG);
 	if(!(tmp_data & RTC_SOURCE_EXTERNAL)){		
 		RTC_ERR("[RTC] WARNING: Rtc time will be wrong!!\n");
