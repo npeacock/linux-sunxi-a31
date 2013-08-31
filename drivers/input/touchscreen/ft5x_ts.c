@@ -22,8 +22,8 @@
 #include <linux/input.h>
 #include "ft5x_ts.h"
 #ifdef CONFIG_HAS_EARLYSUSPEND
-    #include <linux/pm.h>
-    #include <linux/earlysuspend.h>
+#include <linux/pm.h>
+#include <linux/earlysuspend.h>
 #endif
 #include <linux/interrupt.h>
 #include <linux/delay.h>
@@ -48,9 +48,6 @@
 #include <linux/ctp.h>
 
 
-#include <linux/cdev.h>
-
-
 
 #define FOR_TSLIB_TEST
 //#define TOUCH_KEY_SUPPORT
@@ -69,18 +66,11 @@
 #endif
 
 //#define CONFIG_SUPPORT_FTS_CTP_UPG
-///#define FT_DEBUG_ENABLE
-static u32 debug_mask = 1;  //hanbiao ONLY FOR TEST.
 
-#ifdef FT_DEBUG_ENABLE
-#define dprintk(level_mask,fmt,arg...)   pr_info("***CTP***"fmt, ## arg)
+static u32 debug_mask = 0;
+#define dprintk(level_mask,fmt,arg...)    if(unlikely(debug_mask & level_mask)) \
+        printk("***CTP***"fmt, ## arg)
         
-#else
-#define dprintk(level_mask,fmt,arg...) 
-#endif 
-
-static struct cdev gcdev = {0}; 
- 
 struct i2c_dev{
         struct list_head list;	
         struct i2c_adapter *adap;
@@ -88,7 +78,6 @@ struct i2c_dev{
 };
 
 extern struct ctp_config_info config_info;
-
 
 
 static struct class *i2c_dev_class;
@@ -123,6 +112,9 @@ static const unsigned short normal_i2c[2] = {0x38,I2C_CLIENT_END};
 static const int chip_id_value[] = {0x55,0x06,0x08,0x02,0xa3};
 static __u32 twi_id = 0;
 
+static void ft5x_resume_events(struct work_struct *work);
+struct workqueue_struct *ft5x_resume_wq;
+static DECLARE_WORK(ft5x_resume_work, ft5x_resume_events);
 
 static int ctp_detect(struct i2c_client *client, struct i2c_board_info *info)
 {
@@ -133,7 +125,6 @@ static int ctp_detect(struct i2c_client *client, struct i2c_board_info *info)
                 return -ENODEV;
     
 	if(twi_id == adapter->nr){
-                msleep(200);
 	        ret = i2c_smbus_read_byte_data(client,0xA3);
                 dprintk(DEBUG_INIT,"addr:0x%x,chip_id_value:0x%x\n",client->addr,ret);
                 while(chip_id_value[i++]){
@@ -221,6 +212,7 @@ struct ft5x_ts_data {
 	struct ts_event		event;
 	struct work_struct 	pen_event_work;
 	struct workqueue_struct *ts_workqueue;
+	bool is_suspended;
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	struct early_suspend	early_suspend;
 #endif
@@ -714,9 +706,7 @@ int fts_ctpm_fw_upgrade_with_i_file(void)
 	  * when the firmware in touch panel maybe corrupted,
 	  * or the firmware in host flash is new, need upgrade
 	  */
-	if (1)
-	 	{ 
-	    //if ( 0xa6 == a || a != b ){
+	if ( 0xa6 == a ||a < b ){
 		/*call the upgrade function*/
 		i_ret =  fts_ctpm_fw_upgrade(&pbt_buf[0],sizeof(CTPM_FW));
 		if (i_ret != 0){
@@ -1003,8 +993,6 @@ static void ft5x_report_multitouch(void)
 		input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
 		input_mt_sync(data->input_dev);
 		dprintk(DEBUG_X_Y_INFO,"report data:===x1 = %d,y1 = %d ====\n",event->x1,event->y1);
-		//hanbiao
-		dprintk(DEBUG_X_Y_INFO,"report data:===touch_ID1 = %d,pressure = %d ====\n", event->touch_ID1,event->pressure);
 		break;
 	default:
 		dprintk(DEBUG_X_Y_INFO,"report data:==touch_point default =\n");
@@ -1130,127 +1118,70 @@ static u32 ft5x_ts_interrupt(struct ft5x_ts_data *ft5x_ts)
 	return 0;
 }
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+static void ft5x_resume_events (struct work_struct *work)
+{
+	struct ft5x_ts_data *data = i2c_get_clientdata(this_client);
 
-static void ft5x_ts_suspend(struct early_suspend *handler)
-{
-        struct ft5x_ts_data *data = i2c_get_clientdata(this_client);
-        dprintk(DEBUG_SUSPEND,"==ft5x_ts_suspend=\n");
-        dprintk(DEBUG_SUSPEND,"CONFIG_HAS_EARLYSUSPEND: write FT5X0X_REG_PMODE .\n");
-        sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,0);
-        cancel_work_sync(&data->pen_event_work);
-        flush_workqueue(data->ts_workqueue);
-        ft5x_set_reg(FT5X0X_REG_PMODE, PMODE_HIBERNATE);
-        ctp_wakeup(0,0);
-              
-}
-//=================================================
-#if 0
-static void ft5x_ts_resume(struct early_suspend *handler)
-{
-	dprintk(DEBUG_SUSPEND,"==CONFIG_HAS_EARLYSUSPEND:ft5x_ts_resume== \n");
-	;ctp_wakeup(0,20);
-	ctp_wakeup(1,0);
-	sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,1);
-	if(STANDBY_WITH_POWER_OFF == standby_level){
+	ctp_wakeup(0,20);
+	if ((STANDBY_WITH_POWER_OFF == standby_level) && (data->is_suspended == true)) {
 	        msleep(100);
+		dprintk(DEBUG_SUSPEND,"==ft5x_ts_resume 100ms delay== \n");
 	}
-		
+	sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,1);
 }
-#else
-//==========================================
-static void ft5x_ts_resume(struct early_suspend *handler)
-{
-    int i;
-   
-   struct ft5x_ts_data *data = i2c_get_clientdata(this_client);
-    struct ts_event *event = &data->event;
-//ts =  container_of(handler, struct ft5x_ts_dev, early_suspend);
-// wake the mode
 
-//#ifdef TOUCHKEY_ON_SCREEN
-//key_led_ctrl(0);
-//#endif
-//gpio_direction_output(RK30_PIN4_PD0, 0);
-// gpio_set_value(RK29_PIN6_PC3,GPIO_LOW);
-//msleep(5);
-//gpio_set_value(RK30_PIN4_PD0,GPIO_HIGH);
-//msleep(200);
-	dprintk(DEBUG_X_Y_INFO,"report data:===x1 = %d,y1 = %d ====\n",event->x1,event->y1);
-		//hanbiao
-		dprintk(DEBUG_X_Y_INFO,"report data:===touch_ID1 = %d,pressure = %d ====\n", event->touch_ID1,event->pressure);
-		
-		
-ctp_wakeup(1,0);
-msleep(5);
-sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,1);
-msleep(5);
-#if 1 //USE_POINT
-//for(i=0; i<5; i++) 
-//{
-//input_mt_slot(data->input_dev, i);
-//ABS_MT_SLOT
-//input_mt_sync(data->input_dev);
- //input_event(dev, EV_ABS, ABS_MT_SLOT, slot);
-// input_report_abs(data->input_dev, ABS_MT_SLOT, i);
-// input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, -1);
-// input_mt_sync(data->input_dev);
-//}
-
-for(i=0; i<5; i++) 
-{
-   // input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, 0);	
-		//input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, 1);
-		//input_report_abs(data->input_dev, ABS_MT_POSITION_X, 0);
-		//input_report_abs(data->input_dev, ABS_MT_POSITION_Y, 0);
-		//input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
-		//input_mt_sync(data->input_dev);
-		event->x1 = 0;
-		event->y1 = 0;
-		event->touch_ID1 = 0;
-		event->pressure = 200;
-		event->touch_point =1;
-		ft5x_report_multitouch();
-		
-}
- //key_tp =0;
- ft5x_ts_release();
-
-
-
-//event->touch_point = 0;
-
-//down_table	= 0;
-//up_table	= ~0;
-#endif
-
-//if(data->irq)
-//sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,1);
-}
-#endif
-//==============================================
-#else //CONFIG_HAS_EARLYSUSPEND
-#ifdef CONFIG_PM
 static int ft5x_ts_suspend(struct i2c_client *client, pm_message_t mesg)
 {
-        struct ft5x_ts_data *data = i2c_get_clientdata(this_client);
-        dprintk(DEBUG_SUSPEND,"==ft5x_ts_suspend=\n");
-        dprintk(DEBUG_SUSPEND,"CONFIG_PM: write FT5X0X_REG_PMODE .\n");
-        sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,0);
-        cancel_work_sync(&data->pen_event_work);
-        flush_workqueue(data->ts_workqueue);
-        ft5x_set_reg(FT5X0X_REG_PMODE, PMODE_HIBERNATE);
-        return 0;
+	struct ft5x_ts_data *data = i2c_get_clientdata(client);
+	dprintk(DEBUG_SUSPEND,"==ft5x_ts_suspend=\n");
+	dprintk(DEBUG_SUSPEND,"CONFIG_PM: write FT5X0X_REG_PMODE .\n");
+#ifndef CONFIG_HAS_EARLYSUSPEND
+	data->is_suspended = true;
+#endif
+	if (data->is_suspended == true) {
+		flush_workqueue(ft5x_resume_wq);
+		sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,0);
+		cancel_work_sync(&data->pen_event_work);
+		flush_workqueue(data->ts_workqueue);
+		ft5x_set_reg(FT5X0X_REG_PMODE, PMODE_HIBERNATE);
+	}
+	return 0;
 }
+
 static int ft5x_ts_resume(struct i2c_client *client)
 {
+	struct ft5x_ts_data *data = i2c_get_clientdata(client);
 	dprintk(DEBUG_SUSPEND,"==CONFIG_PM:ft5x_ts_resume== \n");
-	ctp_wakeup(0,20);
-	sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,1);
-	return 0;		
+	data->is_suspended = true;
+	queue_work(ft5x_resume_wq, &ft5x_resume_work);
+	return 0;
 }
-#endif
-#endif
+
+#ifdef CONFIG_HAS_EARLYSUSPEND
+static void ft5x_ts_early_suspend(struct early_suspend *handler)
+{
+	struct ft5x_ts_data *data = container_of(handler, struct ft5x_ts_data, early_suspend);
+	dprintk(DEBUG_SUSPEND,"==ft5x_ts_suspend=\n");
+	dprintk(DEBUG_SUSPEND,"CONFIG_HAS_EARLYSUSPEND: write FT5X0X_REG_PMODE .\n");
+	data->is_suspended = false;
+	flush_workqueue(ft5x_resume_wq);
+	sw_gpio_eint_set_enable(CTP_IRQ_NUMBER,0);
+	cancel_work_sync(&data->pen_event_work);
+	flush_workqueue(data->ts_workqueue);
+	ft5x_set_reg(FT5X0X_REG_PMODE, PMODE_HIBERNATE);
+}
+
+static void ft5x_ts_late_resume(struct early_suspend *handler)
+{
+	struct ft5x_ts_data *data = container_of(handler, struct ft5x_ts_data, early_suspend);
+	dprintk(DEBUG_SUSPEND,"==CONFIG_HAS_EARLYSUSPEND:ft5x_ts_resume== \n");
+	if (data->is_suspended == false)
+		queue_work(ft5x_resume_wq, &ft5x_resume_work);
+
+	printk("ts->is_suspended:%d\n",data->is_suspended);
+}
+#endif /* CONFIG_HAS_EARLYSUSPEND */
+
 static int 
 ft5x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 {
@@ -1284,7 +1215,7 @@ ft5x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	i2c_set_clientdata(client, ft5x_ts);
 
 
-#if 0 //def CONFIG_SUPPORT_FTS_CTP_UPG
+#ifdef CONFIG_SUPPORT_FTS_CTP_UPG
 	fts_ctpm_fw_upgrade_with_i_file();
 #endif
 
@@ -1323,9 +1254,6 @@ ft5x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 			     ABS_MT_WIDTH_MAJOR, 0, 200, 0, 0);
 	input_set_abs_params(input_dev,
 			     ABS_MT_TRACKING_ID, 0, 4, 0, 0);
-	//hanbiao
-	///input_set_abs_params(input_dev,
-			     //ABS_MT_SLOT, 0, 4, 0, 0);
 #ifdef TOUCH_KEY_SUPPORT
 	key_tp = 0;
 	input_dev->evbit[0] = BIT_MASK(EV_KEY);
@@ -1354,11 +1282,19 @@ ft5x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		goto exit_input_register_device_failed;
 	}
 
+	ft5x_ts->is_suspended = false;
+
+	ft5x_resume_wq = create_singlethread_workqueue("ft5x_resume");
+	if (ft5x_resume_wq == NULL) {
+		printk("create ft5x_resume_wq fail!\n");
+		return -ENOMEM;
+	}
+
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	printk("==register_early_suspend =\n");
 	ft5x_ts->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
-	ft5x_ts->early_suspend.suspend = ft5x_ts_suspend;
-	ft5x_ts->early_suspend.resume	= ft5x_ts_resume;
+	ft5x_ts->early_suspend.suspend = ft5x_ts_early_suspend;
+	ft5x_ts->early_suspend.resume	= ft5x_ts_late_resume;
 	register_early_suspend(&ft5x_ts->early_suspend);
 #endif
 
@@ -1377,9 +1313,7 @@ ft5x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		printk("i2c_dev fail!");	
 		return err;	
 	}
-	
-    
-    dev = device_create(i2c_dev_class,NULL, MKDEV(I2C_MAJOR,2), NULL, "aw_i2c_dev");	
+	dev = device_create(i2c_dev_class, &client->adapter->dev, MKDEV(I2C_MAJOR,client->adapter->nr), NULL, "aw_i2c_ts%d", client->adapter->nr);	
 	if (IS_ERR(dev))	{		
 			err = PTR_ERR(dev);
 			printk("dev fail!\n");		
@@ -1417,6 +1351,8 @@ static int __devexit ft5x_ts_remove(struct i2c_client *client)
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&ft5x_ts->early_suspend);
 #endif
+	cancel_work_sync(&ft5x_resume_work);
+	destroy_workqueue(ft5x_resume_wq);
 	input_unregister_device(ft5x_ts->input_dev);
 	input_free_device(ft5x_ts->input_dev);
 	cancel_work_sync(&ft5x_ts->pen_event_work);
@@ -1440,14 +1376,8 @@ static struct i2c_driver ft5x_ts_driver = {
 	.class = I2C_CLASS_HWMON,
 	.probe		= ft5x_ts_probe,
 	.remove		= __devexit_p(ft5x_ts_remove),
-#ifdef CONFIG_HAS_EARLYSUSPEND
-
-#else
-#ifdef CONFIG_PM
-	.suspend  =  ft5x_ts_suspend,
-	.resume   =  ft5x_ts_resume,
-#endif
-#endif
+	.suspend        =  ft5x_ts_suspend,
+	.resume         =  ft5x_ts_resume,
 	.id_table	= ft5x_ts_id,
 	.driver	= {
 		.name	= CTP_NAME,
@@ -1459,8 +1389,39 @@ static struct i2c_driver ft5x_ts_driver = {
 
 static int aw_open(struct inode *inode, struct file *file)
 {
-	pr_info("====%s======.\n", __func__);
+	int subminor;
+	int ret = 0;	
+	struct i2c_client *client;
+	struct i2c_adapter *adapter;	
+	struct i2c_dev *i2c_dev;	
 
+	printk("====%s======.\n", __func__);
+	dprintk(DEBUG_OTHERS_INFO,"enter aw_open function\n");
+	subminor = iminor(inode);
+	dprintk(DEBUG_OTHERS_INFO,"subminor=%d\n",subminor);
+	
+	//lock_kernel();	
+	i2c_dev = i2c_dev_get_by_minor(2);	
+	if (!i2c_dev)	{	
+		printk("error i2c_dev\n");		
+		return -ENODEV;	
+	}	
+	adapter = i2c_get_adapter(i2c_dev->adap->nr);	
+	if (!adapter)	{		
+		return -ENODEV;	
+	}	
+	
+	client = kzalloc(sizeof(*client), GFP_KERNEL);	
+	
+	if (!client)	{		
+		i2c_put_adapter(adapter);		
+		ret = -ENOMEM;	
+	}	
+	snprintf(client->name, I2C_NAME_SIZE, "pctp_i2c_ts%d", adapter->nr);
+	client->driver = &ft5x_ts_driver;
+	client->adapter = adapter;		
+	file->private_data = client;
+		
 	return 0;
 }
 
@@ -1468,38 +1429,28 @@ static long aw_ioctl(struct file *file, unsigned int cmd,unsigned long arg )
 {
 	//struct i2c_client *client = (struct i2c_client *) file->private_data;
 
-	    pr_info("====%s====.\n",__func__);
-
-        ///void __user *user_arg = (void __user *)arg;
-        
-        ///struct I2C_Param i2c_param = {0};
-
-	#ifdef AW_DEBUG
-	       pr_info("line :%d,cmd = %d,arg = %d.\n",__LINE__,cmd,arg);
-	#endif
+	dprintk(DEBUG_OTHERS_INFO,"====%s====\n",__func__);
+	dprintk(DEBUG_OTHERS_INFO,"line :%d,cmd = %d,arg = %ld.\n",__LINE__,cmd,arg);
 	
-	//switch (cmd) {
-	//case UPGRADE:
-	        //dprintk(DEBUG_OTHERS_INFO,"==UPGRADE_WORK=\n");
+	switch (cmd) {
+	case UPGRADE:
+	        dprintk(DEBUG_OTHERS_INFO,"==UPGRADE_WORK=\n");
 		fts_ctpm_fw_upgrade_with_i_file();
 		// calibrate();
-		//break;
-	//default:
-		//break;			 
-	//}	
+		break;
+	default:
+		break;			 
+	}	
 	return 0;
 }
 
 static int aw_release (struct inode *inode, struct file *file) 
 {
-	//struct i2c_client *client = file->private_data;
-	#ifdef AW_DEBUG
-	    pr_info("enter aw_release function.\n");
-	#endif
-	
-	//i2c_put_adapter(client->adapter);
-	//kfree(client);
-	//file->private_data = NULL;
+	struct i2c_client *client = file->private_data;
+	dprintk(DEBUG_OTHERS_INFO,"enter aw_release function.\n");		
+	i2c_put_adapter(client->adapter);
+	kfree(client);
+	file->private_data = NULL;
 	return 0;	  
 }
 
@@ -1509,18 +1460,6 @@ static const struct file_operations aw_i2c_ts_fops ={
 	.unlocked_ioctl = aw_ioctl,	
 	.release = aw_release, 
 };
-static void aw_setup_cdev(struct cdev *dev, int index)  
-{     
-  int err, devno = MKDEV(I2C_MAJOR, index);  
-  
-  cdev_init(dev, &aw_i2c_ts_fops);  
-  dev->owner = THIS_MODULE;  
-  dev->ops = &aw_i2c_ts_fops;  
-  err = cdev_add(dev, devno, 1);  
-  if (err)  
-    printk ("==============%s=====================\n", __func__);
- 
-}  
 static int ctp_get_system_config(void)
 {   
         ctp_print_info(config_info,DEBUG_INIT);
@@ -1550,20 +1489,15 @@ static int __init ft5x_ts_init(void)
                 return ret;
         }
         
-        
-//lb    printk("++++++1+++++++\n");     
-	ctp_wakeup(1,0);  
-//lb 	printk("++++++2+++++++\n");     
+	ctp_wakeup(0,10);  
+		
 	ft5x_ts_driver.detect = ctp_detect;
 
-    ret = register_chrdev_region(MKDEV(I2C_MAJOR, 2), 1, "aw_i2c_dev");  
- 
+	ret= register_chrdev(I2C_MAJOR,"aw_i2c_ts",&aw_i2c_ts_fops );	
 	if(ret) {	
-		printk(KERN_ERR "%s:register chrdev failed\n",__FILE__);	
+		printk("%s:register chrdev failed\n",__FILE__);	
 		return ret;
 	}
-
-     aw_setup_cdev(&gcdev, 2);  
 	i2c_dev_class = class_create(THIS_MODULE,"aw_i2c_dev");
 	if (IS_ERR(i2c_dev_class)) {		
 		ret = PTR_ERR(i2c_dev_class);		
@@ -1579,8 +1513,7 @@ static void __exit ft5x_ts_exit(void)
 	printk("==ft5x_ts_exit==\n");
 	i2c_del_driver(&ft5x_ts_driver);
 	class_destroy(i2c_dev_class);
-	cdev_del(&gcdev);   
-  unregister_chrdev_region(MKDEV(I2C_MAJOR, 2), 1);
+	unregister_chrdev(I2C_MAJOR, "aw_i2c_ts");
 }
 
 late_initcall(ft5x_ts_init);
