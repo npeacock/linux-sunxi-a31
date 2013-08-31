@@ -28,24 +28,24 @@ __s32 BSP_disp_cmd_submit(__u32 sel)
 __s32 BSP_disp_cfg_start(__u32 sel)
 {
 	gdisp.screen[sel].cfg_cnt++;
-
+	
 	return DIS_SUCCESS;
 }
 
 __s32 BSP_disp_cfg_finish(__u32 sel)
 {
 	gdisp.screen[sel].cfg_cnt--;
-
+	
 	return DIS_SUCCESS;
 }
 
 __s32 BSP_disp_vsync_event_enable(__u32 sel, __bool enable)
 {
     gdisp.screen[sel].vsync_event_en = enable;
-
+    
     return DIS_SUCCESS;
 }
-//return 0.1fps
+//return 10fps
 __s32 bsp_disp_get_fps(__u32 sel)
 {
     __u32 pre_time_index, cur_time_index;
@@ -62,7 +62,7 @@ __s32 bsp_disp_get_fps(__u32 sel)
     {
         fps = 1000 * 100 / (cur_time - pre_time);
     }
-
+    
     return fps;
 }
 
@@ -76,13 +76,15 @@ __s32 disp_vint_checkin(__u32 sel)
     return 0;
 }
 
+__s32 disp_lcd_set_fps(__u32 sel);
 void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
-{
+{    
     __u32 cur_line = 0, start_delay = 0;
     __u32 i = 0;
 
     disp_vint_checkin(sel);
-
+    disp_lcd_set_fps(sel);
+    
 	Video_Operation_In_Vblanking(sel, tcon_index);
 
     cur_line = TCON_get_cur_line(sel, tcon_index);
@@ -90,7 +92,7 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
     if(cur_line > start_delay-4)
 	{
 	    //DE_INF("int:%d,%d\n", cur_line,start_delay);
-        if(gpanel_info[sel].lcd_fresh_mode == 0)//return while not  trigger mode
+        if(gpanel_info[sel].lcd_fresh_mode == 0)//return while not  trigger mode 
 		{
 		    return ;
         }
@@ -99,7 +101,7 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
     if(gdisp.screen[sel].cache_flag == FALSE && gdisp.screen[sel].cfg_cnt == 0)
     {
         for(i=0; i<2; i++)
-        {
+        {            
             if((gdisp.scaler[i].status & SCALER_USED) && (gdisp.scaler[i].screen_index == sel))
             {
                 __u32 hid;
@@ -118,7 +120,7 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
                 gdisp.scaler[i].b_close = FALSE;
             }
         }
-
+        
         if(DISP_OUTPUT_TYPE_LCD == BSP_disp_get_output_type(sel))
         {
             IEP_Drc_Operation_In_Vblanking(sel);
@@ -133,10 +135,10 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
 
 #if 0
     cur_line = LCDC_get_cur_line(sel, tcon_index);
-
+    
 	if(cur_line > 5)
 	{
-	DE_INF("%d\n", cur_line);
+    	DE_INF("%d\n", cur_line);
     }
 #endif
 
@@ -144,14 +146,14 @@ void LCD_vbi_event_proc(__u32 sel, __u32 tcon_index)
 }
 
 void LCD_line_event_proc(__u32 sel)
-{
+{    
     if(gdisp.screen[sel].vsync_event_en && gdisp.init_para.vsync_event)
     {
         gdisp.init_para.vsync_event(sel);
     }
 
 	if(gdisp.screen[sel].have_cfg_reg)
-	{
+	{   
         gdisp.init_para.disp_int_process(sel);
 	    gdisp.screen[sel].have_cfg_reg = FALSE;
 	}

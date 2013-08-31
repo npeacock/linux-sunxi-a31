@@ -10,11 +10,11 @@
 #define CLK_DEU1_DRAM_ON    0x00040000
 
 #define CLK_DEU0_AHB_OFF	(~(CLK_DEU0_AHB_ON	    ))
-#define CLK_DEU0_MOD_OFF 	(~(CLK_DEU0_MOD_ON	    ))
-#define CLK_DEU0_DRAM_OFF 	(~(CLK_DEU0_DRAM_ON	    ))
+#define CLK_DEU0_MOD_OFF 	(~(CLK_DEU0_MOD_ON	    ))		
+#define CLK_DEU0_DRAM_OFF 	(~(CLK_DEU0_DRAM_ON	    ))	
 #define CLK_DEU1_AHB_OFF	(~(CLK_DEU1_AHB_ON	    ))
-#define CLK_DEU1_MOD_OFF 	(~(CLK_DEU1_MOD_ON	    ))
-#define CLK_DEU1_DRAM_OFF 	(~(CLK_DEU1_DRAM_ON	    ))
+#define CLK_DEU1_MOD_OFF 	(~(CLK_DEU1_MOD_ON	    ))		
+#define CLK_DEU1_DRAM_OFF 	(~(CLK_DEU1_DRAM_ON	    ))	
 
 #define DEU_USED 						0x00000001
 #define DEU_USED_MASK 					(~(DEU_USED))
@@ -22,7 +22,7 @@
 #define DEU_NEED_CLOSED_MASK			(~(DEU_NEED_CLOSED))
 
 
-typedef struct
+typedef struct 
 {
 	__disp_frame_info_t frameinfo;
 	__u32       width;
@@ -31,7 +31,7 @@ typedef struct
 	__u32 		chromashplvl;
 	__u32 		wlelvl;
 	__u32 		blelvl;
-
+	
 }__deu_t;
 
 
@@ -52,7 +52,7 @@ __s32 IEP_Deu_Set_Ready(__u32 sel);
 __s32 IEP_Deu_Set_Reg_base(__u32 sel, __u32 base);
 __s32 IEP_Deu_Set_Winodw(__u32 sel, __disp_rect_t *window);
 __s32 IEP_Deu_Output_Select(__u32 sel, __u32 be_ch);
-__s32 IEP_Deu_Init(__u32 sel);
+__s32 IEP_Deu_Init(__u32 sel); 
 __s32 IEP_Deu_Exit(__u32 sel);
 __s32 IEP_Deu_Operation_In_Vblanking(__u32 sel);
 __s32 iep_deu_early_suspend(__u32 sel);//close clk

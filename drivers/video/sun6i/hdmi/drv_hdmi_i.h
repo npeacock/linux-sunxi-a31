@@ -13,8 +13,8 @@
 #include <linux/fs.h>
 #include <linux/dma-mapping.h>
 #include <linux/sched.h>   //wake_up_process()
-#include <linux/kthread.h> //kthread_create()„ÄÅkthread_run()
-#include <linux/err.h> //IS_ERR()„ÄÅPTR_ERR()
+#include <linux/kthread.h> //kthread_create()°¢kthread_run()
+#include <linux/err.h> //IS_ERR()°¢PTR_ERR()
 #include <linux/delay.h>
 #include <linux/platform_device.h>
 #include <linux/errno.h>
@@ -36,6 +36,7 @@
 #include <linux/ktime.h>
 
 extern __u32 hdmi_print;
+extern __u32 rgb_only;
 #if 1
 #define OSAL_PRINTF(msg...) do{printk(KERN_WARNING "[HDMI] ");printk(msg);}while(0)
 #define __inf(msg...)       do{if(hdmi_print){printk(KERN_WARNING "[HDMI] ");printk(msg);}}while(0)
@@ -43,11 +44,11 @@ extern __u32 hdmi_print;
 #define __wrn(msg...)       do{printk(KERN_WARNING "[HDMI WRN] file:%s,line:%d:    ",__FILE__,__LINE__);printk(msg);}while(0)
 #define __here__            do{if(hdmi_print){printk(KERN_WARNING "[HDMI] file:%s,line:%d\n",__FILE__,__LINE__);}}while(0)
 #else
-#define OSAL_PRINTF(msg...)
-#define __inf(msg...)
+#define OSAL_PRINTF(msg...) 
+#define __inf(msg...)       
 #define __msg(msg...)
 #define __wrn(msg...)
-#define __here__
+#define __here__ 
 #endif
 __s32 Hdmi_init(void);
 __s32 Hdmi_exit(void);

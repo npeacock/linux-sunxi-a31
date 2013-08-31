@@ -44,14 +44,14 @@ inline __u32 CHECK_SDAB_HIGH(void)
     LCD_GPIO_set_attr(0, LCD_GPIO_SDA, 0);
     return LCD_GPIO_read(0, LCD_GPIO_SDA);
 }
-
+    
 __bool i2cB_clock( void )
 {
 	__bool sample = 0;
-
-	LCD_delay_us(5);
+    
+	LCD_delay_us(5); 
 	IIC_SCLB_HIGH();
-	LCD_delay_us(5);
+	LCD_delay_us(5); 
 	IIC_SCLB_LOW();
 	return (sample);
 }
@@ -63,11 +63,11 @@ __bool i2cB_ack(void)
 	LCD_delay_us(5);
 	if(CHECK_SDAB_HIGH())
 	{
-		LCD_delay_us(5);
+		LCD_delay_us(5); 
 		IIC_SCLB_LOW();
-		LCD_delay_us(5);
+		LCD_delay_us(5); 
 		IIC_SDAB_HIGH();
-		LCD_delay_us(5);
+		LCD_delay_us(5); 
 		return(1);
 	}
 	else
@@ -85,9 +85,9 @@ void i2cBStartA( void )
 {
 	IIC_SCLB_HIGH();
 	IIC_SDAB_HIGH();
-	LCD_delay_us(5);
+	LCD_delay_us(5); 
 	IIC_SDAB_LOW();
-	LCD_delay_us(5);
+	LCD_delay_us(5); 
 	IIC_SCLB_LOW();
 }
 
@@ -95,7 +95,7 @@ __bool i2cBStart( void )
 {
 	IIC_SDAB_HIGH();
 	IIC_SCLB_HIGH();
-	LCD_delay_us(5);
+	LCD_delay_us(5); 
 	if(CHECK_SDAB_HIGH())
 	{
 		{
@@ -110,11 +110,11 @@ __bool i2cBStart( void )
 void i2cBStop(void)
 {
    IIC_SDAB_LOW();
-   LCD_delay_us(5);
+   LCD_delay_us(5); 
    IIC_SCLB_HIGH();
-   LCD_delay_us(5);
+   LCD_delay_us(5); 
    IIC_SDAB_HIGH();
-   LCD_delay_us(5);
+   LCD_delay_us(5); 
 }
 //---------------------------------------------------------
 __bool i2cBTransmit(__u8 value)
@@ -164,7 +164,7 @@ __bool i2cBReceive(__u8* value)
 	for ( i=0 ; i<8 ; i++ )
 	{
 		IIC_SCLB_HIGH();
-		LCD_delay_us(5);
+		LCD_delay_us(5); 
 		if(CHECK_SDAB_HIGH())
 		{
 			*value |= (1<<(7-i));
@@ -229,3 +229,4 @@ __s32 lcd_iic_read(__u8 slave_addr, __u8 sub_addr, __u8* value)
 
 EXPORT_SYMBOL(lcd_iic_write);
 EXPORT_SYMBOL(lcd_iic_read);
+

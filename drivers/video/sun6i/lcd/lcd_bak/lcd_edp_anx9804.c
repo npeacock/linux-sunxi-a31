@@ -29,7 +29,7 @@ void anx9804_init(__panel_para_t * info)
 	lcd_iic_write(0x72, DP_TX_RST_CTRL_REG, 0x00);
 	//Power on total and select DP mode
   lcd_iic_write(0x72, DP_POWERD_CTRL_REG, 0x00 );
-
+	
 	//get chip ID. Make sure I2C is OK
 	lcd_iic_read(0x72, DP_TX_DEV_IDH_REG , &c);
 	if(c==0x98)
@@ -72,25 +72,25 @@ void anx9804_init(__panel_para_t * info)
 		LCD_delay_ms(10);
 	}
 
-	//VESA range, 8bits BPC, RGB
+	//VESA range, 8bits BPC, RGB 
 	lcd_iic_write(0x72, DP_TX_VID_CTRL2_REG, colordepth);
-
+	
 	//ANX9804 chip analog setting
-	lcd_iic_write(0x70, DP_TX_PLL_CTRL_REG, 0x07);
-	lcd_iic_write(0x72, DP_TX_PLL_FILTER_CTRL3, 0x19);
-	lcd_iic_write(0x72, DP_TX_PLL_CTRL3, 0xd9);
-
-	//lcd_iic_write(0x7a, 0x38, 0x10);
-	//lcd_iic_write(0x7a, 0x39, 0x20);
-	//lcd_iic_write(0x7a, 0x65, 0x00);
-
+	lcd_iic_write(0x70, DP_TX_PLL_CTRL_REG, 0x07); 
+	lcd_iic_write(0x72, DP_TX_PLL_FILTER_CTRL3, 0x19); 
+	lcd_iic_write(0x72, DP_TX_PLL_CTRL3, 0xd9); 
+	
+	//lcd_iic_write(0x7a, 0x38, 0x10); 
+	//lcd_iic_write(0x7a, 0x39, 0x20); 
+	//lcd_iic_write(0x7a, 0x65, 0x00); 
+	
 	//Select AC mode
-	lcd_iic_write(0x72, DP_TX_RST_CTRL2_REG, 0x40);
-
-	//lcd_iic_write(0x7a, 0x61, 0x10);
-	//lcd_iic_write(0x7a, 0x62, 0x10);
-	//lcd_iic_write(0x7a, 0x63, 0x10);
-	//lcd_iic_write(0x7a, 0x64, 0x10);
+	lcd_iic_write(0x72, DP_TX_RST_CTRL2_REG, 0x40); 
+	
+	//lcd_iic_write(0x7a, 0x61, 0x10); 
+	//lcd_iic_write(0x7a, 0x62, 0x10); 
+	//lcd_iic_write(0x7a, 0x63, 0x10); 
+	//lcd_iic_write(0x7a, 0x64, 0x10); 
 
 	//ANX9804 chip analog setting
 	lcd_iic_write(0x72, ANALOG_DEBUG_REG1, 0xf0);
@@ -156,7 +156,7 @@ void anx9804_init(__panel_para_t * info)
 
 	//Select 4 lanes
 	lcd_iic_write(0x70, DP_TX_LANE_COUNT_SET_REG, lanes);
-
+	
 	//strart link traing
 	//DP_TX_LINK_TRAINING_CTRL_EN is self clear. If link training is OK, it will self cleared.
 	lcd_iic_write(0x70, DP_TX_LINK_TRAINING_CTRL_REG, DP_TX_LINK_TRAINING_CTRL_EN);
@@ -174,7 +174,7 @@ void anx9804_init(__panel_para_t * info)
         }
 		lcd_iic_read(0x70, DP_TX_LINK_TRAINING_CTRL_REG, &c);
 	}
-	//lcd_iic_write(0x7a, 0x7c, 0x02);
+	//lcd_iic_write(0x7a, 0x7c, 0x02);  	
 
     //BIST MODE: video format. In normal mode, don't need to config these reg from 0x12~0x21
 	//lcd_iic_write(0x72, 0x12, 0x2c);
@@ -195,16 +195,18 @@ void anx9804_init(__panel_para_t * info)
 	//lcd_iic_write(0x72, 0x21, 0x28);
 
 	//lcd_iic_write(0x72, 0x11, 0x03);
-
+	
     //enable BIST. In normal mode, don't need to config this reg
 	//lcd_iic_write(0x72, 0x0b, 0x08);
-
-	//enable video input, set DDR mode, the input DCLK should be 102.5MHz;
+	
+	//enable video input, set DDR mode, the input DCLK should be 102.5MHz; 
 	//In normal mode, set this reg to 0x81, SDR mode, the input DCLK should be 205MHz
 	//lcd_iic_write(0x72, 0x08, 0x8d);
 	//lcd_iic_write(0x72, 0x08, 0x81);
 	lcd_iic_write(0x72, 0x08, 0x81);
-
+	
     //force HPD and stream valid
 	lcd_iic_write(0x70, 0x82, 0x33);
 }
+
+

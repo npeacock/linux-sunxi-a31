@@ -189,11 +189,11 @@ __s32 tcon_set_start_delay(__u32 sel, __u32 tcon_index, __u8 delay)
 {
     if(tcon_index == 0)
     {
-	lcd_dev[sel]->tcon0_ctl.bits.start_delay = delay;
+    	lcd_dev[sel]->tcon0_ctl.bits.start_delay = delay;
 	}
 	else if(tcon_index == 1)
 	{
-	lcd_dev[sel]->tcon1_ctl.bits.start_delay = delay;
+    	lcd_dev[sel]->tcon1_ctl.bits.start_delay = delay;
 	}
     return 0;
 }
@@ -202,7 +202,7 @@ __u32 tcon_get_start_delay(__u32 sel,__u32 tcon_index)
 {
     if(tcon_index == 0)
     {
-	return lcd_dev[sel]->tcon0_ctl.bits.start_delay;
+    	return lcd_dev[sel]->tcon0_ctl.bits.start_delay;
 	}
 	else if(tcon_index == 1)
 	{
@@ -216,11 +216,11 @@ __u32 tcon_get_cur_line(__u32 sel, __u32 tcon_index)
 {
     if(tcon_index == 0)
     {
-	return lcd_dev[sel]->tcon_debug.bits.tcon0_current_line;
+    	return lcd_dev[sel]->tcon_debug.bits.tcon0_current_line;
 	}
 	else if(tcon_index == 1)
 	{
-	return lcd_dev[sel]->tcon_debug.bits.tcon1_current_line;
+    	return lcd_dev[sel]->tcon_debug.bits.tcon1_current_line;
 	}
     return 0;
 }
@@ -231,10 +231,16 @@ __s32 tcon0_src_select(__u32 sel, __lcd_src_t src)
     return 0;
 }
 
+__s32 tcon0_src_get(__u32 sel)
+{
+    return lcd_dev[sel]->tcon0_ctl.bits.src_sel;
+}
+
 __s32 tcon0_open(__u32 sel, __panel_para_t * panel)
 {
 	lcd_dev[sel]->tcon_gint0.bits.tcon_irq_flag = 0;
-	if((panel->lcd_if == LCD_IF_HV) || (panel->lcd_if == LCD_IF_LVDS) || (panel->lcd_if == LCD_IF_EDP))
+	if((panel->lcd_if == LCD_IF_HV) || (panel->lcd_if == LCD_IF_LVDS) || (panel->lcd_if == LCD_IF_EDP)
+        || (panel->lcd_if == LCD_IF_EXT_DSI))
 	{
 		lcd_dev[sel]->tcon0_ctl.bits.tcon0_en = 1;
 		tcon_irq_enable(sel,LCD_IRQ_TCON0_VBLK);
@@ -258,7 +264,7 @@ __s32 tcon0_close(__u32 sel)
 {
     tcon_irq_disable(sel,LCD_IRQ_TCON0_CNTR);
     tcon_irq_disable(sel,LCD_IRQ_TCON0_VBLK);
-    tcon_irq_disable(sel,LCD_IRQ_TCON0_TRIF);
+    tcon_irq_disable(sel,LCD_IRQ_TCON0_TRIF);	
     lcd_dev[sel]->tcon0_ctl.bits.tcon0_en = 0;
     while(lcd_dev[sel]->tcon0_cpu_ctl.bits.trigger_start);
 	return 1;
@@ -280,7 +286,7 @@ __s32 tcon0_cfg_mode_auto(__u32 sel, __panel_para_t * panel)
 		start_delay = 10;
     else if(start_delay>31)
 		start_delay = 31;
-
+    
 	lcd_dev[sel]->tcon0_ctl.bits.start_delay = start_delay;
 	return 0;
 }
@@ -292,8 +298,8 @@ __s32 tcon0_cfg_mode_tri(__u32 sel, __panel_para_t * panel)
 	lcd_dev[sel]->tcon0_cpu_tri0.bits.block_size = panel->lcd_x-1;
 	lcd_dev[sel]->tcon0_cpu_tri1.bits.block_num = panel->lcd_y-1;
 	lcd_dev[sel]->tcon0_cpu_tri2.bits.trans_start_mode = 0;
-	lcd_dev[sel]->tcon0_cpu_tri2.bits.sync_mode = 0;
-	lcd_dev[sel]->tcon0_cpu_tri2.bits.start_delay = 3;
+	lcd_dev[sel]->tcon0_cpu_tri2.bits.sync_mode = 0;	
+	lcd_dev[sel]->tcon0_cpu_tri2.bits.start_delay = 3;	
 	/*
 	if(panel->lcd_if==LCD_IF_DSI && panel->lcd_dsi_if==LCD_DSI_IF_VIDEO_MODE)
 	{
@@ -318,7 +324,7 @@ __s32 tcon0_cfg_mode_tri(__u32 sel, __panel_para_t * panel)
 	*/
 
 
-
+	
 	lcd_dev[sel]->tcon0_cpu_ctl.bits.trigger_fifo_en = 1;
 	lcd_dev[sel]->tcon0_cpu_ctl.bits.trigger_en = 1;
 	lcd_dev[sel]->tcon0_cpu_ctl.bits.flush = 1;
@@ -356,13 +362,13 @@ __s32 tcon0_cfg_mode_tri(__u32 sel, __panel_para_t * panel)
         }
         else if(lcd_te == 1)//rising mode
 	    {
-		lcd_dev[sel]->tcon0_cpu_tri3.bits.tri_int_mode = 2;
+	    	lcd_dev[sel]->tcon0_cpu_tri3.bits.tri_int_mode = 2;
 	        return 0;
 	    }
 	    else
 	    {
 	   //     __u32 cntr_set = (panel->lcd_dclk_freq*1000*1000/(60*4));
-		__u32 cntr_set = panel->lcd_ht*panel->lcd_vt/4;
+	     	__u32 cntr_set = panel->lcd_ht*panel->lcd_vt/4;
 	        __u32 cntr_n,cntr_m;
 	        for(cntr_m=1;cntr_m<256;cntr_m++)
 	        {
@@ -374,9 +380,9 @@ __s32 tcon0_cfg_mode_tri(__u32 sel, __panel_para_t * panel)
 	                lcd_dev[sel]->tcon0_cpu_tri3.bits.tri_int_mode = 1;
 	                return 0;
 	            }
-	        }
+	        } 
 	        lcd_dev[sel]->tcon0_cpu_tri3.bits.tri_int_mode = 0;
-			return -1;
+			return -1; 
 	     }
 	}
 
@@ -386,7 +392,7 @@ __s32 tcon0_cfg_mode_tri(__u32 sel, __panel_para_t * panel)
 
 __s32 tcon0_cfg(__u32 sel, __panel_para_t * panel)
 {
-    if((panel->lcd_if == LCD_IF_HV) || (panel->lcd_if == LCD_IF_EDP))
+    if((panel->lcd_if == LCD_IF_HV) || (panel->lcd_if == LCD_IF_EDP) || (panel->lcd_if == LCD_IF_EXT_DSI))
 	{
 		lcd_dev[sel]->tcon0_ctl.bits.tcon0_if = 0;
 		lcd_dev[sel]->tcon0_hv_ctl.bits.hv_mode = panel->lcd_hv_if;
@@ -610,7 +616,7 @@ __s32 tcon0_cpu_rd_16b(__u32 sel, __u32 index, __u32 *data)
 __s32 tcon0_set_dclk_div(__u32 sel, __u8 div)
 {
 	lcd_dev[sel]->tcon0_dclk.bits.tcon0_dclk_div = div;
-
+    
 	return 0;
 }
 
@@ -634,7 +640,7 @@ __s32 tcon1_close(__u32 sel)
 }
 
 __disp_timing_t tv_timing_tbl[30]	= {
-	//	   clk,    x,   y,    ht, hfp, hsa, hbp,   vt, vfp, vsa, vbp, hsp, vsp,  int, act_space, trd
+	//	   clk,        x,       y,       ht,    hfp,   hsa,  hbp, vt,      vfp,  vsa,  vbp,   hsp,  vsp,  int, act_space, trd
 	{ 13500000,  720,  480,  858,  19,  62,  57,  525,   4,   3,  15,   0,   0,   1,  0, 0},	//DISP_TV_MOD_480I
 	{ 13500000,  720,  576,  864,  12,  63,  69,  625,   2,   3,  19,   0,   0,   1,  0, 0},	//DISP_TV_MOD_576I
 	{ 27000000,  720,  480,  858,  16,  62,  60,  525,   9,   6,  30,   0,   0,   0,  0, 0},	//DISP_TV_MOD_480P
@@ -666,7 +672,7 @@ __disp_timing_t tv_timing_tbl[30]	= {
 __s32 tcon1_cfg(__u32 sel,__disp_timing_t* timing)
 {
 	__u32 start_delay;
-
+	
 	lcd_dev[sel]->tcon1_basic0.bits.x = timing->hor_pixels-1;
 	lcd_dev[sel]->tcon1_basic0.bits.y = timing->ver_pixels/(timing->interlace+1)-1;
 	lcd_dev[sel]->tcon1_basic1.bits.ls_xo = timing->hor_pixels-1;
@@ -1058,9 +1064,9 @@ __s32 tcon_gamma(__u32 sel, __u32 en,__u32 *gamma_tbl)
 	for(i=0;i<256;i++)
 	{
 	    lcd_dev[sel]->tcon_gamma_tlb[i].bits.pixel = *gamma_tbl;
-        gamma_tbl ++;
+        gamma_tbl ++;        
     }
-
+    
 	lcd_dev[sel]->tcon_gctl.bits.tcon_gamma_en = en;
     return 0;
 }
@@ -1103,3 +1109,4 @@ __s32 tcon_cmap(__u32 sel, __u32 mode,__lcd_cmap_color lcd_cmap_tbl[2][3][4])
 	}
     return 0;
 }
+

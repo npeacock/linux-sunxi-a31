@@ -11,11 +11,11 @@
 #define CLK_DRC1_DRAM_ON    0x00040000
 
 #define CLK_DRC0_AHB_OFF	(~(CLK_DRC0_AHB_ON	    ))
-#define CLK_DRC0_MOD_OFF 	(~(CLK_DRC0_MOD_ON	    ))
-#define CLK_DRC0_DRAM_OFF 	(~(CLK_DRC0_DRAM_ON	    ))
+#define CLK_DRC0_MOD_OFF 	(~(CLK_DRC0_MOD_ON	    ))		
+#define CLK_DRC0_DRAM_OFF 	(~(CLK_DRC0_DRAM_ON	    ))	
 #define CLK_DRC1_AHB_OFF	(~(CLK_DRC1_AHB_ON	    ))
-#define CLK_DRC1_MOD_OFF 	(~(CLK_DRC1_MOD_ON	    ))
-#define CLK_DRC1_DRAM_OFF 	(~(CLK_DRC1_DRAM_ON	    ))
+#define CLK_DRC1_MOD_OFF 	(~(CLK_DRC1_MOD_ON	    ))		
+#define CLK_DRC1_DRAM_OFF 	(~(CLK_DRC1_DRAM_ON	    ))	
 
 #define DE_FLICKER_USED 				0x01000000
 #define DE_FLICKER_USED_MASK 			(~(DE_FLICKER_USED))
@@ -33,7 +33,7 @@
 //for power saving mode alg0
 #define IEP_LH_PWRSV_NUM 24
 #define IEP_LGC_TAB_SIZE 92160  //(256(GAMMA/LEVEL)*180(LEVEL)*2(BYTE))
-typedef struct
+typedef struct 
 {
 	__u32 			mod;
 
@@ -48,7 +48,7 @@ typedef struct
 	__u32           scn_width;
 	__u32           scn_height;
 	__u32           video_mode_en;
-
+	
 	//lh
 	__u32           lgc_base_add;
 	//__u8            lh_thres_val[IEP_LH_THRES_NUM];
@@ -93,3 +93,4 @@ __s32 IEP_Drc_Set_Imgsize(__u32 sel, __u32 width, __u32 height);
 
 
 #endif
+

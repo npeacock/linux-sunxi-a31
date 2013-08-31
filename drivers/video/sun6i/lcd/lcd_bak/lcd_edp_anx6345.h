@@ -2,7 +2,7 @@
 #define __LCD_EDP_ANX6345_H__
 #include "../lcd_panel_cfg.h"
 
-//define
+//define 
 /***************************************************************/
 // ---------------------------------------------------------------------------
 // Analogix Confidential Strictly Private
@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------
 // >>>>>>>>>>>>>>>>>>>>>>>>> COPYRIGHT NOTICE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // ---------------------------------------------------------------------------
-// Copyright 2004-2010 (c) Analogix
+// Copyright 2004-2010 (c) Analogix 
 //
 //Analogix owns the sole copyright to this software. Under international
 // copyright laws you (1) may not make a copy of this software except for
@@ -39,13 +39,13 @@
 #define SP_TX_MPEG_SEL 0x04
 
 //#define SWING_1     0x30 //600mv//0x10:200mv 0x20:400mv without 30per_g
-//#define SWING_2     0x3f//787.5mv without 30per_g
-//#define SWING_3     0x20//400mv without 30per_g
+//#define SWING_2     0x3f//787.5mv without 30per_g	
+//#define SWING_3     0x20//400mv without 30per_g	
 //#define SWING_4     0x10//100mv without  30per_g
 
-//#define EMP_0           0x1b //6.1db
+//#define EMP_0           0x1b //6.1db    
 //#define EMP_1           0x1f //    7.1db
-//#define EMP_2           0x10 // 3.5db
+//#define EMP_2           0x10 // 3.5db	
 //#define EMP_3           0x00 //0db
 
 //#define SLIMPORT_APP //Slimport application, 1 lane
@@ -60,7 +60,7 @@
 struct Bist_Video_Format {
     char number;
     char video_type[32];
-    unsigned int pixel_frequency;
+    unsigned int pixel_frequency;    
     unsigned int h_total_length;
     unsigned int h_active_length;
     unsigned int v_total_length;
@@ -135,14 +135,14 @@ typedef enum
 typedef enum
 {
 	I2S_LAYOUT_0,
-	I2S_LAYOUT_1
+	I2S_LAYOUT_1 
 }I2SLayOut;
 
 
-typedef struct
+typedef struct 
 {
      I2SChNum Channel_Num;
-     I2SLayOut  AUDIO_LAYOUT;
+     I2SLayOut  AUDIO_LAYOUT;	
      unsigned char SHIFT_CTRL;
      unsigned char DIR_CTRL;
      unsigned char WS_POL;
@@ -154,7 +154,7 @@ typedef struct
      unsigned char Channel_status3;
      unsigned char Channel_status4;
      unsigned char Channel_status5;
-
+	
 }I2S_FORMAT;
 
 
@@ -179,21 +179,21 @@ struct Packet_AVI{
 
 
 struct Packet_SPD{
-     unsigned char SPD_data[25];
-};
+     unsigned char SPD_data[25];    
+};      
 
 
 struct Packet_MPEG{
-     unsigned char MPEG_data[10];
+     unsigned char MPEG_data[10];   
 } ;
 
 
 struct AudiInfoframe
 {
      unsigned char type;
-     unsigned char version;
+     unsigned char version; 
      unsigned char length;
-     unsigned char pb_byte[10]; //modify to 10 bytes from 28.2008/10/23
+     unsigned char pb_byte[10]; //modify to 10 bytes from 28.2008/10/23   
 };
 
 
@@ -230,7 +230,7 @@ typedef enum
 	COLOR_6_BIT,
 	COLOR_8_BIT,
 	COLOR_10_BIT,
-	COLOR_12_BIT
+	COLOR_12_BIT	
 }ColorDepth;
 
 typedef enum
@@ -241,7 +241,7 @@ typedef enum
 }ColorSpace;
 
 struct VideoFormat
-{
+{    
 	VideoInterface Interface;// 0:LVTTL ; 1:mipi
 	ColorDepth bColordepth;
 	ColorSpace bColorSpace;
@@ -280,7 +280,7 @@ typedef enum
 typedef enum
 {
 	BW_54G = 0x14,
-	BW_45G = 0x10,
+	BW_45G = 0x10,	
 	BW_27G = 0x0A,
 	BW_162G = 0x06,
 	BW_NULL = 0x00
@@ -300,7 +300,7 @@ typedef enum{
 // ---------------------------------------------------------------------------
 // >>>>>>>>>>>>>>>>>>>>>>>>> COPYRIGHT NOTICE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // ---------------------------------------------------------------------------
-// Copyright 2004-2010 (c) Analogix
+// Copyright 2004-2010 (c) Analogix 
 //
 //Analogix owns the sole copyright to this software. Under international
 // copyright laws you (1) may not make a copy of this software except for
@@ -335,26 +335,26 @@ typedef enum{
 #define MIPI_ANALOG_PWD_CTRL1			        0x01
 #define MIPI_ANALOG_PWD_CTRL2			        0x02
 
-#define MIPI_MISC_CTRL                         0x03
+#define MIPI_MISC_CTRL                         0x03 
 
-#define MIPI_TIMING_REG0                    0x04
-#define MIPI_TIMING_REG1                    0x05
-#define MIPI_TIMING_REG2                    0x06
+#define MIPI_TIMING_REG0                    0x04 
+#define MIPI_TIMING_REG1                    0x05 
+#define MIPI_TIMING_REG2                    0x06 
 #define MIPI_TIMING_REG3                    0x07
-#define MIPI_TIMING_REG4                    0x08
-#define MIPI_TIMING_REG5                    0x09
-#define MIPI_TIMING_REG6                    0x0a
+#define MIPI_TIMING_REG4                    0x08 
+#define MIPI_TIMING_REG5                    0x09 
+#define MIPI_TIMING_REG6                    0x0a 
 
 #define MIPI_HS_JITTER_REG                 0x0B
 
-#define MIPI_VID_STABLE_CNT               0x0C
+#define MIPI_VID_STABLE_CNT               0x0C 
 
-#define MIPI_ANALOG_CTRL0                  0x0D
+#define MIPI_ANALOG_CTRL0                  0x0D 
 #define MIPI_ANALOG_CTRL1                  0x0E
-#define MIPI_ANALOG_CTRL2                  0x0F
+#define MIPI_ANALOG_CTRL2                  0x0F 
 
-#define MIPI_PRBS_REG                           0x10
-#define MIPI_PROTOCOL_STATE               0x11
+#define MIPI_PRBS_REG                           0x10 
+#define MIPI_PROTOCOL_STATE               0x11 
 
 
 //End for DEV_addr 0x7A/0x7E
@@ -461,12 +461,12 @@ typedef enum{
 #define SP_TX_PKT_EN_REG              					0x90
 #define SP_TX_PKT_AUD_UP								0x80  // bit position
 #define SP_TX_PKT_AVI_UD              					0x40  // bit position
-#define SP_TX_PKT_MPEG_UD             					0x20  // bit position
-#define SP_TX_PKT_SPD_UD              					0x10  // bit position
+#define SP_TX_PKT_MPEG_UD             					0x20  // bit position    
+#define SP_TX_PKT_SPD_UD              					0x10  // bit position   
 #define SP_TX_PKT_AUD_EN								0x08  // bit position=
-#define SP_TX_PKT_AVI_EN              					0x04  // bit position
-#define SP_TX_PKT_MPEG_EN             					0x02  // bit position
-#define SP_TX_PKT_SPD_EN              					0x01  // bit position
+#define SP_TX_PKT_AVI_EN              					0x04  // bit position          
+#define SP_TX_PKT_MPEG_EN             					0x02  // bit position     
+#define SP_TX_PKT_SPD_EN              					0x01  // bit position       
 
 
 #define SP_TX_HDCP_CTRL 												0x92
@@ -515,32 +515,32 @@ typedef enum{
 //#define SP_TX_LINK_TEST_COUNT                     0xC0
 
 
-#define SP_TX_PLL_CTRL_REG											0xC7
+#define SP_TX_PLL_CTRL_REG											0xC7	
 #define SP_TX_PLL_CTRL_PLL_PD           						0x80        // bit position
-#define SP_TX_PLL_CTRL_PLL_RESET        					0x40        // bit position
-//#define SP_TX_PLL_CTRL_CPREG_BLEED      					0x08        // bit position
+#define SP_TX_PLL_CTRL_PLL_RESET        					0x40        // bit position 
+//#define SP_TX_PLL_CTRL_CPREG_BLEED      					0x08        // bit position 
 
 #define SP_TX_ANALOG_POWER_DOWN_REG                   			0xC8
-#define SP_TX_ANALOG_POWER_DOWN_MACRO_PD              	0x20        // bit position
-#define SP_TX_ANALOG_POWER_DOWN_AUX_PD                		0x10        // bit position
-//#define SP_TX_ANALOG_POWER_DOWN_CH3_PD                		0x08        // bit position
-//#define SP_TX_ANALOG_POWER_DOWN_CH2_PD                		0x04        // bit position
-#define SP_TX_ANALOG_POWER_DOWN_CH1_PD                		0x02        // bit position
-#define SP_TX_ANALOG_POWER_DOWN_CH0_PD                		0x01        // bit position
+#define SP_TX_ANALOG_POWER_DOWN_MACRO_PD              	0x20        // bit position 
+#define SP_TX_ANALOG_POWER_DOWN_AUX_PD                		0x10        // bit position 
+//#define SP_TX_ANALOG_POWER_DOWN_CH3_PD                		0x08        // bit position 
+//#define SP_TX_ANALOG_POWER_DOWN_CH2_PD                		0x04        // bit position 
+#define SP_TX_ANALOG_POWER_DOWN_CH1_PD                		0x02        // bit position 
+#define SP_TX_ANALOG_POWER_DOWN_CH0_PD                		0x01        // bit position 
 
 
 #define SP_TX_ANALOG_TEST_REG                         					0xC9
-#define SP_TX_ANALOG_TEST_MACRO_RST                   				0x20       // bit position
-#define SP_TX_ANALOG_TEST_PLL_TEST                    				0x10       // bit position
-#define SP_TX_ANALOG_TEST_CH3_TEST                    				0x08       // bit position
-#define SP_TX_ANALOG_TEST_CH2_TEST                    				0x04       // bit position
-#define SP_TX_ANALOG_TEST_CH1_TEST                    				0x02       // bit position
-#define SP_TX_ANALOG_TEST_CH0_TEST                    				0x01       // bit position
+#define SP_TX_ANALOG_TEST_MACRO_RST                   				0x20       // bit position 
+#define SP_TX_ANALOG_TEST_PLL_TEST                    				0x10       // bit position 
+#define SP_TX_ANALOG_TEST_CH3_TEST                    				0x08       // bit position 
+#define SP_TX_ANALOG_TEST_CH2_TEST                    				0x04       // bit position 
+#define SP_TX_ANALOG_TEST_CH1_TEST                    				0x02       // bit position 
+#define SP_TX_ANALOG_TEST_CH0_TEST                    				0x01       // bit position 
 
 #define SP_TX_GNS_CTRL_REG                            							0xCD
 #define SP_EQ_LOOP_CNT											0x40//bit position
-#define SP_TX_VIDEO_MAP_CTRL                 			                            0x02       // bit position
-#define SP_TX_RS_CTRL                        					              	0x01       // bit position
+#define SP_TX_VIDEO_MAP_CTRL                 			                            0x02       // bit position 
+#define SP_TX_RS_CTRL                        					              	0x01       // bit position 
 
 #define SP_TX_DOWN_SPREADING_CTRL1                                               0xD0   //guochuncheng
 #define SP_TX_DOWN_SPREADING_CTRL2                                               0xD1
@@ -556,7 +556,7 @@ typedef enum{
 #define SP_TX_I2C_STRETCH_CTRL_REG                                                              0xDB
 #define SP_TX_AUX_STATUS            										0xE0
 #define SP_TX_DEFER_CTRL_REG            									0xE2
-#define SP_TXL_DEFER_CTRL_EN  					                     		       0x80       // bit position
+#define SP_TXL_DEFER_CTRL_EN  					                     		       0x80       // bit position 
 
 #define SP_TX_BUF_DATA_COUNT_REG											0xE4
 #define SP_TX_AUX_CTRL_REG              										0xE5
@@ -872,7 +872,7 @@ typedef enum{
 #define SP_TX_MPEG_DATA27            0xCE
 
 //#define GNSS_CTRL_REG				0xCD
-//#define ENABLE_SSC_FILTER			0x80//bit
+//#define ENABLE_SSC_FILTER			0x80//bit 
 
 //#define SSC_D_VALUE					 0xD0
 //#define SSC_CTRL_REG2					 0xD1
@@ -1000,3 +1000,4 @@ typedef enum{
 
 void anx6345_init(__panel_para_t * info);
 #endif
+

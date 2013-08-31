@@ -49,13 +49,13 @@
 typedef struct
 {
     __bool                  lcd_used;
-
+    
 	__bool                  lcd_bl_en_used;
 	disp_gpio_set_t         lcd_bl_en;
-
+	
 	__bool                  lcd_power_used;
 	disp_gpio_set_t         lcd_power;
-
+	
 	__bool                  lcd_pwm_used;
 	disp_gpio_set_t         lcd_pwm;
     __u32                   lcd_pwm_ch;
@@ -69,31 +69,31 @@ typedef struct
     __u32                   backlight_bright;
     __u32                   backlight_dimming;//IEP-drc backlight dimming rate: 0 -256 (256: no dimming; 0: the most dimming)
     __u32                   backlight_max_limit;
-
+    
     __u32                   lcd_bright;
     __u32                   lcd_contrast;
     __u32                   lcd_saturation;
     __u32                   lcd_hue;
 }__disp_lcd_cfg_t;
 
-typedef struct
+typedef struct 
 {
     __u32                  enable;
     __disp_rect_t          rect;
     __u32                  mode; //0: ui, 1:video
 }__iep_drc_t;
 
-typedef struct
+typedef struct 
 {
     __u32                  status;//
-
+    
     __disp_rect_t          screen_rect;
     __disp_enhance_mode_t  screen_mode;     //
     __u32                  screen_bright;   //0~100, default(50)
     __u32                  screen_saturation;//0~100,default(50)
     __u32                  screen_contrast;//0~100,default(50)
     __u32                  screen_hue;       //0~100,default(50)
-
+    
     __disp_rect_t          layer_rect;
     __disp_enhance_mode_t  layer_mode;     //
     __u32                  layer_bright;   //0~100, default(50)
@@ -104,13 +104,13 @@ typedef struct
 
 
 typedef struct
-{
+{    
     __u32                   status; /*display engine,lcd,tv,vga,hdmi status*/
     __u32                   lcdc_status;//tcon0 used, tcon1 used
     __bool                  have_cfg_reg;
     __u32                   cache_flag;
     __u32                   cfg_cnt;
-
+    
     __u32                   screen_width;
     __u32                   screen_height;
     __disp_color_t          bk_color;
@@ -135,6 +135,9 @@ typedef struct
 	__disp_vga_mode_t       vga_mode;
 	__disp_tv_mode_t        tv_mode;
 	__disp_tv_mode_t        hdmi_mode;
+    __bool                  hdmi_hpd;//0:unplug;  1:plugin
+    __disp_tv_mode_t        hdmi_test_mode;
+    __disp_out_csc_type_t   output_csc_type;
 	__disp_tv_dac_source    dac_source[4];
     __bool                  hdmi_used;
 
@@ -142,13 +145,16 @@ typedef struct
     void                    (*LCD_CPUIF_ISR)(void);
 	__u32	                pll_use_status;	//lcdc0/lcdc1 using which video pll(0 or 1)
 
-
+    
 	__disp_color_range_t    out_color_range;
 	__u32                   out_csc;
 
 	__disp_lcd_cfg_t        lcd_cfg;
     __hdle                  gpio_hdl[6];//index4: scl;  index5: sda
+    __u32                   lcd_fps_cfg;
+    __bool                  lcd_fps_cfg_request;
     __bool                  vsync_event_en;
+    __bool                  dvi_enable;
 }__disp_screen_t;
 
 typedef struct

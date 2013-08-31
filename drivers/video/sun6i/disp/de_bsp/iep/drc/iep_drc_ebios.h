@@ -12,7 +12,7 @@
 #ifndef __IEP_DRC_EBIOS_H__
 #define __IEP_DRC_EBIOS_H__
 
-#include "../iep.h"
+#include "../iep.h" 
 
 #define IEP_DRC_SPA_TAB_LEN	9
 #define IEP_DRC_INT_TAB_LEN 256
@@ -20,7 +20,7 @@
 #define IEP_LH_INTERVAL_NUM 8
 #define IEP_LH_THRES_NUM    7
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -36,7 +36,7 @@ typedef union
 	}bits;
 }__imgehc_gnectl_reg_t;	//0x0
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -48,7 +48,7 @@ typedef union
 	}bits;
 }__imgehc_drcsize_reg_t;
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -57,12 +57,12 @@ typedef union
 		__u32	dbrdy_ctl		:1;	//bit1
 		__u32	r0				:6;	//bit2~7
 		__u32	win_en			:1; //bit8
-		__u32   hsv_mode_en     :1; //bit9
+		__u32   hsv_mode_en     :1; //bit9 
 		__u32	r1				:22;//bit10~31
 	}bits;
 }__imgehc_drcctl_reg_t;	//0x10
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -71,7 +71,7 @@ typedef union
 	}bits;
 }__imgehc_drclgc_staadd_reg_t;	//0x14
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -86,7 +86,7 @@ typedef union
 	}bits;
 }__imgehc_drc_set_reg_t;		//0x18
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -98,7 +98,7 @@ typedef union
 	}bits;
 }__imgehc_drc_wp_reg0_t;		//0x1c
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -110,7 +110,7 @@ typedef union
 	}bits;
 }__imgehc_drc_wp_reg1_t;		//0x20
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -127,7 +127,7 @@ typedef union
 	}bits;
 }__imgehc_wbctl_reg_t;		//0x24
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -136,7 +136,7 @@ typedef union
 	}bits;
 }__imgehc_wbaddr_reg_t;		//0x28
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -145,7 +145,7 @@ typedef union
 	}bits;
 }__imgehc_wbline_reg_t;		//0x2c
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -156,7 +156,7 @@ typedef union
 	}bits;
 }__imgehc_lhctl_reg_t;		//0x30
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -168,7 +168,7 @@ typedef union
 	}bits;
 }__imgehc_lhthr_reg0_t;		//0x34
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -180,7 +180,7 @@ typedef union
 	}bits;
 }__imgehc_lhthr_reg1_t;		//0x38
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -189,7 +189,7 @@ typedef union
 	}bits;
 }__imgehc_lhslum_reg_t;		// 0x0040 ~ 0x005c
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -208,7 +208,7 @@ typedef union
 	}bits;
 }__imgehc_cscygcoff_reg_t;	//0xc0~0xc8
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -218,7 +218,7 @@ typedef union
 	}bits;
 }__imgehc_cscygcon_reg_t;	//0xcc
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -228,7 +228,7 @@ typedef union
 	}bits;
 }__imgehc_cscurcoff_reg_t;	//0xd0~0xd8
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -238,7 +238,7 @@ typedef union
 	}bits;
 }__imgehc_cscurcon_reg_t;	//0xdc
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -248,7 +248,7 @@ typedef union
 	}bits;
 }__imgehc_cscvbcoff_reg_t;	//0xe0~0xe8
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -258,11 +258,11 @@ typedef union
 	}bits;
 }__imgehc_cscvbcon_reg_t;	//0xec
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
-	{
+	{	
 		__u32	spa_coff0		:8;	//bit0~7
 		__u32	spa_coff1		:8;	//bit8~15
 		__u32	spa_coff2		:8;	//bit16~23
@@ -270,7 +270,7 @@ typedef union
 	}bits;
 }__imgehc_drcspacoff_reg_t;		//0xf0~0xf8
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -282,7 +282,7 @@ typedef union
 	}bits;
 }__imgehc_drcintcoff_reg_t;		//0x0100 ~ 0x01fc
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -293,7 +293,7 @@ typedef union
 }__imgehc_drclgcoff_reg_t;		//0x0200 ~ 0x03fc
 
 
-typedef struct
+typedef struct 
 {
 	__imgehc_gnectl_reg_t			gnectl;	//0x00
 	__imgehc_drcsize_reg_t          drcsize;//0x04
@@ -354,3 +354,4 @@ __u32 DRC_EBIOS_Lh_Set_Thres(__u32 sel, __u8 thres[IEP_LH_THRES_NUM]);
 __u32 DRC_EBIOS_Lh_Get_Sum_Rec(__u32 sel, __u32 *sum);
 __u32 DRC_EBIOS_Lh_Get_Cnt_Rec(__u32 sel, __u32 *cnt);
 #endif
+

@@ -10,12 +10,12 @@
 *
 * Author 		: javen
 *
-* Description 	: Êìç‰ΩúÁ≥ªÁªüÈÄÇÈÖçÂ±Ç
+* Description 	: ≤Ÿ◊˜œµÕ≥  ≈‰≤„
 *
 * History 		:
 *      <author>    		<time>       	<version >    		<desc>
 *       javen     	   	2010-09-07          1.0         create this word
-*		holi			2010-12-03			1.1			ÂÆûÁé∞‰∫ÜÂÖ∑‰ΩìÁöÑÊé•Âè£
+*		holi			2010-12-03			1.1			 µœ÷¡ÀæﬂÃÂµƒΩ”ø⁄
 *************************************************************************************
 */
 
@@ -55,7 +55,7 @@ typedef enum
     MOD_CLK_IEPDEU0,
     MOD_CLK_IEPDEU1,
     MOD_CLK_LVDS,
-
+    
     AHB_CLK_MIPIDSI,
     AHB_CLK_LCD0,
     AHB_CLK_LCD1,
@@ -72,7 +72,7 @@ typedef enum
     AHB_CLK_DRC1,
     AHB_CLK_TVE0, //not exist in a31
     AHB_CLK_TVE1, //not exist in a31
-
+    
     DRAM_CLK_DRC0,
     DRAM_CLK_DRC1,
     DRAM_CLK_DEU0,
@@ -95,10 +95,10 @@ typedef struct
 *********************************************************************************************************
 *                                   SET SOURCE CLOCK FREQUENCY
 *
-* Description:
+* Description: 
 *		set source clock frequency;
 *
-* Arguments  :
+* Arguments  : 
 *		nSclkNo  	:	source clock number;
 *       nFreq   	:	frequency, the source clock will change to;
 *
@@ -115,13 +115,13 @@ __s32 OSAL_CCMU_SetSrcFreq(__u32 nSclkNo, __u32 nFreq);
 *********************************************************************************************************
 *                                   GET SOURCE CLOCK FREQUENCY
 *
-* Description:
+* Description: 
 *		get source clock frequency;
 *
-* Arguments  :
+* Arguments  : 
 *		nSclkNo  	:	source clock number need get frequency;
 *
-* Returns    :
+* Returns    : 
 *		frequency of the source clock;
 *
 * Note       :
@@ -134,13 +134,13 @@ __u32 OSAL_CCMU_GetSrcFreq(__u32 nSclkNo);
 /*
 *********************************************************************************************************
 *                                   OPEN MODULE CLK
-* Description:
+* Description: 
 *		open module clk;
 *
-* Arguments  :
+* Arguments  : 
 *		nMclkNo	:	number of module clock which need be open;
 *
-* Returns    :
+* Returns    : 
 *		EBSP_TRUE/EBSP_FALSE
 *
 * Note       :
@@ -152,13 +152,13 @@ __hdle OSAL_CCMU_OpenMclk(__s32 nMclkNo);
 /*
 *********************************************************************************************************
 *                                    CLOSE MODULE CLK
-* Description:
+* Description: 
 *		close module clk;
 *
-* Arguments  :
+* Arguments  : 
 *		hMclk	:	handle
 *
-* Returns    :
+* Returns    : 
 *		EBSP_TRUE/EBSP_FALSE
 *
 * Note       :
@@ -169,14 +169,14 @@ __s32  OSAL_CCMU_CloseMclk(__hdle hMclk);
 /*
 *********************************************************************************************************
 *                                   GET MODULE SRC
-* Description:
+* Description: 
 *		set module src;
 *
-* Arguments  :
+* Arguments  : 
 *		nMclkNo	:	number of module clock which need be open;
 *       nSclkNo	:	call-back function for process clock change;
 *
-* Returns    :
+* Returns    : 
 *		EBSP_TRUE/EBSP_FALSE
 *
 * Note       :
@@ -192,13 +192,13 @@ __s32 OSAL_CCMU_SetMclkSrc(__hdle hMclk, __u32 nSclkNo);
 *********************************************************************************************************
 *                                  GET MODULE SRC
 *
-* Description:
+* Description: 
 *		get module src;
 *
-* Arguments  :
+* Arguments  : 
 *		nMclkNo	:	handle of the module clock;
 *
-* Returns    :
+* Returns    : 
 *		src no
 *
 * Note       :
@@ -213,14 +213,14 @@ __s32 OSAL_CCMU_GetMclkSrc(__hdle hMclk);
 *********************************************************************************************************
 *                                   SET MODUEL CLOCK FREQUENCY
 *
-* Description:
+* Description: 
 *		set module clock frequency;
 *
-* Arguments  :
+* Arguments  : 
 *		nSclkNo  :	number of source clock which the module clock will use;
 *		nDiv     :	division for the module clock;
 *
-* Returns    :
+* Returns    : 
 *		EBSP_TRUE/EBSP_FALSE
 *
 * Note       :
@@ -234,13 +234,13 @@ __s32 OSAL_CCMU_SetMclkDiv(__hdle hMclk, __s32 nDiv);
 *********************************************************************************************************
 *                                   GET MODUEL CLOCK FREQUENCY
 *
-* Description:
+* Description: 
 *		get module clock requency;
 *
-* Arguments  :
+* Arguments  : 
 *		hMclk    	:	module clock handle;
 *
-* Returns    :
+* Returns    : 
 *		frequency of the module clock;
 *
 * Note       :
@@ -254,14 +254,14 @@ __u32 OSAL_CCMU_GetMclkDiv(__hdle hMclk);
 *********************************************************************************************************
 *                                   MODUEL CLOCK ON/OFF
 *
-* Description:
+* Description: 
 *		module clock on/off;
 *
-* Arguments  :
+* Arguments  : 
 *		nMclkNo		:	module clock handle;
 *       bOnOff   	:	on or off;
 *
-* Returns    :
+* Returns    : 
 *		EBSP_TRUE/EBSP_FALSE
 *
 * Note       :
@@ -273,7 +273,7 @@ __s32 OSAL_CCMU_MclkReset(__hdle hMclk, __s32 bReset);
 
 
 /*
-//Á¨¨‰∏ÄÁâà
+//µ⁄“ª∞Ê
 __s32  esCLK_SetSrcFreq(__s32 nSclkNo, __u32 nFreq);
 __u32  esCLK_GetSrcFreq(__s32 nSclkNo);
 
@@ -290,7 +290,7 @@ __s32  esCLK_MclkOnOff(__s32 nMclkNo, __s32 bOnOff);
 
 //======================================================================================
 
-//Á¨¨‰∫åÁâà
+//µ⁄∂˛∞Ê
 __s32 esCLK_reg_cb(__s32 nMclkNo, __pCB_ClkCtl_t pCb);	//__hdle esCLK_OpenMclk(__s32 nMclkNo, __pCB_ClkCtl_t pCb);
 __s32  esCLK_unreg_cb(__s32 nMclkNo);					//__s32  esCLK_CloseMclk(__hdle hMclk);
 
@@ -317,3 +317,4 @@ __s32  esCLK_MclkOnOff(__hdle hMclk, __s32 bOnOff);
 */
 
 #endif   //__OSAL_CLOCK_H__
+

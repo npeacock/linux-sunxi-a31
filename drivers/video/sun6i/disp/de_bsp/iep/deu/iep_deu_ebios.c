@@ -14,11 +14,11 @@
 
 static __iep_deu_dev_t *deu_dev[2];
 
-static __u32 deu_csc_tab[48] =
+static __u32 deu_csc_tab[48] = 
 {
     //Y/G   Y/G      Y/G      Y/G      U/R      U/R     U/R        U/R     V/B      V/B       V/B       V/B
     //bt601
-	0x04a8,0x1e70,0x1cbf,0x0878,0x04a8,0x0000,0x0662,0x3211,0x04a8,0x0812,0x0000,0x2eb1,//yuv2rgb
+	0x04a8,0x1e70,0x1cbf,0x0878,0x04a8,0x0000,0x0662,0x3211,0x04a8,0x0812,0x0000,0x2eb1,//yuv2rgb	
 	//bt709
     0x04a7,0x1f25,0x1ddd,0x04cf,0x04a7,0x0000,0x072c,0x307d,0x04a7,0x0875,0x0000,0x2dea,//yuv2rgb
     //DISP_YCC
@@ -27,7 +27,7 @@ static __u32 deu_csc_tab[48] =
     0x04a7,0x1f25,0x1ddd,0x04cf,0x04a7,0x0000,0x072c,0x307d,0x04a7,0x0875,0x0000,0x2dea//yuv2rgb
 };
 
-__u8 deu_str_tab[512] =
+__u8 deu_str_tab[512] = 
 {
 	//strspatab[256]=
 	1,4,8,12,16,20,24,28,31,35,39,43,46,50,53,57,60,64,67,71,74,
@@ -73,7 +73,7 @@ __u8 deu_lp_tab_l[5][5][5] =
 };
 
 //small LCD panel (10 inch below)
-__u8 deu_lp_tab_s[5][5][5] =
+__u8 deu_lp_tab_s[5][5][5] = 
 {
 	//beta, tau, alpha, lmt, corthr
 	{{0	,0	,0	,0	,0 },{0	,0	,0	,0	,0 },{3	,3	,0	,5	,5 },{4	,4	,0	,5	,5 },{6	,6	,0	,5	,5 }},
@@ -89,7 +89,7 @@ __u8 deu_lp_tab_s[5][5][5] =
 
 __s32 DEU_EBIOS_Set_Reg_Base(__u32 sel, __u32 base)
 {
-	deu_dev[sel] = (__iep_deu_dev_t *)base;
+	deu_dev[sel] = (__iep_deu_dev_t *)base;	
 	return 0;
 }
 
@@ -118,21 +118,21 @@ __s32 DEU_EBIOS_Set_Csc_Coeff(__u32 sel, __u32 mode)
 	__u32 *ptcsctab;
 
 	mode = (mode>3)?3:mode;
-
+	
 	ptcsctab = &(deu_csc_tab[mode*12]);
-
-	deu_dev[sel]->cscgcoff[0].bits.csc_g_coff = *ptcsctab;
-	deu_dev[sel]->cscgcoff[1].bits.csc_g_coff = *(ptcsctab+1);
-	deu_dev[sel]->cscgcoff[2].bits.csc_g_coff = *(ptcsctab+2);
-	deu_dev[sel]->cscgcon.bits.csc_g_con =	    *(ptcsctab+3);
-	deu_dev[sel]->cscrcoff[0].bits.csc_r_coff = *(ptcsctab+4);
-	deu_dev[sel]->cscrcoff[1].bits.csc_r_coff = *(ptcsctab+5);
-	deu_dev[sel]->cscrcoff[2].bits.csc_r_coff = *(ptcsctab+6);
-	deu_dev[sel]->cscrcon.bits.csc_r_con =	    *(ptcsctab+7);
-	deu_dev[sel]->cscbcoff[0].bits.csc_b_coff = *(ptcsctab+8);
-	deu_dev[sel]->cscbcoff[1].bits.csc_b_coff = *(ptcsctab+9);
-	deu_dev[sel]->cscbcoff[2].bits.csc_b_coff = *(ptcsctab+10);
-	deu_dev[sel]->cscbcon.bits.csc_b_con =	    *(ptcsctab+11);
+	
+	deu_dev[sel]->cscgcoff[0].bits.csc_g_coff = *ptcsctab; 
+	deu_dev[sel]->cscgcoff[1].bits.csc_g_coff = *(ptcsctab+1); 
+	deu_dev[sel]->cscgcoff[2].bits.csc_g_coff = *(ptcsctab+2); 
+	deu_dev[sel]->cscgcon.bits.csc_g_con =	    *(ptcsctab+3); 
+	deu_dev[sel]->cscrcoff[0].bits.csc_r_coff = *(ptcsctab+4); 
+	deu_dev[sel]->cscrcoff[1].bits.csc_r_coff = *(ptcsctab+5); 
+	deu_dev[sel]->cscrcoff[2].bits.csc_r_coff = *(ptcsctab+6); 
+	deu_dev[sel]->cscrcon.bits.csc_r_con =	    *(ptcsctab+7); 
+	deu_dev[sel]->cscbcoff[0].bits.csc_b_coff = *(ptcsctab+8); 
+	deu_dev[sel]->cscbcoff[1].bits.csc_b_coff = *(ptcsctab+9); 
+	deu_dev[sel]->cscbcoff[2].bits.csc_b_coff = *(ptcsctab+10); 
+	deu_dev[sel]->cscbcon.bits.csc_b_con =	    *(ptcsctab+11); 
 
 	return 0;
 
@@ -154,7 +154,7 @@ __s32 DEU_EBIOS_Set_Win_Para(__u32 sel, __u32 top, __u32 bot, __u32 left, __u32 
 	deu_dev[sel]->pwp1.bits.win_right = right;
 	deu_dev[sel]->pwp1.bits.win_bot = bot;
 	return 0;
-
+	
 }
 
 __s32 DEU_EBIOS_Cfg_Rdy(__u32 sel)
@@ -198,11 +198,11 @@ __s32 DEU_EBIOS_LP_Set_Para(__u32 sel, __u32 level, __u32 filtertype, __u8 *ptta
 {
 	deu_dev[sel]->lp1.bits.neggain = 3;
 	deu_dev[sel]->lp1.bits.delta = 3;
-	deu_dev[sel]->lp0.bits.beta = *(pttab + filtertype * 25 + level *5 + 0);
-	deu_dev[sel]->lp0.bits.tau = *(pttab + filtertype * 25 + level *5 + 1);
-	deu_dev[sel]->lp0.bits.alpha = *(pttab + filtertype * 25 + level *5 + 2);
-	deu_dev[sel]->lp1.bits.limit_thr = *(pttab + filtertype * 25 + level *5 + 3);
-	deu_dev[sel]->lp1.bits.corthr = *(pttab + filtertype * 25 + level *5 + 4);
+	deu_dev[sel]->lp0.bits.beta = *(pttab + filtertype * 25 + level *5 + 0);	
+	deu_dev[sel]->lp0.bits.tau = *(pttab + filtertype * 25 + level *5 + 1);	
+	deu_dev[sel]->lp0.bits.alpha = *(pttab + filtertype * 25 + level *5 + 2);	
+	deu_dev[sel]->lp1.bits.limit_thr = *(pttab + filtertype * 25 + level *5 + 3);	
+	deu_dev[sel]->lp1.bits.corthr = *(pttab + filtertype * 25 + level *5 + 4);	
 
 	return 0;
 }
@@ -212,7 +212,7 @@ __s32 DEU_EBIOS_LP_Enable(__u32 sel, __u32 en)
 	deu_dev[sel]->lp0.bits.lp_en = en;
 	return 0;
 }
-
+	
 #define ____SEPARATOR_DCTI____
 __s32 DEU_EBIOS_DCTI_Set_Para(__u32 sel, __u32 level)
 {
@@ -223,7 +223,7 @@ __s32 DEU_EBIOS_DCTI_Set_Para(__u32 sel, __u32 level)
 	deu_dev[sel]->dcti.bits.uv_separate_en = 0;
 	deu_dev[sel]->dcti.bits.uv_same_sign_mode_sel = 3;
 	deu_dev[sel]->dcti.bits.uv_diff_sign_mode_sel = 3;
-
+	
 	switch(level)
 	{
 		case	0x0:
@@ -233,8 +233,8 @@ __s32 DEU_EBIOS_DCTI_Set_Para(__u32 sel, __u32 level)
 			deu_dev[sel]->dcti.bits.uv_diff_sign_maxmin_mode_sel = 0;
 
 		break;
-
-		case	0x1:
+		
+		case	0x1:	
 			deu_dev[sel]->dcti.bits.dcti_gain = 12;
 			deu_dev[sel]->dcti.bits.dcti_path_limit = 4;
 			deu_dev[sel]->dcti.bits.uv_same_sign_maxmin_mode_sel = 0;
@@ -243,7 +243,7 @@ __s32 DEU_EBIOS_DCTI_Set_Para(__u32 sel, __u32 level)
 
 		break;
 
-		case	0x2:
+		case	0x2:	
 			deu_dev[sel]->dcti.bits.dcti_gain = 23;
 			deu_dev[sel]->dcti.bits.dcti_path_limit = 4;
 			deu_dev[sel]->dcti.bits.uv_same_sign_maxmin_mode_sel = 0;
@@ -252,7 +252,7 @@ __s32 DEU_EBIOS_DCTI_Set_Para(__u32 sel, __u32 level)
 
 		break;
 
-		case	0x3:
+		case	0x3:	
 			deu_dev[sel]->dcti.bits.dcti_gain = 23;
 			deu_dev[sel]->dcti.bits.dcti_path_limit = 4;
 			deu_dev[sel]->dcti.bits.uv_same_sign_maxmin_mode_sel = 1;
@@ -261,7 +261,7 @@ __s32 DEU_EBIOS_DCTI_Set_Para(__u32 sel, __u32 level)
 
 		break;
 
-		case	0x4:
+		case	0x4:	
 			deu_dev[sel]->dcti.bits.dcti_gain = 32;
 			deu_dev[sel]->dcti.bits.dcti_path_limit = 5;
 			deu_dev[sel]->dcti.bits.uv_same_sign_maxmin_mode_sel = 1;
@@ -301,23 +301,23 @@ __s32 DEU_EBIOS_WLE_Set_Para(__u32 sel, __u32 level)
 			deu_dev[sel]->wle.bits.wle_gain = 64;
 
 		break;
-
-		case	0x1:
+		
+		case	0x1:	
 			deu_dev[sel]->wle.bits.wle_gain = 73;
 
 		break;
 
-		case	0x2:
+		case	0x2:	
 			deu_dev[sel]->wle.bits.wle_gain = 79;
 
 		break;
 
-		case	0x3:
+		case	0x3:	
 			deu_dev[sel]->wle.bits.wle_gain = 92;
 
 		break;
 
-		case	0x4:
+		case	0x4:	
 			deu_dev[sel]->wle.bits.wle_gain = 127;
 
 		break;
@@ -334,9 +334,9 @@ __s32 DEU_EBIOS_WLE_Set_Para(__u32 sel, __u32 level)
 __s32 DEU_EBIOS_WLE_Enable(__u32 sel, __u32 en)
 {
 	deu_dev[sel]->wle.bits.wle_en = en;
-
+	
 	return 0;
-
+		
 }
 
 __s32 DEU_EBIOS_BLE_Set_Para(__u32 sel, __u32 level)
@@ -344,37 +344,37 @@ __s32 DEU_EBIOS_BLE_Set_Para(__u32 sel, __u32 level)
 	deu_dev[sel]->ble.bits.ble_thr = 127;
 
 	switch(level)
-	{
-		case	0x0:
+	{		
+		case	0x0:	
 			deu_dev[sel]->ble.bits.ble_gain = 0;
 
 		break;
 
-		case	0x1:
+		case	0x1:	
 			deu_dev[sel]->ble.bits.ble_gain = 9;
 
 		break;
 
-		case	0x2:
+		case	0x2:	
 			deu_dev[sel]->ble.bits.ble_gain = 16;
 
 		break;
 
-		case	0x3:
+		case	0x3:	
 			deu_dev[sel]->ble.bits.ble_gain = 32;
 
 		break;
 
-		case	0x4:
+		case	0x4:	
 			deu_dev[sel]->ble.bits.ble_gain = 64;
 
 		break;
 
-		default:
+		default:	
 			deu_dev[sel]->ble.bits.ble_gain = 0;
 
 		break;
-
+		
 	}
 
 	return 0;
@@ -383,7 +383,8 @@ __s32 DEU_EBIOS_BLE_Set_Para(__u32 sel, __u32 level)
 __s32 DEU_EBIOS_BLE_Enable(__u32 sel, __u32 en)
 {
 	deu_dev[sel]->ble.bits.ble_en = en;
-
+	
 	return 0;
-
+		
 }
+

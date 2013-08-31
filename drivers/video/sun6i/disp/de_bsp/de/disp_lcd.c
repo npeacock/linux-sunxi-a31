@@ -30,9 +30,9 @@ void Lcd_Panel_Parameter_Check(__u32 sel)
 
 	__u32 lcd_fclk_frq;
 	__u32 lcd_clk_div;
-
+	
 	info = &(gpanel_info[sel]);
-
+	
 	if(info->lcd_if==0 && info->lcd_hv_if==1 && info->lcd_hv_smode==0)
 		cycle_num = 3;
 	else if(info->lcd_if==0 && info->lcd_hv_if==1 && info->lcd_hv_smode==1)
@@ -50,7 +50,7 @@ void Lcd_Panel_Parameter_Check(__u32 sel)
 	else if(info->lcd_if==1 && info->lcd_cpu_if==7)
 		cycle_num = 2;
 	else
-		cycle_num = 1;
+		cycle_num = 1;	
 
 	if(info->lcd_hbp > info->lcd_hv_hspw)
 	{
@@ -93,7 +93,7 @@ void Lcd_Panel_Parameter_Check(__u32 sel)
 	{
 		;
 	}
-	else if((lcd_clk_div ==5) || (lcd_clk_div ==4) || (lcd_clk_div ==2))
+	else if((lcd_clk_div ==5) || (lcd_clk_div ==4) || (lcd_clk_div ==2))		
 	{
 		if((info->lcd_io_cfg0 != 0x00000000) && (info->lcd_io_cfg0 != 0x04000000))
 		{
@@ -102,26 +102,26 @@ void Lcd_Panel_Parameter_Check(__u32 sel)
 	}
 	else
 	{
-		Disp_Driver_Bug_Flag |= 1;
+		Disp_Driver_Bug_Flag |= 1;	
 	}
 
 
-	if((info->lcd_if==1 && info->lcd_cpu_if==0)
+	if((info->lcd_if==1 && info->lcd_cpu_if==0)	
 	 ||(info->lcd_if==3 && info->lcd_lvds_bitwidth==1))
 	{
 		if(info->lcd_frm != 1)
-			Lcd_Panel_Wrn_Flag |= BIT0;
+			Lcd_Panel_Wrn_Flag |= BIT0;		
 	}
 	else if(info->lcd_if==1 && info->lcd_cpu_if==4)
 	{
 		if(info->lcd_frm != 2)
-			Lcd_Panel_Wrn_Flag |= BIT1;
+			Lcd_Panel_Wrn_Flag |= BIT1;					
 	}
 
 	lcd_fclk_frq = (info->lcd_dclk_freq * 1000*1000)/((info->lcd_vt/2) * info->lcd_ht);
 	if(lcd_fclk_frq<50 || lcd_fclk_frq>70)
 	{
-		Lcd_Panel_Wrn_Flag |= BIT2;
+		Lcd_Panel_Wrn_Flag |= BIT2;	
 	}
 
 	if(Lcd_Panel_Err_Flag != 0 || Lcd_Panel_Wrn_Flag != 0)
@@ -131,19 +131,19 @@ void Lcd_Panel_Parameter_Check(__u32 sel)
 			__u32 i;
 			for(i=0;i<200;i++)
 			{
-				OSAL_PRINTF("*** Lcd in danger...\n");
+				OSAL_PRINTF("*** Lcd in danger...\n");	
 			}
 		}
-
-		OSAL_PRINTF("*****************************************************************\n");
+		
+		OSAL_PRINTF("*****************************************************************\n");	
 		OSAL_PRINTF("***\n");
 		OSAL_PRINTF("*** LCD Panel Parameter Check\n");
 		OSAL_PRINTF("***\n");
-		OSAL_PRINTF("***             by dulianping\n");
+		OSAL_PRINTF("***             by dulianping\n");				
 		OSAL_PRINTF("***\n");
 		OSAL_PRINTF("*****************************************************************\n");
-
-		OSAL_PRINTF("*** \n");
+		
+		OSAL_PRINTF("*** \n");	
 		OSAL_PRINTF("*** Interface:");
 		if(info->lcd_if==0 && info->lcd_hv_if==0)
 			{OSAL_PRINTF("*** Parallel HV Panel\n");}
@@ -154,9 +154,9 @@ void Lcd_Panel_Parameter_Check(__u32 sel)
 		else if(info->lcd_if==3 && info->lcd_lvds_bitwidth==0)
 			{OSAL_PRINTF("*** 24Bit LVDS Panel\n");}
 		else if(info->lcd_if==3 && info->lcd_lvds_bitwidth==1)
-			{OSAL_PRINTF("*** 18Bit LVDS Panel\n");}
+			{OSAL_PRINTF("*** 18Bit LVDS Panel\n");}	
 		else if(info->lcd_if==1 && info->lcd_cpu_if==0)
-			{OSAL_PRINTF("*** 18Bit CPU Panel\n");}
+			{OSAL_PRINTF("*** 18Bit CPU Panel\n");}	
 		else if(info->lcd_if==1 && info->lcd_cpu_if==4)
 			{OSAL_PRINTF("*** 16Bit CPU Panel\n");}
 		else
@@ -166,48 +166,48 @@ void Lcd_Panel_Parameter_Check(__u32 sel)
 			OSAL_PRINTF("*** lcd_hv_if:  %d\n",info->lcd_hv_if);
 			OSAL_PRINTF("*** lcd_cpu_if: %d\n",info->lcd_cpu_if);
 		}
-
+	
 		if(info->lcd_frm==0)
 			{OSAL_PRINTF("*** Lcd Frm Disable\n");}
 		else if(info->lcd_frm==1)
 			{OSAL_PRINTF("*** Lcd Frm to RGB666\n");}
 		else if(info->lcd_frm==2)
-			{OSAL_PRINTF("*** Lcd Frm to RGB565\n");}
-
+			{OSAL_PRINTF("*** Lcd Frm to RGB565\n");}	
+	
 		OSAL_PRINTF("*** \n");
-		OSAL_PRINTF("*** Timing:\n");
+		OSAL_PRINTF("*** Timing:\n");	
 		OSAL_PRINTF("*** lcd_x:      %d\n",info->lcd_x);
 		OSAL_PRINTF("*** lcd_y:      %d\n",info->lcd_y);
 		OSAL_PRINTF("*** lcd_ht:     %d\n",info->lcd_ht);
 		OSAL_PRINTF("*** lcd_hbp:    %d\n",info->lcd_hbp);
 		OSAL_PRINTF("*** lcd_vt:     %d\n",info->lcd_vt);
 		OSAL_PRINTF("*** lcd_vbp:    %d\n",info->lcd_vbp);
-		OSAL_PRINTF("*** lcd_hspw:   %d\n",info->lcd_hv_hspw);
-		OSAL_PRINTF("*** lcd_vspw:   %d\n",info->lcd_hv_vspw);
-		OSAL_PRINTF("*** lcd_frame_frq:  %dHz\n",lcd_fclk_frq);
-
-		//æ‰“å°é”™è¯¯æç¤º
-		OSAL_PRINTF("*** \n");
+		OSAL_PRINTF("*** lcd_hspw:   %d\n",info->lcd_hv_hspw);			
+		OSAL_PRINTF("*** lcd_vspw:   %d\n",info->lcd_hv_vspw);		
+		OSAL_PRINTF("*** lcd_frame_frq:  %dHz\n",lcd_fclk_frq);	
+		
+		//´òÓ¡´íÎóÌáÊ¾
+		OSAL_PRINTF("*** \n");	
 		if(Lcd_Panel_Err_Flag & BIT0)
 			{OSAL_PRINTF("*** Err01: Violate \"lcd_hbp > lcd_hspw\"\n");}
 		if(Lcd_Panel_Err_Flag & BIT1)
 			{OSAL_PRINTF("*** Err02: Violate \"lcd_vbp > lcd_vspw\"\n");}
 		if(Lcd_Panel_Err_Flag & BIT2)
 			{OSAL_PRINTF("*** Err03: Violate \"lcd_ht >= (lcd_hbp+lcd_x*%d+4)\"\n", cycle_num);}
-		if(Lcd_Panel_Err_Flag & BIT3)
+		if(Lcd_Panel_Err_Flag & BIT3)								
 			{OSAL_PRINTF("*** Err04: Violate \"(lcd_vt/2) >= (lcd_vbp+lcd_y+2)\"\n");}
-		if(Lcd_Panel_Err_Flag & BIT10)
+		if(Lcd_Panel_Err_Flag & BIT10)			
 			{OSAL_PRINTF("*** Err10: Violate \"lcd_io_cfg0\",use \"0x00000000\" or \"0x04000000\"");}
-		if(Lcd_Panel_Wrn_Flag & BIT0)
+		if(Lcd_Panel_Wrn_Flag & BIT0)			
 			{OSAL_PRINTF("*** WRN01: Recommend \"lcd_frm = 1\"\n");}
 		if(Lcd_Panel_Wrn_Flag & BIT1)
-			{OSAL_PRINTF("*** WRN02: Recommend \"lcd_frm = 2\"\n");}
-		if(Lcd_Panel_Wrn_Flag & BIT2)
+			{OSAL_PRINTF("*** WRN02: Recommend \"lcd_frm = 2\"\n");}		
+		if(Lcd_Panel_Wrn_Flag & BIT2)							
 			{OSAL_PRINTF("*** WRN03: Recommend \"lcd_dclk_frq = %d\"\n",((info->lcd_vt/2) * info->lcd_ht)*60/(1000*1000));}
-		OSAL_PRINTF("*** \n");
+		OSAL_PRINTF("*** \n");	
 
-	if(Lcd_Panel_Err_Flag != 0)
-	{
+    	if(Lcd_Panel_Err_Flag != 0)
+    	{	
             __u32 image_base_addr;
             __u32 reg_value = 0;
 
@@ -224,7 +224,7 @@ void Lcd_Panel_Parameter_Check(__u32 sel)
             sys_put_wvalue(image_base_addr+0x800,reg_value);//open layer
 #endif
             OSAL_PRINTF("*** Try new parameters,you can make it pass!\n");
-	}
+    	}
         OSAL_PRINTF("*** LCD Panel Parameter Check End\n");
         OSAL_PRINTF("*****************************************************************\n");
 	}
@@ -239,11 +239,11 @@ __s32 LCD_parse_panel_para(__u32 sel, __panel_para_t * info)
 
     if(!BSP_disp_lcd_used(sel))//no need to get panel para if lcd_used eq 0
         return 0;
-
+    
     sprintf(primary_key, "lcd%d_para", sel);
 
     memset(info, 0, sizeof(__panel_para_t));
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key, "lcd_x", &value, 1);
     if(ret == 0)
     {
@@ -309,31 +309,31 @@ __s32 LCD_parse_panel_para(__u32 sel, __panel_para_t * info)
     {
         info->lcd_vbp = value;
     }
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key, "lcd_vt", &value, 1);
     if(ret == 0)
     {
         info->lcd_vt = value;
     }
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key, "lcd_hv_if", &value, 1);
     if(ret == 0)
     {
         info->lcd_hv_if = value;
     }
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key, "lcd_vspw", &value, 1);
     if(ret == 0)
     {
         info->lcd_vspw = value;
     }
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key, "lcd_hspw", &value, 1);
     if(ret == 0)
     {
         info->lcd_hspw = value;
     }
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key, "lcd_lvds_if", &value, 1);
     if(ret == 0)
     {
@@ -464,7 +464,7 @@ __s32 LCD_parse_panel_para(__u32 sel, __panel_para_t * info)
 
 void LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
 {
-    static char io_name[28][20] = {"lcdd0", "lcdd1", "lcdd2", "lcdd3", "lcdd4", "lcdd5", "lcdd6", "lcdd7", "lcdd8", "lcdd9", "lcdd10", "lcdd11",
+    static char io_name[28][20] = {"lcdd0", "lcdd1", "lcdd2", "lcdd3", "lcdd4", "lcdd5", "lcdd6", "lcdd7", "lcdd8", "lcdd9", "lcdd10", "lcdd11", 
                          "lcdd12", "lcdd13", "lcdd14", "lcdd15", "lcdd16", "lcdd17", "lcdd18", "lcdd19", "lcdd20", "lcdd21", "lcdd22",
                          "lcdd23", "lcdclk", "lcdde", "lcdhsync", "lcdvsync"};
     disp_gpio_set_t  *gpio_info;
@@ -540,7 +540,7 @@ void LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
     for(i=0; i<4; i++)
     {
         sprintf(sub_name, "lcd_gpio_%d", i);
-
+        
         gpio_info = &(lcd_cfg->lcd_gpio[i]);
         ret = OSAL_Script_FetchParser_Data(primary_key,sub_name, (int *)gpio_info, sizeof(disp_gpio_set_t)/sizeof(int));
         if(ret == 0)
@@ -548,7 +548,7 @@ void LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
             lcd_cfg->lcd_gpio_used[i]= 1;
         }
     }
-
+    
 //lcd_gpio_scl,lcd_gpio_sda
     gpio_info = &(lcd_cfg->lcd_gpio[LCD_GPIO_SCL]);
     ret = OSAL_Script_FetchParser_Data(primary_key,"lcd_gpio_scl", (int *)gpio_info, sizeof(disp_gpio_set_t)/sizeof(int));
@@ -562,7 +562,7 @@ void LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
     {
         lcd_cfg->lcd_gpio_used[LCD_GPIO_SDA]= 1;
     }
-
+    
 //lcd io
     for(i=0; i<28; i++)
     {
@@ -584,7 +584,7 @@ void LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
 //init_bright
     sprintf(primary_key, "disp_init");
     sprintf(sub_name, "lcd%d_backlight", sel);
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key, sub_name, &value, 1);
     if(ret < 0)
     {
@@ -615,7 +615,7 @@ void LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
         }
         lcd_cfg->lcd_bright = value;
     }
-
+    
     sprintf(sub_name, "lcd%d_contrast", sel);
     ret = OSAL_Script_FetchParser_Data(primary_key, sub_name, &value, 1);
     if(ret < 0)
@@ -645,7 +645,7 @@ void LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
         }
         lcd_cfg->lcd_saturation = value;
     }
-
+    
     sprintf(sub_name, "lcd%d_hue", sel);
     ret = OSAL_Script_FetchParser_Data(primary_key, sub_name, &value, 1);
     if(ret < 0)
@@ -662,11 +662,11 @@ void LCD_get_sys_config(__u32 sel, __disp_lcd_cfg_t *lcd_cfg)
     }
 }
 
-void LCD_delay_ms(__u32 ms)
+void LCD_delay_ms(__u32 ms) 
 {
 #ifdef __LINUX_OSAL__
     __u32 timeout = ms*HZ/1000;
-
+    
     set_current_state(TASK_INTERRUPTIBLE);
     schedule_timeout(timeout);
 #endif
@@ -676,14 +676,14 @@ void LCD_delay_ms(__u32 ms)
 }
 
 
-void LCD_delay_us(__u32 us)
+void LCD_delay_us(__u32 us) 
 {
 #ifdef __LINUX_OSAL__
     udelay(us);
 #endif
 #ifdef __BOOT_OSAL__
     volatile __u32 time;
-
+    
     for(time = 0; time < (us*700/10);time++);//assume cpu runs at 700Mhz,10 clock one cycle
 #endif
 }
@@ -705,7 +705,7 @@ void LCD_CLOSE_FUNC(__u32 sel, LCD_FUNC func, __u32 delay)
 
 
 void TCON_open(__u32 sel)
-{
+{    
     if(gpanel_info[sel].tcon_index == 0)
     {
         tcon0_open(sel,gpanel_info+sel);
@@ -727,7 +727,7 @@ void TCON_open(__u32 sel)
 }
 
 void TCON_close(__u32 sel)
-{
+{    
     if(gpanel_info[sel].lcd_if == LCD_IF_LVDS)
     {
         lvds_close(sel);
@@ -758,7 +758,7 @@ __s32 TCON_get_cur_line(__u32 sel, __u32 tcon_index)
     {
         return tcon_get_cur_line(sel, tcon_index);
     }
-
+    
     return 0;
 }
 
@@ -771,7 +771,7 @@ __s32 TCON_get_start_delay(__u32 sel, __u32 tcon_index)
     {
         return tcon_get_start_delay(sel, tcon_index);
     }
-
+    
     return 0;
 }
 
@@ -782,15 +782,15 @@ static __u32 pwm_read_reg(__u32 offset)
     __u32 value = 0;
 
     value = sys_get_wvalue(gdisp.init_para.base_pwm+offset);
-
+    
     return value;
 }
 
 static __s32 pwm_write_reg(__u32 offset, __u32 value)
 {
     sys_put_wvalue(gdisp.init_para.base_pwm+offset, value);
-
-    return 0;
+    
+    return 0;    
 }
 
 __s32 pwm_enable(__u32 channel, __bool b_en)
@@ -809,7 +809,7 @@ __s32 pwm_enable(__u32 channel, __bool b_en)
             gpio_info->mul_sel = 2;
         }
         else
-        {
+        {            
             gpio_info->mul_sel = 0;
         }
         hdl = OSAL_GPIO_Request(gpio_info, 1);
@@ -829,7 +829,7 @@ __s32 pwm_enable(__u32 channel, __bool b_en)
 
 
     gdisp.pwm[channel].enable = b_en;
-
+    
     return 0;
 }
 
@@ -885,10 +885,10 @@ __s32 pwm_set_para(__u32 channel, __pwm_info_t * pwm_info)
     gdisp.pwm[channel].duty_ns = pwm_info->duty_ns;
     gdisp.pwm[channel].period_ns = pwm_info->period_ns;
     gdisp.pwm[channel].entire_cycle = entire_cycle;
-    gdisp.pwm[channel].active_cycle = active_cycle;
+    gdisp.pwm[channel].active_cycle = active_cycle; 
 #if 0
     __inf("freq = %d, pre_scal=%d, active_state=%d, duty_ns=%d,period_ns=%d, entire_cycle=%d, active_cycle=%d, mode=%d \n",
-    gdisp.pwm[channel].freq,  gdisp.pwm[channel].pre_scal,
+    gdisp.pwm[channel].freq,  gdisp.pwm[channel].pre_scal, 
     gdisp.pwm[channel].active_state,gdisp.pwm[channel].duty_ns,gdisp.pwm[channel].period_ns,gdisp.pwm[channel].entire_cycle,
     gdisp.pwm[channel].active_cycle, gdisp.pwm[channel].mode);
 #endif
@@ -896,7 +896,7 @@ __s32 pwm_set_para(__u32 channel, __pwm_info_t * pwm_info)
 
     tmp = ((0<<7) | (1<<6) | (pwm_info->active_state<<5) | pre_scal_id);//bit7: channel mode(0cycle,1pulse; bit6:gatting the special clock for pwm0; bit5:pwm0  active state is high level
     pwm_write_reg(channel*0x10,tmp);
-
+   
     pwm_enable(channel, pwm_info->enable);
 
     return 0;
@@ -907,13 +907,13 @@ __s32 pwm_get_para(__u32 channel, __pwm_info_t * pwm_info)
     pwm_info->enable = gdisp.pwm[channel].enable;
     pwm_info->active_state = gdisp.pwm[channel].active_state;
     pwm_info->duty_ns = gdisp.pwm[channel].duty_ns;
-    pwm_info->period_ns = gdisp.pwm[channel].period_ns;
+    pwm_info->period_ns = gdisp.pwm[channel].period_ns; 
 
     return 0;
 }
 
 __s32 pwm_set_duty_ns(__u32 channel, __u32 duty_ns)
-{
+{	    
     __u32 active_cycle = 0;
     __u32 tmp;
 
@@ -923,7 +923,7 @@ __s32 pwm_set_duty_ns(__u32 channel, __u32 duty_ns)
     pwm_write_reg(channel*0x10+0x04,(tmp & 0xffff0000) | active_cycle);
 
     gdisp.pwm[channel].duty_ns = duty_ns;
-
+    
     //DE_INF("PWM: duty_ns=%d,period_ns=%d,active_cycle=%d,entire_cycle=%d\n", duty_ns, gdisp.pwm[channel].period_ns, active_cycle, gdisp.pwm[channel].entire_cycle);
     return 0;
 }
@@ -936,13 +936,13 @@ __s32 LCD_PWM_EN(__u32 sel, __bool b_en)
         __hdle hdl;
 
         memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_pwm), sizeof(disp_gpio_set_t));
-
+        
         if(b_en)
         {
             pwm_enable(gdisp.screen[sel].lcd_cfg.lcd_pwm_ch, b_en);
         }
         else
-        {
+        {            
             gpio_info->mul_sel = 7;
             hdl = OSAL_GPIO_Request(gpio_info, 1);
             OSAL_GPIO_Release(hdl, 2);
@@ -960,7 +960,7 @@ __s32 LCD_BL_EN(__u32 sel, __bool b_en)
     if(gdisp.screen[sel].lcd_cfg.lcd_bl_en_used)
     {
         memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_bl_en), sizeof(disp_gpio_set_t));
-
+        
         if(!b_en)
         {
             gpio_info->data = (gpio_info->data==0)?1:0;
@@ -970,9 +970,76 @@ __s32 LCD_BL_EN(__u32 sel, __bool b_en)
         hdl = OSAL_GPIO_Request(gpio_info, 1);
         OSAL_GPIO_Release(hdl, 2);
     }
+    
+    return 0;
+}
+
+//voltage(7~33): 0.1v,   e.g. 1 voltage = 0.1v
+__s32 LCD_POWER_ELDO3_EN(__u32 sel, __bool b_en, __u32 voltage)
+{
+    __u8 data;
+    __u32 ret;
+    __u8 addr;
+
+    voltage = (voltage < 7)? 7 :voltage;
+    voltage = (voltage > 33)?33:voltage;
+    data = voltage - 7;
+    addr = 0x1b;
+    ret = ar100_axp_write_reg(&addr, &data, 1);
+    if(ret != 0)
+    {
+        DE_WRN("set eldo3 to %d.%dv fail\n", voltage/10, voltage%10);
+    }
+    addr = 0x12;
+    ret = ar100_axp_read_reg(&addr, &data, 1);
+    if(ret != 0)
+    {
+        DE_WRN("axp read reg fail\n");
+    }
+    addr = 0x12;
+    data = (b_en)? (data | 0x04):(data & 0xfb);
+    ar100_axp_write_reg(&addr, &data, 1);
+    if(ret != 0)
+    {
+        DE_WRN("%s eldo3 fail\n", (b_en)? "enable":"disable");
+    }
 
     return 0;
 }
+
+//voltage(7~33): 0.1v,   e.g. 1 voltage = 0.1v
+__s32 LCD_POWER_DLDO1_EN(__u32 sel, __bool b_en, __u32 voltage)
+{
+    __u8 data;
+    __u32 ret;
+    __u8 addr;
+
+    voltage = (voltage < 7)? 7 :voltage;
+    voltage = (voltage > 33)?33:voltage;
+    data = voltage - 7;
+    addr = 0x15;
+    ret = ar100_axp_write_reg(&addr, &data, 1);
+    if(ret != 0)
+    {
+        DE_WRN("set dldo1 to %d.%dv fail\n", voltage/10, voltage%10);
+    }
+    addr = 0x12;
+    ret = ar100_axp_read_reg(&addr, &data, 1);
+    if(ret != 0)
+    {
+        DE_WRN("axp read reg fail\n");
+    }
+    addr = 0x12;
+    data = (b_en)? (data | 0x08):(data & 0xf7);
+    ar100_axp_write_reg(&addr, &data, 1);
+    if(ret != 0)
+    {
+        DE_WRN("%s dldo1 fail\n", (b_en)? "enable":"disable");
+    }
+
+    return 0;
+}
+
 
 __s32 LCD_POWER_EN(__u32 sel, __bool b_en)
 {
@@ -983,8 +1050,13 @@ __s32 LCD_POWER_EN(__u32 sel, __bool b_en)
 	{
 		if(gdisp.screen[sel].lcd_cfg.lcd_power_used)
         {
-            memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_power), sizeof(disp_gpio_set_t));
+            if(gpanel_info[sel].lcd_if == LCD_IF_EXT_DSI)
+	        {
+	            LCD_POWER_ELDO3_EN(sel, 1, 12);
+	        }
 
+            memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_power), sizeof(disp_gpio_set_t));
+		        
 	        if(!b_en)
 	        {
 	            gpio_info->data = (gpio_info->data==0)?1:0;
@@ -993,32 +1065,32 @@ __s32 LCD_POWER_EN(__u32 sel, __bool b_en)
 	        hdl = OSAL_GPIO_Request(gpio_info, 1);
 	        OSAL_GPIO_Release(hdl, 2);
 	        udelay(200);
-
+	        
 	        if((gpanel_info[sel].lcd_if == LCD_IF_EDP) && (gpanel_info[sel].lcd_edp_tx_ic == 0))
 	        {
 				__u8 data;
 				__u32 ret;
 				__u8 addr;
-
+				
 				addr = 0x1b;
 				data = 0x0b;
 				ret = ar100_axp_write_reg(&addr, &data, 1); //set eldo3 to 1.8v
 				if(ret != 0)
 				{
-					DE_WRN("set eldo3 to 1.8v fail\n");
+					DE_WRN("set eldo3 to 1.8v fail\n");	
 				}
 				addr = 0x12;
 				ret = ar100_axp_read_reg(&addr, &data, 1);
 				if(ret != 0)
 				{
-					DE_WRN("axp read reg fail\n");
+					DE_WRN("axp read reg fail\n");	
 				}
 				addr = 0x12;
 				data |= 0x04;
 				ar100_axp_write_reg(&addr, &data, 1); //enable eldo3
 				if(ret != 0)
 				{
-					DE_WRN("enable eldo3 fail\n");
+					DE_WRN("enable eldo3 fail\n");	
 				}
 	        }
             else if((gpanel_info[sel].lcd_if == LCD_IF_EDP) && (gpanel_info[sel].lcd_edp_tx_ic == 1))
@@ -1032,7 +1104,7 @@ __s32 LCD_POWER_EN(__u32 sel, __bool b_en)
 				ret = ar100_axp_write_reg(&addr, &data, 1); //set dldo1 to 2.5v
 				if(ret != 0)
 				{
-					DE_WRN("set dldo3 to 2.5v fail\n");
+					DE_WRN("set dldo1 to 2.5v fail\n");
 				}
 				addr = 0x12;
 				ret = ar100_axp_read_reg(&addr, &data, 1);
@@ -1082,22 +1154,22 @@ __s32 LCD_POWER_EN(__u32 sel, __bool b_en)
         {
             if((gpanel_info[sel].lcd_if == LCD_IF_EDP) && (gpanel_info[sel].lcd_edp_tx_ic == 0))
             {
-			__u8 data;
-			__u32 ret;
-			__u8 addr;
-
-			addr = 0x12;
-			ret = ar100_axp_read_reg(&addr, &data, 1);
-			if(ret != 0)
-			{
+    			__u8 data;
+    			__u32 ret;
+    			__u8 addr;
+    		
+    			addr = 0x12;
+    			ret = ar100_axp_read_reg(&addr, &data, 1);
+    			if(ret != 0)
+    			{
                     DE_WRN("axp read reg fail\n");
-			}
-			data &= 0xfb;
-			ar100_axp_write_reg(&addr, &data, 1); //enable eldo3
-			if(ret != 0)
-			{
+    			}
+    			data &= 0xfb;
+    			ar100_axp_write_reg(&addr, &data, 1); //enable eldo3
+    			if(ret != 0)
+    			{
                     DE_WRN("disable eldo3 fail\n");
-			}
+    			}
            }
            else if((gpanel_info[sel].lcd_if == LCD_IF_EDP) && (gpanel_info[sel].lcd_edp_tx_ic == 1))
            {
@@ -1132,22 +1204,25 @@ __s32 LCD_POWER_EN(__u32 sel, __bool b_en)
                 }
            }
 
-		udelay(200);
-		memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_power), sizeof(disp_gpio_set_t));
-
+    		udelay(200);
+    		memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_power), sizeof(disp_gpio_set_t));
+            
             if(!b_en)
             {
                 gpio_info->data = (gpio_info->data==0)?1:0;
             }
             hdl = OSAL_GPIO_Request(gpio_info, 1);
             OSAL_GPIO_Release(hdl, 2);
+
+            if(gpanel_info[sel].lcd_if == LCD_IF_EXT_DSI)
+	        {
+	            LCD_POWER_ELDO3_EN(sel, 0, 7);
+	        }
         }
 	}
 
     return 0;
 }
-
-
 
 __s32 LCD_GPIO_request(__u32 sel, __u32 io_index)
 {
@@ -1194,12 +1269,12 @@ __s32 LCD_GPIO_init(__u32 sel)
         if(gdisp.screen[sel].lcd_cfg.lcd_gpio_used[i])
         {
             disp_gpio_set_t  gpio_info[1];
-
+            
             memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_gpio[i]), sizeof(disp_gpio_set_t));
             gdisp.screen[sel].gpio_hdl[i] = OSAL_GPIO_Request(gpio_info, 1);
         }
     }
-
+    
     return 0;
 }
 
@@ -1214,7 +1289,7 @@ __s32 LCD_GPIO_exit(__u32 sel)
             disp_gpio_set_t  gpio_info[1];
 
 			OSAL_GPIO_Release(gdisp.screen[sel].gpio_hdl[i], 2);
-
+            
             memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_gpio[i]), sizeof(disp_gpio_set_t));
 			gpio_info->mul_sel = 7;
             gdisp.screen[sel].gpio_hdl[i] = OSAL_GPIO_Request(gpio_info, 1);
@@ -1222,7 +1297,7 @@ __s32 LCD_GPIO_exit(__u32 sel)
 			gdisp.screen[sel].gpio_hdl[i] = 0;
         }
     }
-
+    
     return 0;
 }
 
@@ -1232,7 +1307,7 @@ void LCD_CPU_register_irq(__u32 sel, void (*Lcd_cpuisr_proc) (void))
 }
 
 __s32 Disp_lcdc_pin_cfg(__u32 sel, __disp_output_type_t out_type, __u32 bon)
-{
+{   
     if(out_type == DISP_OUTPUT_TYPE_LCD)
     {
         __hdle lcd_pin_hdl;
@@ -1241,7 +1316,7 @@ __s32 Disp_lcdc_pin_cfg(__u32 sel, __disp_output_type_t out_type, __u32 bon)
         if(bon)
 		{
 			LCD_GPIO_init(sel);
-	}
+    	}
 		else
 		{
 			LCD_GPIO_exit(sel);
@@ -1251,7 +1326,7 @@ __s32 Disp_lcdc_pin_cfg(__u32 sel, __disp_output_type_t out_type, __u32 bon)
             if(gdisp.screen[sel].lcd_cfg.lcd_io_used[i])
             {
                 disp_gpio_set_t  gpio_info[1];
-
+                
                 memcpy(gpio_info, &(gdisp.screen[sel].lcd_cfg.lcd_io[i]), sizeof(disp_gpio_set_t));
                 if(!bon)
                 {
@@ -1286,7 +1361,7 @@ __s32 Disp_lcdc_pin_cfg(__u32 sel, __disp_output_type_t out_type, __u32 bon)
     {
         __u32 reg_start = 0;
         __u32 tmp = 0;
-
+        
         if(sel == 0)
         {
             reg_start = gdisp.init_para.base_pioc+0x6c;
@@ -1331,8 +1406,8 @@ __s32 Disp_lcdc_event_proc(void *parg)
     }
     if(tcon_irq_query(sel,LCD_IRQ_TCON0_CNTR))
     {
-	   LCD_vbi_event_proc(sel, 0);
-
+   	   LCD_vbi_event_proc(sel, 0);
+			
 		if(dsi_inst_busy(sel) || tcon0_tri_busy(sel))
 		{
 			if(cntr>=1)
@@ -1346,32 +1421,32 @@ __s32 Disp_lcdc_event_proc(void *parg)
 		}
 		else
 		{
-			cntr = 0;
+			cntr = 0;		
 		}
-
+		
 		if(cntr==0)
 		{
 		    if(gdisp.screen[sel].LCD_CPUIF_ISR)
 		    {
-			(*gdisp.screen[sel].LCD_CPUIF_ISR)();
+    			(*gdisp.screen[sel].LCD_CPUIF_ISR)();
 				LCD_delay_us(2);
 			}
 			if(gpanel_info[sel].lcd_if == LCD_IF_DSI)
 				dsi_tri_start(sel);
-			tcon0_tri_start(sel);
+		   	tcon0_tri_start(sel);
 		}
 
     }
     if(tcon_irq_query(sel,LCD_IRQ_TCON0_TRIF))
     {
     //  LCD_vbi_event_proc(sel, 0);
-    }
+    }  
 
 	if(dsi_irq_query(sel,DSI_IRQ_VIDEO_VBLK))
     {
 		LCD_vbi_event_proc(sel, 0);
-    }
-
+    }  
+	
     return OSAL_IRQ_RETURN;
 }
 
@@ -1382,7 +1457,7 @@ __s32 Disp_lcdc_init(__u32 sel)
 
     if(gdisp.screen[sel].lcd_cfg.lcd_used)
     {
-
+        
         LCD_parse_panel_para(sel, &gpanel_info[sel]);
         if(lcd_panel_fun[sel].cfg_panel_info)
         {
@@ -1390,7 +1465,7 @@ __s32 Disp_lcdc_init(__u32 sel)
         }
         gpanel_info[sel].tcon_index = 0;
     }
-
+    
     lcdc_clk_init(sel);
     if(gpanel_info[sel].lcd_if == LCD_IF_LVDS)
     {
@@ -1405,9 +1480,9 @@ __s32 Disp_lcdc_init(__u32 sel)
     lcdc_clk_on(sel, 0, 1);
     tcon_init(sel);
     lcdc_clk_off(sel);
-
+    
     if(sel == 0)
-    {
+    {        
         OSAL_RegISR(INTC_IRQNO_LCDC0,0,Disp_lcdc_event_proc,(void*)sel,0,0);
 		if(gpanel_info[sel].lcd_if == LCD_IF_DSI)
         {
@@ -1420,7 +1495,7 @@ __s32 Disp_lcdc_init(__u32 sel)
 #endif
     }
     else
-    {
+    {        
         OSAL_RegISR(INTC_IRQNO_LCDC1,0,Disp_lcdc_event_proc,(void*)sel,0,0);
         //LCD_get_panel_funs_1(&lcd_panel_fun[sel]);
 #ifndef __LINUX_OSAL__
@@ -1442,7 +1517,7 @@ __s32 Disp_lcdc_init(__u32 sel)
             {
                 DE_WRN("lcd%d.lcd_pwm_freq is ZERO\n", sel);
                 pwm_info.period_ns = 1000000000 / 1000;  //default 1khz
-            }
+            } 
             if(gpanel_info[sel].lcd_pwm_pol == 0)
             {
                 pwm_info.duty_ns = (gdisp.screen[sel].lcd_cfg.backlight_bright * pwm_info.period_ns) / 256;
@@ -1459,7 +1534,7 @@ __s32 Disp_lcdc_init(__u32 sel)
 
 
 __s32 Disp_lcdc_exit(__u32 sel)
-{
+{	
     if(sel == 0)
     {
         OSAL_InterruptDisable(INTC_IRQNO_LCDC0);
@@ -1581,42 +1656,42 @@ __u32 vga_mode_to_width(__disp_vga_mode_t mode)
 
     switch(mode)
     {
-	case DISP_VGA_H1680_V1050:
-		width = 1680;
+    	case DISP_VGA_H1680_V1050:
+    		width = 1680;
             break;
-	case DISP_VGA_H1440_V900:
-		width = 1440;
+    	case DISP_VGA_H1440_V900:
+    		width = 1440;
             break;
-	case DISP_VGA_H1360_V768:
-		width = 1360;
+    	case DISP_VGA_H1360_V768:
+    		width = 1360;
             break;
-	case DISP_VGA_H1280_V1024:
-		width = 1280;
+    	case DISP_VGA_H1280_V1024:
+    		width = 1280;
             break;
-	case DISP_VGA_H1024_V768:
-		width = 1024;
+    	case DISP_VGA_H1024_V768:
+    		width = 1024;
             break;
-	case DISP_VGA_H800_V600:
-		width = 800;
+    	case DISP_VGA_H800_V600:
+    		width = 800;
             break;
-	case DISP_VGA_H640_V480:
-		width = 640;
+    	case DISP_VGA_H640_V480:
+    		width = 640;
             break;
-	case DISP_VGA_H1440_V900_RB:
-		width = 1440;
+    	case DISP_VGA_H1440_V900_RB:
+    		width = 1440;
             break;
-	case DISP_VGA_H1680_V1050_RB:
-		width = 1680;
+    	case DISP_VGA_H1680_V1050_RB:
+    		width = 1680;
             break;
-	case DISP_VGA_H1920_V1080_RB:
-	case DISP_VGA_H1920_V1080:
-		width = 1920;
+    	case DISP_VGA_H1920_V1080_RB:
+    	case DISP_VGA_H1920_V1080:
+    		width = 1920;
             break;
         case DISP_VGA_H1280_V720:
             width = 1280;
             break;
-	default:
-		width = 0;
+    	default:
+    		width = 0;
             break;
     }
 
@@ -1676,7 +1751,7 @@ __u32 vga_mode_to_height(__disp_vga_mode_t mode)
 __u32 Disp_get_screen_scan_mode(__disp_tv_mode_t tv_mode)
 {
 	__u32 ret = 0;
-
+	
 	switch(tv_mode)
 	{
 		case DISP_TV_MOD_480I:
@@ -1689,7 +1764,7 @@ __u32 Disp_get_screen_scan_mode(__disp_tv_mode_t tv_mode)
 		case DISP_TV_MOD_PAL_SVIDEO:
 		case DISP_TV_MOD_PAL_NC:
 		case DISP_TV_MOD_PAL_NC_SVIDEO:
-		case DISP_TV_MOD_1080I_50HZ:
+		case DISP_TV_MOD_1080I_50HZ:	
 		case DISP_TV_MOD_1080I_60HZ:
 		    ret = 1;
 		default:
@@ -1700,7 +1775,7 @@ __u32 Disp_get_screen_scan_mode(__disp_tv_mode_t tv_mode)
 }
 
 __s32 BSP_disp_get_screen_width(__u32 sel)
-{
+{    
 	__u32 width = 0;
 
     if((gdisp.screen[sel].status & LCD_ON) || (gdisp.screen[sel].status & TV_ON) || (gdisp.screen[sel].status & HDMI_ON) || (gdisp.screen[sel].status & VGA_ON))
@@ -1714,11 +1789,11 @@ __s32 BSP_disp_get_screen_width(__u32 sel)
 
     return width;
 }
-
+ 
 __s32 BSP_disp_get_screen_height(__u32 sel)
-{
+{    
 	__u32 height = 0;
-
+	
     if((gdisp.screen[sel].status & LCD_ON) || (gdisp.screen[sel].status & TV_ON) || (gdisp.screen[sel].status & HDMI_ON) || (gdisp.screen[sel].status & VGA_ON))
     {
         height = DE_BE_get_display_height(sel);
@@ -1732,12 +1807,12 @@ __s32 BSP_disp_get_screen_height(__u32 sel)
 }
 //get width of screen in mm
 __s32 BSP_disp_get_screen_physical_width(__u32 sel)
-{
+{    
 	__u32 width = 0;
 
     if((gdisp.screen[sel].status & TV_ON) || (gdisp.screen[sel].status & HDMI_ON) || (gdisp.screen[sel].status & VGA_ON))
     {
-        width = 0;
+        width = 0; 
     }
     else
     {
@@ -1749,9 +1824,9 @@ __s32 BSP_disp_get_screen_physical_width(__u32 sel)
 
 //get height of screen in mm
 __s32 BSP_disp_get_screen_physical_height(__u32 sel)
-{
+{    
 	__u32 height = 0;
-
+	
     if((gdisp.screen[sel].status & TV_ON) || (gdisp.screen[sel].status & HDMI_ON) || (gdisp.screen[sel].status & VGA_ON))
     {
         height = 0;
@@ -1873,7 +1948,7 @@ __s32 BSP_disp_get_frame_rate(__u32 sel)
 }
 
 __s32 BSP_disp_lcd_open_before(__u32 sel)
-{
+{    
     lcdc_clk_on(sel, 0, 0);
     disp_clk_cfg(sel, DISP_OUTPUT_TYPE_LCD, DIS_NULL);
     lcdc_clk_on(sel, 0, 1);
@@ -1902,7 +1977,8 @@ __s32 BSP_disp_lcd_open_before(__u32 sel)
     {
         dsi_cfg(sel, (__panel_para_t*)&gpanel_info[sel]);
     }
-    BSP_disp_set_output_csc(sel, DISP_OUTPUT_TYPE_LCD, BSP_disp_drc_get_input_csc(sel));
+    gdisp.screen[sel].output_csc_type = DISP_OUT_CSC_TYPE_LCD;
+	BSP_disp_set_output_csc(sel, gdisp.screen[sel].output_csc_type, BSP_disp_drc_get_input_csc(sel));
     DE_BE_set_display_size(sel, gpanel_info[sel].lcd_x, gpanel_info[sel].lcd_y);
     DE_BE_Output_Select(sel, sel);
 
@@ -1918,7 +1994,7 @@ __s32 BSP_disp_lcd_open_before(__u32 sel)
 }
 
 __s32 BSP_disp_lcd_open_after(__u32 sel)
-{
+{	    
     //esMEM_SwitchDramWorkMode(DRAM_WORK_MODE_LCD);
     gdisp.screen[sel].b_out_interlace = 0;
     gdisp.screen[sel].status |= LCD_ON;
@@ -1933,12 +2009,12 @@ __s32 BSP_disp_lcd_open_after(__u32 sel)
 }
 
 __lcd_flow_t * BSP_disp_lcd_get_open_flow(__u32 sel)
-{
+{    
     return (&open_flow[sel]);
 }
 
 __s32 BSP_disp_lcd_close_befor(__u32 sel)
-{
+{    
     close_flow[sel].func_num = 0;
 	lcd_panel_fun[sel].cfg_close_flow(sel);
     //BSP_disp_drc_enable(sel, FALSE);
@@ -1950,7 +2026,7 @@ __s32 BSP_disp_lcd_close_befor(__u32 sel)
 }
 
 __s32 BSP_disp_lcd_close_after(__u32 sel)
-{
+{    
     Image_close(sel);
 
     //Disp_lcdc_pin_cfg(sel, DISP_OUTPUT_TYPE_LCD, 0);
@@ -1967,12 +2043,12 @@ __s32 BSP_disp_lcd_close_after(__u32 sel)
     drc_clk_close(sel,0);
 
 	gdisp.screen[sel].pll_use_status &= ((gdisp.screen[sel].pll_use_status == VIDEO_PLL0_USED)? VIDEO_PLL0_USED_MASK : VIDEO_PLL1_USED_MASK);
-
+	
 	return DIS_SUCCESS;
 }
 
 __lcd_flow_t * BSP_disp_lcd_get_close_flow(__u32 sel)
-{
+{    
     return (&close_flow[sel]);
 }
 
@@ -1981,7 +2057,7 @@ __s32 __disp_lcd_bright_get_adjust_value(__u32 sel, __u32 bright)
     if(gpanel_info[sel].lcd_bright_curve_en)
     {
         bright = (bright > 255)? 255:bright;
-
+    
         return gpanel_info[sel].lcd_extend_para.lcd_bright_curve_tbl[bright];
     }
 
@@ -2005,9 +2081,9 @@ __s32 bsp_disp_lcd_set_bright_curve_en(__u32 sel, __u32 en)
 //pol==0:  0,       2,      3,....  15,   16
 //pol==1: 16,    14,    13, ...   1,   0
 __s32 BSP_disp_lcd_set_bright(__u32 sel, __u32  bright, __u32 from_iep)
-{
+{	    
     __u32 duty_ns;
-
+    
     bright = (bright > 255)? 255:bright;
 
     if(!from_iep)
@@ -2045,41 +2121,41 @@ __s32 BSP_disp_lcd_get_bright(__u32 sel)
 }
 
 __s32 BSP_disp_set_gamma_table(__u32 sel, __u32 *gamtbl_addr,__u32 gamtbl_size)
-{
+{       
     if((gamtbl_addr == NULL) || (gamtbl_size>1024))
     {
         DE_WRN("para invalid in BSP_disp_set_gamma_table\n");
         return DIS_FAIL;
     }
-
+    
     if(BSP_disp_lcd_used(sel))
     {
         tcon_gamma(sel,1,gamtbl_addr);
         memcpy(gpanel_info[sel].lcd_extend_para.lcd_gamma_tbl, gamtbl_addr, gamtbl_size);
     }
-
+    
     return DIS_SUCCESS;
 }
 
 __s32 BSP_disp_gamma_correction_enable(__u32 sel)
-{
+{    
 //	TCON1_set_gamma_Enable(sel,TRUE);
     if(BSP_disp_lcd_used(sel))
     {
         gpanel_info[sel].lcd_gamma_en = TRUE;
     }
-
+        
 	return DIS_SUCCESS;
 }
 
 __s32 BSP_disp_gamma_correction_disable(__u32 sel)
-{
+{    
 	if(BSP_disp_lcd_used(sel))
     {
         tcon_gamma(sel, 0, 0);
         gpanel_info[sel].lcd_gamma_en = FALSE;
     }
-
+    
 	return DIS_SUCCESS;
 }
 
@@ -2106,7 +2182,7 @@ __s32 BSP_disp_lcd_set_src(__u32 sel, __disp_lcdc_src_t src)
         case DISP_LCDC_SRC_WHITE:
             tcon0_src_select(sel, LCD_SRC_WHITE);
             break;
-
+            
         case DISP_LCDC_SRC_BLACK:
             tcon0_src_select(sel, LCD_SRC_BLACK);
             break;
@@ -2117,6 +2193,12 @@ __s32 BSP_disp_lcd_set_src(__u32 sel, __disp_lcdc_src_t src)
     }
     return DIS_SUCCESS;
 }
+
+__s32 BSP_disp_lcd_get_src(__u32 sel)
+{
+    return tcon0_src_get(sel);
+}
+
 
 __s32 BSP_disp_lcd_user_defined_func(__u32 sel, __u32 para1, __u32 para2, __u32 para3)
 {
@@ -2140,9 +2222,9 @@ void LCD_set_panel_funs(__lcd_panel_fun_t * lcd0_cfg, __lcd_panel_fun_t * lcd1_c
 }
 
 __s32 BSP_disp_get_timming(__u32 sel, __disp_tcon_timing_t * tt)
-{
+{    
     memset(tt, 0, sizeof(__disp_tcon_timing_t));
-
+    
     if(gdisp.screen[sel].status & LCD_ON)
     {
         tcon_get_timing(sel, 0, tt);
@@ -2152,26 +2234,26 @@ __s32 BSP_disp_get_timming(__u32 sel, __disp_tcon_timing_t * tt)
             tt->hor_pixels = gpanel_info[sel].lcd_x;
             tt->ver_pixels = gpanel_info[sel].lcd_y;
             tt->hor_total_time= gpanel_info[sel].lcd_ht;
-            tt->hor_sync_time= gpanel_info[sel].lcd_hspw;
-            tt->hor_back_porch= gpanel_info[sel].lcd_hbp-gpanel_info[sel].lcd_hspw;
-            tt->hor_front_porch= gpanel_info[sel].lcd_ht-gpanel_info[sel].lcd_hbp - gpanel_info[sel].lcd_x;
+            tt->hor_sync_time= gpanel_info[sel].lcd_hspw;  
+            tt->hor_back_porch= gpanel_info[sel].lcd_hbp-gpanel_info[sel].lcd_hspw; 
+            tt->hor_front_porch= gpanel_info[sel].lcd_ht-gpanel_info[sel].lcd_hbp - gpanel_info[sel].lcd_x;           
             tt->ver_total_time= gpanel_info[sel].lcd_vt;
-            tt->ver_sync_time= gpanel_info[sel].lcd_vspw;
-            tt->ver_back_porch= gpanel_info[sel].lcd_vbp-gpanel_info[sel].lcd_vspw;
-            tt->ver_front_porch= gpanel_info[sel].lcd_vt-gpanel_info[sel].lcd_vbp -gpanel_info[sel].lcd_y;
+            tt->ver_sync_time= gpanel_info[sel].lcd_vspw;  
+            tt->ver_back_porch= gpanel_info[sel].lcd_vbp-gpanel_info[sel].lcd_vspw; 
+            tt->ver_front_porch= gpanel_info[sel].lcd_vt-gpanel_info[sel].lcd_vbp -gpanel_info[sel].lcd_y;          
         }
     }
     else if((gdisp.screen[sel].status & TV_ON )|| (gdisp.screen[sel].status & HDMI_ON))
     {
         __disp_tv_mode_t mode = gdisp.screen[sel].tv_mode;;
-
+        
         tcon_get_timing(sel, 1, tt);
         tt->pixel_clk = (clk_tab.tv_clk_tab[mode].tve_clk / clk_tab.tv_clk_tab[mode].pre_scale) / 1000;
     }
     else if(gdisp.screen[sel].status & VGA_ON )
     {
         __disp_tv_mode_t mode = gdisp.screen[sel].vga_mode;
-
+        
         tcon_get_timing(sel, 1, tt);
         tt->pixel_clk = (clk_tab.tv_clk_tab[mode].tve_clk / clk_tab.vga_clk_tab[mode].pre_scale) / 1000;
     }
@@ -2180,14 +2262,14 @@ __s32 BSP_disp_get_timming(__u32 sel, __disp_tcon_timing_t * tt)
         DE_INF("get timming fail because device is not output !\n");
         return -1;
     }
-
+    
     return 0;
 }
 /*
 __u32 BSP_disp_get_cur_line(__u32 sel)
 {
     __u32 line = 0;
-
+    
     if(gdisp.screen[sel].status & LCD_ON)
     {
         line = LCDC_get_cur_line(sel, 0);
@@ -2208,7 +2290,7 @@ __s32 BSP_disp_close_lcd_backlight(__u32 sel)
     char primary_key[20];
 
     sprintf(primary_key, "lcd%d_para", sel);
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key,"lcd_bl_en", (int *)gpio_info, sizeof(disp_gpio_set_t)/sizeof(int));
     if(ret == 0)
     {
@@ -2236,7 +2318,7 @@ __s32 BSP_disp_open_lcd_backlight(__u32 sel)
     char primary_key[20];
 
     sprintf(primary_key, "lcd%d_para", sel);
-
+    
     ret = OSAL_Script_FetchParser_Data(primary_key,"lcd_bl_en", (int *)gpio_info, sizeof(disp_gpio_set_t)/sizeof(int));
     if(ret == 0)
     {
@@ -2301,12 +2383,50 @@ __s32 BSP_disp_restore_lcdc_reg(__u32 sel)
     {
         __pwm_info_t pwm_info;
 
-        pwm_get_para(gdisp.screen[sel].lcd_cfg.lcd_pwm_ch, &pwm_info);
+        if(gdisp.screen[sel].lcd_cfg.lcd_pwm_used)
+        {
+            pwm_get_para(gdisp.screen[sel].lcd_cfg.lcd_pwm_ch, &pwm_info);
 
-        pwm_info.enable = 0;
-        pwm_set_para(gdisp.screen[sel].lcd_cfg.lcd_pwm_ch, &pwm_info);
+            pwm_info.enable = 0;
+            pwm_set_para(gdisp.screen[sel].lcd_cfg.lcd_pwm_ch, &pwm_info);
+        }
     }
 
+    return 0;
+}
+//fps: 1~75
+__s32 BSP_disp_lcd_set_fps(__u32 sel, __u32 fps)
+{
+    if(BSP_disp_lcd_used(sel))
+    {
+        fps = (fps>75)? 75:fps;
+        fps = (fps == 0)? 60:fps;
+        gdisp.screen[sel].lcd_fps_cfg = fps;
+        gdisp.screen[sel].lcd_fps_cfg_request = 1;
+    }
+
+    return 0;
+}
+
+__s32 disp_lcd_set_fps(__u32 sel)
+{
+    __u32 lcd_dclk_freq_cfg;
+
+    if((BSP_disp_get_output_type(sel) == DISP_OUTPUT_TYPE_LCD) && (gdisp.screen[sel].lcd_fps_cfg_request == 1))
+    {
+        lcd_dclk_freq_cfg = gdisp.screen[sel].lcd_fps_cfg * gpanel_info[sel].lcd_ht * gpanel_info[sel].lcd_vt / 1000000;
+
+        if(lcd_dclk_freq_cfg != gpanel_info[sel].lcd_dclk_freq)
+        {
+            gpanel_info[sel].lcd_dclk_freq = (lcd_dclk_freq_cfg>gpanel_info[sel].lcd_dclk_freq)? (gpanel_info[sel].lcd_dclk_freq+1):(gpanel_info[sel].lcd_dclk_freq-1);
+            if(gpanel_info[sel].lcd_dclk_freq < 18)
+            {
+                DE_WRN("__disp_lcd_set_fps, dclk freq(%d Mhz) is too small\n", gpanel_info[sel].lcd_dclk_freq);
+                gpanel_info[sel].lcd_dclk_freq = 18;
+            }
+            disp_clk_cfg(sel, DISP_OUTPUT_TYPE_LCD, DIS_NULL);
+        }
+    }
     return 0;
 }
 
@@ -2337,5 +2457,9 @@ EXPORT_SYMBOL(pwm_get_para);
 EXPORT_SYMBOL(pwm_set_duty_ns);
 EXPORT_SYMBOL(pwm_enable);
 EXPORT_SYMBOL(lcd_get_panel_para);
+EXPORT_SYMBOL(LCD_POWER_ELDO3_EN);
+EXPORT_SYMBOL(LCD_POWER_DLDO1_EN);
+
 
 #endif
+

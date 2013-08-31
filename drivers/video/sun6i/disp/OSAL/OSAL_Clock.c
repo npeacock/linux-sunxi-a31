@@ -8,9 +8,9 @@
 * File    : OSAL_Clock.c
 * By      : Sam.Wu
 * Version : V1.00
-* Date    : 2011/3/25 20:25
-* Description :
-* Update   :  date      author      version     notes
+* Date    : 2011/3/25 20:25 
+* Description :  
+* Update   :  date      author      version     notes    
 ********************************************************************************
 */
 #include "OSAL.h"
@@ -50,7 +50,7 @@ __disp_clk_t disp_clk_tbl[] =
     disp_clk_inf(MOD_CLK_IEPDEU0,     CLK_MOD_IEPDEU0   ),
     disp_clk_inf(MOD_CLK_IEPDEU1,     CLK_MOD_IEPDEU1   ),
     disp_clk_inf(MOD_CLK_LVDS,        CLK_MOD_LVDS      ),
-
+    
     disp_clk_inf(AHB_CLK_MIPIDSI,     CLK_AHB_MIPIDSI   ),
     disp_clk_inf(AHB_CLK_LCD0,        CLK_AHB_LCD0      ),
     disp_clk_inf(AHB_CLK_LCD1,        CLK_AHB_LCD1      ),
@@ -63,7 +63,7 @@ __disp_clk_t disp_clk_tbl[] =
     disp_clk_inf(AHB_CLK_DEU1,        CLK_AHB_DEU1      ),
     disp_clk_inf(AHB_CLK_DRC0,        CLK_AHB_DRC0      ),
     disp_clk_inf(AHB_CLK_DRC1,        CLK_AHB_DRC1      ),
-
+    
     disp_clk_inf(DRAM_CLK_DRC0,       CLK_DRAM_DRC0     ),
     disp_clk_inf(DRAM_CLK_DRC1,       CLK_DRAM_DRC1     ),
     disp_clk_inf(DRAM_CLK_DEU0,       CLK_DRAM_DEU0     ),
@@ -107,9 +107,9 @@ __s32 OSAL_CCMU_SetSrcFreq( __u32 nSclkNo, __u32 nFreq )
         return -1;
     }
     __inf("OSAL_CCMU_SetSrcFreq,  <%s,%d>\n", clk_name, nFreq);
-
+    
     hSysClk = clk_get(NULL, clk_name);
-
+    
     if(NULL == hSysClk || IS_ERR(hSysClk)){
         __wrn("Fail to get handle for system clock [%d].\n", nSclkNo);
         return -1;
@@ -145,9 +145,9 @@ __u32 OSAL_CCMU_GetSrcFreq( __u32 nSclkNo )
         return -1;
     }
     __inf("OSAL_CCMU_GetSrcFreq,  clk_name[%d]=%s\n", nSclkNo,clk_name);
-
+    
     hSysClk = clk_get(NULL, clk_name);
-
+    
     if(NULL == hSysClk || IS_ERR(hSysClk)){
         __wrn("Fail to get handle for system clock [%d].\n", nSclkNo);
         return -1;
@@ -169,7 +169,7 @@ __hdle OSAL_CCMU_OpenMclk( __s32 nMclkNo )
         __wrn("Fail to get clk name from clk id [%d].\n", nMclkNo);
         return -1;
     }
-
+    
     hModClk = clk_get(NULL, clk_name);
 
     if(NULL == hModClk || IS_ERR(hModClk))
@@ -179,7 +179,7 @@ __hdle OSAL_CCMU_OpenMclk( __s32 nMclkNo )
     }
 
     __inf("OSAL_CCMU_OpenMclk,  clk_name[%d]=%s, hdl=0x%x\n", nMclkNo,clk_name, (unsigned int)hModClk);
-
+    
     return (__hdle)hModClk;
 }
 
@@ -210,25 +210,25 @@ __s32 OSAL_CCMU_SetMclkSrc( __hdle hMclk, __u32 nSclkNo )
         __wrn("NULL hdle\n");
         return -1;
     }
-
+    
     if(osal_ccmu_get_clk_name(nSclkNo, clk_name) != 0)
     {
         __wrn("Fail to get clk name from clk id [%d].\n", nSclkNo);
         return -1;
     }
 
-
+    
     __inf("OSAL_CCMU_SetMclkSrc, hMclk= hdl=0x%x, %s\n", (int)hModClk, clk_name);
-
+    
     __inf("OSAL_CCMU_SetMclkSrc,  clk_name[%d]=%s\n", nSclkNo,clk_name);
-
+    
     hSysClk = clk_get(NULL, clk_name);
 
     if((NULL == hSysClk) || (IS_ERR(hSysClk))){
         __wrn("Fail to get handle for system clock [%d].\n", nSclkNo);
         return -1;
     }
-
+    
     if(clk_get_parent(hModClk) == hSysClk){
         __inf("Parent is alreay %d, not need to set.\n", nSclkNo);
         clk_put(hSysClk);
@@ -240,7 +240,7 @@ __s32 OSAL_CCMU_SetMclkSrc( __hdle hMclk, __u32 nSclkNo )
         clk_put(hSysClk);
         return -1;
     }
-
+    
     clk_put(hSysClk);
 
     return retCode;
@@ -257,9 +257,9 @@ __s32 OSAL_CCMU_GetMclkSrc( __hdle hMclk )
     for (; sysClkNo <  TOTAL_SYS_CLK; sysClkNo++)
     {
         struct clk* tmpSysClk = clk_get(NULL, _sysClkName[sysClkNo]);
-
+        
         if(tmpSysClk == NULL)
-		continue;
+        	continue;
 
         if(hParentClk == tmpSysClk){
             clk_put(tmpSysClk);
@@ -291,7 +291,7 @@ __s32 OSAL_CCMU_SetMclkDiv( __hdle hMclk, __s32 nDiv )
     __inf("OSAL_CCMU_SetMclkDiv<0x%0x,%d>\n",(unsigned int)hModClk, nDiv);
 
     if(nDiv == 0){
-	return -1;
+    	return -1;
     }
 
     hParentClk  = clk_get_parent(hModClk);
@@ -319,7 +319,7 @@ __u32 OSAL_CCMU_GetMclkDiv( __hdle hMclk )
         __wrn("NULL hdle\n");
         return -1;
     }
-
+    
     __inf("OSAL_CCMU_GetMclkDiv of clk 0x%0x\n",(unsigned int)hModClk);
 
     hParentClk  = clk_get_parent(hModClk);
@@ -331,9 +331,9 @@ __u32 OSAL_CCMU_GetMclkDiv( __hdle hMclk )
 
     srcRate = clk_get_rate(hParentClk);
     mod_freq = clk_get_rate(hModClk);
-
+    
     if(mod_freq == 0){
-	return 0;
+    	return 0;	
     }
 
     return srcRate/mod_freq;
@@ -350,7 +350,7 @@ __s32 OSAL_CCMU_MclkOnOff( __hdle hMclk, __s32 bOnOff )
         __wrn("NULL hdle\n");
         return -1;
     }
-
+    
     __inf("OSAL_CCMU_MclkOnOff<0x%0x,%d>\n",(unsigned int)hModClk,bOnOff);
 
     if(bOnOff)
@@ -380,7 +380,7 @@ __s32 OSAL_CCMU_MclkReset(__hdle hMclk, __s32 bReset)
         __wrn("NULL hdle\n");
         return -1;
     }
-
+    
     __inf("OSAL_CCMU_MclkReset<0x%x,%d>\n",(unsigned int)hModClk,bReset);
 
     return clk_reset(hModClk, bReset);
@@ -440,3 +440,4 @@ __s32 OSAL_CCMU_MclkReset(__hdle hMclk, __s32 bReset)
     return 0;
 }
 #endif
+

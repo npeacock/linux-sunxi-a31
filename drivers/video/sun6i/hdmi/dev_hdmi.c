@@ -9,7 +9,7 @@ static struct class *hdmi_class;
 hdmi_info_t ghdmi;
 
 
-static struct resource hdmi_resource[1] =
+static struct resource hdmi_resource[1] = 
 {
 	[0] = {
 		.start = 0x01c16000,
@@ -18,7 +18,7 @@ static struct resource hdmi_resource[1] =
 	},
 };
 
-struct platform_device hdmi_device =
+struct platform_device hdmi_device = 
 {
 	.name           = "hdmi",
 	.id		        = -1,
@@ -59,6 +59,39 @@ static ssize_t hdmi_debug_store(struct device *dev,
 static DEVICE_ATTR(debug, S_IRUGO|S_IWUSR|S_IWGRP,
 		hdmi_debug_show, hdmi_debug_store);
 
+static ssize_t hdmi_rgb_only_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf, "rgb_only=%s\n", rgb_only?"on" : "off");
+}
+
+static ssize_t hdmi_rgb_only_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	if (count < 1)
+        return -EINVAL;
+
+    if (strnicmp(buf, "on", 2) == 0 || strnicmp(buf, "1", 1) == 0)
+    {
+        rgb_only = 1;
+	}
+    else if (strnicmp(buf, "off", 3) == 0 || strnicmp(buf, "0", 1) == 0)
+	{
+        rgb_only = 0;
+    }
+    else
+    {
+        return -EINVAL;
+    }
+
+	return count;
+}
+
+static DEVICE_ATTR(rgb_only, S_IRUGO|S_IWUSR|S_IWGRP,
+		hdmi_rgb_only_show, hdmi_rgb_only_store);
+
+
 __s32 hdmi_hpd_state(__u32 state);
 static ssize_t hdmi_state_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
@@ -92,7 +125,7 @@ static DEVICE_ATTR(state, S_IRUGO|S_IWUSR|S_IWGRP,
 static int __init hdmi_probe(struct platform_device *pdev)
 {
 	pr_info("[HDMI]==hdmi_probe call==\n");
-
+		
     memset(&ghdmi, 0, sizeof(hdmi_info_t));
 
 	ghdmi.base_hdmi = 0xf1c16000;
@@ -102,7 +135,7 @@ static int __init hdmi_probe(struct platform_device *pdev)
     Fb_Init(1);
 
     pr_info("[HDMI]==hdmi_probe finish==\n");
-
+    
 	return 0;
 }
 
@@ -125,13 +158,13 @@ int hdmi_resume(struct platform_device *pdev)
 {
     return 0;
 }
-static struct platform_driver hdmi_driver =
+static struct platform_driver hdmi_driver = 
 {
 	.probe		= hdmi_probe,
 	.remove		= hdmi_remove,
 	.suspend    = hdmi_suspend,
 	.resume    = hdmi_resume,
-	.driver		=
+	.driver		= 
 	{
 		.name	= "hdmi",
 		.owner	= THIS_MODULE,
@@ -182,6 +215,7 @@ static const struct file_operations hdmi_fops = {
 
 static struct attribute *hdmi_attributes[] = {
     &dev_attr_debug.attr,
+    &dev_attr_rgb_only.attr,
     &dev_attr_state.attr,
     NULL
 };
@@ -194,7 +228,7 @@ static struct attribute_group hdmi_attribute_group = {
 int __init hdmi_module_init(void)
 {
 	int ret = 0, err;
-
+	
 	pr_info("[HDMI]==hdmi_module_init==\n");
 
 	 alloc_chrdev_region(&devid, 0, 1, "hdmi");
@@ -219,18 +253,18 @@ int __init hdmi_module_init(void)
 
     ret = sysfs_create_group(&ghdmi.dev->kobj,
                              &hdmi_attribute_group);
-
+    
 	ret |= hdmi_i2c_add_driver();
 
 	ret = platform_device_register(&hdmi_device);
-
+	
 	if (ret == 0)
-	{
+	{	
 		ret = platform_driver_register(&hdmi_driver);
 	}
 
     pr_info("[HDMI]==hdmi_module_init finish==\n");
-
+	
 	return ret;
 }
 
@@ -256,3 +290,4 @@ MODULE_AUTHOR("danling_xiao");
 MODULE_DESCRIPTION("hdmi driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:hdmi");
+

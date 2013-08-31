@@ -4,7 +4,7 @@
 //  File name	:	iep_cmu.c
 //
 //  Description	:	Color Management Unit base functions implement for A31
-//
+//     
 //  History		:
 //					2012/06/01	yuputang	v1.0	Initial version
 //*****************************************************************************
@@ -15,14 +15,14 @@
 static __u32 cmu_mem[2];
 __u32 cmu_reg_base[2] = {0,0};//CMU_REGS_BASE
 
-__u32 hsv_range_par[21] =
+__u32 hsv_range_par[21] = 
 {
 	0x01550eaa,0x06aa0400,0x0c000955,0x095506aa,0x0eaa0c00,0x04000155,0x02380000,//Hmax,Hmin
 	0x01000000,0x01000000,0x01000000,0x01000000,0x01000000,0x01000000,0x01000000,//Vmax,Vmin
 	0x0fff0001,0x0fff0000,0x0fff0000,0x0fff0000,0x0fff0000,0x0fff0000,0x0ae101a0 //Smax,Smin
 };
 
-__u32 hsv_adjust_vivid_par[16] =
+__u32 hsv_adjust_vivid_par[16] = 
 {
 	0x00000000,0x068a0000,//Hgain_G,Sgain_G,Vgain_G
 	0xff000000,0xff000000,0xff000000,0xff000000,0xff000000,0xff000000,0xff000000,//Hgain_L
@@ -30,7 +30,7 @@ __u32 hsv_adjust_vivid_par[16] =
 };
 
 
-__u32 hsv_adjust_flesh_par[16] =
+__u32 hsv_adjust_flesh_par[16] = 
 {
 	0x00000000,0x00000080,//Hgain_G,Sgain_G,Vgain_G
 	0xff000000,0xff000000,0xff000000,0xff000000,0xff000000,0xff000000,0xff000000,//Hgain_L
@@ -255,7 +255,7 @@ __s32 IEP_CMU_Operation_In_Vblanking(__u32 sel)
 {
 	__u32 reg_val;
 
-	//åˆå§‹åŒ–æˆæ‰‹åŠ¨æ¨¡å¼
+	//³õÊ¼»¯³ÉÊÖ¶¯Ä£Ê½
 	CMU_WUINT32(sel,IMGEHC_CMU_REGBUFFCTL_REG_OFF,0x2);
 	reg_val = CMU_RUINT32(sel,IMGEHC_CMU_REGBUFFCTL_REG_OFF);
 	CMU_WUINT32(sel,IMGEHC_CMU_REGBUFFCTL_REG_OFF,reg_val|0x1);
@@ -264,7 +264,7 @@ __s32 IEP_CMU_Operation_In_Vblanking(__u32 sel)
 	return 0;
 }
 
-//å¦‚æœæ²¡è®¾ç½®å‚æ•°å°±enable,ç¡®ä¿å¯ä½¿ç”¨ä¸€å¥—é»˜è®¤å‚æ•°
+//Èç¹ûÃ»ÉèÖÃ²ÎÊı¾Íenable,È·±£¿ÉÊ¹ÓÃÒ»Ì×Ä¬ÈÏ²ÎÊı
 __s32 IEP_CMU_Enable(__u32 sel, __u32 enable)
 {
 	__u32 reg_val;
@@ -303,7 +303,7 @@ __s32 iep_cmu_suspend(__u32 sel)
     {
         for(i=0; i<0x100; i+=4)
         {
-		//save register
+        	//save register
             reg_val = CMU_RUINT32(sel,IMGEHC_CMU_CTL_REG_OFF +i);
             put_wvalue(cmu_mem[sel]+i, reg_val);
         }
@@ -321,18 +321,18 @@ __s32 iep_cmu_resume(__u32 sel)
     {
         for(i=4; i<0x100; i+=4)
         {
-		//restore register
+        	//restore register
             reg_val = get_wvalue(cmu_mem[sel] +i);
             CMU_WUINT32(sel,IMGEHC_CMU_CTL_REG_OFF +i,reg_val);
         }
         reg_val = get_wvalue(cmu_mem[sel]);
         CMU_WUINT32(sel,IMGEHC_CMU_CTL_REG_OFF,reg_val);
 #if defined(__LINUX_OSAL__)
-	kfree((void*)cmu_mem[sel]);
+    	kfree((void*)cmu_mem[sel]);
         cmu_mem[sel] = 0;
 #endif
     }
-
+	
 	return 0;
 }
 
@@ -342,3 +342,4 @@ __s32 IEP_CMU_Late_Resume(__u32 sel)
 
 	return 0;
 }
+

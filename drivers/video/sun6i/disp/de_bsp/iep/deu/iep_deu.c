@@ -35,7 +35,7 @@ __s32 deu_clk_init(__u32 sel)
 	    h_deudramclk0 = OSAL_CCMU_OpenMclk(DRAM_CLK_DEU0);
 	    h_deumclk0 = OSAL_CCMU_OpenMclk(MOD_CLK_IEPDEU0);
 
-
+		
 		OSAL_CCMU_SetMclkSrc(h_deumclk0, SYS_CLK_DE_PLL);	//FIX CONNECT TO  PLL10
 		OSAL_CCMU_SetMclkDiv(h_deumclk0, 1);
         pll_freq = OSAL_CCMU_GetSrcFreq(SYS_CLK_DE_PLL);
@@ -45,7 +45,7 @@ __s32 deu_clk_init(__u32 sel)
             mclk_div ++;
         }
 		OSAL_CCMU_SetMclkDiv(h_deumclk0, mclk_div);
-
+		
         OSAL_CCMU_MclkOnOff(h_deuahbclk0, CLK_ON);
         OSAL_CCMU_MclkOnOff(h_deuahbclk0, CLK_OFF);
         OSAL_CCMU_MclkOnOff(h_deudramclk0, CLK_ON);
@@ -69,7 +69,7 @@ __s32 deu_clk_init(__u32 sel)
             mclk_div ++;
         }
 		OSAL_CCMU_SetMclkDiv(h_deumclk1, mclk_div);
-
+		
         OSAL_CCMU_MclkOnOff(h_deuahbclk1, CLK_ON);
         OSAL_CCMU_MclkOnOff(h_deuahbclk1, CLK_OFF);
         OSAL_CCMU_MclkOnOff(h_deudramclk1, CLK_ON);
@@ -91,12 +91,12 @@ __s32 deu_clk_exit(__u32 sel)
 		{
 			OSAL_CCMU_MclkOnOff(h_deudramclk0, CLK_OFF);
 		}
-
+		
 		if(g_deu_clk_status & CLK_DEU0_MOD_ON)
 		{
 			OSAL_CCMU_MclkOnOff(h_deumclk0, CLK_OFF);
 		}
-
+		
 		if(g_deu_clk_status & CLK_DEU0_AHB_ON)
 		{
 			OSAL_CCMU_MclkOnOff(h_deuahbclk0, CLK_OFF);
@@ -104,7 +104,7 @@ __s32 deu_clk_exit(__u32 sel)
 
 		OSAL_CCMU_CloseMclk(h_deuahbclk0);
 	    OSAL_CCMU_CloseMclk(h_deudramclk0);
-	    OSAL_CCMU_CloseMclk(h_deumclk0);
+	    OSAL_CCMU_CloseMclk(h_deumclk0);					
 
 		g_deu_clk_status &= (CLK_DEU0_AHB_OFF & CLK_DEU0_MOD_OFF & CLK_DEU0_DRAM_OFF);
 	}
@@ -116,12 +116,12 @@ __s32 deu_clk_exit(__u32 sel)
 		{
 			OSAL_CCMU_MclkOnOff(h_deudramclk1, CLK_OFF);
 		}
-
+		
 		if(g_deu_clk_status & CLK_DEU1_MOD_ON)
 		{
 			OSAL_CCMU_MclkOnOff(h_deumclk1, CLK_OFF);
 		}
-
+		
 		if(g_deu_clk_status & CLK_DEU1_AHB_ON)
 		{
 			OSAL_CCMU_MclkOnOff(h_deuahbclk1, CLK_OFF);
@@ -129,7 +129,7 @@ __s32 deu_clk_exit(__u32 sel)
 
 		OSAL_CCMU_CloseMclk(h_deuahbclk1);
 	    OSAL_CCMU_CloseMclk(h_deudramclk1);
-	    OSAL_CCMU_CloseMclk(h_deumclk1);
+	    OSAL_CCMU_CloseMclk(h_deumclk1);					
 
 		g_deu_clk_status &= (CLK_DEU1_AHB_OFF & CLK_DEU1_MOD_OFF & CLK_DEU1_DRAM_OFF);
 	}
@@ -146,9 +146,9 @@ __s32 deu_clk_open(__u32 sel, __u32 type)
         {
             //OSAL_CCMU_MclkReset(h_deumclk0, RST_INVAILD);
             OSAL_CCMU_MclkOnOff(h_deuahbclk0, CLK_ON);
-		OSAL_CCMU_MclkOnOff(h_deumclk0, CLK_ON);
+    		OSAL_CCMU_MclkOnOff(h_deumclk0, CLK_ON);
 
-		g_deu_clk_status  |= (CLK_DEU0_AHB_ON | CLK_DEU0_MOD_ON);
+    		g_deu_clk_status  |= (CLK_DEU0_AHB_ON | CLK_DEU0_MOD_ON);
         }
         else
         {
@@ -162,9 +162,9 @@ __s32 deu_clk_open(__u32 sel, __u32 type)
         {
             //OSAL_CCMU_MclkReset(h_deumclk1, RST_INVAILD);
             OSAL_CCMU_MclkOnOff(h_deuahbclk1, CLK_ON);
-		OSAL_CCMU_MclkOnOff(h_deumclk1, CLK_ON);
+    		OSAL_CCMU_MclkOnOff(h_deumclk1, CLK_ON);
 
-		g_deu_clk_status  |= (CLK_DEU1_AHB_ON | CLK_DEU1_MOD_ON);
+    		g_deu_clk_status  |= (CLK_DEU1_AHB_ON | CLK_DEU1_MOD_ON);
         }
         else
         {
@@ -209,12 +209,12 @@ __s32 deu_clk_close(__u32 sel, __u32 type)
             g_deu_clk_status &= (CLK_DEU1_DRAM_OFF);
         }
 	}
-	return DIS_SUCCESS;
+	return DIS_SUCCESS;	
 }
 
 #define ____SEPARATOR_DEU_ALG____
 __s32 DEU_ALG(__u32 sel)
-{
+{	
 	static __disp_frame_info_t frameinfo;
 	__u32 lpmode, dctimode;
 	__u32 scalefact, filtertype = 0;
@@ -225,17 +225,21 @@ __s32 DEU_ALG(__u32 sel)
         if(count == 300)
         {
             count = 0;
+            if(gdeu[sel].frameinfo.in_size.width == 0)
+            {
+                DE_WRN("DEU_ALG, input width is ZERO\n");
+            }
             //pr_warn("<<deu-I>>\n");
             //pr_warn("frameinfo.disp_size: <%dx%d>\n", gdeu[sel].frameinfo.disp_size.width,  gdeu[sel].frameinfo.disp_size.height);
         }
     }
-
+	
     if((frameinfo.disp_size.width != gdeu[sel].frameinfo.disp_size.width) || (frameinfo.disp_size.height != gdeu[sel].frameinfo.disp_size.height))
     {
         //pr_warn("frameinfo.disp_size: <%dx%d>\n", gdeu[sel].frameinfo.disp_size.width,  gdeu[sel].frameinfo.disp_size.height);
     }
     memcpy(&frameinfo, &gdeu[sel].frameinfo, sizeof(__disp_frame_info_t));
-
+	
 	if(frameinfo.b_trd_out == 1 && frameinfo.trd_out_mode == DISP_3D_OUT_MODE_LIRGB)
 	{
 		deuwidth = frameinfo.disp_size.width*2;
@@ -262,7 +266,7 @@ __s32 DEU_ALG(__u32 sel)
 		lpmode = 0;	//disable
 		dctimode = 0;	//disable
 	}
-	else if((( frameinfo.trd_out_mode == DISP_3D_OUT_MODE_FA ) &&
+	else if((( frameinfo.trd_out_mode == DISP_3D_OUT_MODE_FA ) && 
 			frameinfo.b_trd_out == 1)|| frameinfo.b_interlace_out == 1 || deuwidth > 2048)
 	{
 		lpmode = 1;	//1d lp
@@ -277,7 +281,7 @@ __s32 DEU_ALG(__u32 sel)
 	if(frameinfo.in_size.width == 0)
     {
         frameinfo.in_size.width = 2;
-        DE_WRN("DEU_ALG, input width is ZERO\n");
+        //DE_WRN("DEU_ALG, input width is ZERO\n");
     }
     scalefact = (frameinfo.out_size.width<<2)/frameinfo.in_size.width;  //scale factor X4
 
@@ -308,13 +312,13 @@ __s32 DEU_ALG(__u32 sel)
 	DEU_EBIOS_LP_Set_Mode(sel, lpmode-1);
 	DEU_EBIOS_DCTI_Enable(sel, ((dctimode==0)||(gdeu[sel].chromashplvl==0))?0:1);
 
-
+	
     DEU_EBIOS_LP_Set_Para(sel, gdeu[sel].lumashplvl, filtertype, plptab);
     DEU_EBIOS_DCTI_Set_Para(sel, gdeu[sel].chromashplvl);
 
 
     return DIS_SUCCESS;
-
+    
 }
 
 #define ____SEPARATOR_DEU_BSP____
@@ -337,29 +341,29 @@ __s32 IEP_Deu_Enable(__u32 sel, __u32 enable)
 		//virtual to physcal addr
 		strtab_addr = __pa(strtab_addr);
 
-
+		
 
 		DEU_EBIOS_LP_Set_STR_Addr(sel, strtab_addr);
         DEU_EBIOS_LP_STR_Enable(sel, TRUE);
 		DEU_EBIOS_LP_STR_Cfg_Rdy(sel);
-		DEU_EBIOS_Set_Csc_Coeff(sel, gdeu[sel].frameinfo.csc_mode);
+		DEU_EBIOS_Set_Csc_Coeff(sel, gdeu[sel].frameinfo.csc_mode);	
 		DEU_EBIOS_Csc_Enable(sel, 1);
 		g_deu_status[sel] |= DEU_USED;
         g_deu_status[sel] &= DEU_NEED_CLOSED_MASK;
-
+		
 	}
 	else
 	{
 		DEU_EBIOS_Csc_Enable(sel, 0);
 		DEU_EBIOS_Enable(sel, 0);
-
+				
 		g_deu_status[sel] |= DEU_NEED_CLOSED;
 
         if(enable == 2)
         {
             IEP_Deu_Operation_In_Vblanking(sel);
         }
-
+		
 	}
 
     return DIS_SUCCESS;
@@ -383,7 +387,7 @@ __s32 IEP_Deu_Set_White_Level_Extension(__u32 sel, __u32 level)
 {
 	DEU_EBIOS_WLE_Set_Para(sel,level);
 	DEU_EBIOS_WLE_Enable(sel, (level==0)?0:1);
-
+	
 	gdeu[sel].wlelvl = level;
 
 	return DIS_SUCCESS;
@@ -402,39 +406,39 @@ __s32 IEP_Deu_Set_Black_Level_Extension(__u32 sel, __u32 level)
 __s32 IEP_Deu_Set_Ready(__u32 sel)
 {
 	DEU_EBIOS_Cfg_Rdy(sel);
-
+	
 	return DIS_SUCCESS;
 }
 
 __s32 IEP_Deu_Set_Reg_base(__u32 sel, __u32 base)
 {
 	DEU_EBIOS_Set_Reg_Base(sel, base);
-
+	
 	return DIS_SUCCESS;
 
 }
 
 __s32 IEP_Deu_Set_Winodw(__u32 sel, __disp_rect_t *window)
 {
-	__u32 top, bot, left, right;
-
+ 	__u32 top, bot, left, right;
+ 	
 	//convert rectangle to register
 	top = window->y;
 	bot = window->y + window->height - 1;
 	left = window->x;
 	right = window->x + window->width - 1;
-
+			
 	DEU_EBIOS_Set_Win_Para(sel, top, bot, left, right);
 
 	return DIS_SUCCESS;
 }
 
 __s32 IEP_Deu_Output_Select(__u32 sel, __u32 be_ch)
-{
+{	
 	DEU_EBIOS_Set_Output_Chnl(sel, be_ch);
 
 	return DIS_SUCCESS;
-
+	
 }
 
 __s32 IEP_Deu_Init(__u32 sel)
@@ -442,7 +446,7 @@ __s32 IEP_Deu_Init(__u32 sel)
 	int ret;
 	int value = 1;
 	char primary_key[20];
-
+	
 	g_strtab_addr = (__u32 *)kmalloc(512, GFP_KERNEL | __GFP_ZERO);
 	memcpy(g_strtab_addr, deu_str_tab, 512);
 	deu_clk_init(sel);
@@ -452,7 +456,7 @@ __s32 IEP_Deu_Init(__u32 sel)
 	if(ret < 0)
 	{
 		DE_WRN("deu_mode%d not exist.\n", sel);
-		plptab = &deu_lp_tab_s[0][0][0];
+		plptab = &deu_lp_tab_s[0][0][0]; 
 	}
 	else
 	{
@@ -460,23 +464,23 @@ __s32 IEP_Deu_Init(__u32 sel)
 		if(value > 1 || value < 0)
 		{
 			DE_WRN("deu_mode%d invalid.\n",sel);
-			plptab = &deu_lp_tab_s[0][0][0];
+			plptab = &deu_lp_tab_s[0][0][0]; 
 		}
 		else
 		{
 			plptab = (value == 1)? (&deu_lp_tab_l[0][0][0]):(&deu_lp_tab_s[0][0][0]);
 		}
 	}
-
+	
 	return DIS_SUCCESS;
-
+	
 }
 
 __s32 IEP_Deu_Exit(__u32 sel)
 {
 	deu_clk_exit(sel);
     kfree((void*)g_strtab_addr);
-
+	
 	return DIS_SUCCESS;
 
 }
@@ -486,7 +490,7 @@ __s32 IEP_Deu_Operation_In_Vblanking(__u32 sel)
     if(g_deu_status[sel] & DEU_USED)
 	{
 		//function about setting level through frameinfo
-
+		
 		DEU_ALG(sel);
 
 		DEU_EBIOS_Cfg_Rdy(sel);
@@ -513,7 +517,7 @@ __s32 iep_deu_suspend(__u32 sel)//save register
     {
         for(i=0; i<0x60; i+=4)
         {
-		//save register
+        	//save register
             reg_val = sys_get_wvalue(DEU_EBIOS_Get_Reg_Base(sel) +i);
             sys_put_wvalue(deu_reg_bak[sel]+i, reg_val);
         }
@@ -544,7 +548,7 @@ __s32 iep_deu_resume (__u32 sel)//restore register
     }
 
     return 0;
-
+    
 }
 
 
@@ -552,7 +556,7 @@ __s32 IEP_Deu_Late_Resume(__u32 sel);//open clk
 
 __s32 IEP_Deu_Set_frameinfo(__u32 sel, __disp_frame_info_t frameinfo)
 {
-	if((frameinfo.disp_size.width != gdeu[sel].frameinfo.disp_size.width) || (frameinfo.disp_size.height != gdeu[sel].frameinfo.disp_size.height))
+   	if((frameinfo.disp_size.width != gdeu[sel].frameinfo.disp_size.width) || (frameinfo.disp_size.height != gdeu[sel].frameinfo.disp_size.height))
     {
         //pr_warn("IEP_Deu_Set_frameinfo,   frameinfo.disp_size: <%dx%d>\n", gdeu[sel].frameinfo.disp_size.width,  gdeu[sel].frameinfo.disp_size.height);
     }
@@ -560,5 +564,6 @@ __s32 IEP_Deu_Set_frameinfo(__u32 sel, __disp_frame_info_t frameinfo)
     memcpy(&gdeu[sel].frameinfo, &frameinfo, sizeof(__disp_frame_info_t));
 
     return DIS_SUCCESS;
-
+    
 }
+

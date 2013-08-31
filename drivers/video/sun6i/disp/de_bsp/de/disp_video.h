@@ -10,7 +10,7 @@
 
 typedef enum
 {
-    DIT_MODE_WEAVE = 0,
+    DIT_MODE_WEAVE = 0, 
     DIT_MODE_BOB = 1,
     DIT_MODE_RESERVE = 2,
     DIT_MODE_MAF = 3,
@@ -38,7 +38,7 @@ typedef struct frame_para
 	dit_mode_t  dit_mode;
 	__bool  tempdiff_en;
 	__bool  diagintp_en;
-
+	
 }frame_para_t;
 
 

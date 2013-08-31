@@ -14,7 +14,7 @@
 
 #include "../iep.h"
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -28,11 +28,11 @@ typedef union
 		__u32	r2				:3; //bit9~bit11
 		__u32	out_port_sel	:1;	//bit12
 		__u32	r3				:19;//bit13~bit31
-
+		
 	}bits;
 }__imgehc_deu_en_reg_t;	//0x00
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -44,7 +44,7 @@ typedef union
 	}bits;
 }__imgehc_deu_psize_reg_t;//0x04
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -56,7 +56,7 @@ typedef union
 	}bits;
 }__imgehc_deu_pwp0_reg_t;	//0x08
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -68,7 +68,7 @@ typedef union
 	}bits;
 }__imgehc_deu_pwp1_reg_t;	//0x0c
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -91,7 +91,7 @@ typedef union
 	}bits;
 }__imgehc_deu_dcti_reg_t;	//0x10
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -107,7 +107,7 @@ typedef union
 	}bits;
 }__imgehc_deu_lp0_reg_t;	//0x14
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -124,16 +124,16 @@ typedef union
 	}bits;
 }__imgehc_deu_lp1_reg_t;	//0x18
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
 	{
-		__u32	straddr			:32;//bit0~bit31
+		__u32	straddr			:32;//bit0~bit31	
 	}bits;
 }__imgehc_deu_lp_straddr_reg_t;	//0x1c
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -146,7 +146,7 @@ typedef union
 	}bits;
 }__imgehc_deu_wle_reg_t;	//0x28
 
-typedef union
+typedef union   
 {
 	__u32 dwval;
 	struct
@@ -219,7 +219,7 @@ typedef union
 	}bits;
 }__imgehc_deu_cscbcon_reg_t;	//0x5c
 
-typedef struct
+typedef struct 
 {
 	__imgehc_deu_en_reg_t			en;		//0x00
 	__imgehc_deu_psize_reg_t		psize;	//0x04
@@ -231,7 +231,7 @@ typedef struct
 	__imgehc_deu_lp_straddr_reg_t   straddr;//0x1c
 	__u32							r0[2];	//0x20~0x24
 	__imgehc_deu_wle_reg_t			wle;	//0x28
-	__imgehc_deu_ble_reg_t			ble;	//0x2c
+	__imgehc_deu_ble_reg_t			ble;	//0x2c		
 	__imgehc_deu_cscgcoff_reg_t		cscgcoff[3];//0x30~0x38
 	__imgehc_deu_cscgcon_reg_t		cscgcon;	//0x3c
 	__imgehc_deu_cscrcoff_reg_t		cscrcoff[3];//0x40~0x48

@@ -61,7 +61,7 @@ typedef struct
 
 typedef enum
 {
-    TVE_MODE_NTSC = 0,
+    TVE_MODE_NTSC = 0, 
     TVE_MODE_PAL,
     TVE_MODE_480I,
     TVE_MODE_576I,
@@ -85,7 +85,7 @@ typedef enum tag_TVE_DAC
 
 typedef enum tag_TVE_SRC
 {
-    CVBS = 0,
+    CVBS = 0, 
     SVIDEO_Y = 1,
     SVIDEO_C = 2,
     COMPONENT_Y = 4,
@@ -93,7 +93,7 @@ typedef enum tag_TVE_SRC
     COMPONENT_PR = 6,
     VGA_R = 4,
     VGA_G = 5,
-    VGA_B = 6
+    VGA_B = 6  
 }__tve_src_t;
 
 __s32 	hmid_src_sel(__u32 sel);
@@ -115,6 +115,7 @@ __s32   tcon_gamma(__u32 sel, __u32 en,__u32 *gamma_tbl);
 
 __s32 	tcon0_cfg(__u32 sel, __panel_para_t * panel);
 __s32   tcon0_src_select(__u32 sel, __lcd_src_t src);
+__s32 tcon0_src_get(__u32 sel);
 __s32 	tcon0_open(__u32 sel, __panel_para_t * panel);
 __s32 	tcon0_close(__u32 sel);
 __s32   tcon0_set_dclk_div(__u32 sel, __u8 div);
@@ -185,3 +186,4 @@ __s32   TVE_dac_sel(__u32 sel,__u32 dac, __u32 index);
 
 
 #endif
+

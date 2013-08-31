@@ -27,7 +27,7 @@ static ssize_t disp_sel_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -42,7 +42,7 @@ static ssize_t disp_sel_store(struct device *dev,
         printk("%ld\n", val);
         sel = val;
 	}
-
+    
 	return count;
 }
 
@@ -58,7 +58,7 @@ static ssize_t disp_hid_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -73,7 +73,7 @@ static ssize_t disp_hid_store(struct device *dev,
         printk("%ld\n", val);
         hid = IDTOHAND(val);
 	}
-
+    
 	return count;
 }
 static DEVICE_ATTR(sel, S_IRUGO|S_IWUSR|S_IWGRP,
@@ -161,7 +161,7 @@ static ssize_t disp_reg_dump_store(struct device *dev,
     {
         printk("Invalid para!\n");
     }
-
+    
 	return count;
 }
 
@@ -182,7 +182,7 @@ static ssize_t disp_print_cmd_level_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -196,7 +196,7 @@ static ssize_t disp_print_cmd_level_store(struct device *dev,
     {
         disp_print_cmd_level = val;
 	}
-
+    
 	return count;
 }
 
@@ -217,16 +217,16 @@ static ssize_t disp_cmd_print_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 16, &val);
 	if (err) {
 		printk("Invalid size\n");
 		return err;
 	}
 
-
-    disp_cmd_print = val;
-
+   
+    disp_cmd_print = val;    
+    
 	return count;
 }
 
@@ -261,7 +261,7 @@ static ssize_t disp_debug_store(struct device *dev,
     {
         return -EINVAL;
     }
-
+    
 	return count;
 }
 
@@ -283,14 +283,14 @@ static ssize_t disp_layer_para_show(struct device *dev,
     }
     else
     {
-        return sprintf(buf, "=== screen%d layer%d para ====\nmode: %d\naddr=<%x,%x,%x>\nfb.size=<%dx%d>\nfb.fmt=<%d, %d, %d>\ntrd_src=<%d, %d> trd_out=<%d, %d>\npipe:%d\tprio: %d\nalpha: <%d, %d>\tcolor_key_en: %d\nsrc_window:<%d,%d,%d,%d>\nscreen_window:<%d,%d,%d,%d>\npre_multiply=%d\n======= screen%d layer%d para ====\n",
+        return sprintf(buf, "=== screen%d layer%d para ====\nmode: %d\naddr=<%x,%x,%x>\nfb.size=<%dx%d>\nfb.fmt=<%d, %d, %d>\ntrd_src=<%d, %d> trd_out=<%d, %d>\npipe:%d\tprio: %d\nalpha: <%d, %d>\tcolor_key_en: %d\nsrc_window:<%d,%d,%d,%d>\nscreen_window:<%d,%d,%d,%d>\npre_multiply=%d\n======= screen%d layer%d para ====\n", 
         sel, HANDTOID(hid),layer_para.mode, layer_para.fb.addr[0], layer_para.fb.addr[1], layer_para.fb.addr[2],
-        layer_para.fb.size.width, layer_para.fb.size.height, layer_para.fb.mode, layer_para.fb.format,
-        layer_para.fb.seq, layer_para.fb.b_trd_src,  layer_para.fb.trd_mode,
-        layer_para.b_trd_out, layer_para.out_trd_mode, layer_para.pipe,
-        layer_para.prio, layer_para.alpha_en, layer_para.alpha_val,
-        layer_para.ck_enable, layer_para.src_win.x, layer_para.src_win.y,
-        layer_para.src_win.width, layer_para.src_win.height, layer_para.scn_win.x, layer_para.scn_win.y,
+        layer_para.fb.size.width, layer_para.fb.size.height, layer_para.fb.mode, layer_para.fb.format, 
+        layer_para.fb.seq, layer_para.fb.b_trd_src,  layer_para.fb.trd_mode, 
+        layer_para.b_trd_out, layer_para.out_trd_mode, layer_para.pipe, 
+        layer_para.prio, layer_para.alpha_en, layer_para.alpha_val, 
+        layer_para.ck_enable, layer_para.src_win.x, layer_para.src_win.y, 
+        layer_para.src_win.width, layer_para.src_win.height, layer_para.scn_win.x, layer_para.scn_win.y, 
         layer_para.scn_win.width, layer_para.scn_win.height,layer_para.fb.pre_multiply, sel, HANDTOID(hid));
     }
 }
@@ -300,7 +300,7 @@ static ssize_t disp_layer_para_store(struct device *dev,
 				const char *buf, size_t count)
 {
     printk("there no room for anything\n");
-
+        
 	return count;
 }
 
@@ -381,7 +381,7 @@ static ssize_t disp_lcd_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -396,7 +396,7 @@ static ssize_t disp_lcd_store(struct device *dev,
         BSP_disp_hdmi_close(sel);
         DRV_lcd_open(sel);
 	}
-
+    
 	return count;
 }
 
@@ -415,7 +415,7 @@ static ssize_t disp_lcd_bl_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -429,7 +429,7 @@ static ssize_t disp_lcd_bl_store(struct device *dev,
     {
         BSP_disp_lcd_set_bright(sel, val, 0);
 	}
-
+    
 	return count;
 }
 
@@ -448,7 +448,7 @@ static ssize_t disp_lcd_bright_curve_en_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -457,12 +457,46 @@ static ssize_t disp_lcd_bright_curve_en_store(struct device *dev,
 
     val = (val == 0)? 0:1;
     bsp_disp_lcd_set_bright_curve_en(sel, val);
-
+    
 	return count;
 }
 
 static DEVICE_ATTR(lcd_bright_curve_en, S_IRUGO|S_IWUSR|S_IWGRP,
 		disp_lcd_bright_curve_en_show, disp_lcd_bright_curve_en_store);
+
+
+static ssize_t disp_lcd_src_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf, "screen%d lcd src=%d\n", sel, BSP_disp_lcd_get_src(sel));
+}
+
+static ssize_t disp_lcd_src_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	int err;
+    unsigned long val;
+
+	err = strict_strtoul(buf, 10, &val);
+	if (err) {
+		printk("Invalid size\n");
+		return err;
+	}
+
+    if(val > 6)
+    {
+        printk("Invalid value, <=6 is expected!\n");
+    }else
+    {
+        BSP_disp_lcd_set_src(sel, val);
+	}
+
+	return count;
+}
+
+static DEVICE_ATTR(lcd_src, S_IRUGO|S_IWUSR|S_IWGRP,
+		disp_lcd_src_show, disp_lcd_src_store);
 
 
 static ssize_t disp_fps_show(struct device *dev,
@@ -475,8 +509,25 @@ static ssize_t disp_fps_show(struct device *dev,
 static ssize_t disp_fps_store(struct device *dev,
 				struct device_attribute *attr,
 				const char *buf, size_t count)
-{
-	return count;
+{   
+	int err;
+    unsigned long val;
+
+	err = strict_strtoul(buf, 10, &val);
+	if (err) {
+		printk("Invalid size\n");
+		return err;
+	}
+
+    if(val > 75)
+    {
+        printk("Invalid value, <=75 is expected!\n");
+    }else
+    {
+        BSP_disp_lcd_set_fps(sel, val);
+	}
+
+    return count;
 }
 
 static DEVICE_ATTR(fps, S_IRUGO|S_IWUSR|S_IWGRP,
@@ -504,7 +555,7 @@ static ssize_t disp_hdmi_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -522,7 +573,7 @@ static ssize_t disp_hdmi_store(struct device *dev,
             BSP_disp_hdmi_open(sel);
         }
 	}
-
+    
 	return count;
 }
 
@@ -547,6 +598,91 @@ static DEVICE_ATTR(hdmi_hpd, S_IRUGO|S_IWUSR|S_IWGRP,
 		disp_hdmi_hpd_show, disp_hdmi_hpd_store);
 
 
+static ssize_t disp_hdmi_cts_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf, "cts %s\n", BSP_disp_hdmi_get_cts_enable()? "on":"off");
+}
+
+static ssize_t disp_hdmi_cts_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	if (count < 1)
+        return -EINVAL;
+
+    if (strnicmp(buf, "on", 2) == 0 || strnicmp(buf, "1", 1) == 0)
+    {
+        BSP_disp_hdmi_cts_enable(1);
+	}
+    else if (strnicmp(buf, "off", 3) == 0 || strnicmp(buf, "0", 1) == 0)
+	{
+        BSP_disp_hdmi_cts_enable(0);
+    }
+    else
+    {
+        return -EINVAL;
+    }
+
+	return count;
+}
+
+static DEVICE_ATTR(hdmi_cts, S_IRUGO|S_IWUSR|S_IWGRP,
+		disp_hdmi_cts_show, disp_hdmi_cts_store);
+
+
+static ssize_t disp_hdmi_test_mode_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf, "screen%d hdmi_test_mode=%d\n", sel, BSP_disp_hdmi_get_test_mode(sel));
+}
+
+static ssize_t disp_hdmi_test_mode_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	if (count < 1)
+        return -EINVAL;
+
+    if (strnicmp(buf, "720p50hz", 8) == 0)
+    {
+        BSP_disp_hdmi_set_test_mode(sel, DISP_TV_MOD_720P_50HZ);
+	}
+    else if (strnicmp(buf, "720p60hz", 8) == 0)
+    {
+        BSP_disp_hdmi_set_test_mode(sel, DISP_TV_MOD_720P_60HZ);
+	}
+    else if (strnicmp(buf, "1080p50hz", 9) == 0)
+    {
+        BSP_disp_hdmi_set_test_mode(sel, DISP_TV_MOD_1080P_50HZ);
+	}
+    else if (strnicmp(buf, "1080p60hz", 9) == 0)
+    {
+        BSP_disp_hdmi_set_test_mode(sel, DISP_TV_MOD_1080P_60HZ);
+	}
+    else if (strnicmp(buf, "1080p24hz", 9) == 0)
+    {
+        BSP_disp_hdmi_set_test_mode(sel, DISP_TV_MOD_1080P_24HZ);
+	}
+    else if (strnicmp(buf, "576p", 4) == 0)
+    {
+        BSP_disp_hdmi_set_test_mode(sel, DISP_TV_MOD_576P);
+	}
+    else if (strnicmp(buf, "480p", 4) == 0)
+    {
+        BSP_disp_hdmi_set_test_mode(sel, DISP_TV_MOD_480P);
+	}
+    else
+    {
+        return -EINVAL;
+    }
+
+	return count;
+}
+
+static DEVICE_ATTR(hdmi_test_mode, S_IRUGO|S_IWUSR|S_IWGRP,
+		disp_hdmi_test_mode_show, disp_hdmi_test_mode_store);
+
 
 #define ____SEPARATOR_VSYNC_EVENT____
 static ssize_t disp_vsync_event_enable_show(struct device *dev,
@@ -561,7 +697,7 @@ static ssize_t disp_vsync_event_enable_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -575,7 +711,7 @@ static ssize_t disp_vsync_event_enable_store(struct device *dev,
     {
         BSP_disp_vsync_event_enable(sel, val);
 	}
-
+    
 	return count;
 }
 
@@ -608,7 +744,7 @@ static ssize_t disp_layer_mode_store(struct device *dev,
     unsigned long val;
     int ret;
     __disp_layer_info_t para;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -618,7 +754,7 @@ static ssize_t disp_layer_mode_store(struct device *dev,
     if((val>4))
     {
         printk("Invalid value, <5 is expected!\n");
-
+        
     }else
     {
         ret = BSP_disp_layer_get_para(sel, hid, &para);
@@ -636,7 +772,7 @@ static ssize_t disp_layer_mode_store(struct device *dev,
             printk("not used!\n");
         }
 	}
-
+    
 	return count;
 }
 
@@ -658,7 +794,7 @@ static ssize_t disp_video_dit_mode_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -673,7 +809,7 @@ static ssize_t disp_video_dit_mode_store(struct device *dev,
         printk("%ld\n", val);
         disp_video_set_dit_mode(sel, (unsigned int)val);
 	}
-
+    
 	return count;
 }
 static DEVICE_ATTR(video_dit_mode, S_IRUGO|S_IWUSR|S_IWGRP,
@@ -696,14 +832,14 @@ static ssize_t disp_video_info_show(struct device *dev,
             ret = BSP_disp_video_get_fb(sel, i, &video_fb);
             if(ret == 0)
             {
-                cnt += sprintf(buf+cnt, "=== screen%d layer%d para ====\nmode: %d\nfb.size=<%dx%d>\nfb.fmt=<%d, %d, %d>\ntrd_src=<%d, %d> trd_out=<%d, %d>\npipe:%d\tprio: %d\nalpha: <%d, %d>\tcolor_key_en: %d\nsrc_window:<%d,%d,%d,%d>\nscreen_window:<%d,%d,%d,%d>\npre_multiply=%d\n======= screen%d layer%d para ====\n",
-                        sel, HANDTOID(i),layer_para.mode, layer_para.fb.size.width,
-                        layer_para.fb.size.height, layer_para.fb.mode, layer_para.fb.format,
-                        layer_para.fb.seq, layer_para.fb.b_trd_src,  layer_para.fb.trd_mode,
-                        layer_para.b_trd_out, layer_para.out_trd_mode, layer_para.pipe,
-                        layer_para.prio, layer_para.alpha_en, layer_para.alpha_val,
-                        layer_para.ck_enable, layer_para.src_win.x, layer_para.src_win.y,
-                        layer_para.src_win.width, layer_para.src_win.height, layer_para.scn_win.x, layer_para.scn_win.y,
+                cnt += sprintf(buf+cnt, "=== screen%d layer%d para ====\nmode: %d\nfb.size=<%dx%d>\nfb.fmt=<%d, %d, %d>\ntrd_src=<%d, %d> trd_out=<%d, %d>\npipe:%d\tprio: %d\nalpha: <%d, %d>\tcolor_key_en: %d\nsrc_window:<%d,%d,%d,%d>\nscreen_window:<%d,%d,%d,%d>\npre_multiply=%d\n======= screen%d layer%d para ====\n", 
+                        sel, HANDTOID(i),layer_para.mode, layer_para.fb.size.width, 
+                        layer_para.fb.size.height, layer_para.fb.mode, layer_para.fb.format, 
+                        layer_para.fb.seq, layer_para.fb.b_trd_src,  layer_para.fb.trd_mode, 
+                        layer_para.b_trd_out, layer_para.out_trd_mode, layer_para.pipe, 
+                        layer_para.prio, layer_para.alpha_en, layer_para.alpha_val, 
+                        layer_para.ck_enable, layer_para.src_win.x, layer_para.src_win.y, 
+                        layer_para.src_win.width, layer_para.src_win.height, layer_para.scn_win.x, layer_para.scn_win.y, 
                         layer_para.scn_win.width, layer_para.scn_win.height,layer_para.fb.pre_multiply, sel, HANDTOID(i));
 
                 cnt += sprintf(buf+cnt, "=== video info ==\nid=%d\n%s\nmaf_valid=%d\tfre_frame_valid=%d\ttop_field_first=%d\n=== video info ===\n",
@@ -713,13 +849,13 @@ static ssize_t disp_video_info_show(struct device *dev,
     }
 
     return cnt;
-
+    
 }
 
 static ssize_t disp_video_info_store(struct device *dev,
 				struct device_attribute *attr,
 				const char *buf, size_t count)
-{
+{ 
 	return count;
 }
 static DEVICE_ATTR(video_info, S_IRUGO|S_IWUSR|S_IWGRP,
@@ -746,7 +882,7 @@ static ssize_t disp_video_fps_show(struct device *dev,
 static ssize_t disp_video_fps_store(struct device *dev,
 				struct device_attribute *attr,
 				const char *buf, size_t count)
-{
+{   
 	return count;
 }
 
@@ -768,7 +904,7 @@ static ssize_t disp_deu_enable_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -783,7 +919,7 @@ static ssize_t disp_deu_enable_store(struct device *dev,
         printk("%ld\n", val);
         BSP_disp_deu_enable(sel, hid, (unsigned int)val);
 	}
-
+    
 	return count;
 }
 
@@ -800,7 +936,7 @@ static ssize_t disp_deu_luma_sharp_level_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -815,7 +951,7 @@ static ssize_t disp_deu_luma_sharp_level_store(struct device *dev,
         printk("%ld\n", val);
         BSP_disp_deu_set_luma_sharp_level(sel, hid, (unsigned int)val);
 	}
-
+    
 	return count;
 }
 
@@ -831,7 +967,7 @@ static ssize_t disp_deu_chroma_sharp_level_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -846,7 +982,7 @@ static ssize_t disp_deu_chroma_sharp_level_store(struct device *dev,
         printk("%ld\n", val);
         BSP_disp_deu_set_chroma_sharp_level(sel, hid, (unsigned int)val);
 	}
-
+    
 	return count;
 }
 
@@ -862,7 +998,7 @@ static ssize_t disp_deu_black_exten_level_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -877,7 +1013,7 @@ static ssize_t disp_deu_black_exten_level_store(struct device *dev,
         printk("%ld\n", val);
         BSP_disp_deu_set_black_exten_level(sel, hid, (unsigned int)val);
 	}
-
+    
 	return count;
 }
 
@@ -893,7 +1029,7 @@ static ssize_t disp_deu_white_exten_level_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -908,7 +1044,7 @@ static ssize_t disp_deu_white_exten_level_store(struct device *dev,
         printk("%ld\n", val);
         BSP_disp_deu_set_white_exten_level(sel, hid, (unsigned int)val);
 	}
-
+    
 	return count;
 }
 
@@ -942,7 +1078,7 @@ static ssize_t disp_layer_enhance_enable_store(struct device *dev,
 {
 	int err;
     unsigned long bright_val;
-
+    
 	err = strict_strtoul(buf, 10, &bright_val);
     printk("string=%s, int=%ld\n", buf, bright_val);
 	if (err) {
@@ -958,7 +1094,7 @@ static ssize_t disp_layer_enhance_enable_store(struct device *dev,
         printk("%ld\n", bright_val);
         BSP_disp_cmu_layer_enable(sel, hid, (unsigned int)bright_val);
 	}
-
+    
 	return count;
 }
 
@@ -975,7 +1111,7 @@ static ssize_t disp_layer_bright_store(struct device *dev,
 {
 	int err;
     unsigned long bright_val;
-
+    
 	err = strict_strtoul(buf, 10, &bright_val);
     printk("string=%s, int=%ld\n", buf, bright_val);
 	if (err) {
@@ -991,7 +1127,7 @@ static ssize_t disp_layer_bright_store(struct device *dev,
         printk("%ld\n", bright_val);
         BSP_disp_cmu_layer_set_bright(sel, hid, (unsigned int)bright_val);
 	}
-
+    
 	return count;
 }
 
@@ -1007,7 +1143,7 @@ static ssize_t disp_layer_contrast_store(struct device *dev,
 {
 	int err;
     unsigned long contrast_val;
-
+    
 	err = strict_strtoul(buf, 10, &contrast_val);
 
 	if (err) {
@@ -1023,7 +1159,7 @@ static ssize_t disp_layer_contrast_store(struct device *dev,
         printk("%ld\n", contrast_val);
         BSP_disp_cmu_layer_set_contrast(sel, hid, (unsigned int)contrast_val);
 	}
-
+    
 	return count;
 }
 
@@ -1039,7 +1175,7 @@ static ssize_t disp_layer_saturation_store(struct device *dev,
 {
 	int err;
     unsigned long saturation_val;
-
+    
 	err = strict_strtoul(buf, 10, &saturation_val);
 
 	if (err) {
@@ -1055,7 +1191,7 @@ static ssize_t disp_layer_saturation_store(struct device *dev,
         printk("%ld\n", saturation_val);
         BSP_disp_cmu_layer_set_saturation(sel, hid,(unsigned int)saturation_val);
 	}
-
+    
 	return count;
 }
 
@@ -1071,7 +1207,7 @@ static ssize_t disp_layer_hue_store(struct device *dev,
 {
 	int err;
     unsigned long hue_val;
-
+    
 	err = strict_strtoul(buf, 10, &hue_val);
 
 	if (err) {
@@ -1087,7 +1223,7 @@ static ssize_t disp_layer_hue_store(struct device *dev,
         printk("%ld\n", hue_val);
         BSP_disp_cmu_layer_set_hue(sel, hid,(unsigned int)hue_val);
 	}
-
+    
 	return count;
 }
 
@@ -1103,7 +1239,7 @@ static ssize_t disp_layer_enhance_mode_store(struct device *dev,
 {
 	int err;
     unsigned long mode_val;
-
+    
 	err = strict_strtoul(buf, 10, &mode_val);
 
 	if (err) {
@@ -1119,7 +1255,7 @@ static ssize_t disp_layer_enhance_mode_store(struct device *dev,
         printk("%ld\n", mode_val);
         BSP_disp_cmu_layer_set_mode(sel, hid,(unsigned int)mode_val);
 	}
-
+    
 	return count;
 }
 
@@ -1136,7 +1272,7 @@ static ssize_t disp_enhance_enable_store(struct device *dev,
 {
 	int err;
     unsigned long bright_val;
-
+    
 	err = strict_strtoul(buf, 10, &bright_val);
     printk("string=%s, int=%ld\n", buf, bright_val);
 	if (err) {
@@ -1152,7 +1288,7 @@ static ssize_t disp_enhance_enable_store(struct device *dev,
         printk("%ld\n", bright_val);
         BSP_disp_cmu_enable(sel,(unsigned int)bright_val);
 	}
-
+    
 	return count;
 }
 
@@ -1170,7 +1306,7 @@ static ssize_t disp_bright_store(struct device *dev,
 {
 	int err;
     unsigned long bright_val;
-
+    
 	err = strict_strtoul(buf, 10, &bright_val);
     printk("string=%s, int=%ld\n", buf, bright_val);
 	if (err) {
@@ -1186,7 +1322,7 @@ static ssize_t disp_bright_store(struct device *dev,
         printk("%ld\n", bright_val);
         BSP_disp_cmu_set_bright(sel, (unsigned int)bright_val);
 	}
-
+    
 	return count;
 }
 
@@ -1202,7 +1338,7 @@ static ssize_t disp_contrast_store(struct device *dev,
 {
 	int err;
     unsigned long contrast_val;
-
+    
 	err = strict_strtoul(buf, 10, &contrast_val);
 
 	if (err) {
@@ -1218,7 +1354,7 @@ static ssize_t disp_contrast_store(struct device *dev,
         printk("%ld\n", contrast_val);
         BSP_disp_cmu_set_contrast(sel, (unsigned int)contrast_val);
 	}
-
+    
 	return count;
 }
 
@@ -1234,7 +1370,7 @@ static ssize_t disp_saturation_store(struct device *dev,
 {
 	int err;
     unsigned long saturation_val;
-
+    
 	err = strict_strtoul(buf, 10, &saturation_val);
 
 	if (err) {
@@ -1250,7 +1386,7 @@ static ssize_t disp_saturation_store(struct device *dev,
         printk("%ld\n", saturation_val);
         BSP_disp_cmu_set_saturation(sel, (unsigned int)saturation_val);
 	}
-
+    
 	return count;
 }
 
@@ -1266,7 +1402,7 @@ static ssize_t disp_hue_store(struct device *dev,
 {
 	int err;
     unsigned long hue_val;
-
+    
 	err = strict_strtoul(buf, 10, &hue_val);
 
 	if (err) {
@@ -1282,7 +1418,7 @@ static ssize_t disp_hue_store(struct device *dev,
         printk("%ld\n", hue_val);
         BSP_disp_cmu_set_hue(sel, (unsigned int)hue_val);
 	}
-
+    
 	return count;
 }
 
@@ -1298,7 +1434,7 @@ static ssize_t disp_enhance_mode_store(struct device *dev,
 {
 	int err;
     unsigned long mode_val;
-
+    
 	err = strict_strtoul(buf, 10, &mode_val);
 
 	if (err) {
@@ -1314,7 +1450,7 @@ static ssize_t disp_enhance_mode_store(struct device *dev,
         printk("%ld\n", mode_val);
         BSP_disp_cmu_set_mode(sel, (unsigned int)mode_val);
 	}
-
+    
 	return count;
 }
 
@@ -1369,7 +1505,7 @@ static ssize_t disp_drc_enable_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 
 	if (err) {
@@ -1385,7 +1521,7 @@ static ssize_t disp_drc_enable_store(struct device *dev,
         printk("%ld\n", val);
         BSP_disp_drc_enable(sel, (unsigned int)val);
 	}
-
+    
 	return count;
 }
 
@@ -1408,7 +1544,7 @@ static ssize_t disp_colorbar_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -1419,10 +1555,10 @@ static ssize_t disp_colorbar_store(struct device *dev,
         printk("Invalid value, 0~7 is expected!\n");
     }
     else {
-        fb_draw_colorbar((__u32)g_fbi.fbinfo[val]->screen_base, g_fbi.fbinfo[val]->var.xres,
+        fb_draw_colorbar((__u32)g_fbi.fbinfo[val]->screen_base, g_fbi.fbinfo[val]->var.xres, 
             g_fbi.fbinfo[val]->var.yres, &(g_fbi.fbinfo[val]->var));;
 	}
-
+    
 	return count;
 }
 
@@ -1442,7 +1578,7 @@ static ssize_t disp_gamma_test_store(struct device *dev,
 {
 	int err;
     unsigned long val;
-
+    
 	err = strict_strtoul(buf, 10, &val);
 	if (err) {
 		printk("Invalid size\n");
@@ -1451,8 +1587,8 @@ static ssize_t disp_gamma_test_store(struct device *dev,
 
     if((val == 1))
     {
-         __u32 gamma_tab[256] =
-        {
+         __u32 gamma_tab[256] = 
+        { 
             0x00000000,0x00010101,0x00020202,0x00030303,0x00040404,0x00050505,0x00060606,0x00070707,
             0x00080808,0x00090909,0x000A0A0A,0x000B0B0B,0x000C0C0C,0x000D0D0D,0x000D0D0D,0x000E0E0E,
             0x000F0F0F,0x00101010,0x00111111,0x00111111,0x00121212,0x00131313,0x00141414,0x00141414,
@@ -1487,7 +1623,7 @@ static ssize_t disp_gamma_test_store(struct device *dev,
             0x00FBFBFB,0x00FCFCFC,0x00FCFCFC,0x00FDFDFD,0x00FDFDFD,0x00FEFEFE,0x00FEFEFE,0x00FFFFFF
         };
 
-
+            
             BSP_disp_set_gamma_table(sel, (__u32 *)gamma_tab,1024);
             BSP_disp_gamma_correction_enable(sel);
     }
@@ -1495,7 +1631,7 @@ static ssize_t disp_gamma_test_store(struct device *dev,
     {
         BSP_disp_gamma_correction_disable(sel);
 	}
-
+    
 	return count;
 }
 
@@ -1542,6 +1678,9 @@ static struct attribute *disp_attributes[] = {
     &dev_attr_fps.attr,
     &dev_attr_video_info.attr,
     &dev_attr_video_fps.attr,
+    &dev_attr_lcd_src.attr,
+    &dev_attr_hdmi_cts.attr,
+    &dev_attr_hdmi_test_mode.attr,
 	NULL
 };
 

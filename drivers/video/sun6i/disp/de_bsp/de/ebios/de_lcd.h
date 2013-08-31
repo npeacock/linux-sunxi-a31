@@ -791,3 +791,4 @@ __s32 tcon_ceu(__u32 sel,__u32 mode,__s32 b,__s32 c,__s32 s,__s32 h);
 __s32 tcon0_frm(__u32 sel,__u32 mode);
 
 #endif
+

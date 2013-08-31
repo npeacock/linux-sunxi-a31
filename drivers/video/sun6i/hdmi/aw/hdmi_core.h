@@ -26,33 +26,33 @@ extern __u32 hdmi_print;
 typedef struct video_timing
 {
 	__s32 VIC;
-	__s32 PCLK;
+	__s32 PCLK; 
 	__s32 AVI_PR;
-
-	__s32 INPUTX;
-	__s32 INPUTY;
-	__s32 HT;
-	__s32 HBP;
-	__s32 HFP;
-	__s32 HPSW;
-	__s32 VT;
-	__s32 VBP;
-	__s32 VFP;
-	__s32 VPSW;
+	 
+	__s32 INPUTX; 	
+	__s32 INPUTY; 	
+	__s32 HT; 		
+	__s32 HBP; 	
+	__s32 HFP; 	
+	__s32 HPSW; 	
+	__s32 VT; 		
+	__s32 VBP; 	
+	__s32 VFP; 	
+	__s32 VPSW; 	
 
 }HDMI_VIDE_INFO;
 
 typedef struct audio_timing
 {
 
-	__s32 audio_en;
-	__s32 sample_rate;
-	__s32 channel_num;
-
-	__s32 CTS;
-	__s32 ACR_N;
-	__s32 CH_STATUS0;
-	__s32 CH_STATUS1;
+ 	__s32 audio_en;
+ 	__s32 sample_rate;
+ 	__s32 channel_num;
+	 
+	__s32 CTS; 	
+	__s32 ACR_N; 	
+	__s32 CH_STATUS0; 		
+	__s32 CH_STATUS1; 	 	
 	__u8	data_raw;		/*0:pcm;1:raw*/
 
 }HDMI_AUDIO_INFO;
@@ -71,7 +71,10 @@ __s32 audio_config(void);
 extern __u32 hdmi_pll;//0:video pll 0; 1:video pll 1
 extern __u32 hdmi_clk;
 
+extern __s32      cts_enable;
 
+extern __u8  			isHDMI;
+extern __u8  			YCbCr444_Support;
 void DDC_Init(void);
 void send_ini_sequence(void);
 __s32 DDC_Read(char cmd,char pointer,char offset,int nbyte,char * pbuf);
@@ -79,3 +82,4 @@ extern 	__u8		EDID_Buf[1024];
 extern 	__u8		Device_Support_VIC[512];
 
 #endif
+

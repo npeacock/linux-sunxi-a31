@@ -78,7 +78,7 @@
 #define HDMI_TMDS_CLKCH_MUTE	 	0x40	// bit position
 
 #define HDMI_CHIP_DEBUG_CTRL1       0x67
-#define HDMI_FORCE_HOTPLUG          0x01//bit position
+#define HDMI_FORCE_HOTPLUG          0x01//bit position 
 
 
 #define HDMI_INFO_PKTCTRL1_REG  	0x70
@@ -193,12 +193,12 @@
 #define DP_TX_PKT_EN_REG              					0x90
 #define DP_TX_PKT_AUD_UP								0x80  // bit position
 #define DP_TX_PKT_AVI_UD              					0x40  // bit position
-#define DP_TX_PKT_MPEG_UD             					0x20  // bit position
-#define DP_TX_PKT_SPD_UD              					0x10  // bit position
+#define DP_TX_PKT_MPEG_UD             					0x20  // bit position    
+#define DP_TX_PKT_SPD_UD              					0x10  // bit position   
 #define DP_TX_PKT_AUD_EN								0x08  // bit position=
-#define DP_TX_PKT_AVI_EN              					0x04  // bit position
-#define DP_TX_PKT_MPEG_EN             					0x02  // bit position
-#define DP_TX_PKT_SPD_EN              					0x01  // bit position
+#define DP_TX_PKT_AVI_EN              					0x04  // bit position          
+#define DP_TX_PKT_MPEG_EN             					0x02  // bit position     
+#define DP_TX_PKT_SPD_EN              					0x01  // bit position       
 
 
 #define DP_TX_HDCP_CTRL 												0x92
@@ -234,33 +234,33 @@
 #define DP_TX_SINK_STATUS_SINK_STATUS_0          	0x01        // bit position
 
 
-#define DP_TX_PLL_CTRL_REG											0xC7
+#define DP_TX_PLL_CTRL_REG											0xC7	
 #define DP_TX_PLL_CTRL_PLL_PD           						0x80        // bit position
-#define DP_TX_PLL_CTRL_PLL_RESET        					0x40        // bit position
-#define DP_TX_PLL_CTRL_CPREG_BLEED      					0x08        // bit position
+#define DP_TX_PLL_CTRL_PLL_RESET        					0x40        // bit position 
+#define DP_TX_PLL_CTRL_CPREG_BLEED      					0x08        // bit position 
 
 #define DP_TX_ANALOG_POWER_DOWN_REG                   			0xC8
-#define DP_TX_ANALOG_POWER_DOWN_MACRO_PD              	0x20        // bit position
-#define DP_TX_ANALOG_POWER_DOWN_AUX_PD                		0x10        // bit position
-#define DP_TX_ANALOG_POWER_DOWN_CH3_PD                		0x08        // bit position
-#define DP_TX_ANALOG_POWER_DOWN_CH2_PD                		0x04        // bit position
-#define DP_TX_ANALOG_POWER_DOWN_CH1_PD                		0x02        // bit position
-#define DP_TX_ANALOG_POWER_DOWN_CH0_PD                		0x01        // bit position
+#define DP_TX_ANALOG_POWER_DOWN_MACRO_PD              	0x20        // bit position 
+#define DP_TX_ANALOG_POWER_DOWN_AUX_PD                		0x10        // bit position 
+#define DP_TX_ANALOG_POWER_DOWN_CH3_PD                		0x08        // bit position 
+#define DP_TX_ANALOG_POWER_DOWN_CH2_PD                		0x04        // bit position 
+#define DP_TX_ANALOG_POWER_DOWN_CH1_PD                		0x02        // bit position 
+#define DP_TX_ANALOG_POWER_DOWN_CH0_PD                		0x01        // bit position 
 
 
 #define DP_TX_ANALOG_TEST_REG                         		0xC9
-#define DP_TX_ANALOG_TEST_MACRO_RST                   				0x20       // bit position
-#define DP_TX_ANALOG_TEST_PLL_TEST                    				0x10       // bit position
-#define DP_TX_ANALOG_TEST_CH3_TEST                    				0x08       // bit position
-#define DP_TX_ANALOG_TEST_CH2_TEST                    				0x04       // bit position
-#define DP_TX_ANALOG_TEST_CH1_TEST                    				0x02       // bit position
-#define DP_TX_ANALOG_TEST_CH0_TEST                    				0x01       // bit position
+#define DP_TX_ANALOG_TEST_MACRO_RST                   				0x20       // bit position 
+#define DP_TX_ANALOG_TEST_PLL_TEST                    				0x10       // bit position 
+#define DP_TX_ANALOG_TEST_CH3_TEST                    				0x08       // bit position 
+#define DP_TX_ANALOG_TEST_CH2_TEST                    				0x04       // bit position 
+#define DP_TX_ANALOG_TEST_CH1_TEST                    				0x02       // bit position 
+#define DP_TX_ANALOG_TEST_CH0_TEST                    				0x01       // bit position 
 
 #define DP_TX_FIFO_THRESHOLD                            0xCC
 
 #define DP_TX_GNS_CTRL_REG                            	0xCD
-#define DP_TX_GNS_CTRL_VIDEO_MAP_CTRL                 	 0x02       // bit position
-#define DP_TX_GNS_CTRL_RS_CTRL                        	 0x01       // bit position
+#define DP_TX_GNS_CTRL_VIDEO_MAP_CTRL                 	 0x02       // bit position 
+#define DP_TX_GNS_CTRL_RS_CTRL                        	 0x01       // bit position 
 
 #define DP_TX_SSC_D_VALUE                               0xD0   //guochuncheng
 #define DP_TX_DOWN_SPREADING_CTRL2                      0xD1
@@ -276,7 +276,7 @@
 #define DP_TX_I2C_STRETCH_CTRL_REG                      0xDA
 #define DP_TX_AUX_STATUS            					0xE0
 #define DP_TX_DEFER_CTRL_REG            				0xE2
-#define DP_TX_DEFER_CTRL_DEFER_CTRL_EN  				 0x80       // bit position
+#define DP_TX_DEFER_CTRL_DEFER_CTRL_EN  				 0x80       // bit position 
 
 #define DP_TX_BUF_DATA_COUNT_REG						0xE4
 #define DP_TX_AUX_CTRL_REG              				0xE5
@@ -579,7 +579,7 @@
 
 #define SSC_CTRL_REG1					 0xA7
 #define GNSS_CTRL_REG				0xCD
-#define ENABLE_SSC_FILTER			0x80//bit
+#define ENABLE_SSC_FILTER			0x80//bit 
 
 #define SSC_D_VALUE					 0xD0
 #define SSC_CTRL_REG2					 0xD1

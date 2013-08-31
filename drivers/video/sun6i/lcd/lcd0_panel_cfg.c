@@ -2,6 +2,7 @@
 #include "lcd_panel_cfg.h"
 #include "lcd_bak/lcd_edp_anx9804.h"
 #include "lcd_bak/lcd_edp_anx6345.h"
+#include "lcd_bak/lcd_B079XAN01.h"
 
 //delete this line if you want to use the lcd para define in sys_config1.fex
 //#define LCD_PARA_USE_CONFIG
@@ -18,7 +19,7 @@ static void LCD_cfg_panel_info(__panel_extend_para_t * info)
 {
     __u32 i = 0, j=0;
     __u32 items;
-    __u8 lcd_gamma_tbl[][2] =
+    __u8 lcd_gamma_tbl[][2] = 
     {
     //{input value, corrected value}
         {0, 0},
@@ -41,7 +42,7 @@ static void LCD_cfg_panel_info(__panel_extend_para_t * info)
         {255, 255},
     };
 
-    __u8 lcd_bright_curve_tbl[][2] =
+    __u8 lcd_bright_curve_tbl[][2] = 
     {
         //{input value, corrected value}
         {0    ,0  },//0
@@ -57,29 +58,29 @@ static void LCD_cfg_panel_info(__panel_extend_para_t * info)
         {150  ,54 },
         {165  ,67 },
         {180  ,84 },
-        {195  ,108},
-        {210  ,137},
-        {225 ,171},
-        {240 ,210},
+        {195  ,108}, 
+        {210  ,137}, 
+        {225 ,171}, 
+        {240 ,210}, 
         {255 ,255},
     };
 
     __u32 lcd_cmap_tbl[2][3][4] = {
-		{
+    		{
                 {LCD_CMAP_G0,LCD_CMAP_B1,LCD_CMAP_G2,LCD_CMAP_B3},
-			{LCD_CMAP_B0,LCD_CMAP_R1,LCD_CMAP_B2,LCD_CMAP_R3},
-			{LCD_CMAP_R0,LCD_CMAP_G1,LCD_CMAP_R2,LCD_CMAP_G3},
+        		{LCD_CMAP_B0,LCD_CMAP_R1,LCD_CMAP_B2,LCD_CMAP_R3},
+        		{LCD_CMAP_R0,LCD_CMAP_G1,LCD_CMAP_R2,LCD_CMAP_G3},
             },
-		{
+    		{
                 {LCD_CMAP_B3,LCD_CMAP_G2,LCD_CMAP_B1,LCD_CMAP_G0},
-			{LCD_CMAP_R3,LCD_CMAP_B2,LCD_CMAP_R1,LCD_CMAP_B0},
-			{LCD_CMAP_G3,LCD_CMAP_R2,LCD_CMAP_G1,LCD_CMAP_R0},
+        		{LCD_CMAP_R3,LCD_CMAP_B2,LCD_CMAP_R1,LCD_CMAP_B0},
+        		{LCD_CMAP_G3,LCD_CMAP_R2,LCD_CMAP_G1,LCD_CMAP_R0},
             },
     };
 
     memset(info,0,sizeof(__panel_extend_para_t));
 
-    items = sizeof(lcd_gamma_tbl)/2;
+    items = sizeof(lcd_gamma_tbl)/2;   
     for(i=0; i<items-1; i++)
     {
         __u32 num = lcd_gamma_tbl[i+1][0] - lcd_gamma_tbl[i][0];
@@ -94,7 +95,7 @@ static void LCD_cfg_panel_info(__panel_extend_para_t * info)
     }
     info->lcd_gamma_tbl[255] = (lcd_gamma_tbl[items-1][1]<<16) + (lcd_gamma_tbl[items-1][1]<<8) + lcd_gamma_tbl[items-1][1];
 
-    items = sizeof(lcd_bright_curve_tbl)/2;
+    items = sizeof(lcd_bright_curve_tbl)/2;   
     for(i=0; i<items-1; i++)
     {
         __u32 num = lcd_bright_curve_tbl[i+1][0] - lcd_bright_curve_tbl[i][0];
@@ -124,7 +125,7 @@ static __s32 LCD_open_flow(__u32 sel)
 }
 
 static __s32 LCD_close_flow(__u32 sel)
-{
+{	
 	LCD_CLOSE_FUNC(sel, LCD_bl_close, 0);       //close lcd backlight, and delay 0ms
 	LCD_CLOSE_FUNC(sel, TCON_close, 0);         //close lcd controller, and delay 0ms
 	LCD_CLOSE_FUNC(sel, LCD_panel_exit,	200);   //open lcd power, than delay 200ms
@@ -158,7 +159,7 @@ static void LCD_bl_close(__u32 sel)
 static void LCD_panel_init(__u32 sel)
 {
     __panel_para_t *info = kmalloc(sizeof(__panel_para_t), GFP_KERNEL | __GFP_ZERO);
-
+    
     lcd_get_panel_para(sel, info);
     if((info->lcd_if == LCD_IF_EDP) && (info->lcd_edp_tx_ic == 0))
     {
@@ -167,10 +168,13 @@ static void LCD_panel_init(__u32 sel)
     else if((info->lcd_if == LCD_IF_EDP) && (info->lcd_edp_tx_ic == 1))
     {
         anx6345_init(info);
+    }else if(info->lcd_if == LCD_IF_EXT_DSI)
+    {
+        lp079x01_init(info);
     }
 
     kfree(info);
-
+    
     return;
 }
 
@@ -193,3 +197,4 @@ void LCD_get_panel_funs_0(__lcd_panel_fun_t * fun)
     fun->lcd_user_defined_func = LCD_user_defined_func;
 }
 EXPORT_SYMBOL(LCD_get_panel_funs_0);
+

@@ -5,7 +5,7 @@
 #define LCD_PARA_USE_CONFIG
 
 #ifdef LCD_PARA_USE_CONFIG
-static __u8 g_gamma_tbl[][2] =
+static __u8 g_gamma_tbl[][2] = 
 {
 //{input value, corrected value}
     {0, 0},
@@ -29,7 +29,7 @@ static __u8 g_gamma_tbl[][2] =
 };
 
 static void LCD_cfg_panel_info(__panel_para_t * info)
-{
+{ 
     memset(info,0,sizeof(__panel_para_t));
 
 	//interface
@@ -37,7 +37,7 @@ static void LCD_cfg_panel_info(__panel_para_t * info)
     info->lcd_dsi_if        = LCD_DSI_IF_VIDEO_MODE;
     info->lcd_dsi_lane		= LCD_DSI_2LANE;
     info->lcd_dsi_format	= LCD_DSI_FORMAT_RGB888;
-
+	
     //timing
     info->lcd_x             = 480;			//Hor Pixels
     info->lcd_y             = 800;			//Ver Pixels
@@ -47,7 +47,7 @@ static void LCD_cfg_panel_info(__panel_para_t * info)
 	info->lcd_ht			= 480+64*3;
 	info->lcd_hbp			= 128;
 	info->lcd_hspw			= 64;
-
+	
     info->lcd_dclk_freq     = 10;       	//Pixel Data Cycle
 //    info->lcd_fps     		= 5;       		//Pixel Data Cycle
 
@@ -82,7 +82,7 @@ static	void bm480800_8892ftgb_init(__u32 sel)
 	dsi_dcs_wr(0,cmd,para,num);
 
 	//data type:39h
-	cmd 	= 0xb1; //set power
+	cmd 	= 0xb1; //set power 
 	p		= para;
 	num		= 19;
 	*(p++)	= 0x85;
@@ -389,9 +389,9 @@ static	void bm480800_8892ftgb_init(__u32 sel)
 
 
 	cmd		= 0x35;
-	p		= para;
+	p		= para;	
 	num		= 1;
-	*(p++)	= 0x00;
+	*(p++)	= 0x00;	
 	dsi_dcs_wr(0,cmd,para,num);
 
 
@@ -427,8 +427,8 @@ static __s32 LCD_open_flow(__u32 sel)
 	LCD_OPEN_FUNC(sel, LCD_power_on, 50);   //open lcd power, and delay 50ms
 
 
-
-	LCD_OPEN_FUNC(sel, bm480800_8892ftgb_init, 200);   //open lcd power, and delay 50ms
+	
+	LCD_OPEN_FUNC(sel, bm480800_8892ftgb_init, 200);   //open lcd power, and delay 50ms	
 	LCD_OPEN_FUNC(sel, TCON_open, 500);     //open lcd controller, and delay 500ms
 	LCD_OPEN_FUNC(sel, LCD_bl_open, 0);     //open lcd backlight, and delay 0ms
 
@@ -436,7 +436,7 @@ static __s32 LCD_open_flow(__u32 sel)
 }
 
 static __s32 LCD_close_flow(__u32 sel)
-{
+{	
 	LCD_CLOSE_FUNC(sel, LCD_bl_close, 0);       //close lcd backlight, and delay 0ms
 	LCD_CLOSE_FUNC(sel, TCON_close, 0);         //close lcd controller, and delay 0ms
 	LCD_CLOSE_FUNC(sel, LCD_power_off, 1000);   //close lcd power, and delay 1000ms
@@ -485,3 +485,4 @@ void LCD_get_panel_funs_0(__lcd_panel_fun_t * fun)
     fun->lcd_user_defined_func = LCD_user_defined_func;
 }
 EXPORT_SYMBOL(LCD_get_panel_funs_0);
+

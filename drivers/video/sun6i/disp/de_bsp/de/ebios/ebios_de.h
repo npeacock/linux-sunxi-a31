@@ -57,14 +57,14 @@ typedef enum
 typedef enum __SCAL_PS
 {
 	DE_SCAL_BGRA=0,  //rgb
-	DE_SCAL_ARGB=1,
-	DE_SCAL_AYUV=0,
+	DE_SCAL_ARGB=1, 
+	DE_SCAL_AYUV=0, 
 	DE_SCAL_VUYA=1,
 	DE_SCAL_UVUV=0, //for uv combined
-	DE_SCAL_VUVU=1,
-	DE_SCAL_UYVY=0,
-	DE_SCAL_YUYV=1,
-	DE_SCAL_VYUY=2,
+	DE_SCAL_VUVU=1, 
+	DE_SCAL_UYVY=0, 
+	DE_SCAL_YUYV=1, 
+	DE_SCAL_VYUY=2, 
 	DE_SCAL_YVYU=3,
 	DE_SCAL_RGB565=0,
 	DE_SCAL_BGR565=1,
@@ -76,10 +76,10 @@ typedef enum __SCAL_PS
 
 typedef enum __SCAL_INMODE
 {
-	DE_SCAL_PLANNAR=0,
-	DE_SCAL_INTERLEAVED,
-	DE_SCAL_UVCOMBINED,
-	DE_SCAL_PLANNARMB=4,
+	DE_SCAL_PLANNAR=0, 
+	DE_SCAL_INTERLEAVED, 
+	DE_SCAL_UVCOMBINED, 
+	DE_SCAL_PLANNARMB=4, 
 	DE_SCAL_UVCOMBINEDMB=6
 }__scal_inmode_t;
 
@@ -87,10 +87,10 @@ typedef enum __SCAL_INMODE
 typedef enum __SCAL_INFMT
 {
 	DE_SCAL_INYUV444=0,
-	DE_SCAL_INYUV422,
-	DE_SCAL_INYUV420,
-	DE_SCAL_INYUV411,
-	DE_SCAL_INRGB565,  //new
+	DE_SCAL_INYUV422, 
+	DE_SCAL_INYUV420, 
+	DE_SCAL_INYUV411, 
+	DE_SCAL_INRGB565,  //new 
 	DE_SCAL_INRGB888,
 	DE_SCAL_INRGB4444, //new
 	DE_SCAL_INRGB1555  //new
@@ -98,13 +98,13 @@ typedef enum __SCAL_INFMT
 
 typedef enum __SCAL_OUTFMT
 {
-	DE_SCAL_OUTPRGB888=0,
-	DE_SCAL_OUTI0RGB888,
+	DE_SCAL_OUTPRGB888=0, 
+	DE_SCAL_OUTI0RGB888, 
 	DE_SCAL_OUTI1RGB888,
-	DE_SCAL_OUTPYUV444=4,
-	DE_SCAL_OUTPYUV420,
-	DE_SCAL_OUTPYUV422,
-	DE_SCAL_OUTPYUV411
+	DE_SCAL_OUTPYUV444=4, 
+	DE_SCAL_OUTPYUV420, 
+	DE_SCAL_OUTPYUV422, 
+	DE_SCAL_OUTPYUV411 
 }__scal_outfmt_t;
 //for 3D inmod,  source mod must  be DE_SCAL_PLANNAR or DE_SCAL_UVCOMBINEDMB
 //DE_SCAL_INTER_LEAVED and DE_SCAL_UVCOMBINED maybe supported in future====
@@ -201,7 +201,7 @@ typedef struct __SCAL_OUT_TYPE
 {
     __u8    byte_seq;  //0:byte0,byte1, byte2, byte3; 1: byte3, byte2, byte1, byte0
     __u8    fmt;       //0:plannar rgb; 1: argb(byte0,byte1, byte2, byte3); 2:bgra; 4:yuv444; 5:yuv420; 6:yuv422; 7:yuv411
-
+    
     __bool  alpha_en;   //output alpha channel enable, valid when rgb888fmt
     __u8   alpha_coef_type;  //0:soft type;  1: sharp type
 }__scal_out_type_t;
@@ -248,17 +248,17 @@ __s32 DE_SCAL_Config_Src(__u8 sel, __scal_buf_addr_t *addr, __scal_src_size_t *s
 __s32 DE_SCAL_Set_Fb_Addr(__u8 sel, __scal_buf_addr_t *addr);
 __s32 DE_SCAL_Set_Init_Phase(__u8 sel, __scal_scan_mod_t *in_scan, __scal_src_size_t *in_size,
                              __scal_src_type_t *in_type, __scal_scan_mod_t *out_scan,
-                             __scal_out_size_t *out_size, __scal_out_type_t *out_type, __u8 dien);
-__s32 DE_SCAL_Agth_Config(__u8 sel, __scal_src_type_t *in_type,__scal_src_size_t *in_size,__scal_out_size_t *out_size,
+                             __scal_out_size_t *out_size, __scal_out_type_t *out_type, __u8 dien);   
+__s32 DE_SCAL_Agth_Config(__u8 sel, __scal_src_type_t *in_type,__scal_src_size_t *in_size,__scal_out_size_t *out_size, 
                           __u8 dien,__u8 trden,__scal_3d_outmode_t outmode);
 __s32 DE_SCAL_Set_Scaling_Factor(__u8 sel, __scal_scan_mod_t *in_scan, __scal_src_size_t *in_size,
-                                 __scal_src_type_t *in_type, __scal_scan_mod_t *out_scan,
+                                 __scal_src_type_t *in_type, __scal_scan_mod_t *out_scan, 
                                  __scal_out_size_t *out_size, __scal_out_type_t *out_type);
 __s32 DE_SCAL_Set_Scaling_Coef(__u8 sel, __scal_scan_mod_t *in_scan, __scal_src_size_t *in_size,
-                               __scal_src_type_t *in_type, __scal_scan_mod_t *out_scan,
-                               __scal_out_size_t *out_size, __scal_out_type_t *out_type, __u8 smth_mode);
+                               __scal_src_type_t *in_type, __scal_scan_mod_t *out_scan, 
+                               __scal_out_size_t *out_size, __scal_out_type_t *out_type, __u8 smth_mode);  
 __s32 DE_SCAL_Set_Scaling_Coef_for_video(__u8 sel, __scal_scan_mod_t *in_scan, __scal_src_size_t *in_size,
-                               __scal_src_type_t *in_type, __scal_scan_mod_t *out_scan,
+                               __scal_src_type_t *in_type, __scal_scan_mod_t *out_scan, 
                                __scal_out_size_t *out_size, __scal_out_type_t *out_type, __u32 smth_mode)  ;
 __s32 DE_SCAL_Set_CSC_Coef(__u8 sel, __u8 in_csc_mode, __u8 out_csc_mode, __u8 incs, __u8 outcs, __u32  in_br_swap, __u32 out_br_swap);
 __s32 DE_SCAL_Set_Out_Format(__u8 sel, __scal_out_type_t *out_type);
@@ -284,7 +284,7 @@ __s32 DE_SCAL_Get_3D_Out_Single_Size(__scal_3d_outmode_t outmode, __scal_out_siz
 __s32 DE_SCAL_Get_3D_Out_Full_Size(__scal_3d_outmode_t outmode, __scal_out_size_t *singlesize,__scal_out_size_t *fullsize);
 __s32 DE_SCAL_Set_3D_Fb_Addr(__u8 sel, __scal_buf_addr_t *addr, __scal_buf_addr_t *addrtrd);
 __s32 DE_SCAL_Set_3D_Di_PreFrame_Addr(__u8 sel, __scal_buf_addr_t *addr, __scal_buf_addr_t *addrtrd);
-__s32 DE_SCAL_Set_3D_Ctrl(__u8 sel, __u8 trden, __scal_3d_inmode_t inmode,
+__s32 DE_SCAL_Set_3D_Ctrl(__u8 sel, __u8 trden, __scal_3d_inmode_t inmode, 
 								__scal_3d_outmode_t outmode);
 __s32 DE_SCAL_Config_3D_Src(__u8 sel, __scal_buf_addr_t *addr, __scal_src_size_t *size,
                            __scal_src_type_t *type, __scal_3d_inmode_t trdinmode, __scal_buf_addr_t *addrtrd);

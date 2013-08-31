@@ -66,7 +66,7 @@ extern __s32 IEP_Deu_Set_Ready(__u32 sel);
 extern __s32 IEP_Deu_Set_Reg_base(__u32 sel, __u32 base);
 extern __s32 IEP_Deu_Set_Winodw(__u32 sel, __disp_rect_t *window);
 extern __s32 IEP_Deu_Output_Select(__u32 sel, __u32 be_ch);
-extern __s32 IEP_Deu_Init(__u32 sel);
+extern __s32 IEP_Deu_Init(__u32 sel); 
 extern __s32 IEP_Deu_Exit(__u32 sel);
 extern __s32 IEP_Deu_Operation_In_Vblanking(__u32 sel);
 extern __s32 iep_deu_early_suspend(__u32 sel);//close clk

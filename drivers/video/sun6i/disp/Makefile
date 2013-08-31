@@ -14,3 +14,4 @@ disp-objs :=  dev_disp.o dev_fb.o dev_disp_attrnode.o\
 							de_bsp/iep/deu/iep_deu.o de_bsp/iep/deu/iep_deu_ebios.o\
 							de_bsp/de/disp_lcd_iic.o\
 							#de_bsp/lcd/lcd0_panel_cfg.o de_bsp/lcd/lcd1_panel_cfg.o\
+

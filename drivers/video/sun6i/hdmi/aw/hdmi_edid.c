@@ -2,7 +2,7 @@
 #include "hdmi_core.h"
 #if 0
 void DDC_Init(void)
-{
+{    
     __inf("DDC_Init\n");
 
 	HDMI_WUINT32(0x500,0x80000001);
@@ -10,7 +10,7 @@ void DDC_Init(void)
 
     //while(HDMI_RUINT32(0x500) & 0x1);
     //__here__;
-
+    
 	HDMI_WUINT32(0x528,0x0d   );					//N = 5,M=1 Fscl= Ftmds/2/10/2^N/(M+1)
 	//HDMI_WUINT8(0x506,0x60   );					//ddc address  0x60
 	//HDMI_WUINT8(0x504,0xa0>>1);					//slave address  0xa0
@@ -18,7 +18,7 @@ void DDC_Init(void)
 	HDMI_WUINT32( 0x540,(0<<12) + (3<<8));		//enable analog  sda/scl pad
 
 	//send_ini_sequence();
-
+	
 }
 
 __s32 DDC_Read(char cmd,char pointer,char offset,int nbyte,char * pbuf)
@@ -30,7 +30,7 @@ __s32 DDC_Read(char cmd,char pointer,char offset,int nbyte,char * pbuf)
    __u32 begin_ms, end_ms;
 
    __inf("DDC_Read\n");
-
+   
    while(nbyte >0)
    {
       if(nbyte > 16)
@@ -38,29 +38,29 @@ __s32 DDC_Read(char cmd,char pointer,char offset,int nbyte,char * pbuf)
       else
         n = nbyte;
       nbyte = nbyte -n;
-
+      
       reg_val = HDMI_RUINT32(0x500);
       reg_val &= 0xfffffeff;
       HDMI_WUINT32(0x500,reg_val);						//set FIFO read
-
+		
 	  HDMI_WUINT32(0x504, (pointer<<24)+(0x60<<16)+(off<<8)+(0xa0>>1));
-
+	  
       reg_val = HDMI_RUINT32(0x510);
       reg_val |= 0x80000000;
       HDMI_WUINT32(0x510,reg_val);						//FIFO address clear
-
+      			
       HDMI_WUINT32(0x51c,n 		);						//nbyte to access
       HDMI_WUINT32(0x520,cmd		);					//set cmd type
 
       reg_val = HDMI_RUINT32(0x500);
       reg_val |= 0x40000000;
       HDMI_WUINT32(0x500,reg_val);						//start and cmd
-
-      off   += n;
+      
+      off   += n; 
 
       begin_ms = (jiffies * 1000) / HZ;
       while(HDMI_RUINT32(0x500)&0x40000000)
-      {
+      { 
         end_ms = (jiffies * 1000) / HZ;
         if((end_ms - begin_ms) > 1000)
         {
@@ -72,8 +72,8 @@ __s32 DDC_Read(char cmd,char pointer,char offset,int nbyte,char * pbuf)
       i=0;
       while(i<n)
       {
-	     * pbuf ++ = HDMI_RUINT8(0x518);
-	     i++;
+   	     * pbuf ++ = HDMI_RUINT8(0x518);
+   	     i++;
       }
    }
 
@@ -82,7 +82,7 @@ __s32 DDC_Read(char cmd,char pointer,char offset,int nbyte,char * pbuf)
 #endif
 
 void DDC_Init()
-{
+{	
     HDMI_WUINT32(0x500,0x80000000);
     HDMI_WUINT32(0x504,0x00000000);
     HDMI_WUINT32(0x508,0x00000007);
@@ -91,7 +91,7 @@ void DDC_Init()
     HDMI_WUINT32(0x518,0x00000000);
     HDMI_WUINT32(0x520,0x00000061);
     HDMI_WUINT32(0x500,0x00000051);
-
+    
     HDMI_WUINT32(0x504,HDMI_RUINT32(0x504)| 0x00000010);//set intial sequence
     HDMI_WUINT32(0x500,HDMI_RUINT32(0x500)| 0x08000000);//start
     while(HDMI_RUINT32(0x500)& 0x08000000);
@@ -105,25 +105,25 @@ __s32 DDC_Read(char cmd,char pointer,char offset,int nbyte,char * pbuf)
    char n=0;
    char off = offset;
    __u32 begin_ms, end_ms;
-
+    
    while(nbyte >0)
    {
       if(nbyte > 16)
         n = 16;
       else
         n = nbyte;
-      nbyte = nbyte -n;
-
+      nbyte = nbyte -n;      
+      
       HDMI_WUINT32(0x518,HDMI_RUINT32(0x518)| 0x00008000);		//FIFO address clear
       HDMI_WUINT8(0x50f,pointer	);										//segment pointer
-      HDMI_WUINT8(0x50d,off  		);										//offset address
+      HDMI_WUINT8(0x50d,off  		);										//offset address 
       HDMI_WUINT32(0x508,(n<<16) +cmd);									//nbyte to access and cmd type
       HDMI_WUINT32(0x500,HDMI_RUINT32(0x500)| 0x08000000);		//start the command
-
-      off   += n;
+      
+      off   += n; 
       begin_ms = (jiffies * 1000) / HZ;
       while(HDMI_RUINT32(0x500) & 0x08000000)
-       {
+       { 
           end_ms = (jiffies * 1000) / HZ;
           if((end_ms - begin_ms) > 1000)
           {
@@ -136,13 +136,13 @@ __s32 DDC_Read(char cmd,char pointer,char offset,int nbyte,char * pbuf)
       i=0;
       while(i<n)
       {
-	     * pbuf ++ = HDMI_RUINT8(0x580);
-	     i++;
+   	     * pbuf ++ = HDMI_RUINT8(0x580);
+   	     i++;
       }
    }
 
    return 0;
-
+      	
 }
 
 
@@ -151,7 +151,7 @@ void GetEDIDData(__u8 block,__u8 *buf)
 	__u8 i;
     __u8 * pbuf = buf + 128*block;
     __u8 offset = (block&0x01)? 128:0;
-
+    
 	DDC_Read(Explicit_Offset_Address_E_DDC_Read,block>>1,offset,128,pbuf);
 
 	////////////////////////////////////////////////////////////////////////////
@@ -160,7 +160,7 @@ void GetEDIDData(__u8 block,__u8 *buf)
 	__inf(" 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F\n");
 	__inf(" ===============================================================================================\n");
 
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < 8; i++) 
 	{
 		__inf(" %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x  %2.2x\n",
 				pbuf[i*16 + 0 ],pbuf[i*16 + 1 ],pbuf[i*16 + 2 ],pbuf[i*16 + 3 ],
@@ -172,7 +172,7 @@ void GetEDIDData(__u8 block,__u8 *buf)
     __inf(" ===============================================================================================\n");
 
     return;
-
+	
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -183,10 +183,10 @@ __s32 EDID_CheckSum(__u8 block,__u8 *buf)
 {
     __s32 i = 0, CheckSum = 0;
 	__u8 *pbuf = buf + 128*block;
-
+	
     for( i = 0, CheckSum = 0 ; i < 128 ; i++ )
     {
-        CheckSum += pbuf[i] ;
+        CheckSum += pbuf[i] ; 
         CheckSum &= 0xFF ;
     }
 
@@ -208,7 +208,7 @@ __s32 EDID_Header_Check(__u8 *pbuf)
 	    pbuf[6] != 0xFF ||
 	    pbuf[7] != 0x00)
     {
-	__inf("EDID block0 header error\n");
+    	__inf("EDID block0 header error\n");
         return -1 ;
     }
 	return 0;
@@ -250,7 +250,7 @@ __s32 Parse_DTD_Block(__u8 *pbuf)
 	{
 		return 0;
 	}
-
+	
 	if(pixels_total == 0)
 	{
 		return 0;
@@ -263,11 +263,11 @@ __s32 Parse_DTD_Block(__u8 *pbuf)
     {
         if ((sizex== 720) && (sizey == 240))
         {
-		Device_Support_VIC[HDMI1440_480I] = 1;
+        	Device_Support_VIC[HDMI1440_480I] = 1;
         }
         if ((sizex== 720) && (sizey == 480))
         {
-		Device_Support_VIC[HDMI480P] = 1;
+        	Device_Support_VIC[HDMI480P] = 1;
         }
         if ((sizex== 1280) && (sizey == 720))
         {
@@ -286,16 +286,16 @@ __s32 Parse_DTD_Block(__u8 *pbuf)
     {
         if ((sizex== 720) && (sizey == 288))
         {
-		Device_Support_VIC[HDMI1440_576I] = 1;
+        	Device_Support_VIC[HDMI1440_576I] = 1;
         }
         if ((sizex== 720) && (sizey == 576))
         {
-		Device_Support_VIC[HDMI576P] = 1;
+        	Device_Support_VIC[HDMI576P] = 1;
         }
         if ((sizex== 1280) && (sizey == 720))
         {
             Device_Support_VIC[HDMI720P_50] = 1;
-        }
+        }          
         if ((sizex== 1920) && (sizey == 540))
         {
             Device_Support_VIC[HDMI1080I_50] = 1;
@@ -305,7 +305,7 @@ __s32 Parse_DTD_Block(__u8 *pbuf)
             Device_Support_VIC[HDMI1080P_50] = 1;
         }
     }
-
+    
     else if ((frame_rate == 23) || (frame_rate == 24))
     {
         if ((sizex== 1920) && (sizey == 1080))
@@ -315,7 +315,7 @@ __s32 Parse_DTD_Block(__u8 *pbuf)
     }
 	__inf("PCLK=%d\tXsize=%d\tYsize=%d\tFrame_rate=%d\n",
 		  pclk*10000,sizex,sizey,frame_rate);
-
+    
     return 0;
 }
 
@@ -341,16 +341,16 @@ __s32 Parse_VideoData_Block(__u8 *pbuf,__u8 size)
 __s32 Parse_AudioData_Block(__u8 *pbuf,__u8 size)
 {
 	__u8 sum = 0;
-
+	
 	while(sum < size)
 	{
-	if( (pbuf[sum]&0xf8) == 0x08)
-	{
+    	if( (pbuf[sum]&0xf8) == 0x08)
+    	{
 			__inf("Parse_AudioData_Block: max channel=%d\n",(pbuf[sum]&0x7)+1);
 			__inf("Parse_AudioData_Block: SampleRate code=%x\n",pbuf[sum+1]);
 			__inf("Parse_AudioData_Block: WordLen code=%x\n",pbuf[sum+2]);
-	}
-	sum += 3;
+    	}
+    	sum += 3;
 	}
 	return 0;
 }
@@ -361,13 +361,14 @@ __s32 Parse_HDMI_VSDB(__u8 * pbuf,__u8 size)
 
 	if( (pbuf[0] ==0x03) &&	(pbuf[1] ==0x0c) &&	(pbuf[2] ==0x00) )	//check if it's HDMI VSDB
 	{
+		isHDMI = 1;
 		__inf("Find HDMI Vendor Specific DataBlock\n");
 	}
 	else
 	{
 		return 0;
 	}
-
+	
 	if(size <=8)
 		return 0;
 
@@ -389,16 +390,16 @@ __s32 Parse_HDMI_VSDB(__u8 * pbuf,__u8 size)
 	{
 		return 0;
 	}
-
+	
 	if( ((pbuf[index]&0x60) ==1) || ((pbuf[index]&0x60) ==2) )
 	{
 		__inf("3D_multi_present\n");
 	}
-
+	
 	index += (pbuf[index+1]&0xe0) + 2;
 	if(index > (size+1) )
-		return 0;
-
+	   	return 0;
+	   	
 	__inf("3D_multi_present byte(%2.2x,%2.2x)\n",pbuf[index],pbuf[index+1]);
 
 	return 0;
@@ -414,7 +415,8 @@ __s32 ParseEDID(void)
 
     memset(Device_Support_VIC,0,sizeof(Device_Support_VIC));
     memset(EDID_Buf,0,sizeof(EDID_Buf));
-
+    isHDMI = 0;
+    YCbCr444_Support = 0;
 	DDC_Init();
 
     GetEDIDData(0, EDID_Buf);
@@ -433,7 +435,7 @@ __s32 ParseEDID(void)
 	{
 		return 0;
 	}
-	Parse_DTD_Block(EDID_Buf + 0x36);
+	Parse_DTD_Block(EDID_Buf + 0x36);	
 
 	Parse_DTD_Block(EDID_Buf + 0x48);
 
@@ -447,15 +449,30 @@ __s32 ParseEDID(void)
 	    }
 	    for( i = 1 ; i <= BlockCount ; i++ )
 	    {
-	        GetEDIDData(i, EDID_Buf) ;
+	        GetEDIDData(i, EDID_Buf) ;  
 	        if( EDID_CheckSum(i, EDID_Buf)!= 0)
 	        {
-			return 0;
+	        	return 0;
 	        }
 
 			if((EDID_Buf[0x80*i+0]==2)/*&&(EDID_Buf[0x80*i+1]==1)*/)
 			{
-
+				//add by matthew 20120809 to add rgb/yuv detect
+				if( (EDID_Buf[0x80*i+1]>=1))
+				{
+						if(EDID_Buf[0x80*i+3]&0x20)
+						{
+							YCbCr444_Support = 1;
+							__inf("device support YCbCr44 output\n");
+                            if(rgb_only == 1)
+                            {
+                                __inf("rgb only test!\n");
+                                YCbCr444_Support = 0;
+                            }
+						}
+				}
+				//end by matthew 20120809
+				
 				offset = EDID_Buf[0x80*i+2];
 				if(offset > 4)		//deal with reserved data block
 				{
@@ -478,7 +495,7 @@ __s32 ParseEDID(void)
 							{
 								Parse_VideoData_Block(EDID_Buf+0x80*i+bsum+1,len);
 							}
-							else if( tag == 3)	//vendor specific
+							else if( tag == 3)	//vendor specific 
 							{
 								Parse_HDMI_VSDB(EDID_Buf+0x80*i+bsum+1,len);
 							}
@@ -486,17 +503,17 @@ __s32 ParseEDID(void)
 
 						bsum += (len +1);
 					}
-
+					
 				}else
 				{
 					__inf("no data in reserved block%d\n",i);
 				}
-
+				
 				if(offset >= 4)		//deal with 18-byte timing block
 				{
 					while(offset < (0x80-18))
 					{
-						Parse_DTD_Block(EDID_Buf + 0x80*i + offset);
+						Parse_DTD_Block(EDID_Buf + 0x80*i + offset);	
 						offset += 18;
 					}
 				}else
@@ -507,7 +524,10 @@ __s32 ParseEDID(void)
 
 	    }
     }
-
+		
     return 0 ;
 
 }
+
+
+
